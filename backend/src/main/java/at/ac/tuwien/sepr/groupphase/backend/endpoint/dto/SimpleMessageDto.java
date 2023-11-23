@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@Builder(builderMethodName = "simpleBuilder")
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleMessageDto {

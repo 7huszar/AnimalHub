@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.MessageService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class SimpleMessageService implements MessageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final MessageRepository messageRepository;
-
-    public SimpleMessageService(MessageRepository messageRepository) {
-        this.messageRepository = messageRepository;
-    }
 
     @Override
     public List<Message> findAll() {
