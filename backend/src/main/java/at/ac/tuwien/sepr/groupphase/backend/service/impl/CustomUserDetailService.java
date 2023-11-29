@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,18 @@ public class CustomUserDetailService implements UserService {
         try {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
-            List<GrantedAuthority> grantedAuthorities;
-            if (applicationUser.getAdmin()) {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
-            } else {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+            List<GrantedAuthority> grantedAuthorities = null;
+
+            switch(applicationUser.getUserRole()){
+                case ADMIN:
+                    grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_SHELTER_USER", "ROLE_EXTERN_USER");
+                    break;
+                case SHELTER_USER:
+                    grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_SHELTER_USER");
+                    break;
+                case EXTERNAL_USER:
+                    grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_EXTERN_USER");
+                    break;
             }
 
             return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);

@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+
+
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +17,5 @@ public class ApplicationUser {
 
     private String email;
     private String password;
-    private Boolean admin;
+    private UserRole userRole;
 }
