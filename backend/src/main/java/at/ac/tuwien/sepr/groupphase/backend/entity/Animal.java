@@ -30,7 +30,7 @@ public class Animal {
     private String name;
 
     @Column(nullable = false, length = 60)
-    private String kind;
+    private String species;
 
     @Column(nullable = false, length = 60)
     private String race;
@@ -50,12 +50,12 @@ public class Animal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Animal animal = (Animal) o;
-        return Double.compare(height, animal.height) == 0 && Double.compare(weight, animal.weight) == 0 && Objects.equals(id, animal.id) && Objects.equals(name, animal.name) && Objects.equals(kind, animal.kind) && Objects.equals(race, animal.race) && Objects.equals(birthDate, animal.birthDate);
+        return Double.compare(height, animal.height) == 0 && Double.compare(weight, animal.weight) == 0 && Objects.equals(id, animal.id) && Objects.equals(name, animal.name) && Objects.equals(species, animal.species) && Objects.equals(race, animal.race) && Objects.equals(birthDate, animal.birthDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, kind, race, birthDate, height, weight);
+        return Objects.hash(id, name, species, race, birthDate, height, weight);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Animal {
         return "Animal{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", kind='" + kind + '\'' +
+            ", kind='" + species + '\'' +
             ", race='" + race + '\'' +
             ", birthDate=" + birthDate +
             ", height=" + height +
