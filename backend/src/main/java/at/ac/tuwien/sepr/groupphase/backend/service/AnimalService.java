@@ -14,4 +14,12 @@ public interface AnimalService {
 
     // TODO doku
     AnimalDetailDto create(CreateAnimalDto animalDto);
+
+    // TODO doku
+    AnimalDetailDto update(AnimalDetailDto animalDto);
+
+    // TODO doku
+
+    AnimalDetailDto getById(Long id);
+
 }

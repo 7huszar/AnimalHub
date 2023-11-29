@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,13 +15,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AnimalDetailDto {
 
-    private double id;
+    private Long id;
 
     @NotNull(message = "Name must not be null")
     private String name;
 
     @NotNull(message = "Species must not be null")
-    private String species;
+    private Species species;
 
     private String race;
 
@@ -43,5 +44,10 @@ public class AnimalDetailDto {
             + ", height='" + height + '\''
             + ", weight='" + weight + '\''
             + '}';
+    }
+
+    public AnimalDetailDto withId(long id){
+        this.id = id;
+        return this;
     }
 }

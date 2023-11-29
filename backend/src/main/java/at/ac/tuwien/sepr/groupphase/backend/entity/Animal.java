@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +15,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Objects;
+
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 
 @Entity
 @Getter
@@ -29,10 +33,11 @@ public class Animal {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 60)
-    private String species;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false, length = 100)
+    private Species species;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 100)
     private String race;
 
     @Column(nullable = false, name = "birth_date")

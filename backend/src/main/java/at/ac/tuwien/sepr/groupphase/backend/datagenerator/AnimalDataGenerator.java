@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class AnimalDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int AMOUNT = 3;
     private static final String NAME = "Herbert";
-    private static final String SPECIES = "Cat";
+    private static final Species SPECIES = Species.CAT;
     private static final String RACE = "Brown Cat";
     private static final LocalDate BIRTH_DATE = LocalDate.now();
     private static final double HEIGHT = 0.4;

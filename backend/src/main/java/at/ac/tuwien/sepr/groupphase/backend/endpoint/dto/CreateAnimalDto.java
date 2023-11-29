@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateAnimalDto {
@@ -17,7 +19,7 @@ public class CreateAnimalDto {
     private String name;
 
     @NotNull(message = "Species must not be null")
-    private String species;
+    private Species species;
 
     private String race;
 
