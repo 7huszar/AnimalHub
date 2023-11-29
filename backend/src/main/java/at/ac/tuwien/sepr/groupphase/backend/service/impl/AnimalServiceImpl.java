@@ -36,5 +36,21 @@ public class AnimalServiceImpl implements AnimalService {
         return mapper.animalToAnimalDetailDto(entity);
     }
 
+    @Override
+    public AnimalDetailDto update(AnimalDetailDto animalDto){
+        LOGGER.debug("Update Animal with id: "+ animalDto.getId() + ", with following data:" + animalDto);
+
+        animalRepository.deleteById(animalDto.getId());
+        Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
+        animalRepository.save(entity);
+        return mapper.animalToAnimalDetailDto(entity);
+    }
+
+    @Override
+    public AnimalDetailDto getById(Long id){
+        LOGGER.debug("Get Animal with id: "+ id);
+        return mapper.animalToAnimalDetailDto(animalRepository.getById(id));
+    }
+
 
 }

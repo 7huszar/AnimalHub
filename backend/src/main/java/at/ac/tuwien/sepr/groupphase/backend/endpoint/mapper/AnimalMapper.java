@@ -12,5 +12,7 @@ public interface AnimalMapper {
     Animal createAnimalDtoToAnimal(CreateAnimalDto animalDto);
 
     AnimalDetailDto animalToAnimalDetailDto(Animal animal);
+
+    Animal animalDetailDtoToAnimal(AnimalDetailDto animalDto);
 }
 
