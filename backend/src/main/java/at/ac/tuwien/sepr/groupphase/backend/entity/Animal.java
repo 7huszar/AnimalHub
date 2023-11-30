@@ -13,10 +13,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -27,14 +30,14 @@ import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 public class Animal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false, length = 100)
     private String name;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private Species species;
 
     @Column(nullable = false, length = 100)
@@ -49,18 +52,21 @@ public class Animal {
     @Column
     private double weight;
 
+    @Column(name = "created_on")
+    @CreationTimestamp
+    private Instant createdOn;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Animal animal = (Animal) o;
-        return Double.compare(height, animal.height) == 0 && Double.compare(weight, animal.weight) == 0 && Objects.equals(id, animal.id) && Objects.equals(name, animal.name) && Objects.equals(species, animal.species) && Objects.equals(race, animal.race) && Objects.equals(birthDate, animal.birthDate);
+        return Double.compare(height, animal.height) == 0 && Double.compare(weight, animal.weight) == 0 && Objects.equals(id, animal.id) && Objects.equals(name, animal.name) && species == animal.species && Objects.equals(race, animal.race) && Objects.equals(birthDate, animal.birthDate) && Objects.equals(createdOn, animal.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, species, race, birthDate, height, weight);
+        return Objects.hash(id, name, species, race, birthDate, height, weight, createdOn);
     }
 
     @Override
@@ -68,11 +74,12 @@ public class Animal {
         return "Animal{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", kind='" + species + '\'' +
+            ", species=" + species +
             ", race='" + race + '\'' +
             ", birthDate=" + birthDate +
             ", height=" + height +
             ", weight=" + weight +
+            ", createdOn=" + createdOn +
             '}';
     }
 }

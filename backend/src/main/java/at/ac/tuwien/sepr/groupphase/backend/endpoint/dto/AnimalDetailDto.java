@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AnimalDetailDto {
 
-    private Long id;
+    private UUID id;
 
     @NotNull(message = "Name must not be null")
     private String name;
@@ -34,20 +36,19 @@ public class AnimalDetailDto {
     @NotNull(message = "Weight must not be null")
     private double weight;
 
+    private Instant createdOn;
+
     @Override
     public String toString() {
-        return "CreateAnimalDto{"
-            + "id='" + id + '\''
-            + "name='" + name + '\''
-            + ", species='" + species + '\''
-            + ", birthDate='" + birthDate + '\''
-            + ", height='" + height + '\''
-            + ", weight='" + weight + '\''
-            + '}';
-    }
-
-    public AnimalDetailDto withId(long id){
-        this.id = id;
-        return this;
+        return "AnimalDetailDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", species=" + species +
+            ", race='" + race + '\'' +
+            ", birthDate=" + birthDate +
+            ", height=" + height +
+            ", weight=" + weight +
+            ", createdOn=" + createdOn +
+            '}';
     }
 }

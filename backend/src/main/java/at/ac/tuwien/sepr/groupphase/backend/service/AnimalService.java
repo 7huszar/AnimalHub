@@ -5,12 +5,12 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface AnimalService {
 
     // TODO doku
     List<Animal> findAll();
-
 
     // TODO doku
     AnimalDetailDto create(CreateAnimalDto animalDto);
@@ -20,6 +20,6 @@ public interface AnimalService {
 
     // TODO doku
 
-    AnimalDetailDto getById(Long id);
+    AnimalDetailDto getById(UUID id);
 
 }
