@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 public class AnimalValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final AnimalMapper mapper;
 
     // ### HELPER METHODS
 
@@ -40,7 +43,7 @@ public class AnimalValidator {
      * @param animalDto animal
      * @throws ValidationException when at least one value cannot be used / validated
      */
-    boolean validateAnimalDetails(AnimalDetailDto animalDto) throws ValidationException {
+    void validateAnimalDetails(AnimalDetailDto animalDto) throws ValidationException {
         LOGGER.trace("validateAnimalDetails({})", animalDto);
 
         List<String> validationErrors = new ArrayList<>();
@@ -97,7 +100,6 @@ public class AnimalValidator {
             throw new ValidationException("Validation of animal details failed", validationErrors);
         }
 
-        return true;
     }
 
     // ### VALIDATION METHODS
@@ -108,9 +110,9 @@ public class AnimalValidator {
      * @param animalDto animalDto
      * @throws ValidationException when at least one value cannot be used / validated
      */
-    public boolean validateForCreate(AnimalDetailDto animalDto) throws ValidationException {
+    public void validateForCreate(CreateAnimalDto animalDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", animalDto);
-        return validateAnimalDetails(animalDto);
+        validateAnimalDetails(mapper.createAnimalDtoToAnimalDetailDto(animalDto));
     }
 
     /**
@@ -119,7 +121,7 @@ public class AnimalValidator {
      * @param animalDto animalDto
      * @throws ValidationException when at least one value cannot be used / validated
      */
-    public boolean validateForUpdate(AnimalDetailDto animalDto) throws ValidationException {
+    public void validateForUpdate(AnimalDetailDto animalDto) throws ValidationException {
         LOGGER.trace("validateForUpdate({})", animalDto);
         List<String> validationErrors = new ArrayList<>();
 
@@ -133,7 +135,7 @@ public class AnimalValidator {
             throw new ValidationException("Validation of animal for update has failed", validationErrors);
         }
 
-        return validateAnimalDetails(animalDto);
+        validateAnimalDetails(animalDto);
     }
 
 

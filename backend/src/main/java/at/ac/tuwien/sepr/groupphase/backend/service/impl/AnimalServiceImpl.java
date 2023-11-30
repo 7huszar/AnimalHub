@@ -5,8 +5,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ public class AnimalServiceImpl implements AnimalService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalRepository animalRepository;
     private final AnimalMapper mapper;
+    private final AnimalValidator validator;
 
     @Override
     public List<Animal> findAll() {
@@ -31,17 +34,20 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto create(CreateAnimalDto animalDto){
+    public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException {
         LOGGER.debug("Create new Animal: " + animalDto);
+
+        validator.validateForCreate(animalDto);
         Animal entity = mapper.createAnimalDtoToAnimal(animalDto);
         animalRepository.save(entity);
         return mapper.animalToAnimalDetailDto(entity);
     }
 
     @Override
-    public AnimalDetailDto update(AnimalDetailDto animalDto){
+    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException{
         LOGGER.debug("Update Animal with id: "+ animalDto.getId() + ", with following data:" + animalDto);
 
+        validator.validateForUpdate(animalDto);
         animalRepository.deleteById(animalDto.getId());
         Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
         animalRepository.save(entity);
