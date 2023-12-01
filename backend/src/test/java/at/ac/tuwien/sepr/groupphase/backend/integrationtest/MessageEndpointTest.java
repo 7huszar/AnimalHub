@@ -1,62 +1,62 @@
-package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
-
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedMessageDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MessageInquiryDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleMessageDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.MessageMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Message;
-import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
-import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-public class MessageEndpointTest implements TestData {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private MessageRepository messageRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private MessageMapper messageMapper;
-
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
-
-    @Autowired
-    private SecurityProperties securityProperties;
-
+//package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
+//
+//import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+//import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+//import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedMessageDto;
+//import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MessageInquiryDto;
+//import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleMessageDto;
+//import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.MessageMapper;
+//import at.ac.tuwien.sepr.groupphase.backend.entity.Message;
+//import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
+//import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.MediaType;
+//import org.springframework.mock.web.MockHttpServletResponse;
+//import org.springframework.test.context.ActiveProfiles;
+//import org.springframework.test.context.junit.jupiter.SpringExtension;
+//import org.springframework.test.web.servlet.MockMvc;
+//import org.springframework.test.web.servlet.MvcResult;
+//
+//import java.time.LocalDateTime;
+//import java.util.Arrays;
+//import java.util.List;
+//
+//import static org.junit.jupiter.api.Assertions.*;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+//
+//@ExtendWith(SpringExtension.class)
+//@SpringBootTest
+//@ActiveProfiles("test")
+//@AutoConfigureMockMvc
+//public class MessageEndpointTest implements TestData {
+//
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @Autowired
+//    private MessageRepository messageRepository;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//
+//    @Autowired
+//    private MessageMapper messageMapper;
+//
+//    @Autowired
+//    private JwtTokenizer jwtTokenizer;
+//
+//    @Autowired
+//    private SecurityProperties securityProperties;
+//
 //    private Message message = Message.builder()
 //        .title(TEST_NEWS_TITLE)
 //        .summary(TEST_NEWS_SUMMARY)
@@ -214,5 +214,5 @@ public class MessageEndpointTest implements TestData {
 //        return date.getYear() == today.getYear() && date.getDayOfYear() == today.getDayOfYear() &&
 //            date.getHour() == today.getHour();
 //    }
-
-}
+//
+//}
