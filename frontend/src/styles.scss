@@ -1,4 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
-body {
-  background-color: whitesmoke;
+
+
+
+$primary:       #64B5F6;
+
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+
+.logo {
+  width: 50%;
+}
+
+.custom-head {
+  background-color: $primary;
+  width: 50%;
+  height: 12.5%;
+}
+
+.left-visual {
+  width: 50%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.start-pic {
+  height: 100%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.my-tmp {
+  position: fixed;
+  left: 60%;
+  top: 45%;
+  width: 900px;
+}
+
+
+.btn-primary {
+  color: #ffffff;
 }
