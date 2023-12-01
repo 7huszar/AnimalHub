@@ -32,7 +32,6 @@ public class AnimalValidator {
         }
     }
 
-    // We expect no animals older than 50 years!
     Boolean isValidDateOfBirth(LocalDate date) {
         return !date.isAfter(LocalDate.now());
     }

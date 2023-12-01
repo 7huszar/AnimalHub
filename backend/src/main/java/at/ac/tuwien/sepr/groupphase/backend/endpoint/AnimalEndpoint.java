@@ -2,11 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MessageInquiryDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -34,7 +31,7 @@ public class AnimalEndpoint {
     @Secured("ROLE_EXTERNAL_USER")
     @GetMapping
     @Operation(summary = "Get list of animals", security = @SecurityRequirement(name = "apiKey"))
-    public List<Animal> findAll() {
+    public List<AnimalDetailDto> findAll() {
         LOGGER.info("GET " + BASE_PATH);
         return animalService.findAll();
     }

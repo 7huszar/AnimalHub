@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface AnimalService {
 
     // TODO doku
-    List<Animal> findAll();
+    List<AnimalDetailDto> findAll();
 
     // TODO doku
     AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException;
@@ -21,6 +21,6 @@ public interface AnimalService {
 
     // TODO doku
 
-    AnimalDetailDto getById(UUID id);
+    AnimalDetailDto findById(UUID id);
 
 }

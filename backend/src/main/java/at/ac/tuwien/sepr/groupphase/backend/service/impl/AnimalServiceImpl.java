@@ -2,8 +2,10 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,9 +31,15 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalValidator validator;
 
     @Override
-    public List<Animal> findAll() {
+    public List<AnimalDetailDto> findAll() {
         LOGGER.debug("Find all Animals");
-        return animalRepository.findAll();
+        List<AnimalDetailDto> allAnimalDetailDtoList = Collections.emptyList();
+
+        for (Animal animal:animalRepository.findAll()
+        ) {
+            allAnimalDetailDtoList.add(mapper.animalToAnimalDetailDto(animal));
+        }
+        return allAnimalDetailDtoList;
     }
 
     @Override
@@ -55,7 +64,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto getById(UUID id){
+    public AnimalDetailDto findById(UUID id){
         LOGGER.debug("Get Animal with id: "+ id);
 
         var animal = animalRepository.findById(id).orElseThrow(
