@@ -1,0 +1,148 @@
+package at.ac.tuwien.sepr.groupphase.backend.service.validator;
+
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class ShelterValidator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final ShelterMapper mapper;
+    private final AnimalService animalService;
+
+    // ### HELPER METHODS
+
+    Boolean stringIsEmpty(String s) {
+        if (s != null) {
+            return s.isEmpty() || s.isBlank();
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Validates simple attributes of ShelterDtos before Creation or Updating
+     *
+     * @param shelterDto shelterDto
+     * @throws ValidationException when at least one value cannot be used / validated
+     */
+    void validateShelterDetails(ShelterDetailDto shelterDto) throws ValidationException {
+        LOGGER.trace("(validateShelterDetails{})", shelterDto);
+
+        List<String> validationErrors = new ArrayList<>();
+
+        // # Name
+
+        if (stringIsEmpty(shelterDto.getName())) {
+            validationErrors.add("No Name given");
+        }
+        else if(shelterDto.getName().length() > 200) {
+            validationErrors.add("Name is too long");
+        }
+
+        // # Address
+
+        if (stringIsEmpty(shelterDto.getAddress())) {
+            validationErrors.add("No Address given");
+        }
+        else if(shelterDto.getName().length() > 400) {
+            validationErrors.add("Address is too long");
+        }
+
+        // # Phone Number
+
+        if (stringIsEmpty(shelterDto.getPhoneNumber())) {
+            validationErrors.add("No Phone Number given");
+        }
+        else if(shelterDto.getName().length() > 50) {
+            validationErrors.add("Phone Number is too long");
+        }
+
+        // # Email
+
+        if (stringIsEmpty(shelterDto.getName())) {
+            validationErrors.add("No Email given");
+        }
+        else if(shelterDto.getName().length() > 100) {
+            validationErrors.add("Email is too long");
+        }
+
+        // # Animals
+
+        if(!shelterDto.getAnimals().isEmpty()){
+            for (AnimalDetailDto animalDto: shelterDto.getAnimals()
+                 ) {
+                try{animalService.findById(animalDto.getId());}
+                catch(NotFoundException e){
+                    validationErrors.add("The shelter-associated Animal with ID: " + animalDto.getId() + " could not be found in the Animal Database.");
+                }
+            }
+        }
+
+        // # Created On
+
+        // TODO create validation for created on - date
+
+
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException("Validation of shelter details failed", validationErrors);
+        }
+
+    }
+
+    // ### VALIDATION METHODS
+
+    /**
+     * Validates new shelter for creation
+     *
+     * @param shelterDto shelterDto
+     * @throws ValidationException when at least one value cannot be used / validated
+     */
+    public void validateForCreate(CreateShelterDto shelterDto) throws ValidationException {
+        LOGGER.trace("validateForCreate({})", shelterDto);
+        validateShelterDetails(mapper.createShelterDtoToShelterDetailDto(shelterDto));
+    }
+
+    /**
+     * Validates new shelter for update
+     *
+     * @param shelterDto shelterDto
+     * @throws ValidationException when at least one value cannot be used / validated
+     */
+    public void validateForUpdate(ShelterDetailDto shelterDto) throws ValidationException {
+        LOGGER.trace("validateForUpdate({})", shelterDto);
+        List<String> validationErrors = new ArrayList<>();
+
+        // # id
+
+        if(stringIsEmpty(shelterDto.getId().toString())){
+            validationErrors.add("No id given");
+        }
+
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException("Validation of shelter for update has failed", validationErrors);
+        }
+
+        validateShelterDetails(shelterDto);
+    }
+
+
+
+}
