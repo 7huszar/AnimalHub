@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -48,35 +47,21 @@ public class ShelterEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDetailDto create(@Valid @RequestBody CreateShelterDto shelterDto) {
+    public ShelterDetailDto create(@Valid @RequestBody CreateShelterDto shelterDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/ " + shelterDto.getName());
         LOGGER.debug("Body of request:\n{}", shelterDto);
-        try{
-            return shelterService.create(shelterDto);
-        }
-        catch(ValidationException e){
-            LOGGER.warn("POST - " + BASE_PATH + "/" + ": Could not validate the given parameters for creating new shelter: [" + shelterDto + "]!", e);
-            HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-            throw new ResponseStatusException(status, e.getMessage(), e);
-        }
+        return shelterService.create(shelterDto);
     }
 
     @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDetailDto update(@PathVariable UUID id, @Valid @RequestBody ShelterDetailDto shelterDto) {
+    public ShelterDetailDto update(@PathVariable UUID id, @Valid @RequestBody ShelterDetailDto shelterDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", shelterDto);
-        try{
-            shelterDto.setId(id);
-            return shelterService.update(shelterDto);
-        }
-        catch(ValidationException e){
-            LOGGER.warn("PUT - " + BASE_PATH + "/" + ": Could not validate the given parameters for updating shelter: [" + shelterDto + "]!", e);
-            HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-            throw new ResponseStatusException(status, e.getMessage(), e);
-        }
+        shelterDto.setId(id);
+        return shelterService.update(shelterDto);
     }
 
 }

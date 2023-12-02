@@ -1,21 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Converter;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +16,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -35,6 +26,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "SHELTER")
 public class Shelter {
 
     @Id
@@ -54,8 +46,8 @@ public class Shelter {
     @Column(nullable = false, length = 100)
     private String email;
 
-    @Convert(converter = AnimalListConverter.class)
-    private List<Animal> animals;
+    @OneToMany(mappedBy = "shelter")
+    private Set<Animal> animals;
 
 
     @Column(name = "created_on")
@@ -71,8 +63,8 @@ public class Shelter {
             return false;
         }
         Shelter shelter = (Shelter) o;
-        return Objects.equals(id, shelter.id) && Objects.equals(name, shelter.name) && Objects.equals(address, shelter.address) && Objects.equals(phoneNumber, shelter.phoneNumber) && Objects.equals(email, shelter.email) && Objects.equals(animals, shelter.animals) &&
-            Objects.equals(createdOn, shelter.createdOn);
+        return Objects.equals(id, shelter.id) && Objects.equals(name, shelter.name) && Objects.equals(address, shelter.address) && Objects.equals(phoneNumber, shelter.phoneNumber) && Objects.equals(email, shelter.email)
+            && Objects.equals(animals, shelter.animals) && Objects.equals(createdOn, shelter.createdOn);
     }
 
     @Override
@@ -82,14 +74,14 @@ public class Shelter {
 
     @Override
     public String toString() {
-        return "Shelter{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", address=" + address +
-            ", phoneNumber='" + phoneNumber + '\'' +
-            ", email=" + email +
-            ", animals=" + animals +
-            ", createdOn=" + createdOn +
-            '}';
+        return "Shelter{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", address=" + address
+            + ", phoneNumber='" + phoneNumber + '\''
+            + ", email=" + email
+            + ", animals=" + animals
+            + ", createdOn=" + createdOn
+            + '}';
     }
 }

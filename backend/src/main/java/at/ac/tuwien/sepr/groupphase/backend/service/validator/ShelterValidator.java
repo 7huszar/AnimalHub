@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -15,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +35,7 @@ public class ShelterValidator {
     }
 
     /**
-     * Validates simple attributes of ShelterDtos before Creation or Updating
+     * Validates simple attributes of ShelterDtos before Creation or Updating.
      *
      * @param shelterDto shelterDto
      * @throws ValidationException when at least one value cannot be used / validated
@@ -52,8 +49,7 @@ public class ShelterValidator {
 
         if (stringIsEmpty(shelterDto.getName())) {
             validationErrors.add("No Name given");
-        }
-        else if(shelterDto.getName().length() > 200) {
+        } else if (shelterDto.getName().length() > 200) {
             validationErrors.add("Name is too long");
         }
 
@@ -61,8 +57,7 @@ public class ShelterValidator {
 
         if (stringIsEmpty(shelterDto.getAddress())) {
             validationErrors.add("No Address given");
-        }
-        else if(shelterDto.getName().length() > 400) {
+        } else if (shelterDto.getName().length() > 400) {
             validationErrors.add("Address is too long");
         }
 
@@ -70,8 +65,7 @@ public class ShelterValidator {
 
         if (stringIsEmpty(shelterDto.getPhoneNumber())) {
             validationErrors.add("No Phone Number given");
-        }
-        else if(shelterDto.getName().length() > 50) {
+        } else if (shelterDto.getName().length() > 50) {
             validationErrors.add("Phone Number is too long");
         }
 
@@ -79,18 +73,17 @@ public class ShelterValidator {
 
         if (stringIsEmpty(shelterDto.getName())) {
             validationErrors.add("No Email given");
-        }
-        else if(shelterDto.getName().length() > 100) {
+        } else if (shelterDto.getName().length() > 100) {
             validationErrors.add("Email is too long");
         }
 
         // # Animals
 
-        if(!shelterDto.getAnimals().isEmpty()){
-            for (AnimalDetailDto animalDto: shelterDto.getAnimals()
-                 ) {
-                try{animalService.findById(animalDto.getId());}
-                catch(NotFoundException e){
+        if (!shelterDto.getAnimals().isEmpty()) {
+            for (AnimalDetailDto animalDto : shelterDto.getAnimals()) {
+                try {
+                    animalService.findById(animalDto.getId());
+                } catch (NotFoundException e) {
                     validationErrors.add("The shelter-associated Animal with ID: " + animalDto.getId() + " could not be found in the Animal Database.");
                 }
             }
@@ -110,7 +103,7 @@ public class ShelterValidator {
     // ### VALIDATION METHODS
 
     /**
-     * Validates new shelter for creation
+     * Validates new shelter for creation.
      *
      * @param shelterDto shelterDto
      * @throws ValidationException when at least one value cannot be used / validated
@@ -121,7 +114,7 @@ public class ShelterValidator {
     }
 
     /**
-     * Validates new shelter for update
+     * Validates new shelter for update.
      *
      * @param shelterDto shelterDto
      * @throws ValidationException when at least one value cannot be used / validated
@@ -132,7 +125,7 @@ public class ShelterValidator {
 
         // # id
 
-        if(stringIsEmpty(shelterDto.getId().toString())){
+        if (stringIsEmpty(shelterDto.getId().toString())) {
             validationErrors.add("No id given");
         }
 
@@ -142,7 +135,6 @@ public class ShelterValidator {
 
         validateShelterDetails(shelterDto);
     }
-
 
 
 }
