@@ -1,0 +1,10 @@
+{
+  "LOGIN": {
+    "LOGIN_TITLE": "Login",
+    "USERNAME_PLACEHOLDER": "Username",
+    "PWD_PLACEHOLDER": "Password",
+    "LOGIN_BUTTON": "login",
+    "FORGOT_PWD": "forgot password?",
+    "REGISTER": "register"
+  }
+}
