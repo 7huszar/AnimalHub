@@ -6,5 +6,9 @@
     "LOGIN_BUTTON": "login",
     "FORGOT_PWD": "forgot password?",
     "REGISTER": "register"
+  },
+
+  "LANG_SELECT": {
+    "DROPDOWN": "Language"
   }
 }

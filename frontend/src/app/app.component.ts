@@ -9,6 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
 export class AppComponent {
   title = 'SE PR Group Phase';
   constructor(translate: TranslateService) {
+    translate.addLangs(['de', 'en']);
     translate.setDefaultLang('de');
     translate.use('de');
   }

@@ -6,5 +6,9 @@
     "LOGIN_BUTTON": "anmelden",
     "FORGOT_PWD": "Passwort vergessen?",
     "REGISTER": "registrieren"
+  },
+
+  "LANG_SELECT": {
+    "DROPDOWN": "Sprache"
   }
 }
