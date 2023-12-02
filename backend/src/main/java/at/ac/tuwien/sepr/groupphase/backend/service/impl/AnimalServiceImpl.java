@@ -57,7 +57,6 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.debug("Update Animal with id: "+ animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
-        animalRepository.deleteById(animalDto.getId());
         Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
         animalRepository.save(entity);
         return mapper.animalToAnimalDetailDto(entity);
@@ -72,6 +71,18 @@ public class AnimalServiceImpl implements AnimalService {
         );
 
         return mapper.animalToAnimalDetailDto(animal);
+    }
+
+    @Override
+    public void delete(UUID id){
+        LOGGER.debug("Delete Animal with id: "+ id);
+
+        var shelter = animalRepository.findById(id)
+            .orElseThrow(
+                () -> new NotFoundException("Shelter does not exist.")
+            );
+
+        animalRepository.delete(shelter);
     }
 
 }
