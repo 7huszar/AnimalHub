@@ -35,11 +35,11 @@ public class ApplicationUser {
 
     @Override
     public String toString() {
-        return "ApplicationUser{" +
-            "id=" + id +
-            ", email='" + email + '\'' +
-            ", password='" + password + '\'' +
-            ", role=" + role +
-            '}';
+        return "ApplicationUser{"
+            + "id=" + id
+            + ", email='" + email + '\''
+            + ", password='" + password + '\''
+            + ", role=" + role
+            + '}';
     }
 }

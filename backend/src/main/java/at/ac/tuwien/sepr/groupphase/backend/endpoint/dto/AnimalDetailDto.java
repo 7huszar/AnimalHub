@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,9 @@ public class AnimalDetailDto {
 
     @NotNull(message = "Height must not be null")
     private double height;
+
+    @NotNull(message = "Shelter must not be null")
+    private Shelter shelter;
 
     @NotNull(message = "Weight must not be null")
     private double weight;

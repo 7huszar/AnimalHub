@@ -17,7 +17,6 @@ import java.lang.invoke.MethodHandles;
 @Component
 @RequiredArgsConstructor
 public class UserDataGenerator {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final UserRepository userRepository;
@@ -28,19 +27,19 @@ public class UserDataGenerator {
         if (!userRepository.findAll().isEmpty()) {
             LOGGER.debug("users already exist");
         } else {
-            var admin = ApplicationUser.builder()
+            final var admin = ApplicationUser.builder()
                 .email("admin@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.ADMIN)
                 .build();
 
-            var member = ApplicationUser.builder()
+            final var member = ApplicationUser.builder()
                 .email("member@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.MEMBER)
                 .build();
 
-            var user = ApplicationUser.builder()
+            final var user = ApplicationUser.builder()
                 .email("user@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.USER)

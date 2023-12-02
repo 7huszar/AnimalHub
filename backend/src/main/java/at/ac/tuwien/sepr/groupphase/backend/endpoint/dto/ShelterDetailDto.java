@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -30,7 +31,7 @@ public class ShelterDetailDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
-    private List<AnimalDetailDto> animals;
+    private Set<AnimalDetailDto> animals;
 
     private Instant createdOn;
 
