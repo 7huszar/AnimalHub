@@ -70,11 +70,23 @@ public class ShelterServiceImpl implements ShelterService {
     public ShelterDetailDto findById(UUID id){
         LOGGER.debug("Get Shelter with id: "+ id);
 
-        var animal = shelterRepository.findById(id).orElseThrow(
+        var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
 
-        return mapper.shelterToShelterDetailDto(animal);
+        return mapper.shelterToShelterDetailDto(shelter);
+    }
+
+    @Override
+    public void delete(UUID id){
+        LOGGER.debug("Delete Shelter with id: "+ id);
+
+        var shelter = shelterRepository.findById(id)
+            .orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        shelterRepository.delete(shelter);
     }
 
 }
