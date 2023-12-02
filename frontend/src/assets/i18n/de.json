@@ -10,5 +10,9 @@
 
   "LANG_SELECT": {
     "DROPDOWN": "Sprache"
+  },
+
+  "HOME": {
+    "ACCOUNT": "Account verwalten"
   }
 }

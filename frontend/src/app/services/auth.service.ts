@@ -52,13 +52,12 @@ export class AuthService {
     if (this.getToken() != null) {
       const decoded: any = jwtDecode(this.getToken());
       const authInfo: string[] = decoded.rol;
-      if (authInfo.includes('ROLE_ADMIN')) {
+      if (authInfo.includes('ADMIN_ROLE')) {
         return 'ADMIN';
-      } else if (authInfo.includes('ROLE_SHELTER_USER')) {
-        return 'SHELTER_USER';
-      }
-      else if (authInfo.includes('ROLE_EXTERNAL_USER')) {
-        return 'EXTERNAL_USER';
+      } else if (authInfo.includes('MEMBER_ROLE')) {
+        return 'MEMBER';
+      } else if (authInfo.includes('USER_ROLE')) {
+        return 'USER';
       }
     }
     return 'UNDEFINED';

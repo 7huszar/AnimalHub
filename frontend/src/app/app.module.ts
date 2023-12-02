@@ -15,6 +15,8 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { LangSelectComponent } from './components/lang-select/lang-select.component';
+import { MemberProfileComponent } from './components/home/member-profile/member-profile.component';
+import { AdminPageComponent } from './components/admin-page/admin-page.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -29,6 +31,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginComponent,
     MessageComponent,
     LangSelectComponent,
+    MemberProfileComponent,
+    AdminPageComponent,
   ],
   imports: [
     BrowserModule,

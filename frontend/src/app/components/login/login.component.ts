@@ -3,7 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
-
+import {jwtDecode} from "jwt-decode";
 
 @Component({
   selector: 'app-login',
@@ -37,6 +37,8 @@ export class LoginComponent implements OnInit {
     } else {
       console.log('Invalid input');
     }
+    console.log(this.authService.getUserRole());
+    console.log(jwtDecode(this.authService.getToken()));
   }
 
   /**
@@ -49,7 +51,18 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         console.log('Successfully logged in user: ' + authRequest.email);
-        this.router.navigate(['/message']);
+        switch (this.authService.getUserRole()) {
+          case 'ADMIN':
+            this.router.navigate(['/admin']);
+            break;
+          case 'MEMBER':
+          case 'USER':
+            this.router.navigate(['/home']);
+            break;
+          default:
+            this.router.navigate(['']);
+            break;
+        }
       },
       error: error => {
         console.log('Could not log in due to:');

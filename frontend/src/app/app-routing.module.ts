@@ -2,13 +2,15 @@ import {NgModule} from '@angular/core';
 import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
+import {MemberProfileComponent} from "./components/home/member-profile/member-profile.component";
+import {AdminPageComponent} from "./components/admin-page/admin-page.component";
 import {AuthGuard} from './guards/auth.guard';
-import {MessageComponent} from './components/message/message.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent}
+  {path: '', component: LoginComponent},
+  {path: 'home', canActivate: mapToCanActivate([AuthGuard]), component: HomeComponent},
+  {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
+  {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent}
 ];
 
 @NgModule({

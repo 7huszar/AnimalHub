@@ -17,9 +17,6 @@ export class LangSelectComponent{
   }
 
   getLangs() : string[] {
-    this.translateService.getLangs().forEach((foo : string) => {
-      console.log(foo)
-    });
     return this.translateService.getLangs();
   }
 
