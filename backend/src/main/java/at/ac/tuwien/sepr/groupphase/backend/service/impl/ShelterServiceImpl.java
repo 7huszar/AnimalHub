@@ -1,18 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ShelterMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
-import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ShelterValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,13 +30,8 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     public List<ShelterDetailDto> findAll() {
         LOGGER.debug("Find all Shelters");
-        List<ShelterDetailDto> allShelterDtoList = Collections.emptyList();
 
-        for (Shelter shelter:shelterRepository.findAll()
-             ) {
-            allShelterDtoList.add(mapper.shelterToShelterDetailDto(shelter));
-        }
-        return allShelterDtoList;
+        return shelterRepository.findAll().stream().map(mapper::shelterToShelterDetailDto).toList();
     }
 
     @Override
@@ -81,8 +70,7 @@ public class ShelterServiceImpl implements ShelterService {
     public void delete(UUID id){
         LOGGER.debug("Delete Shelter with id: "+ id);
 
-        var shelter = shelterRepository.findById(id)
-            .orElseThrow(
+        var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
 

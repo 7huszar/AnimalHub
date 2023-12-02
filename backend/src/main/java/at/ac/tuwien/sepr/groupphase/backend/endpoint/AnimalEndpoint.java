@@ -44,7 +44,7 @@ public class AnimalEndpoint {
         return animalService.findAll();
     }
 
-    @Secured("ROLE_SHELTER_USER")
+    @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
@@ -61,7 +61,7 @@ public class AnimalEndpoint {
         }
     }
 
-    @Secured("ROLE_SHELTER_USER")
+    @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific animal in database", security = @SecurityRequirement(name = "apiKey"))

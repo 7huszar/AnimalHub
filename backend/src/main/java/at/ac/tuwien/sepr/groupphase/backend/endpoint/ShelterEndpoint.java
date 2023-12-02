@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +36,7 @@ public class ShelterEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShelterService shelterService;
 
-    @Secured("ROLE_EXTERNAL_USER")
+    @Secured(UserRole.Values.USER_VALUE)
     @GetMapping
     @Operation(summary = "Get list of shelters", security = @SecurityRequirement(name = "apiKey"))
     public List<ShelterDetailDto> findAll() {
@@ -43,7 +44,7 @@ public class ShelterEndpoint {
         return shelterService.findAll();
     }
 
-    @Secured("ROLE_SHELTER_USER")
+    @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
@@ -60,7 +61,7 @@ public class ShelterEndpoint {
         }
     }
 
-    @Secured("ROLE_SHELTER_USER")
+    @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
