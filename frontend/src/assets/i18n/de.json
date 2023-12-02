@@ -1,0 +1,14 @@
+{
+  "LOGIN": {
+    "LOGIN_TITLE": "Anmelden",
+    "USERNAME_PLACEHOLDER": "Benutzername",
+    "PWD_PLACEHOLDER": "Passwort",
+    "LOGIN_BUTTON": "anmelden",
+    "FORGOT_PWD": "Passwort vergessen?",
+    "REGISTER": "registrieren"
+  },
+
+  "LANG_SELECT": {
+    "DROPDOWN": "Sprache"
+  }
+}
