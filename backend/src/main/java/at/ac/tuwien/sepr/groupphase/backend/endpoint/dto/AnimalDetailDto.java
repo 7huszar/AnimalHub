@@ -40,15 +40,15 @@ public class AnimalDetailDto {
 
     @Override
     public String toString() {
-        return "AnimalDetailDto{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", species=" + species +
-            ", race='" + race + '\'' +
-            ", birthDate=" + birthDate +
-            ", height=" + height +
-            ", weight=" + weight +
-            ", createdOn=" + createdOn +
-            '}';
+        return "AnimalDetailDto{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", species=" + species
+            + ", race='" + race + '\''
+            + ", birthDate=" + birthDate
+            + ", height=" + height
+            + ", weight=" + weight
+            + ", createdOn=" + createdOn
+            + '}';
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
  * Contains a list of all validations that failed when validating the piece of data in question.
  */
 public class ValidationException extends ErrorListException {
-  public ValidationException(String messageSummary, List<String> errors) {
-    super("Failed validations", messageSummary, errors);
-  }
+    public ValidationException(String messageSummary, List<String> errors) {
+        super("Failed validations", messageSummary, errors);
+    }
 }

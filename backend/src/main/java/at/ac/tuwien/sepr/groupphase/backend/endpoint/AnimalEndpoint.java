@@ -22,6 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -48,35 +56,21 @@ public class AnimalEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto create(@Valid @RequestBody CreateAnimalDto animalDto) {
+    public AnimalDetailDto create(@Valid @RequestBody CreateAnimalDto animalDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/ " + animalDto.getName());
         LOGGER.debug("Body of request:\n{}", animalDto);
-        try{
-            return animalService.create(animalDto);
-        }
-        catch(ValidationException e){
-            LOGGER.warn("POST - " + BASE_PATH + "/" + ": Could not validate the given parameters for creating new animal: [" + animalDto + "]!", e);
-            HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-            throw new ResponseStatusException(status, e.getMessage(), e);
-        }
+        return animalService.create(animalDto);
     }
 
     @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto update(@PathVariable UUID id, @Valid @RequestBody AnimalDetailDto animalDto) {
+    public AnimalDetailDto update(@PathVariable UUID id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", animalDto);
-        try{
-            animalDto.setId(id);
-            return animalService.update(animalDto);
-        }
-        catch(ValidationException e){
-            LOGGER.warn("PUT - " + BASE_PATH + "/" + ": Could not validate the given parameters for updating animal: [" + animalDto + "]!", e);
-            HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-            throw new ResponseStatusException(status, e.getMessage(), e);
-        }
+        animalDto.setId(id);
+        return animalService.update(animalDto);
     }
 
 }

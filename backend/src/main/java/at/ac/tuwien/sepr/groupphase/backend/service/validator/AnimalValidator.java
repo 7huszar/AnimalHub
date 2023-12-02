@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class AnimalValidator {
     }
 
     /**
-     * Validates simple attributes of Animal Entities before Creation or Updating
+     * Validates simple attributes of Animal Entities before Creation or Updating.
      *
      * @param animalDto animal
      * @throws ValidationException when at least one value cannot be used / validated
@@ -51,8 +50,7 @@ public class AnimalValidator {
 
         if (stringIsEmpty(animalDto.getName())) {
             validationErrors.add("No Name given");
-        }
-        else if(animalDto.getName().length() > 100) {
+        } else if (animalDto.getName().length() > 100) {
             validationErrors.add("Name is too long");
         }
 
@@ -60,17 +58,15 @@ public class AnimalValidator {
 
         if (stringIsEmpty(animalDto.getSpecies().toString())) {
             validationErrors.add("No Species selected");
-        }
-        else if(animalDto.getSpecies().toString().length() > 100) {
+        } else if (animalDto.getSpecies().toString().length() > 100) {
             validationErrors.add("Species name is too long");
         }
 
         // # Race
 
-        if (stringIsEmpty(animalDto.getRace().toString())) {
+        if (stringIsEmpty(animalDto.getRace())) {
             validationErrors.add("No Race selected");
-        }
-        else if(animalDto.getRace().toString().length() > 100) {
+        } else if (animalDto.getRace().length() > 100) {
             validationErrors.add("Race name is too long");
         }
 
@@ -78,8 +74,7 @@ public class AnimalValidator {
 
         if (!isValidDateOfBirth(animalDto.getBirthDate())) {
             validationErrors.add("Birth Date must not be in the future!");
-        }
-        else if(!animalDto.getBirthDate().isBefore(LocalDate.now().minusYears(50))){
+        } else if (!animalDto.getBirthDate().isBefore(LocalDate.now().minusYears(50))) {
             validationErrors.add("Animal cannot be older than 50 years!");
         }
 
@@ -104,7 +99,7 @@ public class AnimalValidator {
     // ### VALIDATION METHODS
 
     /**
-     * Validates new animal for creation
+     * Validates new animal for creation.
      *
      * @param animalDto animalDto
      * @throws ValidationException when at least one value cannot be used / validated
@@ -115,7 +110,7 @@ public class AnimalValidator {
     }
 
     /**
-     * Validates new animal for update
+     * Validates new animal for update.
      *
      * @param animalDto animalDto
      * @throws ValidationException when at least one value cannot be used / validated
@@ -126,7 +121,7 @@ public class AnimalValidator {
 
         // # id
 
-        if(stringIsEmpty(animalDto.getId().toString())){
+        if (stringIsEmpty(animalDto.getId().toString())) {
             validationErrors.add("No id given");
         }
 
@@ -136,7 +131,6 @@ public class AnimalValidator {
 
         validateAnimalDetails(animalDto);
     }
-
 
 
 }

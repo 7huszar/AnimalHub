@@ -2,10 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
@@ -35,7 +33,7 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.debug("Find all Animals");
         List<AnimalDetailDto> allAnimalDetailDtoList = Collections.emptyList();
 
-        for (Animal animal:animalRepository.findAll()
+        for (Animal animal : animalRepository.findAll()
         ) {
             allAnimalDetailDtoList.add(mapper.animalToAnimalDetailDto(animal));
         }
@@ -53,8 +51,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException{
-        LOGGER.debug("Update Animal with id: "+ animalDto.getId() + ", with following data:" + animalDto);
+    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException {
+        LOGGER.debug("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
         Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
@@ -63,8 +61,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto findById(UUID id){
-        LOGGER.debug("Get Animal with id: "+ id);
+    public AnimalDetailDto findById(UUID id) {
+        LOGGER.debug("Get Animal with id: " + id);
 
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
@@ -74,8 +72,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public void delete(UUID id){
-        LOGGER.debug("Delete Animal with id: "+ id);
+    public void delete(UUID id) {
+        LOGGER.debug("Delete Animal with id: " + id);
 
         var shelter = animalRepository.findById(id)
             .orElseThrow(

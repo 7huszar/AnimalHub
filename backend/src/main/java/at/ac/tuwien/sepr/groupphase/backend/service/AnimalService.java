@@ -2,11 +2,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Service for working with Animals.
@@ -14,14 +14,14 @@ import java.util.UUID;
 public interface AnimalService {
 
     /**
-     * Get all Animals from database
+     * Get all Animals from database.
      *
      * @return List of all Animals as AnimalDetailDto
      */
     List<AnimalDetailDto> findAll();
 
     /**
-     * Validate and then create a new animal in the persistent data storage with the given parameters
+     * Validate and then create a new animal in the persistent data storage with the given parameters.
      *
      * @param animalDto attributes to create new Animal
      * @return the created animal as AnimalDetailDto
