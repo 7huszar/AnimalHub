@@ -1,17 +1,19 @@
 <div class="container">
-  <div class="row-cols-4">
-  <div class="col">
-<i class="bi bi-globe-americas"></i>
-  </div>
-  <div class="col">
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    {{"LANG_SELECT.DROPDOWN" | translate}}
-  </button>
-  <ul class="dropdown-menu">
-    <li><option class="dropdown-item" (click)="setLang(lang)" *ngFor="let lang of getLangs()" [value]="lang" >{{formattedLang(lang)}}</option></li>
-  </ul>
-</div>
-  </div>
+  <div class="row align-items-center">
+    <div class="col-auto">
+      <i class="bi bi-globe-americas text-primary"></i>
+    </div>
+    <div class="col-auto">
+      <div class="dropdown">
+        <button class="btn btn-primary rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {{"LANG_SELECT.DROPDOWN" | translate}}
+        </button>
+        <ul class="dropdown-menu rounded-3 border-0">
+          <li *ngFor="let lang of getLangs()">
+            <a class="dropdown-item" (click)="setLang(lang)">{{formattedLang(lang)}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
