@@ -33,7 +33,6 @@ public class AnimalRepositoryTest implements TestData {
 
     @Test
     public void createNewAnimalWithSuccess() {
-
         Shelter shelter = Shelter.builder()
             .id(TEST_SHELTER_ID)
             .name(TEST_SHELTER_NAME)
@@ -45,7 +44,6 @@ public class AnimalRepositoryTest implements TestData {
         assertDoesNotThrow(() -> {
             shelterRepository.save(shelter);
         });
-
 
         Animal animal = Animal.builder()
             .id(TEST_ANIMAL_ID)
@@ -59,7 +57,6 @@ public class AnimalRepositoryTest implements TestData {
             .build();
 
         Animal returnAnimal = animalRepository.save(animal);
-
 
         assertAll(
             () -> assertEquals(1, animalRepository.findAll().size()),

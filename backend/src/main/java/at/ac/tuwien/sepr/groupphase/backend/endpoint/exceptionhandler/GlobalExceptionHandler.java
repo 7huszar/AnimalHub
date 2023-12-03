@@ -53,6 +53,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
+    // TODO doku
+
+    //    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    //    protected ResponseEntity<Object> handleMethodArgumentNotValidException(RuntimeException ex, WebRequest request) {
+    //        LOGGER.error(ex.getMessage());
+    //        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    //    }
+
 
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
