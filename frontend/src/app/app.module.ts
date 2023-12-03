@@ -17,6 +17,8 @@ import {httpInterceptorProviders} from './interceptors';
 import { LangSelectComponent } from './components/lang-select/lang-select.component';
 import { MemberProfileComponent } from './components/home/member-profile/member-profile.component';
 import { AdminPageComponent } from './components/admin-page/admin-page.component';
+import { RegisterComponent } from './components/register/register.component';
+import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -33,6 +35,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LangSelectComponent,
     MemberProfileComponent,
     AdminPageComponent,
+    RegisterComponent,
+    RegisterConfirmComponent,
   ],
   imports: [
     BrowserModule,

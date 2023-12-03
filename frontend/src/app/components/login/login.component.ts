@@ -3,7 +3,6 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
-import {jwtDecode} from "jwt-decode";
 
 @Component({
   selector: 'app-login',
@@ -37,8 +36,6 @@ export class LoginComponent implements OnInit {
     } else {
       console.log('Invalid input');
     }
-    console.log(this.authService.getUserRole());
-    console.log(jwtDecode(this.authService.getToken()));
   }
 
   /**
