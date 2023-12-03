@@ -14,5 +14,21 @@
 
   "HOME": {
     "ACCOUNT": "manage account"
+  },
+
+  "REGISTER": {
+    "REGISTER_TITLE": "Register",
+    "USERNAME_PLACEHOLDER": "E-mail Address",
+    "PWD_PLACEHOLDER": "Password",
+    "PWD_PLACEHOLDER_REPEAT": "Repeat password",
+    "LOGIN": "Already registered? Then login here!",
+    "REGISTER_BUTTON": "register",
+    "PWD_MISSING": "your password is required",
+    "PWD_REPEAT_MISSING": "please repeat the password",
+    "PWD_SHORT": "your password has to be at least 8 characters long",
+    "MAIL_MISSING": "your e-mail address is required",
+    "MAIL_INVALID": "invalid e-mail address",
+    "PWD_MISS_MATCH": "passwords don't match"
   }
+
 }

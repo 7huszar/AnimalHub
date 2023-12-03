@@ -42,3 +42,11 @@ $primary:       #64B5F6;
 .btn-primary {
   color: #ffffff;
 }
+
+.invalid {
+  border-color: $danger;
+}
+
+.valid {
+  border-color: $success;
+}

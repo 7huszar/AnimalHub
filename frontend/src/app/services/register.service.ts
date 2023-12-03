@@ -12,10 +12,12 @@ export class RegisterService {
   private http :HttpClient;
   private authBaseUri: string = this.globals.backendUri + '/register';
 
+
   constructor(handler :HttpBackend, private globals :Globals) {
     this.http = new HttpClient(handler);
   }
 
+  // for later e-mail verification
   verifyEmail(token :string) :Observable<any> {
     return this.http.get(this.authBaseUri, {
       headers: {'Authorization': 'Bearer ' + token}

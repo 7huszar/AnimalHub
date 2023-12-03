@@ -20,8 +20,9 @@ export class RegisterComponent implements OnInit{
 
   constructor(private formBuilder: UntypedFormBuilder, private router: Router, private service :RegisterService) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      username: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      password_repeat: ['', [Validators.required]]
     });
   }
 
@@ -30,10 +31,19 @@ export class RegisterComponent implements OnInit{
    */
   register() {
     this.submitted = true;
-    if (this.loginForm.valid) {
-     this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe();
+    if (this.loginForm.valid && this.pwdMatch()) {
+     this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
+       next :data => {
+        console.log("successfully registered", data);
+        this.router.navigate(['']);
+       },
+       error: error => {
+        console.error("failed to register", error);
+       }
+
+     });
     } else {
-      console.error("failed")
+      this.error = true;
     }
   }
 
@@ -51,6 +61,19 @@ export class RegisterComponent implements OnInit{
   }
 
   ngOnInit(): void {
+  }
+
+  validForm() :string {
+    return this.submitted ? 'is-valid' : '';
+  }
+
+  invalidForm() :string {
+    return this.submitted ? 'is-invalid' : '';
+  }
+
+  pwdMatch() :boolean {
+    console.log(this.loginForm.controls.password_repeat.value)
+    return this.loginForm.controls.password.value === this.loginForm.controls.password_repeat.value;
   }
 
 }
