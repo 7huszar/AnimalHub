@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit {
             break;
         }
       },
+      // TODO add real error message
       error: error => {
         console.log('Could not log in due to:');
         console.log(error);
@@ -86,5 +87,14 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  validForm() :string {
+    return this.submitted ? 'is-valid' : '';
+  }
+
+  invalidForm() :string {
+    return this.submitted ? 'is-invalid' : '';
+  }
+
 
 }
