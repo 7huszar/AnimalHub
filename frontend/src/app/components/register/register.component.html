@@ -37,22 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group mb-2">
-                            <input type="password" name="password" formControlName="password" class="form-control" id="password-repeat"
-                                   placeholder="{{'LOGIN.PWD_PLACEHOLDER' | translate}}">
-                            <div  class="error">
-                                <small class="form-text text-warning" >Your password
-                                    is
-                                    required!
-                                </small>
-                                <small class="form-text text-alert" >Your password
-                                    must be at least 8 characters long!
-                                </small>
-                            </div>
-                        </div>
-
-
-                        <button type="button" class="btn btn-primary mb-2">{{'LOGIN.LOGIN_BUTTON' | translate}}</button>
+                        <button (click)="register()" type="button" class="btn btn-primary mb-2">{{'LOGIN.LOGIN_BUTTON' | translate}}</button>
 
                     </form>
 

@@ -32,6 +32,8 @@ export class RegisterComponent implements OnInit{
     this.submitted = true;
     if (this.loginForm.valid) {
      this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe();
+    } else {
+      console.error("failed")
     }
   }
 

@@ -10,7 +10,7 @@ import {AuthRequest} from "../dtos/auth-request";
 export class RegisterService {
 
   private http :HttpClient;
-  private authBaseUri: string = this.globals.backendUri + '/authentication';
+  private authBaseUri: string = this.globals.backendUri + '/register';
 
   constructor(handler :HttpBackend, private globals :Globals) {
     this.http = new HttpClient(handler);
