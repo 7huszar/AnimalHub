@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.ManyToAny;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -56,7 +57,7 @@ public class Animal {
     private double weight;
 
     @ManyToOne
-    @JoinColumn(name = "shelter_id", nullable = false)
+    @JoinColumn(name = "shelter_id", nullable = true)
     private Shelter shelter;
 
     @Column(name = "created_on")
