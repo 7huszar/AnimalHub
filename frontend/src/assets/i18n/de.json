@@ -18,5 +18,12 @@
 
   "HOME": {
     "ACCOUNT": "Account verwalten"
-  }
+  },
+
+  "HEADER": {
+    "LOGOUT": "ausloggen"
+  },
+
+  "LOGO" : "Logo mit der Aufschrift AnimalHub"
+
 }

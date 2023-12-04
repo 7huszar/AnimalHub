@@ -19,5 +19,11 @@
 
   "HOME": {
     "ACCOUNT": "manage account"
-  }
+  },
+
+  "HEADER": {
+    "LOGOUT": "logout"
+  },
+
+  "LOGO" : "Logo with the writing AnimalHub"
 }
