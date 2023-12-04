@@ -1,11 +1,16 @@
 {
   "LOGIN": {
     "LOGIN_TITLE": "Login",
-    "USERNAME_PLACEHOLDER": "Username",
+    "USERNAME_PLACEHOLDER": "e-mail",
     "PWD_PLACEHOLDER": "Password",
     "LOGIN_BUTTON": "login",
     "FORGOT_PWD": "forgot password?",
-    "REGISTER": "register"
+    "REGISTER": "register",
+    "USER_NAME_MISSING": "e-mail required",
+    "MAIL_INVALID": "username should be a valid e-mail address",
+    "PWD_MISSING": "password required",
+    "PWD_SHORT": "password has to be at least 8 characters long"
+
   },
 
   "LANG_SELECT": {
