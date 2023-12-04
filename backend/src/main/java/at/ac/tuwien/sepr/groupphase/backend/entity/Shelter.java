@@ -5,8 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -36,6 +36,9 @@ public class Shelter {
 
     @Column(nullable = false, length = 200)
     private String name;
+
+    @OneToOne
+    private File profilePicture;
 
     @Column(nullable = false, length = 400)
     private String address;

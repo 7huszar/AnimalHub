@@ -21,15 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -46,6 +37,7 @@ public class AnimalEndpoint {
 
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get list of animals", security = @SecurityRequirement(name = "apiKey"))
     public List<AnimalDetailDto> findAll() {
         LOGGER.info("GET " + BASE_PATH);

@@ -61,6 +61,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     //        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     //    }
 
+    // TODO handle IOException.
+
 
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
