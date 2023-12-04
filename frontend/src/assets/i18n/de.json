@@ -33,5 +33,11 @@
     "MAIL_MISSING": "Eine E-Mail Addresse muss nagegeben werden",
     "MAIL_INVALID": "Ungültige E-Mail Addresse",
     "PWD_MISS_MATCH": "Passwörter sind nicht gleich"
-  }
+  },
+
+  "HEADER": {
+    "LOGOUT": "ausloggen"
+  },
+
+  "LOGO" : "Logo mit der Aufschrift AnimalHub"
 }

@@ -11,7 +11,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { LangSelectComponent } from './components/lang-select/lang-select.component';
@@ -19,6 +18,7 @@ import { MemberProfileComponent } from './components/home/member-profile/member-
 import { AdminPageComponent } from './components/admin-page/admin-page.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
+import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -31,10 +31,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    MessageComponent,
     LangSelectComponent,
     MemberProfileComponent,
     AdminPageComponent,
+    AnimalCardComponent,
     RegisterComponent,
     RegisterConfirmComponent,
   ],

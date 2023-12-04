@@ -34,6 +34,11 @@
     "MAIL_MISSING": "your e-mail address is required",
     "MAIL_INVALID": "invalid e-mail address",
     "PWD_MISS_MATCH": "passwords don't match"
-  }
+  },
 
+  "HEADER": {
+    "LOGOUT": "logout"
+  },
+
+  "LOGO" : "Logo with the writing AnimalHub"
 }
