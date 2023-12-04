@@ -16,6 +16,7 @@ import {httpInterceptorProviders} from './interceptors';
 import { LangSelectComponent } from './components/lang-select/lang-select.component';
 import { MemberProfileComponent } from './components/home/member-profile/member-profile.component';
 import { AdminPageComponent } from './components/admin-page/admin-page.component';
+import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -31,6 +32,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     LangSelectComponent,
     MemberProfileComponent,
     AdminPageComponent,
+    AnimalCardComponent,
   ],
   imports: [
     BrowserModule,
