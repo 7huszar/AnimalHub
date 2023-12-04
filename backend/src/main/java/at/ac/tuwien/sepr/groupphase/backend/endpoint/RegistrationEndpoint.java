@@ -28,10 +28,4 @@ public class RegistrationEndpoint {
         LOGGER.info("POST " + userLoginDto.getEmail());
         service.register(userLoginDto);
     }
-
-    @PermitAll
-    @GetMapping
-    public void verify() {
-
-    }
 }
