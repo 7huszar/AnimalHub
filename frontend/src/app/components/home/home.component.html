@@ -1,4 +1,19 @@
-<app-header></app-header>
 <div class="container">
   <button *ngIf="this.isMember()" type="button" class="btn btn-primary mb-2">{{"HOME.ACCOUNT" | translate}}</button>
+</div>
+
+<div class="container mt-xxl-5">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <app-animal-card></app-animal-card>
+      </div>
+      <div class="col">
+        <app-animal-card></app-animal-card>
+      </div>
+      <div class="col">
+        <app-animal-card></app-animal-card>
+      </div>
+    </div>
+  </div>
 </div>
