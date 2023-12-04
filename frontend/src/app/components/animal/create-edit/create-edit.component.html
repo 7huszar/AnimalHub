@@ -1,0 +1,182 @@
+
+<h3 class="display-3">{{heading}}</h3>
+
+
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+  <div class="row">
+    <!-- Start name and date of birth row -->
+    <div class="mb-2 col-lg-6">
+      <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+      <div class="row">
+        <label for="animalName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Name
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <input type="text"
+                 id="animalName"
+                 name="animalName"
+                 placeholder="Animal name"
+                 class="form-control"
+                 [class]="dynamicCssClassesForInput(animalNameModel)"
+                 [(ngModel)]="animal.name"
+                 maxlength="100"
+                 #animalNameModel="ngModel"
+                 required
+          >
+          <div class="invalid-feedback">
+            <!-- This is shown, when the form validation deems the name input to be invalid -->
+            Name is required
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="animalBirthDate" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Date of Birth
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
+               The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
+            -->
+          <input type="date"
+                 id="animalBirthDate"
+                 name="animalBirthDate"
+                 pattern="\d{4}-\d{2}-\d{2}"
+                 placeholder="yyyy-mm-dd"
+                 class="form-control"
+
+                 max="{{today}}"
+
+                 [class]="dynamicCssClassesForInput(AnimalBirthDateModel)"
+                 [(ngModel)]="birthDate"
+                 #AnimalBirthDateModel="ngModel"
+                 required
+          >
+          <div class="invalid-feedback">
+            Date of birth is required
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End name and date of birth row -->
+  </div>
+
+  <div class="row">
+    <!-- Start species row -->
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="animalSpecies" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Species
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <select class="form-select"
+                  id="animalSpecies"
+                  name="animalSpecies"
+                  [(ngModel)]="animal.species"
+                  required
+          >
+            <option value="DOG">Dog</option>
+            <option value="CAT">Cat</option>
+            <option value="BIRD">Bird</option>
+            <option value="RODENT">Rodent</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- End species row -->
+  </div>
+
+  <div class="row">
+    <label for="animalRace" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+      Race
+    </label>
+    <div class="col-md-10 col-lg-8"
+    >
+      <input type="text"
+             id="animalRace"
+             name="animalRace"
+             placeholder="Race"
+             class="form-control"
+             [class]="dynamicCssClassesForInput(animalRaceModel)"
+             [(ngModel)]="animal.race"
+             maxlength="100"
+             #animalRaceModel="ngModel"
+             required
+      >
+      <div class="invalid-feedback">
+        <!-- This is shown, when the form validation deems the name input to be invalid -->
+        Race is required
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Start height and weight row -->
+    <div class="mb-2 col-lg-6">
+      <div class="row"><label for="animalHeight" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Height [m]
+      </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <input type="number" class="form-control"
+                 id="animalHeight"
+                 name="animalHeight"
+                 onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))"
+                 step="0.01"
+                 [(ngModel)]="height"
+                 required
+          >
+        </div>
+        <!-- \TEMPLATE EXLCUDE BEGIN\ -->
+        <ng-template #heightDetail>
+          <span class="col-form-label col-md-10 col-lg-8">{{animal.height}}</span>
+        </ng-template>
+        <!-- \TEMPLATE EXLCUDE END\ -->
+      </div>
+    </div>
+    <div class="mb-2 col-lg-6">
+      <div class="row"><label for="animalWeight" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Weight [kg]
+      </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <input type="number" class="form-control"
+                 id="animalWeight"
+                 name="animalWeight"
+                 step="0.1"
+                 onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))"
+                 [(ngModel)]="weight"
+                 required
+          >
+        </div>
+        <!-- \TEMPLATE EXLCUDE BEGIN\ -->
+        <ng-template #weightDetail>
+          <span class="col-form-label col-md-10 col-lg-8">{{animal.weight}}</span>
+        </ng-template>
+        <!-- \TEMPLATE EXLCUDE END\ -->
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row">
+    <button type="button"
+            class="btn btn-danger"
+            *ngIf="!modeIsCreate"
+            (click)="onDelete()"
+    >
+      <i class="bi bi-trash"></i>
+      Delete
+    </button>
+    <span class="flex-grow-1"></span>
+    <button type="submit"
+            class="btn btn-primary"
+            [disabled]="!form.valid"
+    >
+      {{submitButtonText}}
+    </button>
+  </div>
+</form>

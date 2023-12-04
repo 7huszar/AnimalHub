@@ -1,0 +1,59 @@
+package at.ac.tuwien.sepr.groupphase.backend.endpoint;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import at.ac.tuwien.sepr.groupphase.backend.entity.File;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.files.FileRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.FileContentStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+public class FileEndpoint {
+
+    @Autowired private FileRepository filesRepo;
+    @Autowired private FileContentStore contentStore;
+
+    @RequestMapping(value="/files/{fileId}", method = RequestMethod.PUT)
+    public ResponseEntity<?> setContent(@PathVariable("fileId") Long id, @RequestParam("file") MultipartFile file)
+        throws IOException {
+
+        Optional<File> f = filesRepo.findById(id);
+        if (f.isPresent()) {
+            f.get().setContentMimeType(file.getContentType());
+
+            contentStore.setContent(f.get(), file.getInputStream());
+
+            // save updated content-related info
+            filesRepo.save(f.get());
+
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        }
+        throw new IOException("File could not be saved.");
+    }
+
+    @RequestMapping(value="/files/{fileId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getContent(@PathVariable("fileId") Long id) throws IOException{
+
+        Optional<File> f = filesRepo.findById(id);
+        if (f.isPresent()) {
+            InputStreamResource inputStreamResource = new InputStreamResource(contentStore.getContent(f.get()));
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentLength(f.get().getContentLength());
+            headers.set("Content-Type", f.get().getContentMimeType());
+            return new ResponseEntity<Object>(inputStreamResource, headers, HttpStatus.OK);
+        }
+        throw new IOException("File could not be retrieved.");
+    }
+}
