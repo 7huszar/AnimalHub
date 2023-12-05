@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 
+import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public interface TestData {
     // ### ANIMAL TestData
     UUID TEST_ANIMAL_ID = UUID.randomUUID();
     String TEST_ANIMAL_NAME = "Herbert";
+
     Species TEST_ANIMAL_SPECIES = Species.CAT;
     String TEST_ANIMAL_RACE = "Angoran";
     LocalDate TEST_ANIMAL_BIRTH_DATE =
@@ -57,6 +60,12 @@ public interface TestData {
         .animals(TEST_SHELTER_ANIMALS)
         .build();
 
+    // ### FILE TestData
+    String TEST_IMAGE_PATH = "/Users/matthiasbaumschlager/Documents/My Files/02 Projects/tu-sepr/group assignment/23ws-se-pr-qse-12/backend/src/test/java/at/ac/tuwien/sepr/groupphase/backend/basetest/test.png";
+    String TEST_IMAGE_NAME = "test.png";
+    String TEST_IMAGE_SUMMARY = "just a normal png image";
+
+    File TEST_FILE = new File(TEST_IMAGE_PATH);
 
     String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {

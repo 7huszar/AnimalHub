@@ -50,10 +50,10 @@ public class AnimalDetailDto {
             + ", name='" + name + '\''
             + ", species=" + species
             + ", race='" + race + '\''
-            + ", birthDate=" + birthDate
-            + ", height=" + height
-            + ", weight=" + weight
-            + ", createdOn=" + createdOn
+            + ", birthDate=" + birthDate + '\''
+            + ", height=" + height + '\''
+            + ", weight=" + weight + '\''
+            + ", createdOn=" + createdOn + '\''
             + '}';
     }
 }
