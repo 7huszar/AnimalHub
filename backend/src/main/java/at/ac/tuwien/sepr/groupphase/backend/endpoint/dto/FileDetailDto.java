@@ -1,0 +1,42 @@
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.core.io.InputStreamResource;
+
+import java.util.Date;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class FileDetailDto {
+
+    private Long id;
+
+    private String name;
+
+    private String summary;
+
+    private Date created;
+
+    private String contentMimeType;
+
+    private long contentLength;
+
+    private InputStreamResource file;
+
+    @Override
+    public String toString() {
+        return "FileDetailDto{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", summary='" + summary + '\''
+            + ", created='" + created + '\''
+            + ", contentMimeType='" + contentMimeType + '\''
+            + ", file='" + file + '\''
+            + '}';
+    }
+}
