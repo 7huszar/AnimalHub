@@ -10,3 +10,18 @@ body {
     padding-top: 0;
   }
 }
+
+.center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bi-arrow-left-square-fill {
+  font-size: 5rem;
+}
+
+.bi-arrow-right-square-fill {
+  font-size: 5rem;
+}

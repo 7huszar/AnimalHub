@@ -2,20 +2,26 @@
 
 <div class="container">
 
-  <button *ngIf="this.isMember()" type="button" class="btn btn-primary mb-2">{{"HOME.ACCOUNT" | translate}}</button>
+  <button type="button" class="btn btn-primary mb-2">{{"HOME.ACCOUNT" | translate}}</button>
 </div>
 
 <div class="container mt-xxl-5">
   <div class="container">
     <div class="row">
-      <div class="col">
-        <app-animal-card></app-animal-card>
+      <div class="col center-column">
+        <i class="bi bi-arrow-left-square-fill text-primary my_bigger"></i>
       </div>
       <div class="col">
-        <app-animal-card></app-animal-card>
+        <app-animal-card [name]="'Schnappi das kleine Krokodil'" ></app-animal-card>
       </div>
       <div class="col">
-        <app-animal-card></app-animal-card>
+        <app-animal-card [name]="'Schnappi das kleine Krokodil'"></app-animal-card>
+      </div>
+      <div class="col">
+        <app-animal-card [name]="'Schnappi das kleine Krokodil'"></app-animal-card>
+      </div>
+      <div class="col center-column">
+        <i class="bi bi-arrow-right-square-fill text-primary"></i>
       </div>
     </div>
   </div>

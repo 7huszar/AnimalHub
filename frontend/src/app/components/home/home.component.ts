@@ -8,16 +8,13 @@ import {AuthService} from '../../services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
-  private userType :string;
-
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
-      this.userType = this.authService.getUserRole();
   }
 
-  isMember() :boolean {
-    return this.userType === 'MEMBER';
+  loadCard() {
+
   }
 
 }
