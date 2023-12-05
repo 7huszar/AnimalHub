@@ -5,7 +5,12 @@
         <img  src="/assets/img/logo.png" alt="{{'LOGO' | translate}}">
       </a>
     </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li *ngIf="authService.isLoggedIn()" class="nav-item">
+          <a (click)="logout()" class="nav-link" routerLink="">{{'HEADER.LOGOUT' | translate}}</a>
+        </li>
+      </ul>
+    </div>
   </div>
-
-  <a *ngIf="authService.isLoggedIn()" (click)="logout()" class="text-secondary" routerLink="">{{'HEADER.LOGOUT' | translate}}</a>
 </nav>
