@@ -5,6 +5,9 @@ import {AnimalService} from "../../../services/animal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from '@angular/forms';
 import {Observable} from "rxjs";
+import {FileService} from "../../../services/file.service";
+import {CreateFile} from "../../../dtos/file";
+import {forEach} from "lodash";
 
 export enum AnimalCreateEditMode {
   create,
@@ -26,7 +29,7 @@ export class CreateEditComponent implements OnInit {
     birthDate: new Date()
   };
 
-
+  private image: File = null;
   private heightSet: boolean = false;
   private weightSet: boolean = false;
   private birthDateSet: boolean = false;
@@ -69,7 +72,8 @@ export class CreateEditComponent implements OnInit {
 
 
   constructor(
-    private service: AnimalService,
+    private animalService: AnimalService,
+    private fileService: FileService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -110,7 +114,7 @@ export class CreateEditComponent implements OnInit {
         this.heightSet = true;
 
         this.route.params.subscribe(params => {
-          this.service.findById(this.route.snapshot.paramMap.get('id')!).subscribe({
+          this.animalService.findById(this.route.snapshot.paramMap.get('id')!).subscribe({
             next: (data: Animal) => {
               if (data) {
                 this.animal.id = data.id;
@@ -143,28 +147,29 @@ export class CreateEditComponent implements OnInit {
       let observable: Observable<Animal>;
       switch (this.mode) {
         case AnimalCreateEditMode.create:
-          observable = this.service.create(this.animal);
+          this.uploadImage();
+          // observable = this.animalService.create(this.animal);
           break;
         case AnimalCreateEditMode.edit:
-          observable = this.service.update(this.animal);
+          observable = this.animalService.update(this.animal);
           break;
         default:
           console.error('Unknown AnimalCreateEditMode', this.mode);
           return;
       }
-      observable.subscribe({
-        next: data => {
-          this.router.navigate(['/animals']);
-        },
-        error: error => {
-          console.error('Error creating animal', error);
-        }
-      });
+      // observable.subscribe({
+      //   next: data => {
+      //     this.router.navigate(['/animals']);
+      //   },
+      //   error: error => {
+      //     console.error('Error creating animal', error);
+      //   }
+      // });
     }
   }
 
   public onDelete() {
-    this.service.delete(this.route.snapshot.paramMap.get('id')!).subscribe({
+    this.animalService.delete(this.route.snapshot.paramMap.get('id')!).subscribe({
         next: data => {
           this.router.navigate(['/animals']);
         }, error: error => {
@@ -174,5 +179,16 @@ export class CreateEditComponent implements OnInit {
     );
   }
 
+  onImageSelected(event: any): void {
+    if (event.target.files[0].size > 52428800) {
+      alert("File is too big!");
+    } else {
+      this.image = event.target.files[0];
+    }
+  }
 
+  uploadImage() {
+    const createFile: CreateFile = {name: this.image.name, summary: "", file: this.image}
+    this.fileService.create(createFile);
+  }
 }

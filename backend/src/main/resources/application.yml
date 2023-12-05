@@ -24,6 +24,12 @@ spring:
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. To learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
+    # make sure that users can upload larger files
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
 
 security:
   auth:
