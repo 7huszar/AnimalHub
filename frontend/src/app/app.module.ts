@@ -19,6 +19,7 @@ import { AdminPageComponent } from './components/admin-page/admin-page.component
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
 import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
+import { AnimalHomepageComponent } from './components/animal-homepage/animal-homepage.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -37,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnimalCardComponent,
     RegisterComponent,
     RegisterConfirmComponent,
+    AnimalHomepageComponent,
   ],
   imports: [
     BrowserModule,

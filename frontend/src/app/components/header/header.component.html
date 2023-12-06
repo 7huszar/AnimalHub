@@ -1,6 +1,16 @@
-<nav class="bg-primary fixed-top">
-  <a routerLink="/home">
-    <img  src="/assets/img/logo.png" alt="{{'LOGO' | translate}}">
-  </a>
-  <a (click)="logout()" class="text-secondary" routerLink="">{{'HEADER.LOGOUT' | translate}}</a>
+<nav class="bg-primary navbar-fixed-top navbar navbar-expand-md">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <a routerLink="/home">
+        <img  src="/assets/img/logo.png" alt="{{'LOGO' | translate}}">
+      </a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li *ngIf="authService.isLoggedIn()" class="nav-item">
+          <a (click)="logout()" class="nav-link" routerLink="">{{'HEADER.LOGOUT' | translate}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
