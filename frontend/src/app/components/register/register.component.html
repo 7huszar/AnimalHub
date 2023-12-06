@@ -1,0 +1,86 @@
+<div class="custom-head position-fixed top-0 end-0">
+  <img class="logo position-absolute top-50 start-50 translate-middle" src="/assets/img/logo.png" alt="img">
+</div>
+
+<div class="left-visual">
+  <img class="start-pic" src="/assets/img/gratisography-cool-cat.png" alt="img">
+</div>
+
+
+<div class="my-tmp">
+  <div class="row">
+    <div class="col-md-6">
+      <span class="anchor" id="formLogin"></span>
+
+      <div>
+        <div>
+          <h4 class="mb-2">{{'REGISTER.REGISTER_TITLE' | translate}}</h4>
+        </div>
+
+        <div>
+          <form class="form" [formGroup]="loginForm" (ngSubmit)="register()">
+
+            <div class="form-group mb-2">
+              <input type="text" name="username" formControlName="username" class="form-control"
+                     [ngClass]="loginForm.controls.username.valid ? validForm() : invalidForm()" id="inputUsername"
+                     aria-describedby="usernameHelp" placeholder="{{'REGISTER.USERNAME_PLACEHOLDER' | translate}}">
+              <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.required">
+                  {{'REGISTER.MAIL_MISSING' | translate}}
+                </small>
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email">
+                  {{'REGISTER.MAIL_MISSING' | translate}}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group mb-2">
+              <input type="password" name="password" formControlName="password" class="form-control"
+                     [ngClass]="loginForm.controls.password.valid ? validForm() : invalidForm()" id="password"
+                     placeholder="{{'REGISTER.PWD_PLACEHOLDER' | translate}}">
+              <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
+                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.required">
+                  {{'REGISTER.PWD_MISSING' | translate}}
+                </small>
+                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.minlength">
+                  {{'REGISTER.PWD_SHORT' | translate}}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group mb-2">
+              <input type="password" name="password_repeat" formControlName="password_repeat" class="form-control"
+                     [ngClass]="loginForm.controls.password_repeat.valid && pwdMatch() ? validForm() : invalidForm()" id="password_repeat"
+                     placeholder="{{'REGISTER.PWD_PLACEHOLDER_REPEAT' | translate}}">
+              <div *ngIf="submitted && loginForm.controls.password_repeat.errors" class="error">
+                <small class="form-text text-danger" *ngIf="loginForm.controls.password_repeat.errors.required">
+                  {{'REGISTER.PWD_REPEAT_MISSING' | translate}}
+                </small>
+              </div>
+              <div *ngIf="submitted && loginForm.controls.password_repeat.valid && !pwdMatch()" class="error">
+                <small class="form-text text-danger">
+                  {{'REGISTER.PWD_MISS_MATCH' | translate}}
+                </small>
+              </div>
+            </div>
+
+            <button type="button" (click)="register()" class="btn btn-primary mb-2">
+              {{'REGISTER.REGISTER_BUTTON' | translate}}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <a class="link-opacity-100" routerLink="">{{'REGISTER.LOGIN' | translate}}</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="position-absolute end-0 bottom-0 mb-4 me-4">
+  <app-lang-select></app-lang-select>
+</div>

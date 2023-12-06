@@ -29,4 +29,20 @@ public class JwtTokenizer {
             .compact();
         return securityProperties.getAuthTokenPrefix() + token;
     }
+
+    /*
+    public String getActivationToken(String user) {
+        byte[] signingKey = securityProperties.getJwtSecret().getBytes();
+        String token = Jwts.builder()
+            .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
+            .setHeaderParam("typ", securityProperties.getJwtType())
+            .setIssuer(securityProperties.getJwtIssuer())
+            .setAudience(securityProperties.getJwtAudience())
+            .setSubject("verification")
+            .claim("email", user)
+            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
+            .compact();
+        return token;
+    }
+     */
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
@@ -53,16 +54,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    // TODO doku
-
-    //    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    //    protected ResponseEntity<Object> handleMethodArgumentNotValidException(RuntimeException ex, WebRequest request) {
-    //        LOGGER.error(ex.getMessage());
-    //        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-    //    }
+    /**
+     * Handles NotAuthorizedException thrown in the REST Controller.
+     *
+     * @param ex RuntimeException cached from REST Controller
+     * @param request the initial {@link WebRequest}
+     * @return {@link ResponseEntity} with HttpStatus.UNAUTHORIZED
+     */
+    @ExceptionHandler(value = {NotAuthorizedException.class})
+    protected ResponseEntity<Object> handleNotAuthorizedException(RuntimeException ex, WebRequest request) {
+        LOGGER.error(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
 
     // TODO handle IOException.
-
 
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception

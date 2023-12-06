@@ -1,11 +1,19 @@
-<div class="jumbotron mt-5">
-  <h1 class="display-4">Home</h1>
-  <hr class="my-4">
-  <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login" role="button">Login</a>
-  <div *ngIf="authService.isLoggedIn()">
+<div class="container">
+  <button *ngIf="this.isMember()" type="button" class="btn btn-primary mb-2">{{"HOME.ACCOUNT" | translate}}</button>
+</div>
+
+<div class="container mt-xxl-5">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <app-animal-card></app-animal-card>
+      </div>
+      <div class="col">
+        <app-animal-card></app-animal-card>
+      </div>
+      <div class="col">
+        <app-animal-card></app-animal-card>
+      </div>
+    </div>
   </div>
-  <a class="btn btn-primary btn-lg" routerLink="/login" role="button">Login</a>
-  <br>
-  <br>
-  <a class="btn btn-primary btn-lg" routerLink="/animal/create" role="button">Create Animal</a>
 </div>

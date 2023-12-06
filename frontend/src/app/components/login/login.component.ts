@@ -3,7 +3,10 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
-
+import {ToastrService} from "ngx-toastr";
+import {HttpStatusCode} from "@angular/common/http";
+import {TranslateService} from "@ngx-translate/core";
+import {NotifierService} from "../../services/notifier.service";
 
 @Component({
   selector: 'app-login',
@@ -17,11 +20,18 @@ export class LoginComponent implements OnInit {
   submitted = false;
   // Error flag
   error = false;
-  errorMessage = '';
+  failedLogin :boolean = false;
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private notification :ToastrService,
+    private translator :TranslateService,
+    private notifier :NotifierService
+   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
@@ -49,17 +59,36 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         console.log('Successfully logged in user: ' + authRequest.email);
-        this.router.navigate(['']);
+        switch (this.authService.getUserRole()) {
+          case 'ADMIN':
+            this.router.navigate(['/admin']);
+            break;
+          case 'MEMBER':
+          case 'USER':
+            this.router.navigate(['/home']);
+            break;
+          default:
+            this.router.navigate(['']);
+            break;
+        }
       },
       error: error => {
-        console.log('Could not log in due to:');
-        console.log(error);
-        this.error = true;
-        if (typeof error.error === 'object') {
-          this.errorMessage = error.error.error;
+        console.error('Failed to log in:', error);
+        let title: string;
+        this.translator.get('LOGIN.LOGIN_FAILED').subscribe((translation: string) => {
+          title = translation;
+        });
+        // status == 401 / Unauthorized - wrong login credentials
+         if (error.status === HttpStatusCode.Unauthorized) {
+          this.translator.get('LOGIN.BAD_CREDENTIALS').subscribe((message: string) => {
+            this.notification.error(message, title);
+          });
+          this.failedLogin = true;
         } else {
-          this.errorMessage = error.error;
-        }
+           // standard errors, we do not anticpate
+           this.notifier.notifyError(error, title);
+         }
+        this.error = true;
       }
     });
   }
@@ -73,5 +102,14 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  validForm() :string {
+    return this.submitted ? 'is-valid' : '';
+  }
+
+  invalidForm() :string {
+    return this.submitted ? 'is-invalid' : '';
+  }
+
 
 }

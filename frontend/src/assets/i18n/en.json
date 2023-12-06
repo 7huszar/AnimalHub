@@ -1,0 +1,50 @@
+{
+  "LOGIN": {
+    "LOGIN_TITLE": "Login",
+    "USERNAME_PLACEHOLDER": "e-mail",
+    "PWD_PLACEHOLDER": "Password",
+    "LOGIN_BUTTON": "login",
+    "FORGOT_PWD": "forgot password?",
+    "REGISTER": "register",
+    "USER_NAME_MISSING": "e-mail required",
+    "MAIL_INVALID": "username should be a valid e-mail address",
+    "PWD_MISSING": "password required",
+    "PWD_SHORT": "password has to be at least 8 characters long",
+    "BAD_CREDENTIALS": "Username or password incorrect",
+    "LOGIN_FAILED": "Failed to login"
+  },
+
+  "LANG_SELECT": {
+    "DROPDOWN": "Language"
+  },
+
+  "HOME": {
+    "ACCOUNT": "manage account"
+  },
+
+  "REGISTER": {
+    "REGISTER_TITLE": "Register",
+    "USERNAME_PLACEHOLDER": "E-mail Address",
+    "PWD_PLACEHOLDER": "Password",
+    "PWD_PLACEHOLDER_REPEAT": "Repeat password",
+    "LOGIN": "Already registered? Then login here!",
+    "REGISTER_BUTTON": "register",
+    "PWD_MISSING": "your password is required",
+    "PWD_REPEAT_MISSING": "please repeat the password",
+    "PWD_SHORT": "your password has to be at least 8 characters long",
+    "MAIL_MISSING": "your e-mail address is required",
+    "MAIL_INVALID": "invalid e-mail address",
+    "PWD_MISS_MATCH": "passwords don't match"
+  },
+
+  "HEADER": {
+    "LOGOUT": "logout"
+  },
+
+  "NOTIFIER": {
+    "CONNECTION_FAILED": "Connection error",
+    "INTERNAL_SERVER_ERROR": "internal server error - we apologize"
+  },
+
+  "LOGO" : "Logo with the writing AnimalHub"
+}

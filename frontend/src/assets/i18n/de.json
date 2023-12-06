@@ -1,0 +1,50 @@
+{
+  "LOGIN": {
+    "LOGIN_TITLE": "Anmelden",
+    "USERNAME_PLACEHOLDER": "E-Mail",
+    "PWD_PLACEHOLDER": "Passwort",
+    "LOGIN_BUTTON": "anmelden",
+    "FORGOT_PWD": "Passwort vergessen?",
+    "REGISTER": "registrieren",
+    "USER_NAME_MISSING": "Bitte E-Mail Addresse angeben",
+    "MAIL_INVALID": "Der Benutzername sollte eine korrekte E-Mail Addresse sein",
+    "PWD_MISSING": "Bitte Passwort angeben",
+    "PWD_SHORT": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "BAD_CREDENTIALS": "Benutzername oder Passwort falsch",
+    "LOGIN_FAILED": "Anmeldung fehlgeschlagen"
+  },
+
+  "LANG_SELECT": {
+    "DROPDOWN": "Sprache"
+  },
+
+  "HOME": {
+    "ACCOUNT": "Account verwalten"
+  },
+
+  "REGISTER": {
+    "REGISTER_TITLE": "Registrieren",
+    "USERNAME_PLACEHOLDER": "E-mail Addresse",
+    "PWD_PLACEHOLDER": "Passwort",
+    "PWD_PLACEHOLDER_REPEAT": "Passwort wiederholen",
+    "LOGIN": "Bereits registriert? Dann melde dich an!",
+    "REGISTER_BUTTON": "registrieren",
+    "PWD_MISSING": "Ein Passwort muss angegeben werden",
+    "PWD_SHORT": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "PWD_REPEAT_MISSING": "Bitte wiederholen Sie das Passwort",
+    "MAIL_MISSING": "Eine E-Mail Addresse muss nagegeben werden",
+    "MAIL_INVALID": "Ungültige E-Mail Addresse",
+    "PWD_MISS_MATCH": "Passwörter sind nicht gleich"
+  },
+
+  "HEADER": {
+    "LOGOUT": "ausloggen"
+  },
+
+  "NOTIFIER": {
+    "CONNECTION_FAILED": "Verbindungsfehler",
+    "INTERNAL_SERVER_ERROR": "Interne Fehler in unserem Server - Entschuldigung"
+  },
+
+  "LOGO" : "Logo mit der Aufschrift AnimalHub"
+}

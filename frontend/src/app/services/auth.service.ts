@@ -33,7 +33,7 @@ export class AuthService {
    * Check if a valid JWT token is saved in the localStorage
    */
   isLoggedIn() {
-    return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
+    return !!this.getToken() && this.getUserRole() != 'UNDEFINED' && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
   }
 
   logoutUser() {
@@ -53,12 +53,11 @@ export class AuthService {
       const decoded: any = jwtDecode(this.getToken());
       const authInfo: string[] = decoded.rol;
       if (authInfo.includes('ADMIN_ROLE')) {
-        return 'ADMIN_ROLE';
+        return 'ADMIN';
       } else if (authInfo.includes('MEMBER_ROLE')) {
-        return 'MEMBER_ROLE';
-      }
-      else if (authInfo.includes('USER_ROLE')) {
-        return 'USER_ROLE';
+        return 'MEMBER';
+      } else if (authInfo.includes('USER_ROLE')) {
+        return 'USER';
       }
     }
     return 'UNDEFINED';

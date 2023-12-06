@@ -43,6 +43,8 @@ security:
     audience: secure-app
     # 12 hours in milliseconds
     expiration-time: 43200000
+    # 10 minutes
+    verification-expiration-time': 600000
 
 management:
   server:
