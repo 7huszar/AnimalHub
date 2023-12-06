@@ -17,6 +17,9 @@ import org.springframework.content.commons.annotations.ContentLength;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
+
+import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Getter
@@ -27,14 +30,15 @@ import java.util.Date;
 @Table(name = "FILE")
 public class File {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = UUID)
+    private UUID id;
+
     @Column(length = 200)
     private String name;
+
     @Column(length = 400)
     private String summary;
 
-    @Column(name = "created_on")
     @CreationTimestamp
     private Instant created;
 

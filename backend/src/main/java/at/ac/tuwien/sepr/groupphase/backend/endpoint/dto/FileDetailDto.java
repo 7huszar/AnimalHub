@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.core.io.InputStreamResource;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class FileDetailDto {
 
-    private Long id;
+    private UUID id;
 
     private String name;
 

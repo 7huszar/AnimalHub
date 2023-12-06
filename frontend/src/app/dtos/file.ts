@@ -4,7 +4,8 @@ import {Shelter} from "./shelter";
 /**
  * Interface for creating new Files
  */
-export interface CreateFile {
+export interface CreateAnimalFile {
+  animalId: string,
   name: string,
   summary?: string,
   file: File

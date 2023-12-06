@@ -6,8 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from '@angular/forms';
 import {Observable} from "rxjs";
 import {FileService} from "../../../services/file.service";
-import {CreateFile} from "../../../dtos/file";
-import {forEach} from "lodash";
+import {CreateAnimalFile} from "../../../dtos/file";
 
 export enum AnimalCreateEditMode {
   create,
@@ -33,6 +32,7 @@ export class CreateEditComponent implements OnInit {
   private heightSet: boolean = false;
   private weightSet: boolean = false;
   private birthDateSet: boolean = false;
+  private profilePictureChanged: boolean = false;
 
   today: String = new Date().toISOString().slice(0, 10);
 
@@ -147,11 +147,19 @@ export class CreateEditComponent implements OnInit {
       let observable: Observable<Animal>;
       switch (this.mode) {
         case AnimalCreateEditMode.create:
-          this.uploadImage();
-          // observable = this.animalService.create(this.animal);
+          this.animalService.create(this.animal).subscribe({
+            next: data => {
+              this.uploadImage(data.id);
+              this.router.navigate(['/home']);
+            }
+          });
+
           break;
         case AnimalCreateEditMode.edit:
-          observable = this.animalService.update(this.animal);
+          if(this.profilePictureChanged){
+            // delete old picture from database
+          }
+          // this.animalService.update(this.animal);
           break;
         default:
           console.error('Unknown AnimalCreateEditMode', this.mode);
@@ -171,7 +179,7 @@ export class CreateEditComponent implements OnInit {
   public onDelete() {
     this.animalService.delete(this.route.snapshot.paramMap.get('id')!).subscribe({
         next: data => {
-          this.router.navigate(['/animals']);
+          this.router.navigate(['/home']);
         }, error: error => {
           console.error('Error deleting animal', error);
         }
@@ -184,11 +192,12 @@ export class CreateEditComponent implements OnInit {
       alert("File is too big!");
     } else {
       this.image = event.target.files[0];
+      this.profilePictureChanged = true;
     }
   }
 
-  uploadImage() {
-    const createFile: CreateFile = {name: this.image.name, summary: "", file: this.image}
+  uploadImage(id: string) {
+    const createFile: CreateAnimalFile = {name: this.image.name, summary: "", file: this.image, animalId: id}
     this.fileService.create(createFile);
   }
 }

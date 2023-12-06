@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.files.FileRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileContentStore;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +32,10 @@ public class FileServiceImpl implements FileService {
     private final FileValidator validator;
     private final FileMapper mapper;
 
+    private final AnimalRepository animalRepository;
+
     @Override
-    public FileDetailDto create(CreateFileDto fileDto) throws ValidationException, IOException {
+    public FileDetailDto create(CreateAnimalFileDto fileDto) throws ValidationException, IOException {
         LOGGER.debug("Create new File: " + fileDto);
 
         validator.validateForCreate(fileDto);
@@ -47,6 +52,12 @@ public class FileServiceImpl implements FileService {
         // Save updated content-related information
         File fileWithAllInformation = fileRepository.save(savedFile);
 
+        Animal animal = animalRepository.findById(fileDto.getAnimalId()).orElseThrow(() -> new NotFoundException("Animal with given ID does not exist."));
+
+        animal.setProfilePicture(fileWithAllInformation);
+
+        animalRepository.save(animal);
+
         // Create detailDto fr returning
         FileDetailDto detailDto = mapper.fileToFileDetailDto(fileWithAllInformation);
 
@@ -58,7 +69,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileDetailDto findById(long id) {
+    public FileDetailDto findById(UUID id) {
         LOGGER.debug("Get File with id: " + id);
 
         File entity = fileRepository.findById(id).orElseThrow(

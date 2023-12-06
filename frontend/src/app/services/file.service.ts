@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Globals} from '../global/globals';
-import {CreateFile} from "../dtos/file";
+import {CreateAnimalFile, DetailFile} from "../dtos/file";
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +13,12 @@ export class FileService {
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
-  create(createFile: CreateFile): void {
+  create(createFile: CreateAnimalFile): void {
     console.log('Create file with name: ' + createFile.name);
 
     const formData = new FormData();
 
+    formData.append('animalId', createFile.animalId);
     formData.append('name', createFile.name);
     formData.append('summary', createFile.summary);
     formData.append('file', createFile.file);
@@ -38,6 +39,7 @@ export class FileService {
    *
    * @param id of file to load
    */
+  // NOT TESTED YET!
   // findById(id: number): DetailFile {
   //   console.log('Load file with id: ' + id);
   //   let file: DetailFile = {
@@ -45,13 +47,15 @@ export class FileService {
   //     name: "",
   //     summary: "",
   //     created: null,
-  //     fileBlob: null,
-  //     contentMimeType: ""
-  //   } as DetailFile;
+  //     file: null,
+  //     contentMimeType: "",
+  //     contentLength: 0
+  //   };
   //   this.httpClient.get(this.filesBaseUri + '/' + id, {responseType: "blob"})
   //     .subscribe(data => {
-  //       file.fileBlob = new Blob([data], {type: data.type});
+  //       file.file = new Blob([data], {type: data.type});
   //       file.contentMimeType = data.type;
+  //       file.contentLength = file.file.size;
   //     });
   //
   //   return file;

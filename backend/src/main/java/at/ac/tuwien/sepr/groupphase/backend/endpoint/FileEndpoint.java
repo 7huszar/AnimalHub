@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.UUID;
 
 
 @RequestMapping(FileEndpoint.BASE_PATH)
@@ -42,26 +42,26 @@ public class FileEndpoint {
     @PostMapping
     @Secured(UserRole.Values.USER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public FileDetailDto create(@RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, IOException {
+    public void createAnimalImage(@RequestParam("animalId") String animalId, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, IOException {
         LOGGER.info("POST " + BASE_PATH + "/ " + name);
-        CreateFileDto createDto = new CreateFileDto(name, summary, file);
+        CreateAnimalFileDto createDto = new CreateAnimalFileDto(UUID.fromString(animalId), name, summary, file);
         LOGGER.debug("Body of request:\n{}", createDto);
-        return fileService.create(createDto);
+        fileService.create(createDto);
     }
 
-
-    @GetMapping("{fileId}")
-    @Secured(UserRole.Values.USER_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get file with specific id", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<?> findById(@PathVariable("fileId") Long id) {
-
-        FileDetailDto fileDto = fileService.findById(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentLength(fileDto.getContentLength());
-        headers.set("Content-Type", fileDto.getContentMimeType());
-
-        return new ResponseEntity<Object>(fileDto.getFile(), headers, HttpStatus.OK);
-    }
+    // NOT TESTED YET!
+    //    @GetMapping("{fileId}")
+    //    @Secured(UserRole.Values.USER_VALUE)
+    //    @ResponseStatus(HttpStatus.OK)
+    //    @Operation(summary = "Get file with specific id", security = @SecurityRequirement(name = "apiKey"))
+    //    public ResponseEntity<?> findById(@PathVariable("fileId") String id) {
+    //
+    //        FileDetailDto fileDto = fileService.findById(UUID.fromString(id));
+    //
+    //        HttpHeaders headers = new HttpHeaders();
+    //        headers.setContentLength(fileDto.getContentLength());
+    //        headers.set("Content-Type", fileDto.getContentMimeType());
+    //
+    //        return new ResponseEntity<Object>(fileDto.getFile(), headers, HttpStatus.OK);
+    //    }
 }

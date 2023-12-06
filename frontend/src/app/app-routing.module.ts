@@ -18,9 +18,8 @@ const routes: Routes = [
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
   {
     path: 'animal', children: [
-      {path: '', canActivate: mapToCanActivate([AuthGuard]), component: HomeComponent},
-      {path: 'create', component: CreateEditComponent, data: {mode: AnimalCreateEditMode.create}},
-      {path: 'edit/:id', component: CreateEditComponent, data: {mode: AnimalCreateEditMode.edit}}
+      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.create}},
+      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.edit}}
     ]
   },
   {path: '*', redirectTo: ''}
