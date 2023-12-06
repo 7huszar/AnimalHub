@@ -54,6 +54,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
+    /**
+     * Handles NotAuthorizedException thrown in the REST Controller.
+     *
+     * @param ex RuntimeException cached from REST Controller
+     * @param request the initial {@link WebRequest}
+     * @return {@link ResponseEntity} with HttpStatus.UNAUTHORIZED
+     */
     @ExceptionHandler(value = {NotAuthorizedException.class})
     protected ResponseEntity<Object> handleNotAuthorizedException(RuntimeException ex, WebRequest request) {
         LOGGER.error(ex.getMessage());
