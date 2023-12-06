@@ -3,7 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.exception;
 /**
  * RuntimeException thrown is Action of request is not authorized. Http code 401.
  */
-public class NotAuthorizedException extends RuntimeException {
+public class NotAuthorizedException extends Exception {
     public NotAuthorizedException() {
     }
 

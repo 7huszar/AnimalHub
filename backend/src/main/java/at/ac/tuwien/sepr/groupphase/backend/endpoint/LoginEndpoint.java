@@ -30,10 +30,8 @@ public class LoginEndpoint {
         String token;
         LOGGER.debug("LOGIN {}", userLoginDto.getEmail());
         try {
-            LOGGER.debug("####################### HERE HERE HERE ###################################################");
             token = userService.login(userLoginDto);
         } catch (UsernameNotFoundException | BadCredentialsException e) {
-            LOGGER.debug("####################### I catched it ###################################################");
             throw new NotAuthorizedException("Failed to login user");
         }
         return token;

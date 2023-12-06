@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -62,10 +63,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return {@link ResponseEntity} with HttpStatus.UNAUTHORIZED
      */
     @ExceptionHandler(value = {NotAuthorizedException.class})
-    protected ResponseEntity<Object> handleNotAuthorizedException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleNotAuthorizedException(Exception ex, WebRequest request) {
         LOGGER.error(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
+
+    @ExceptionHandler(value = {ConflictException.class})
+    protected ResponseEntity<Object> handleConflictException(Exception ex, WebRequest request) {
+        LOGGER.error(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
 
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
