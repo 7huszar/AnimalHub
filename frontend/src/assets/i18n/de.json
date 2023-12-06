@@ -34,7 +34,8 @@
     "PWD_REPEAT_MISSING": "Bitte wiederholen Sie das Passwort",
     "MAIL_MISSING": "Eine E-Mail Addresse muss nagegeben werden",
     "MAIL_INVALID": "Ungültige E-Mail Addresse",
-    "PWD_MISS_MATCH": "Passwörter sind nicht gleich"
+    "PWD_MISS_MATCH": "Passwörter sind nicht gleich",
+    "FAILED_REGISTRATION": "Account konnte nicht erstellt werden"
   },
 
   "HEADER": {
