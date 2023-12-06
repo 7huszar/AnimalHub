@@ -3,6 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,14 @@ export class LoginComponent implements OnInit {
   submitted = false;
   // Error flag
   error = false;
-  errorMessage = '';
+  failedLogin :boolean = false;
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private notification :ToastrService
+   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -63,14 +69,19 @@ export class LoginComponent implements OnInit {
       },
       // TODO add real error message
       error: error => {
-        console.log('Could not log in due to:');
-        console.log(error);
-        this.error = true;
-        if (typeof error.error === 'object') {
-          this.errorMessage = error.error.error;
+        console.error('Failed to log in:', error);
+        if (error.error) {
+          if (error.error.status === 401) {
+            this.notification.error("Wrong e-mail or password");
+            this.failedLogin = false;
+          } else {
+            this.notification.error(error.error);
+
+          }
         } else {
-          this.errorMessage = error.error;
+          this.notification.error("Failed to login");
         }
+        this.error = true;
       }
     });
   }
