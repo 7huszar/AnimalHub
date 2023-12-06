@@ -20,7 +20,7 @@ export class NotifierService {
         this.notification.error(translation, title);
       });
       // status == 422 / unprocessable entity - should not happen, frontend should never send not validated data
-    } else if (error.status === HttpStatusCode.UnprocessableEntity) {
+    } else if (error.status == HttpStatusCode.UnprocessableEntity) {
       this.notification.error(error.error, title);
       // status == / internal server error - this also should not happen
     } else if (error.status == HttpStatusCode.InternalServerError) {

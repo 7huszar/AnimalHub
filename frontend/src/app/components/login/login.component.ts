@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
           title = translation;
         });
         // status == 401 / Unauthorized - wrong login credentials
-         if (error.status === HttpStatusCode.Unauthorized) {
+         if (error.status == HttpStatusCode.Unauthorized) {
           this.translator.get('LOGIN.BAD_CREDENTIALS').subscribe((message: string) => {
             this.notification.error(message, title);
           });

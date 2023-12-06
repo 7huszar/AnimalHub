@@ -35,7 +35,8 @@
     "MAIL_MISSING": "your e-mail address is required",
     "MAIL_INVALID": "invalid e-mail address",
     "PWD_MISS_MATCH": "passwords don't match",
-    "FAILED_REGISTRATION": "failed to register account"
+    "FAILED_REGISTRATION": "failed to register account",
+    "ALREADY_EXISTS": "Account existiert bereits"
   },
 
   "HEADER": {

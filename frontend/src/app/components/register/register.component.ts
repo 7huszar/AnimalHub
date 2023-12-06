@@ -5,6 +5,8 @@ import {RegisterService} from "../../services/register.service";
 import {AuthRequest} from "../../dtos/auth-request";
 import {NotifierService} from "../../services/notifier.service";
 import {TranslateService} from "@ngx-translate/core";
+import {HttpStatusCode} from "@angular/common/http";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,8 @@ export class RegisterComponent {
               private router: Router,
               private service :RegisterService,
               private notifier :NotifierService,
-              private translator :TranslateService) {
+              private translator :TranslateService,
+              private notification :ToastrService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -46,8 +49,15 @@ export class RegisterComponent {
         this.translator.get('REGISTER.FAILED_REGISTRATION').subscribe((translation :string) => {
           title = translation;
         });
-        // standard error banners
-        this.notifier.notifyError(error, title);
+        // Account already exists
+        if (error.status == HttpStatusCode.Conflict) {
+          this.translator.get('REGISTER.ALREADY_EXISTS').subscribe((translation :string) => {
+            this.notification.error(translation, title);
+          });
+        } else {
+          // standard error banners
+          this.notifier.notifyError(error, title);
+        }
        }
      });
     }
