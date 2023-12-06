@@ -70,6 +70,9 @@ public class FileValidator {
             case "image/jpeg":
                 // ALLOWED -> No validation error
                 break;
+            case "image/png":
+                // ALLOWED -> No validation error
+                break;
             case "video/mp4":
                 // ALLOWED -> No validation error
                 break;

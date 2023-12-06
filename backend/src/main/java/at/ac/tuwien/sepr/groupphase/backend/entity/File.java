@@ -31,7 +31,10 @@ public class File {
     private String name;
     @Column(length = 400)
     private String summary;
-    private Date created = new Date();
+
+    @Column(name = "created_on")
+    @CreationTimestamp
+    private Instant created;
 
     @ContentId
     private String contentId;
