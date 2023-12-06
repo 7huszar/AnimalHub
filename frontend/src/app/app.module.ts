@@ -20,6 +20,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
 import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
 import { AnimalHomepageComponent } from './components/animal-homepage/animal-homepage.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -47,6 +49,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     NgbModule,
     FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

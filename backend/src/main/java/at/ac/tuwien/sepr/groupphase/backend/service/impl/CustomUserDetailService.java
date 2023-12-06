@@ -3,11 +3,13 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.conflictchecker.UserConflictChecker;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
     private final JavaMailSender emailSender;
+    private final UserConflictChecker conflictChecker;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -81,10 +84,10 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void register(UserLoginDto userLoginDto) throws ValidationException {
+    public void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
-
+        conflictChecker.checkRegisterConflicts(userLoginDto.getEmail());
         /*
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");

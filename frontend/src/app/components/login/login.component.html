@@ -1,11 +1,3 @@
-<div *ngIf="error" xmlns="http://www.w3.org/1999/html" class="alert alert-warning alert-dismissible fade show"
-     role="alert">
-  <strong>Authentication problems!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <div class="custom-head position-fixed top-0 end-0">
   <img class="logo position-absolute top-50 start-50 translate-middle" src="/assets/img/logo.png" alt="img">
 </div>
@@ -54,6 +46,12 @@
                   {{'LOGIN.PWD_SHORT' | translate}}
                 </small>
               </div>
+            </div>
+
+            <div *ngIf="failedLogin" class="error">
+              <small class="form-text text-danger">
+                {{'LOGIN.BAD_CREDENTIALS' | translate}}
+              </small>
             </div>
 
             <div class="form-group mb-2"></div>
