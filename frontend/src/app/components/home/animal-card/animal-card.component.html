@@ -1,16 +1,20 @@
 <div class="card p-2" style="width: 18rem;">
-  <img src="assets/img/Schnappi.png" class="card-img-top" alt="test picture">
+  <a routerLink="/animal/{{animal.id}}">
+    <img src="assets/img/Schnappi.png" class="card-img-top" alt="test picture">
+  </a>
   <div class="card-body">
-    <h5 class="card-title">{{name}}</h5>
+    <h5 class="card-title">{{animal.name}}</h5>
     <div class="row text-center">
       <div class="col">
-        <i class="bi bi-x-circle-fill text-danger"></i>
+          <i class="bi bi-x-circle-fill text-danger" (click)="dislike()"></i>
       </div>
       <div class="col">
-        <i class="bi bi-info-circle-fill"></i>
+        <a routerLink="/animal/{{animal.id}}">
+          <i class="bi bi-info-circle-fill"></i>
+        </a>
       </div>
       <div class="col">
-        <i class="bi bi-heart-fill text-primary"></i>
+        <i class="bi bi-heart-fill text-primary" (click)="like()"></i>
       </div>
     </div>
   </div>

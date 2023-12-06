@@ -2,23 +2,23 @@
 
 <div class="container">
 
-  <button type="button" class="btn btn-primary mb-2">{{"HOME.ACCOUNT" | translate}}</button>
+  <button *ngIf="authService.isLoggedIn()" type="button" class="btn btn-primary mb-2">{{"HOME.ACCOUNT" | translate}}</button>
 </div>
 
 <div class="container mt-xxl-5">
   <div class="container">
     <div class="row">
       <div class="col center-column">
-        <i class="bi bi-arrow-left-square-fill text-primary my_bigger"></i>
+        <i class="bi bi-arrow-left-square-fill text-primary"></i>
       </div>
       <div class="col">
-        <app-animal-card [name]="'Schnappi das kleine Krokodil'" ></app-animal-card>
+        <app-animal-card [animal]="getCard(Position.LEFT)"></app-animal-card>
       </div>
       <div class="col">
-        <app-animal-card [name]="'Schnappi das kleine Krokodil'"></app-animal-card>
+        <app-animal-card [animal]="getCard(Position.MIDDLE)"></app-animal-card>
       </div>
       <div class="col">
-        <app-animal-card [name]="'Schnappi das kleine Krokodil'"></app-animal-card>
+        <app-animal-card [animal]="getCard(Position.RIGHT)"></app-animal-card>
       </div>
       <div class="col center-column">
         <i class="bi bi-arrow-right-square-fill text-primary"></i>
