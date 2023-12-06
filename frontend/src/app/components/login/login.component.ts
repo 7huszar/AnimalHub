@@ -4,6 +4,9 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {ToastrService} from "ngx-toastr";
+import {HttpStatusCode} from "@angular/common/http";
+import {TranslateService} from "@ngx-translate/core";
+import {NotifierService} from "../../services/notifier.service";
 
 @Component({
   selector: 'app-login',
@@ -23,7 +26,9 @@ export class LoginComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notification :ToastrService
+    private notification :ToastrService,
+    private translator :TranslateService,
+    private notifier :NotifierService
    ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
@@ -67,20 +72,22 @@ export class LoginComponent implements OnInit {
             break;
         }
       },
-      // TODO add real error message
       error: error => {
         console.error('Failed to log in:', error);
-        if (error.error) {
-          if (error.error.status === 401) {
-            this.notification.error("Wrong e-mail or password");
-            this.failedLogin = false;
-          } else {
-            this.notification.error(error.error);
-
-          }
+        let title: string;
+        this.translator.get('LOGIN.LOGIN_FAILED').subscribe((translation: string) => {
+          title = translation;
+        });
+        // status == 401 / Unauthorized - wrong login credentials
+         if (error.status === HttpStatusCode.Unauthorized) {
+          this.translator.get('LOGIN.BAD_CREDENTIALS').subscribe((message: string) => {
+            this.notification.error(message, title);
+          });
+          this.failedLogin = true;
         } else {
-          this.notification.error("Failed to login");
-        }
+           // standard errors, we do not anticpate
+           this.notifier.notifyError(error, title);
+         }
         this.error = true;
       }
     });

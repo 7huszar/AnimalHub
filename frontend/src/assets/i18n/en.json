@@ -9,8 +9,9 @@
     "USER_NAME_MISSING": "e-mail required",
     "MAIL_INVALID": "username should be a valid e-mail address",
     "PWD_MISSING": "password required",
-    "PWD_SHORT": "password has to be at least 8 characters long"
-
+    "PWD_SHORT": "password has to be at least 8 characters long",
+    "BAD_CREDENTIALS": "Username or password incorrect",
+    "LOGIN_FAILED": "Failed to login"
   },
 
   "LANG_SELECT": {
@@ -38,6 +39,11 @@
 
   "HEADER": {
     "LOGOUT": "logout"
+  },
+
+  "NOTIFIER": {
+    "CONNECTION_FAILED": "Connection error",
+    "INTERNAL_SERVER_ERROR": "internal server error - we apologize"
   },
 
   "LOGO" : "Logo with the writing AnimalHub"
