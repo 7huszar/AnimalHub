@@ -51,9 +51,9 @@ public class AnimalEndpoint {
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get animal with specific id", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto findById(@PathVariable String id) {
+    public AnimalDetailDto findById(@PathVariable UUID id) {
         LOGGER.info("GET " + BASE_PATH + "/{}", id);
-        return animalService.findById(UUID.fromString(id));
+        return animalService.findById(id);
     }
 
     // todo doku
@@ -72,10 +72,10 @@ public class AnimalEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto update(@PathVariable String id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException {
+    public AnimalDetailDto update(@PathVariable UUID id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", animalDto);
-        animalDto.setId(UUID.fromString(id));
+        animalDto.setId(id);
         return animalService.update(animalDto);
     }
 
@@ -86,9 +86,9 @@ public class AnimalEndpoint {
      */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable UUID id) {
         LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
-        animalService.delete(UUID.fromString(id));
+        animalService.delete(id);
     }
 
 
