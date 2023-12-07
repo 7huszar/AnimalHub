@@ -30,7 +30,7 @@ public class JwtTokenizer {
         return securityProperties.getAuthTokenPrefix() + token;
     }
 
-    /*
+
     public String getActivationToken(String user) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
         String token = Jwts.builder()
@@ -44,5 +44,5 @@ public class JwtTokenizer {
             .compact();
         return token;
     }
-     */
+
 }

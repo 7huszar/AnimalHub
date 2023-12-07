@@ -88,14 +88,6 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
         conflictChecker.checkRegisterConflicts(userLoginDto.getEmail());
-        /*
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("animalhub.service@gmail.com");
-        message.setTo(userLoginDto.getEmail());
-        message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(userLoginDto.getEmail()));
-        emailSender.send(message);
-         */
 
         ApplicationUser user = ApplicationUser.builder()
             .email(userLoginDto.getEmail())
@@ -104,5 +96,12 @@ public class CustomUserDetailService implements UserService {
             .build();
 
         userRepository.save(user);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("animalhub.service@gmail.com");
+        message.setTo(userLoginDto.getEmail());
+        message.setSubject("Animalhub e-mail confirmation");
+        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(userLoginDto.getEmail()));
+        emailSender.send(message);
     }
 }
