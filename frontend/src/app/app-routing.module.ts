@@ -8,6 +8,7 @@ import {RegisterComponent} from "./components/register/register.component";
 import {RegisterConfirmComponent} from "./components/register/register-confirm/register-confirm.component";
 import {AuthGuard} from './guards/auth.guard';
 import {AnimalCreateEditMode, CreateEditComponent} from './components/animal/create-edit/create-edit.component';
+import {ShelterComponent} from "./components/shelter/shelter.component";
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
@@ -22,6 +23,7 @@ const routes: Routes = [
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.edit}}
     ]
   },
+  {path: 'shelter', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
   {path: '*', redirectTo: ''}
 ];
 
