@@ -24,18 +24,20 @@ public class CreateAnimalDto {
     @NotNull(message = "Species must not be null")
     private Species species;
 
+    @NotNull(message = "Race must not be null")
     private String race;
 
     @NotNull(message = "Birth Date must not be null")
     private LocalDate birthDate;
 
-    @NotNull(message = "Shelter must not be null")
+    // TODO add Not Null Restraint
+
+    // @NotNull(message = "Shelter must not be null")
     private Shelter shelter;
 
-    @NotNull(message = "Height must not be null")
+
     private double height;
 
-    @NotNull(message = "Weight must not be null")
     private double weight;
 
     @Override
@@ -43,6 +45,7 @@ public class CreateAnimalDto {
         return "CreateAnimalDto{"
             + "name='" + name + '\''
             + ", species='" + species + '\''
+            + ", race='" + race + '\''
             + ", birthDate='" + birthDate + '\''
             + ", height='" + height + '\''
             + ", weight='" + weight + '\''

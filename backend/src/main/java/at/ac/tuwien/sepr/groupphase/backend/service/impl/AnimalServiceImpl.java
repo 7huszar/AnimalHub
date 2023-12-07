@@ -46,6 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
 
         validator.validateForCreate(animalDto);
         Animal entity = mapper.createAnimalDtoToAnimal(animalDto);
+
         animalRepository.save(entity);
         return mapper.animalToAnimalDetailDto(entity);
     }

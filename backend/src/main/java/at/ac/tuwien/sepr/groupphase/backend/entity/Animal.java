@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,9 @@ public class Animal {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @OneToOne
+    private File profilePicture;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Species species;
@@ -56,7 +60,7 @@ public class Animal {
     private double weight;
 
     @ManyToOne
-    @JoinColumn(name = "shelter_id", nullable = false)
+    @JoinColumn(name = "shelter_id", nullable = true)
     private Shelter shelter;
 
     @Column(name = "created_on")

@@ -17,7 +17,7 @@
         <maven.compiler.plugin>3.11.0</maven.compiler.plugin>
         <maven-surefire-plugin.version>3.2.1</maven-surefire-plugin.version>
         <spring.boot.version>3.1.5</spring.boot.version>
-        <h2.version>2.2.224</h2.version>
+        <h2.version>2.1.210</h2.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jjwt.version>0.12.3</jjwt.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
@@ -25,6 +25,7 @@
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <checkstyle.version>10.12.4</checkstyle.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+        <spring-boot-content.version>3.0.6</spring-boot-content.version>
     </properties>
 
     <dependencyManagement>
@@ -43,6 +44,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -69,6 +74,13 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
+        <!--  START - OUR CUSTOM DEPENDENCIES -->
+        <dependency>
+            <groupId>com.github.paulcwarren</groupId>
+            <artifactId>spring-content-fs-boot-starter</artifactId>
+            <version>${spring-boot-content.version}</version>
+        </dependency>
+        <!--  END - OUR CUSTOM DEPENDENCIES -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -230,7 +242,8 @@
                 <configuration>
                     <useNativeGit>true</useNativeGit>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                    </generateGitPropertiesFilename>
                     <verbose>true</verbose>
                 </configuration>
             </plugin>

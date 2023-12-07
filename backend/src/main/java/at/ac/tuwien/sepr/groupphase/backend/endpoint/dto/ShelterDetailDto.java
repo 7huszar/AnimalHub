@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,9 +41,9 @@ public class ShelterDetailDto {
             + ", name='" + name + '\''
             + ", address=" + address
             + ", phoneNumber='" + phoneNumber + '\''
-            + ", email=" + email
-            + ", animals=" + animals
-            + ", createdOn=" + createdOn
+            + ", email=" + email + '\''
+            + ", animals=" + animals + '\''
+            + ", createdOn=" + createdOn + '\''
             + '}';
     }
 }

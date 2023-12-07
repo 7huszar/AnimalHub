@@ -6,7 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class ShelterValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShelterMapper mapper;
-    private final AnimalService animalService;
+    private final AnimalRepository animalRepository;
 
     // ### HELPER METHODS
 
@@ -82,7 +82,7 @@ public class ShelterValidator {
         if (!shelterDto.getAnimals().isEmpty()) {
             for (AnimalDetailDto animalDto : shelterDto.getAnimals()) {
                 try {
-                    animalService.findById(animalDto.getId());
+                    animalRepository.findById(animalDto.getId());
                 } catch (NotFoundException e) {
                     validationErrors.add("The shelter-associated Animal with ID: " + animalDto.getId() + " could not be found in the Animal Database.");
                 }
