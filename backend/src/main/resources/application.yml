@@ -12,6 +12,9 @@ spring:
     driver-class-name: org.h2.Driver
     username: admin
     password: password
+  h2:
+    console:
+      enabled: true
   jpa:
     # Set this property to true if you want to see the executed queries
     show-sql: false
@@ -21,6 +24,15 @@ spring:
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. To learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
+    # make sure that users can upload larger files
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+  content:
+    fs:
+      filesystem-root: ./files/
 
 security:
   auth:
@@ -71,5 +83,8 @@ spring:
       on-cloud-platform: kubernetes
   lifecycle:
     timeout-per-shutdown-phase: 30s
+#  content:
+#    fs:
+#      filesystem-root: ""
 server:
   shutdown: graceful

@@ -13,15 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,14 +36,27 @@ public class AnimalEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalService animalService;
 
+    // todo doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get list of animals", security = @SecurityRequirement(name = "apiKey"))
     public List<AnimalDetailDto> findAll() {
         LOGGER.info("GET " + BASE_PATH);
         return animalService.findAll();
     }
 
+    // todo doku
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get animal with specific id", security = @SecurityRequirement(name = "apiKey"))
+    public AnimalDetailDto findById(@PathVariable String id) {
+        LOGGER.info("GET " + BASE_PATH + "/{}", id);
+        return animalService.findById(UUID.fromString(id));
+    }
+
+    // todo doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -62,15 +67,29 @@ public class AnimalEndpoint {
         return animalService.create(animalDto);
     }
 
+    // todo doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto update(@PathVariable UUID id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException {
+    public AnimalDetailDto update(@PathVariable String id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", animalDto);
-        animalDto.setId(id);
+        animalDto.setId(UUID.fromString(id));
         return animalService.update(animalDto);
     }
+
+    /**
+     * deletes the animal with the given id.
+     *
+     * @param id id of animal-to-delete
+     */
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable String id) {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
+        animalService.delete(UUID.fromString(id));
+    }
+
 
 }

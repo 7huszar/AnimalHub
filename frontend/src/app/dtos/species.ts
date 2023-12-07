@@ -7,4 +7,3 @@ export enum Species {
   bird = 'BIRD',
   rodent = 'RODENT'
 }
-

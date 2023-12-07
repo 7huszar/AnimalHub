@@ -26,18 +26,19 @@ public class AnimalDetailDto {
     @NotNull(message = "Species must not be null")
     private Species species;
 
+    @NotNull(message = "Race must not be null")
     private String race;
 
     @NotNull(message = "Birth Date must not be null")
     private LocalDate birthDate;
 
-    @NotNull(message = "Height must not be null")
-    private double height;
+    // TODO add Not Null Restraint
 
-    @NotNull(message = "Shelter must not be null")
+    //   @NotNull(message = "Shelter must not be null")
     private Shelter shelter;
 
-    @NotNull(message = "Weight must not be null")
+    private double height;
+
     private double weight;
 
     private Instant createdOn;
@@ -49,10 +50,10 @@ public class AnimalDetailDto {
             + ", name='" + name + '\''
             + ", species=" + species
             + ", race='" + race + '\''
-            + ", birthDate=" + birthDate
-            + ", height=" + height
-            + ", weight=" + weight
-            + ", createdOn=" + createdOn
+            + ", birthDate=" + birthDate + '\''
+            + ", height=" + height + '\''
+            + ", weight=" + weight + '\''
+            + ", createdOn=" + createdOn + '\''
             + '}';
     }
 }

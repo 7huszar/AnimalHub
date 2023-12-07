@@ -13,4 +13,3 @@ export interface Shelter {
   animals?: Animal[];
   createdOn?: Date
 }
-
