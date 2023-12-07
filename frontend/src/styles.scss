@@ -3,11 +3,15 @@
 
 
 $primary:       #64B5F6;
-
+@use "sass:map";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 
 .logo {
-  width: 50%;
+  height: 70%;
+  max-width: 90%;
 }
 
 .custom-head {
@@ -33,12 +37,31 @@ $primary:       #64B5F6;
 
 .my-tmp {
   position: fixed;
-  left: 60%;
-  top: 45%;
-  width: 900px;
+  left: 75.5%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 22.5vw;
 }
 
 
 .btn-primary {
   color: #ffffff;
+}
+
+@media screen and (max-width: map-get($grid-breakpoints, "md")) {
+  .custom-head {
+    width: 100%;
+  }
+  .my-tmp {
+    left: 50%;
+    width: 50vw;
+    min-width: calc(map-get($grid-breakpoints, "sm") * 0.75);
+  }
+}
+
+@media screen and (max-width: map-get($grid-breakpoints, "sm")) {
+  .my-tmp {
+    width: 75vw;
+    min-width: 0;
+  }
 }
