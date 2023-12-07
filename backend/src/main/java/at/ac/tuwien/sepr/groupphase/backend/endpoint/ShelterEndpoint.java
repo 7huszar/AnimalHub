@@ -44,6 +44,14 @@ public class ShelterEndpoint {
     }
 
     @Secured(UserRole.Values.MEMBER_VALUE)
+    @GetMapping("{id}")
+    @Operation(summary = "Get shelter by id", security = @SecurityRequirement(name = "apiKey"))
+    public ShelterDetailDto getShelter(@PathVariable UUID id) {
+        LOGGER.info("GET " + BASE_PATH + "/" + id);
+        return shelterService.findById(id);
+    }
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
