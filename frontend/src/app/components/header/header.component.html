@@ -10,6 +10,12 @@
         <li *ngIf="authService.isLoggedIn()" class="nav-item">
           <a (click)="logout()" class="nav-link" routerLink="">{{'HEADER.LOGOUT' | translate}}</a>
         </li>
+        <li *ngIf="authService.isAdmin()" class="nav-item">
+          <a class="nav-link" routerLink="/admin-page">{{'HEADER.ADMIN_PAGE' | translate}}</a>
+        </li>
+        <li *ngIf="authService.isMember()" class="nav-item">
+          <a class="nav-link" routerLink="/member-profile">{{'HEADER.MEMBER_PAGE' | translate}}</a>
+        </li>
       </ul>
     </div>
   </div>
