@@ -31,7 +31,8 @@ public class ShelterServiceImpl implements ShelterService {
     public List<ShelterDetailDto> findAll() {
         LOGGER.debug("Find all Shelters");
 
-        return shelterRepository.findAll().stream().map(mapper::shelterToShelterDetailDto).toList();
+        return shelterRepository.findAll().stream()
+            .map(mapper::shelterToShelterDetailDto).toList();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ShelterServiceImpl implements ShelterService {
 
         validator.validateForCreate(shelterDto);
         Shelter entity = mapper.createShelterDtoToShelter(shelterDto);
-        shelterRepository.save(entity);
+        entity = shelterRepository.save(entity);
         return mapper.shelterToShelterDetailDto(entity);
     }
 
@@ -51,7 +52,7 @@ public class ShelterServiceImpl implements ShelterService {
         validator.validateForUpdate(shelterDto);
         shelterRepository.deleteById(shelterDto.getId());
         Shelter entity = mapper.shelterDetailDtoToShelter(shelterDto);
-        shelterRepository.save(entity);
+        entity = shelterRepository.save(entity);
         return mapper.shelterToShelterDetailDto(entity);
     }
 
