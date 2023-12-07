@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {AnimalListDto} from "../../dtos/animal";
+import {Animal} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 
 @Component({
@@ -10,16 +10,16 @@ import {AnimalService} from "../../services/animal.service";
 })
 export class HomeComponent implements OnInit {
 
-  private left :AnimalListDto;
-  private middle :AnimalListDto;
-  private right :AnimalListDto;
+  private left :Animal;
+  private middle :Animal;
+  private right :Animal;
 
-  private animalList :AnimalListDto[];
+  private animalList :Animal[];
 
   constructor(public authService: AuthService, private animalService :AnimalService) { }
 
   ngOnInit() {
-    this.animalService.finalAll().subscribe({
+    this.animalService.findAll().subscribe({
       next :data => {
         this.animalList = data;
       },
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getCard(position: Position): AnimalListDto {
+  getCard(position: Position): Animal {
     if (this.animalList && this.animalList.length > 0) {
       switch (position) {
         case Position.LEFT:

@@ -46,8 +46,7 @@ public class FileValidator {
         // # Animal Id
         try {
             animalRepository.findById(fileDto.getAnimalId()).orElseThrow(() -> new NotFoundException("Animal with given ID does not exist."));
-        }
-        catch(NotFoundException e){
+        } catch (NotFoundException e) {
             validationErrors.add(e.getMessage());
         }
 

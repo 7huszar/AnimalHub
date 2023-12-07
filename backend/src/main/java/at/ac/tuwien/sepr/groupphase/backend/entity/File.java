@@ -16,10 +16,7 @@ import org.springframework.content.commons.annotations.ContentId;
 import org.springframework.content.commons.annotations.ContentLength;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Getter
@@ -30,7 +27,7 @@ import static jakarta.persistence.GenerationType.*;
 @Table(name = "FILE")
 public class File {
     @Id
-    @GeneratedValue(strategy = UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(length = 200)
