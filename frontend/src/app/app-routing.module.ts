@@ -7,7 +7,9 @@ import {AdminPageComponent} from "./components/admin-page/admin-page.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {RegisterConfirmComponent} from "./components/register/register-confirm/register-confirm.component";
 import {AuthGuard} from './guards/auth.guard';
-import {AnimalCreateEditMode, CreateEditComponent} from './components/animal/create-edit/create-edit.component';
+import {Mode} from "./enums/modes";
+import {CreateEditComponent} from './components/animal/create-edit/create-edit.component';
+import {ShelterCreateEditComponent} from "./components/shelter/shelter-create-edit/shelter-create-edit.component";
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
@@ -18,8 +20,14 @@ const routes: Routes = [
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
   {
     path: 'animal', children: [
-      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.create}},
-      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.edit}}
+      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.CREATE}},
+      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.EDIT}}
+    ]
+  },
+  {
+    path: 'shelter', children: [
+      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
+      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}}
     ]
   },
   {path: '*', redirectTo: ''}

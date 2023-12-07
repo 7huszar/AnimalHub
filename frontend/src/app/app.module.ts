@@ -22,6 +22,7 @@ import { RegisterConfirmComponent } from './components/register/register-confirm
 import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
+import { ShelterCreateEditComponent } from './components/shelter/shelter-create-edit/shelter-create-edit.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -41,6 +42,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnimalCardComponent,
     RegisterComponent,
     RegisterConfirmComponent,
+    ShelterCreateEditComponent,
   ],
   imports: [
     BrowserModule,
