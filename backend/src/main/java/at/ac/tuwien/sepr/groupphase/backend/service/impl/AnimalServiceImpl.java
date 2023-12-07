@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +31,10 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public List<AnimalDetailDto> findAll() {
         LOGGER.debug("Find all Animals");
-        List<AnimalDetailDto> allAnimalDetailDtoList = Collections.emptyList();
 
-        for (Animal animal : animalRepository.findAll()
-        ) {
-            allAnimalDetailDtoList.add(mapper.animalToAnimalDetailDto(animal));
-        }
-        return allAnimalDetailDtoList;
+        return animalRepository.findAll().stream()
+            .map(mapper::animalToAnimalDetailDto)
+            .collect(Collectors.toList());
     }
 
     @Override
