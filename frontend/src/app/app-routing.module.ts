@@ -19,11 +19,28 @@ const routes: Routes = [
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
   {
     path: 'animal', children: [
-      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.create}},
-      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.edit}}
+      {
+        path: 'create',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: CreateEditComponent,
+        data: {mode: AnimalCreateEditMode.create}
+      },
+      {
+        path: 'edit/:id',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: CreateEditComponent,
+        data: {mode: AnimalCreateEditMode.edit}
+      }
     ]
   },
-  {path: 'shelter', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
+  {
+    path: 'shelter', children: [
+      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
+      {path: 'edit', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
+      {path: 'member', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
+      {path: 'user', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
+    ]
+  },
   {path: '*', redirectTo: ''}
 ];
 
