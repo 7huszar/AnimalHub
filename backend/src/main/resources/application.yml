@@ -30,6 +30,9 @@ spring:
       enabled: true
       max-file-size: 50MB
       max-request-size: 100MB
+  content:
+    fs:
+      filesystem-root: ./files/
 
 security:
   auth:
