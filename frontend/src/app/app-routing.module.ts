@@ -10,12 +10,14 @@ import {AuthGuard} from './guards/auth.guard';
 import {Mode} from "./enums/modes";
 import {CreateEditComponent} from './components/animal/create-edit/create-edit.component';
 import {ShelterCreateEditComponent} from "./components/shelter/shelter-create-edit/shelter-create-edit.component";
+import {ShelterComponent} from "./components/shelter/shelter.component";
+
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'register/confirm/:token', component: RegisterConfirmComponent},
-  {path: 'home', component: HomeComponent},
+  {path: 'home', canActivate: mapToCanActivate([AuthGuard]), component: HomeComponent},
   {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
   {
@@ -26,6 +28,7 @@ const routes: Routes = [
   },
   {
     path: 'shelter', children: [
+      {path: '', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
       {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}}
     ]

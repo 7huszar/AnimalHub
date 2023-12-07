@@ -20,6 +20,8 @@ import { AdminPageComponent } from './components/admin-page/admin-page.component
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
 import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
+import {ShelterComponent} from "./components/shelter/shelter.component";
+
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import { ShelterCreateEditComponent } from './components/shelter/shelter-create-edit/shelter-create-edit.component';
@@ -43,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     RegisterComponent,
     RegisterConfirmComponent,
     ShelterCreateEditComponent,
+    ShelterComponent,
   ],
   imports: [
     BrowserModule,

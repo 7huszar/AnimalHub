@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animal Cards</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .card {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1 class="mt-4 mb-4">Animal Cards</h1>
+
+  <div class="form-group">
+    <label for="filter">Filter by:</label>
+    <select id="filter" class="form-control">
+      <option value="all">All Animals</option>
+      <option value="mammal">Mammals</option>
+      <option value="bird">Birds</option>
+      <!-- Add more options as needed -->
+    </select>
+  </div>
+
+  <div id="animal-cards" class="row">
+    <div class="card col-md-3" *ngFor="let animal of displayedAnimals">
+      <img [src]="animal.imageUrl" class="card-img-top" alt="Animal Image">
+      <div class="card-body">
+        <h5 class="card-title">{{ animal.name }}</h5>
+        <p class="card-text">Type: {{ animal.type }}</p>
+        <button class="btn btn-primary" (click)="editAnimal(animal.id)">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
