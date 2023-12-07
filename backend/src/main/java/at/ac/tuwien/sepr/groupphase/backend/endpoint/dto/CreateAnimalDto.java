@@ -51,6 +51,4 @@ public class CreateAnimalDto {
             + ", weight='" + weight + '\''
             + '}';
     }
-
-
 }

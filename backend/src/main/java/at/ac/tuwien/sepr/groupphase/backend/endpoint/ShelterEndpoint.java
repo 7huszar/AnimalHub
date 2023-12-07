@@ -46,7 +46,7 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "Get shelter by id", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDetailDto getShelter(@PathVariable UUID id) {
+    public ShelterDetailDto findById(@PathVariable UUID id) {
         LOGGER.info("GET " + BASE_PATH + "/" + id);
         return shelterService.findById(id);
     }
