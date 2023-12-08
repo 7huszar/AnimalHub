@@ -36,8 +36,8 @@ public class CreateShelterDto {
             + ", name='" + name + '\''
             + ", address=" + address
             + ", phoneNumber='" + phoneNumber + '\''
-            + ", email=" + email
-            + ", createdOn=" + createdOn
+            + ", email=" + email + '\''
+            + ", createdOn=" + createdOn + '\''
             + '}';
     }
 

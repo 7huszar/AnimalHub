@@ -13,6 +13,7 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import { CreateEditComponent } from './components/animal/create-edit/create-edit.component';
 import { LangSelectComponent } from './components/lang-select/lang-select.component';
 import { MemberProfileComponent } from './components/home/member-profile/member-profile.component';
 import { AdminPageComponent } from './components/admin-page/admin-page.component';
@@ -33,6 +34,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    CreateEditComponent,
     LangSelectComponent,
     MemberProfileComponent,
     AdminPageComponent,

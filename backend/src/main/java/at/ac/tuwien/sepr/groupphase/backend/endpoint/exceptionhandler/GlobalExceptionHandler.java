@@ -75,6 +75,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
+    // TODO handle IOException.
+
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
      * from e.g. Spring
