@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserStatus;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -11,10 +13,13 @@ import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflictchecker.UserConflictChecker;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,6 +44,7 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
     private final JavaMailSender emailSender;
+    private final SecurityProperties securityProperties;
     private final UserConflictChecker conflictChecker;
 
     @Override
@@ -93,6 +99,7 @@ public class CustomUserDetailService implements UserService {
             .email(userLoginDto.getEmail())
             .password(passwordEncoder.encode(userLoginDto.getPassword()))
             .role(UserRole.USER)
+            .status(UserStatus.UNVERIFIED)
             .build();
 
         userRepository.save(user);
@@ -103,5 +110,20 @@ public class CustomUserDetailService implements UserService {
         message.setSubject("Animalhub e-mail confirmation");
         message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(userLoginDto.getEmail()));
         emailSender.send(message);
+    }
+
+    @Transactional
+    @Override
+    public void verify(String token) {
+        String email;
+        Claims claims = Jwts.parser()
+            .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+
+        email = claims.get("email", String.class);
+
+        userRepository.updateStatus(email, UserStatus.ACTIVE);
     }
 }

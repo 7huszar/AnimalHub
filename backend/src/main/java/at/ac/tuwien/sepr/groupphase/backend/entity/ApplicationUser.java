@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class ApplicationUser {
     private String email;
     private String password;
     private UserRole role;
+    private UserStatus status;
 
     @Override
     public String toString() {
@@ -39,7 +41,8 @@ public class ApplicationUser {
             + "id=" + id
             + ", email='" + email + '\''
             + ", password='" + password + '\''
-            + ", role=" + role
+            + ", role=" + role + '\''
+            + ", status=" + status
             + '}';
     }
 }

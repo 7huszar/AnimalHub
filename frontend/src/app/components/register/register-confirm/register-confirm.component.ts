@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../../../services/auth.service";
 import {RegisterService} from "../../../services/register.service";
 
 @Component({
@@ -11,7 +10,6 @@ import {RegisterService} from "../../../services/register.service";
 export class RegisterConfirmComponent implements OnInit{
   private token :string;
   constructor(private route :ActivatedRoute,
-              private auth :AuthService,
               private service :RegisterService,
               private router :Router) {
   }
@@ -20,6 +18,7 @@ export class RegisterConfirmComponent implements OnInit{
   }
 
   verify() :void {
+    console.log(this.token);
     this.service.verifyEmail(this.token).subscribe();
   }
 

@@ -88,3 +88,20 @@ spring:
 #      filesystem-root: ""
 server:
   shutdown: graceful
+---
+# email configuration
+spring:
+  mail:
+    host: smtp.gmail.com
+    username: animalhub.service@gmail.com
+    password: ryyexjjzyqlreupo
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enable: true
+            required: true

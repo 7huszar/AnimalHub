@@ -3,6 +3,7 @@ import {HttpBackend, HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Globals} from "../global/globals";
 import {AuthRequest} from "../dtos/auth-request";
+import {VerificationDto} from "../dtos/register";
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,15 @@ export class RegisterService {
   }
 
   // for later e-mail verification
-  verifyEmail(token :string) :Observable<any> {
-    return this.http.get(this.authBaseUri, {
-      headers: {'Authorization': 'Bearer ' + token}
-    });
+  verifyEmail(urlToken :string) :Observable<any> {
+    let verificationDto :VerificationDto= {
+      token: urlToken,
+      lang: 'en'
+  };
+    return this.http.put(this.authBaseUri, verificationDto);
   }
 
   register(userData :AuthRequest) :Observable<any> {
     return this.http.post(this.authBaseUri, userData);
   }
-
 }
