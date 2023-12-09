@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class AnimalValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalMapper mapper;
+    private final ShelterRepository shelterRepository;
 
     // ### HELPER METHODS
 
@@ -74,21 +76,35 @@ public class AnimalValidator {
 
         if (!isValidDateOfBirth(animalDto.getBirthDate())) {
             validationErrors.add("Birth Date must not be in the future!");
-        } else if (!animalDto.getBirthDate().isBefore(LocalDate.now().minusYears(50))) {
+        } else if (animalDto.getBirthDate().isBefore(LocalDate.now().minusYears(50))) {
             validationErrors.add("Animal cannot be older than 50 years!");
         }
 
         // # Height
 
-        if (animalDto.getHeight() > 0) {
+        if (animalDto.getHeight() < 0) {
             validationErrors.add("Height must be greater than zero");
         }
 
         // # Weight
 
-        if (animalDto.getWeight() > 0) {
+        if (animalDto.getWeight() < 0) {
             validationErrors.add("Weight must be greater than zero");
         }
+
+        // # Shelter
+
+        // TODO enable Shelter Validation!
+
+        //        if (animalDto.getShelter() != null) {
+        //            try {
+        //                shelterRepository.findById(animalDto.getShelter().getId());
+        //            } catch (NotFoundException e) {
+        //                validationErrors.add("Assigned Shelter could not be found in the database");
+        //            }
+        //        } else {
+        //            validationErrors.add("Shelter must not be null");
+        //        }
 
         if (!validationErrors.isEmpty()) {
             throw new ValidationException("Validation of animal details failed", validationErrors);

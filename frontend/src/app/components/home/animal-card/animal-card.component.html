@@ -1,11 +1,21 @@
-<app-header></app-header>
-
-<!--
-<div class="card">
-  <div class="card-body" style="width: 18rem;">
-    <h5 class="card-title">Card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a class="btn btn-primary">Go somewhere</a>
+<div class="card p-2" style="width: 18rem;">
+  <a routerLink="/animal/{{animal.id}}">
+    <img src="assets/img/Schnappi.png" class="card-img-top" alt="test picture">
+  </a>
+  <div class="card-body">
+    <h5 class="card-title">{{animal.name}}</h5>
+    <div class="row text-center">
+      <div class="col">
+          <i class="bi bi-x-circle-fill text-danger" (click)="dislike()"></i>
+      </div>
+      <div class="col">
+        <a routerLink="/animal/{{animal.id}}">
+          <i class="bi bi-info-circle-fill"></i>
+        </a>
+      </div>
+      <div class="col">
+        <i class="bi bi-heart-fill text-primary" (click)="like()"></i>
+      </div>
+    </div>
   </div>
 </div>
--->

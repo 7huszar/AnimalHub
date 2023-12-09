@@ -40,7 +40,9 @@
   },
 
   "HEADER": {
-    "LOGOUT": "logout"
+    "LOGOUT": "logout",
+    "ADMIN_PAGE": "admin page",
+    "MEMBER_PAGE": "member page"
   },
 
   "NOTIFIER": {

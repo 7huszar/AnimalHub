@@ -8,15 +8,23 @@ import {RegisterComponent} from "./components/register/register.component";
 import {RegisterConfirmComponent} from "./components/register/register-confirm/register-confirm.component";
 import {AuthGuard} from './guards/auth.guard';
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
+import {AnimalCreateEditMode, CreateEditComponent} from './components/animal/create-edit/create-edit.component';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'animal', component: AnimalHomepageComponent},
   {path: 'register/confirm/:token', component: RegisterConfirmComponent},
-  {path: 'home', canActivate: mapToCanActivate([AuthGuard]), component: HomeComponent},
+  {path: 'home', component: HomeComponent},
   {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
-  {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent}
+  {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
+  {
+    path: 'animal', children: [
+      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.create}},
+      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: AnimalCreateEditMode.edit}}
+    ]
+  },
+  {path: '*', redirectTo: ''}
 ];
 
 @NgModule({

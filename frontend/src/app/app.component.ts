@@ -7,7 +7,7 @@ import {TranslateService} from "@ngx-translate/core";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'SE PR Group Phase';
+  title = 'AnimalHub';
   constructor(translate: TranslateService) {
     translate.addLangs(['de', 'en']);
     translate.setDefaultLang('de');

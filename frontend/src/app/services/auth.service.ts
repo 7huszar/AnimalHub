@@ -79,4 +79,18 @@ export class AuthService {
     return date;
   }
 
+  isAdmin() :boolean {
+    return this.getUserRole() === 'ADMIN';
+  }
+
+  isMember() :boolean {
+    const decoded: any = jwtDecode(this.getToken());
+    return decoded.rol.includes('MEMBER_ROLE');
+  }
+
+  isUser() :boolean {
+    const decoded: any = jwtDecode(this.getToken());
+    return decoded.rol.includes('USER_ROLE');
+  }
+
 }

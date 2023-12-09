@@ -40,7 +40,9 @@
   },
 
   "HEADER": {
-    "LOGOUT": "ausloggen"
+    "LOGOUT": "ausloggen",
+    "ADMIN_PAGE": "Adminansicht",
+    "MEMBER_PAGE": "Member Profil"
   },
 
   "NOTIFIER": {
