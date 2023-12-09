@@ -13,9 +13,9 @@ import {AnimalCreateEditMode, CreateEditComponent} from './components/animal/cre
 const routes: Routes = [
   {path: '', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'animal', component: AnimalHomepageComponent},
   {path: 'register/confirm/:token', component: RegisterConfirmComponent},
   {path: 'home', component: HomeComponent},
+  {path: 'home/:id', component: AnimalHomepageComponent},
   {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
   {

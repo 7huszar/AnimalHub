@@ -9,11 +9,12 @@ export interface Animal {
   name: string;
   species: Species;
   race: string;
+  sex?: string;
   birthDate: Date;
   height?: number;
   weight?: number;
   shelter?: Shelter;
-  createdOn?: Date
+  createdOn?: Date;
 }
 
 /**
