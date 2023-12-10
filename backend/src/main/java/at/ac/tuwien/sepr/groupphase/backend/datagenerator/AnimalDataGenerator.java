@@ -44,12 +44,11 @@ public class AnimalDataGenerator {
 
     @PostConstruct
     private void generateAnimals() {
-        LOGGER.debug("generating demo shelter ({})", SHELTER);
-        Shelter shelter = shelterRepository.save(SHELTER);
-
         if (!animalRepository.findAll().isEmpty()) {
             LOGGER.debug("animals already generated");
         } else {
+            LOGGER.debug("generating demo shelter ({})", SHELTER);
+            Shelter shelter = shelterRepository.save(SHELTER);
             LOGGER.debug("generating {} animal entries", AMOUNT);
             for (int i = 1; i <= AMOUNT; i++) {
                 Animal animal = Animal.builder()

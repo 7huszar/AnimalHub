@@ -2,7 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -10,50 +11,52 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ShelterValidator;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ShelterServiceImpl implements ShelterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShelterRepository shelterRepository;
-    private final ShelterMapper mapper;
+    private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
 
     @Override
-    public List<ShelterDetailDto> findAll() {
+    public List<ShelterDto> findAll() {
         LOGGER.debug("Find all Shelters");
 
         return shelterRepository.findAll().stream()
-            .map(mapper::shelterToShelterDetailDto).toList();
+            .map(mapper::shelterToShelterDto).toList();
     }
 
     @Override
-    public ShelterDetailDto create(CreateShelterDto shelterDto) throws ValidationException {
+    public ShelterDto create(CreateShelterDto shelterDto) throws ValidationException {
         LOGGER.debug("Create new Shelter: " + shelterDto);
 
         validator.validateForCreate(shelterDto);
         Shelter entity = mapper.createShelterDtoToShelter(shelterDto);
         entity = shelterRepository.save(entity);
-        return mapper.shelterToShelterDetailDto(entity);
+        return mapper.shelterToShelterDto(entity);
     }
 
     @Override
-    public ShelterDetailDto update(ShelterDetailDto shelterDto) throws ValidationException {
+    public ShelterDto update(ShelterDto shelterDto) throws ValidationException {
         LOGGER.debug("Update Shelter with id: " + shelterDto.getId() + ", with following data:" + shelterDto);
 
         validator.validateForUpdate(shelterDto);
-        shelterRepository.deleteById(shelterDto.getId());
-        Shelter entity = mapper.shelterDetailDtoToShelter(shelterDto);
+        Shelter entity = mapper.shelterDtoToShelter(shelterDto);
         entity = shelterRepository.save(entity);
-        return mapper.shelterToShelterDetailDto(entity);
+        return mapper.shelterToShelterDto(entity);
     }
 
     @Override
@@ -63,6 +66,8 @@ public class ShelterServiceImpl implements ShelterService {
         var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
+
+        Hibernate.initialize(shelter.getAnimals());
 
         return mapper.shelterToShelterDetailDto(shelter);
     }

@@ -2,7 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -25,7 +25,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalRepository animalRepository;
-    private final AnimalMapper mapper;
+    private final AnimalShelterMapper mapper;
     private final AnimalValidator validator;
 
     @Override

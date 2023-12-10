@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface ShelterService {
      *
      * @return List of all Shelters as ShelterDetailDto
      */
-    List<ShelterDetailDto> findAll();
+    List<ShelterDto> findAll();
 
 
     /**
@@ -27,7 +28,7 @@ public interface ShelterService {
      * @return the created shelter as ShelterDetailDto
      * @throws ValidationException if the data given for the shelter is in itself incorrect (no name, name too long …)
      */
-    ShelterDetailDto create(CreateShelterDto shelterDto) throws ValidationException;
+    ShelterDto create(CreateShelterDto shelterDto) throws ValidationException;
 
     /**
      * Updates the shelter with the data given in {@code shelterDto} in the persistent data store.
@@ -37,7 +38,7 @@ public interface ShelterService {
      * @throws ValidationException if the update data given for the shelter is in itself incorrect (no name, name too long …)
      * @code NotFoundException when there is no shelter with the given ID
      */
-    ShelterDetailDto update(ShelterDetailDto shelterDto) throws ValidationException;
+    ShelterDto update(ShelterDto shelterDto) throws ValidationException;
 
     /**
      * Get the shelter with given ID from the database.
