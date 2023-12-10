@@ -22,7 +22,6 @@ export class ShelterComponent implements OnInit {
       this.animals = animals;
       this.displayAnimalCards('all');
     });
-    this.displayAnimalCards('all');
   }
 
   displayAnimalCards(filter: string): void {

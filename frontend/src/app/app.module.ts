@@ -25,6 +25,7 @@ import {ShelterComponent} from "./components/shelter/shelter.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import { ShelterCreateEditComponent } from './components/shelter/shelter-create-edit/shelter-create-edit.component';
+import { AnimalListComponent } from './components/animal-list/animal-list.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -46,6 +47,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     RegisterConfirmComponent,
     ShelterCreateEditComponent,
     ShelterComponent,
+    AnimalListComponent,
   ],
   imports: [
     BrowserModule,

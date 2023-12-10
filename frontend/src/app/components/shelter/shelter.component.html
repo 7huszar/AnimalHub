@@ -14,14 +14,5 @@
     </select>
   </div>
 
-  <div id="animal-cards" class="row">
-    <div class="card col-md-3" *ngFor="let animal of displayedAnimals">
-      <img [src]="animal.imageUrl" class="card-img-top" alt="Animal Image">
-      <div class="card-body">
-        <h5 class="card-title">{{ animal.name }}</h5>
-        <p class="card-text">Type: {{ animal.species }}</p>
-        <button class="btn btn-primary" (click)="editAnimal(animal.id)">Edit</button>
-      </div>
-    </div>
-  </div>
+  <app-animal-list></app-animal-list>
 </div>
