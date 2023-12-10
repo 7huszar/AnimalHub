@@ -26,3 +26,16 @@ export interface AnimalListDto {
   race: string;
   dateOfBirth: Date;
 }
+
+/**
+ * Interface for searching animals
+ */
+export interface AnimalSearch {
+  name?: string;
+  species?: Species;
+  race?: string;
+  birthDate?: Date;
+  height?: number;
+  weight?: number;
+  shelter?: Shelter;
+}

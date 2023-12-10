@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import {AnimalService} from "../../services/animal.service";
+import {Animal} from "../../dtos/animal";
+import {Shelter} from "../../dtos/shelter";
 
 
 @Component({
@@ -7,20 +10,23 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./shelter.component.scss']
 })
 export class ShelterComponent implements OnInit {
-  private animals = [
-    { id: 1, name: 'Lion', type: 'mammal' },
-    { id: 2, name: 'Eagle', type: 'bird' },
-    // Add more animals as needed
-  ];
+  private animals: Animal[] = [];
 
   displayedAnimals: any[] = [];
 
+  constructor(private animalService: AnimalService) {
+  }
+
   ngOnInit(): void {
+    this.animalService.findAll().subscribe(animals => {
+      this.animals = animals;
+      this.displayAnimalCards('all');
+    });
     this.displayAnimalCards('all');
   }
 
   displayAnimalCards(filter: string): void {
-    this.displayedAnimals = this.animals.filter(animal => filter === 'all' || animal.type === filter);
+    this.displayedAnimals = this.animals.filter(animal => filter === 'all' || animal.species === filter);
   }
 
   editAnimal(animalId: number): void {

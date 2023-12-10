@@ -1,7 +1,8 @@
 <app-header></app-header>
 
 <div class="container">
-  <h1 class="mt-4 mb-4">Animal Cards</h1>
+  <h1 class="mt-4 mb-4">shelter.name
+  </h1>
 
   <div class="form-group">
     <label for="filter">Filter by:</label>
@@ -18,7 +19,7 @@
       <img [src]="animal.imageUrl" class="card-img-top" alt="Animal Image">
       <div class="card-body">
         <h5 class="card-title">{{ animal.name }}</h5>
-        <p class="card-text">Type: {{ animal.type }}</p>
+        <p class="card-text">Type: {{ animal.species }}</p>
         <button class="btn btn-primary" (click)="editAnimal(animal.id)">Edit</button>
       </div>
     </div>
