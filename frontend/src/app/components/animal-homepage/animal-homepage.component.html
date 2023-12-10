@@ -23,20 +23,36 @@
     </div>
     <div class="col">
       <div class="container position-relative" style="height: 100%">
-        <div class="row">
-          <span>Alter: Test</span>
-          <span>Alter: Test</span>
+        <div class="row" style="height: 15%">
+          <div class="col-md-2">Species:</div>
+          <div class="col">{{ animal.species }}</div>
+        </div>
+        <div class="row" style="height: 15%">
+          <div class="col-md-2">Race:</div>
+          <div class="col">{{ animal.race }}</div>
+        </div>
+        <div class="row" style="height: 15%">
+          <div class="col-md-2">Sex:</div>
+          <div class="col">{{ animal.sex }}</div>
+        </div>
+        <div class="row" style="height: 15%">
+          <div class="col-md-2">Date of birth:</div>
+          <div class="col">{{ animal.birthDate }}</div>
+        </div>
+        <div class="row" style="height: 15%">
+          <div class="col-md-2">Height:</div>
+          <div class="col">{{ animal.height }}</div>
+        </div>
+        <div class="row" style="height: 15%">
+          <div class="col-md-2">Weight:</div>
+          <div class="col">{{ animal.weight }}</div>
         </div>
         <div class="row fixed-button">
           <div class="col">
-            <button type="button" class="btn btn-primary">Für $Tiername spenden</button>
-          </div>
-          <div class="col">
-            <button type="button" class="btn btn-primary">Primary</button>
+            <button type="button" class="btn btn-primary">Für {{ animal.name }} spenden</button>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -46,7 +62,7 @@
     <div class="col">
       <div class="headings">
         <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
-          <h1 style=" float: left">Medien</h1>
+          <h1 style=" float: left">Media</h1>
         </div>
       </div>
       <div class="content">
