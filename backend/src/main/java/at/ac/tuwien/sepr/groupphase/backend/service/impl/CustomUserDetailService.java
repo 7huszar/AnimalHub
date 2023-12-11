@@ -9,14 +9,11 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.conflictchecker.UserConflictChecker;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -38,8 +35,7 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
-    private final JavaMailSender emailSender;
-    private final UserConflictChecker conflictChecker;
+    private final ConflictValidator conflictChecker;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

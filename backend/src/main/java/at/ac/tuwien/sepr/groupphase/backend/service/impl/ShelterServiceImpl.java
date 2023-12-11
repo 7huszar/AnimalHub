@@ -4,10 +4,12 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ShelterValidator;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -30,6 +33,7 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
     private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
+    private final AnimalService animalService;
 
     @Override
     public List<ShelterDto> findAll() {
@@ -81,9 +85,15 @@ public class ShelterServiceImpl implements ShelterService {
                 () -> new NotFoundException("Shelter does not exist.")
             );
 
-        // TODO check for conflicts: if shelter has any animals assigned to it!
+        if (shelter.getAnimals() != null) {
+            if (!shelter.getAnimals().isEmpty()) {
+                Set<Animal> animalsToDelete = shelter.getAnimals();
 
+                for (Animal animal : animalsToDelete) {
+                    animalService.delete(animal.getId());
+                }
+            }
+        }
         shelterRepository.delete(shelter);
     }
-
 }

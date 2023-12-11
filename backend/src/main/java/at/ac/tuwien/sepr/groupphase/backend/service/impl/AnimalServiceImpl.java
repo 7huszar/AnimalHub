@@ -4,11 +4,13 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,7 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalShelterMapper mapper;
     private final AnimalValidator validator;
+    private final ConflictValidator conflictValidator;
 
     @Override
     public List<AnimalDetailDto> findAll() {
@@ -38,10 +41,11 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException {
+    public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException {
         LOGGER.debug("Create new Animal: " + animalDto);
 
         validator.validateForCreate(animalDto);
+        conflictValidator.validateForCreate(animalDto);
         Animal entity = mapper.createAnimalDtoToAnimal(animalDto);
 
         entity = animalRepository.save(entity);

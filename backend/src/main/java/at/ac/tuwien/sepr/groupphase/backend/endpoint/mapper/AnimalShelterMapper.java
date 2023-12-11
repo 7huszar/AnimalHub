@@ -17,6 +17,8 @@ public interface AnimalShelterMapper {
 
     AnimalDto animalToAnimalDto(Animal animal);
 
+    AnimalDto createAnimalDtoToAnimalDto(CreateAnimalDto animal);
+
     AnimalDetailDto animalToAnimalDetailDto(Animal animal);
 
     Animal animalDtoToAnimal(AnimalDto animalDto);
@@ -28,6 +30,8 @@ public interface AnimalShelterMapper {
     Shelter createShelterDtoToShelter(CreateShelterDto shelterDto);
 
     ShelterDto shelterToShelterDto(Shelter shelter);
+
+    ShelterDto shelterDetailDtoToShelterDto(ShelterDetailDto shelter);
 
     ShelterDetailDto shelterToShelterDetailDto(Shelter shelter);
 
