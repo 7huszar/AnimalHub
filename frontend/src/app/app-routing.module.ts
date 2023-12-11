@@ -7,6 +7,7 @@ import {AdminPageComponent} from "./components/admin-page/admin-page.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {RegisterConfirmComponent} from "./components/register/register-confirm/register-confirm.component";
 import {AuthGuard} from './guards/auth.guard';
+import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
 import {AnimalCreateEditMode, CreateEditComponent} from './components/animal/create-edit/create-edit.component';
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'register/confirm/:token', component: RegisterConfirmComponent},
   {path: 'home', component: HomeComponent},
+  {path: 'home/:id', component: AnimalHomepageComponent},
   {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
   {

@@ -11,7 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.conflictchecker.UserConflictChecker;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -46,6 +46,7 @@ public class CustomUserDetailService implements UserService {
     private final JavaMailSender emailSender;
     private final SecurityProperties securityProperties;
     private final UserConflictChecker conflictChecker;
+    private final ConflictValidator conflictChecker;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

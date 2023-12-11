@@ -20,6 +20,7 @@ import { AdminPageComponent } from './components/admin-page/admin-page.component
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
 import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
+import { AnimalHomepageComponent } from './components/animal-homepage/animal-homepage.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 
@@ -41,6 +42,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnimalCardComponent,
     RegisterComponent,
     RegisterConfirmComponent,
+    AnimalHomepageComponent,
   ],
   imports: [
     BrowserModule,
