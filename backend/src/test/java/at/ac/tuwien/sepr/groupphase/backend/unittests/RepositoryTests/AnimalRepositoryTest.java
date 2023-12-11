@@ -1,10 +1,11 @@
-package at.ac.tuwien.sepr.groupphase.backend.unittests;
+package at.ac.tuwien.sepr.groupphase.backend.unittests.RepositoryTests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 // This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
@@ -30,9 +29,10 @@ public class AnimalRepositoryTest implements TestData {
 
 
     // POSITIVE TESTS
-
+    @Transactional
     @Test
     public void createNewAnimalWithSuccess() {
+
         Shelter shelter = Shelter.builder()
             .id(TEST_SHELTER_ID)
             .name(TEST_SHELTER_NAME)
@@ -44,6 +44,7 @@ public class AnimalRepositoryTest implements TestData {
         assertDoesNotThrow(() -> {
             shelterRepository.save(shelter);
         });
+
 
         Animal animal = Animal.builder()
             .id(TEST_ANIMAL_ID)
@@ -57,6 +58,7 @@ public class AnimalRepositoryTest implements TestData {
             .build();
 
         Animal returnAnimal = animalRepository.save(animal);
+
 
         assertAll(
             () -> assertEquals(1, animalRepository.findAll().size()),
