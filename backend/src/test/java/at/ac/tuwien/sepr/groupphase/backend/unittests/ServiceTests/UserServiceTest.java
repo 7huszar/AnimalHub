@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.unittests;
+package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.junit.jupiter.api.extension.ExtendWith;

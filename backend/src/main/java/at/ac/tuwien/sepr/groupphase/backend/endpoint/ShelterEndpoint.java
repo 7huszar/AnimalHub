@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
@@ -38,34 +39,33 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping
     @Operation(summary = "Get list of shelters", security = @SecurityRequirement(name = "apiKey"))
-    public List<ShelterDetailDto> findAll() {
+    public List<ShelterDto> findAll() {
         LOGGER.info("GET " + BASE_PATH);
         return shelterService.findAll();
     }
 
-    @Secured(UserRole.Values.MEMBER_VALUE)
+    @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "Get shelter by id", security = @SecurityRequirement(name = "apiKey"))
     public ShelterDetailDto findById(@PathVariable UUID id) {
-        LOGGER.info("GET " + BASE_PATH + "/" + id);
+        LOGGER.info("GET " + BASE_PATH + "/ " + id);
         return shelterService.findById(id);
     }
 
-    @Secured(UserRole.Values.MEMBER_VALUE)
+    @Secured(UserRole.Values.ADMIN_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDetailDto create(@Valid @RequestBody CreateShelterDto shelterDto) throws ValidationException {
-        LOGGER.info("POST " + BASE_PATH + "/ " + shelterDto.getName());
+    public ShelterDto create(@Valid @RequestBody CreateShelterDto shelterDto) throws ValidationException {
+        LOGGER.info("POST " + BASE_PATH + "/" + shelterDto.getName());
         LOGGER.debug("Body of request:\n{}", shelterDto);
         return shelterService.create(shelterDto);
     }
 
     @Secured(UserRole.Values.MEMBER_VALUE)
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDetailDto update(@PathVariable UUID id, @Valid @RequestBody ShelterDetailDto shelterDto) throws ValidationException {
+    public ShelterDto update(@PathVariable UUID id, @Valid @RequestBody ShelterDto shelterDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", shelterDto);
         shelterDto.setId(id);
