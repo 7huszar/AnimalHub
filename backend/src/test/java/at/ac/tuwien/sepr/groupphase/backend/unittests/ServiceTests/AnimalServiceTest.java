@@ -1,13 +1,20 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +24,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
@@ -25,18 +34,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 //// the entire application context
 @SpringBootTest
 @ActiveProfiles("test")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class AnimalServiceTest implements TestData {
 
-    @Autowired
-    AnimalService animalService;
+    private final AnimalRepository animalRepository;
+    private final ShelterRepository shelterRepository;
 
-    @Autowired
-    ShelterService shelterService;
+    private final AnimalService animalService;
+    private final ShelterService shelterService;
 
-    @Autowired
-    AnimalShelterMapper mapper;
+    private final AnimalShelterMapper mapper;
 
-    @Transactional
+    @BeforeEach
+    public void beforeEach() {
+        shelterRepository.deleteAll();
+        animalRepository.deleteAll();   // at this point there shouldnt be any animals in the repo (just to be sure)
+    }
+
     @Test
     public void findAllSuccessfully() throws ValidationException, ConflictException {
 
@@ -97,7 +111,6 @@ public class AnimalServiceTest implements TestData {
     }
 
 
-    @Transactional
     @Test
     public void createNewAnimalWithSuccess() throws ValidationException, ConflictException {
 
@@ -109,15 +122,15 @@ public class AnimalServiceTest implements TestData {
             .createdOn(Instant.now())
             .build();
 
-        ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
+        ShelterDto shelterDto = shelterService.create(createShelterDto);
 
         assertAll(
             () -> assertEquals(1, shelterService.findAll().size()),
-            () -> assertEquals(createShelterDto.getName(), shelterDetailDto.getName()),
-            () -> assertEquals(createShelterDto.getAddress(), shelterDetailDto.getAddress()),
-            () -> assertEquals(createShelterDto.getPhoneNumber(), shelterDetailDto.getPhoneNumber()),
-            () -> assertEquals(createShelterDto.getEmail(), shelterDetailDto.getEmail()),
-            () -> assertEquals(createShelterDto.getCreatedOn(), shelterDetailDto.getCreatedOn())
+            () -> assertEquals(createShelterDto.getName(), shelterDto.getName()),
+            () -> assertEquals(createShelterDto.getAddress(), shelterDto.getAddress()),
+            () -> assertEquals(createShelterDto.getPhoneNumber(), shelterDto.getPhoneNumber()),
+            () -> assertEquals(createShelterDto.getEmail(), shelterDto.getEmail()),
+            () -> assertEquals(createShelterDto.getCreatedOn(), shelterDto.getCreatedOn())
         );
 
 
@@ -128,7 +141,7 @@ public class AnimalServiceTest implements TestData {
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)
-            .shelter(shelterDetailDto)
+            .shelter(shelterDto)
             .build();
 
         AnimalDetailDto animalDetailDto = animalService.create(animalDto);
@@ -144,7 +157,7 @@ public class AnimalServiceTest implements TestData {
             () -> assertEquals(animalDto.getWeight(), animalDetailDto.getWeight())
         );
 
-        ShelterDetailDto foundAnimalsInShelter = shelterService.findById(shelterDetailDto.getId());
+        ShelterDetailDto foundAnimalsInShelter = shelterService.findById(shelterDto.getId());
 
         assertAll(
             () -> assertEquals(1, shelterService.findAll().size()),
@@ -156,7 +169,6 @@ public class AnimalServiceTest implements TestData {
         );
     }
 
-    @Transactional
     @Test
     public void createNewAnimalUnsuccessfullyNotExistingShelter() {
 
@@ -175,7 +187,6 @@ public class AnimalServiceTest implements TestData {
         assertThrows(ConflictException.class, () -> animalService.create(animal));
     }
 
-    @Transactional
     @Test
     public void createNewAnimalUnsuccessfullyInvalidNameAndWeight() throws ValidationException {
 
@@ -212,7 +223,6 @@ public class AnimalServiceTest implements TestData {
         assertThrows(ValidationException.class, () -> animalService.create(animalDto));
     }
 
-    @Transactional
     @Test
     public void deleteShelterAndAnimalsInItSuccessfully() throws ValidationException, ConflictException {
 
@@ -247,8 +257,6 @@ public class AnimalServiceTest implements TestData {
             .build();
 
         AnimalDetailDto animalDetailDto = animalService.create(animalDto);
-
-
 
 
         shelterService.delete(shelterDetailDto.getId());

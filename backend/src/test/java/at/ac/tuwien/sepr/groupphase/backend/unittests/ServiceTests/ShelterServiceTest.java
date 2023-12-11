@@ -6,8 +6,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +20,36 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_ANIMAL_SHELTER;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_ADDRESS;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_EMAIL;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_NAME;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_PHONE_NUMBER;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 //// This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
 //// the entire application context
 @SpringBootTest
 @ActiveProfiles("test")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ShelterServiceTest {
 
-    @Autowired
-    ShelterService shelterService;
+    private final AnimalRepository animalRepository;
+    private final ShelterRepository shelterRepository;
 
-    @Autowired
-    AnimalShelterMapper mapper;
+    private final ShelterService shelterService;
 
-    @Transactional
+    private final AnimalShelterMapper mapper;
+
+    @BeforeEach
+    public void beforeEach() {
+        shelterRepository.deleteAll();
+        animalRepository.deleteAll();   // at this point there shouldnt be any animals in the repo (just to be sure)
+    }
+
     @Test
     public void findByIdWithSuccess() throws ValidationException {
 
@@ -42,28 +58,24 @@ public class ShelterServiceTest {
             .address(TEST_SHELTER_ADDRESS)
             .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
             .email(TEST_SHELTER_EMAIL)
-            .createdOn(Instant.now())
             .build();
 
         ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
         ShelterDetailDto foundShelter = shelterService.findById(shelterDetailDto.getId());
 
-            assertAll(
+        assertAll(
             () -> assertEquals(createShelterDto.getName(), foundShelter.getName()),
             () -> assertEquals(createShelterDto.getAddress(), foundShelter.getAddress()),
             () -> assertEquals(createShelterDto.getPhoneNumber(), foundShelter.getPhoneNumber()),
-            () -> assertEquals(createShelterDto.getEmail(), foundShelter.getEmail()),
-            () -> assertEquals(createShelterDto.getCreatedOn(), foundShelter.getCreatedOn())
+            () -> assertEquals(createShelterDto.getEmail(), foundShelter.getEmail())
         );
     }
 
-    @Transactional
     @Test
     public void findByIdUnsuccessfully() {
         assertThrows(NotFoundException.class, () -> shelterService.findById(TEST_ANIMAL_SHELTER.getId()));
     }
 
-    @Transactional
     @Test
     public void createNewShelterWithSuccess() throws ValidationException {
 
@@ -87,7 +99,6 @@ public class ShelterServiceTest {
         );
     }
 
-    @Transactional
     @Test
     public void createNewShelterUnsuccessfullyInvalidAddressAndPhoneNumber() {
 
@@ -102,7 +113,6 @@ public class ShelterServiceTest {
         assertThrows(ValidationException.class, () -> shelterService.create(createShelterDto));
     }
 
-    @Transactional
     @Test
     public void deleteShelterWithSuccess() throws ValidationException {
 
@@ -130,7 +140,6 @@ public class ShelterServiceTest {
         assertEquals(0, shelterService.findAll().size());
     }
 
-    @Transactional
     @Test
     public void deleteShelterUnsuccessfully() throws ValidationException {
 
@@ -159,7 +168,6 @@ public class ShelterServiceTest {
         assertThrows(NotFoundException.class, () -> shelterService.delete(shelterDetailDto.getId()));
     }
 
-    @Transactional
     @Test
     public void updateShelterUnsuccessfully() throws ValidationException {
 

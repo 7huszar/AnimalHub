@@ -4,12 +4,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ShelterValidator;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -33,7 +30,6 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
     private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
-    private final AnimalService animalService;
 
     @Override
     public List<ShelterDto> findAll() {
@@ -58,9 +54,18 @@ public class ShelterServiceImpl implements ShelterService {
         LOGGER.debug("Update Shelter with id: " + shelterDto.getId() + ", with following data:" + shelterDto);
 
         validator.validateForUpdate(shelterDto);
-        Shelter entity = mapper.shelterDtoToShelter(shelterDto);
-        entity = shelterRepository.save(entity);
-        return mapper.shelterToShelterDto(entity);
+        Shelter newEntity = mapper.shelterDtoToShelter(shelterDto);
+
+        // Get old entity for the animal set
+        Shelter oldEntity = shelterRepository.findById(newEntity.getId()).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        // Set the animal set for the new entity to avoid hibernate errors
+        newEntity.setAnimals(oldEntity.getAnimals());
+
+        newEntity = shelterRepository.save(newEntity);
+        return mapper.shelterToShelterDto(newEntity);
     }
 
     @Override
@@ -80,20 +85,10 @@ public class ShelterServiceImpl implements ShelterService {
     public void delete(UUID id) {
         LOGGER.debug("Delete Shelter with id: " + id);
 
-        var shelter = shelterRepository.findById(id)
-            .orElseThrow(
-                () -> new NotFoundException("Shelter does not exist.")
-            );
+        var shelter = shelterRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
 
-        if (shelter.getAnimals() != null) {
-            if (!shelter.getAnimals().isEmpty()) {
-                Set<Animal> animalsToDelete = shelter.getAnimals();
-
-                for (Animal animal : animalsToDelete) {
-                    animalService.delete(animal.getId());
-                }
-            }
-        }
         shelterRepository.delete(shelter);
     }
 }
