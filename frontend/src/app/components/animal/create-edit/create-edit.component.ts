@@ -8,6 +8,7 @@ import {Observable} from "rxjs";
 import {FileService} from "../../../services/file.service";
 import {CreateAnimalFile} from "../../../dtos/file";
 import {Mode} from "../../../enums/modes";
+import {IdOnlyShelter} from "../../../dtos/shelter";
 
 @Component({
   selector: 'app-create-edit',
@@ -21,7 +22,10 @@ export class CreateEditComponent implements OnInit {
     name: '',
     species: Species.dog,
     race: '',
-    birthDate: new Date()
+    birthDate: new Date(),
+    height: 0,
+    weight: 0,
+    shelter: new IdOnlyShelter('970846d3-aeba-4ce9-9057-3e222137a692')
   };
 
   private image: File = null;

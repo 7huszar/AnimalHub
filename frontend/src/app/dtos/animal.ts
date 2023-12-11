@@ -10,9 +10,9 @@ export interface Animal {
   species: Species;
   race: string;
   birthDate: Date;
-  height?: number;
-  weight?: number;
-  shelter?: Shelter;
+  height: number;
+  weight: number;
+  shelter: Shelter;
   createdOn?: Date
 }
 
