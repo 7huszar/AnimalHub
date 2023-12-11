@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ShelterMapper;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,7 @@ import java.util.List;
 public class ShelterValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final ShelterMapper mapper;
-    private final AnimalRepository animalRepository;
+    private final AnimalShelterMapper mapper;
 
     // ### HELPER METHODS
 
@@ -40,7 +37,7 @@ public class ShelterValidator {
      * @param shelterDto shelterDto
      * @throws ValidationException when at least one value cannot be used / validated
      */
-    void validateShelterDetails(ShelterDetailDto shelterDto) throws ValidationException {
+    void validateShelterDetails(ShelterDto shelterDto) throws ValidationException {
         LOGGER.trace("(validateShelterDetails{})", shelterDto);
 
         List<String> validationErrors = new ArrayList<>();
@@ -77,18 +74,6 @@ public class ShelterValidator {
             validationErrors.add("Email is too long");
         }
 
-        // # Animals
-
-        if (!shelterDto.getAnimals().isEmpty()) {
-            for (AnimalDetailDto animalDto : shelterDto.getAnimals()) {
-                try {
-                    animalRepository.findById(animalDto.getId());
-                } catch (NotFoundException e) {
-                    validationErrors.add("The shelter-associated Animal with ID: " + animalDto.getId() + " could not be found in the Animal Database.");
-                }
-            }
-        }
-
         // # Created On
 
         // TODO create validation for created on - date
@@ -110,7 +95,7 @@ public class ShelterValidator {
      */
     public void validateForCreate(CreateShelterDto shelterDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", shelterDto);
-        validateShelterDetails(mapper.createShelterDtoToShelterDetailDto(shelterDto));
+        validateShelterDetails(mapper.createShelterDtoToShelterDto(shelterDto));
     }
 
     /**
@@ -119,7 +104,7 @@ public class ShelterValidator {
      * @param shelterDto shelterDto
      * @throws ValidationException when at least one value cannot be used / validated
      */
-    public void validateForUpdate(ShelterDetailDto shelterDto) throws ValidationException {
+    public void validateForUpdate(ShelterDto shelterDto) throws ValidationException {
         LOGGER.trace("validateForUpdate({})", shelterDto);
         List<String> validationErrors = new ArrayList<>();
 

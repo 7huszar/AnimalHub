@@ -30,7 +30,7 @@ public class ShelterDetailDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
-    private Set<AnimalDetailDto> animals;
+    private Set<AnimalDto> animals;
 
     private Instant createdOn;
 

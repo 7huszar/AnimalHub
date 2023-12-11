@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface AnimalService {
      * @return the created animal as AnimalDetailDto
      * @throws ValidationException if the data given for the animal is in itself incorrect (no name, name too long …)
      */
-    AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException;
+    AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException;
 
     /**
      * Updates the animal with the data given in {@code animalDto} in the persistent data store.
