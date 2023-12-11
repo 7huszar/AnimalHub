@@ -19,7 +19,8 @@
   },
 
   "HOME": {
-    "ACCOUNT": "manage account"
+    "ACCOUNT": "manage account",
+    "LOAD_FAILED": "failed to load animals"
   },
 
   "REGISTER": {

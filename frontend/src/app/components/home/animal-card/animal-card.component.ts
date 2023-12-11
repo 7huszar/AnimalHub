@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AnimalListDto} from "../../../dtos/animal";
 
 @Component({
   selector: 'app-animal-card',
@@ -8,8 +7,8 @@ import {AnimalListDto} from "../../../dtos/animal";
 })
 export class AnimalCardComponent implements OnInit{
 
-  @Input() animal :AnimalListDto;
-
+  @Input() name :string = "Schnappi das kleine Krokodil";
+  @Input() id :number | unknown;
   like() :void {
     console.log("like");
   }
