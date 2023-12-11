@@ -3,14 +3,15 @@
 
 <div class="container-fluid">
   <div class="row">
+    <div class="col-1"></div>
     <div class="col center-column">
-      <button class="bi bi-funnel-fill text-primary btn" aria-label="Filter">
+      <button class="bi bi-funnel-fill text-primary btn align-self-start" aria-label="Filter" style="padding-left: 0">
         Filter
       </button>
     </div>
   </div>
   <div class="row">
-    <div class="col-2 center-column">
+    <div class="col-1 center-column">
       <i class="bi bi-arrow-left-square-fill text-primary btn"></i>
     </div>
     <div class="col">
@@ -22,11 +23,18 @@
     <div class="col">
       <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
     </div>
-    <div class="col-2 center-column">
+
+    <div class="col-1 center-column">
       <i (click)="setAllCards()" class="bi bi-arrow-right-square-fill text-primary btn"></i>
     </div>
   </div>
   <div class="row">
-    Favoriten
+    <div class="col">
+      <div class="headings">
+        <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
+          <h1 style=" float: left">Favorites</h1>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
