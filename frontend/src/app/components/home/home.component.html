@@ -1,24 +1,32 @@
 <app-header></app-header>
 
 
-<div class="container mt-xxl-5">
-  <div class="container">
-    <div class="row">
-      <div class="col center-column">
-        <i class="bi bi-arrow-left-square-fill text-primary"></i>
-      </div>
-      <div class="col">
-        <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
-      </div>
-      <div class="col">
-        <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
-      </div>
-      <div class="col">
-        <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
-      </div>
-      <div class="col center-column">
-        <i (click)="setAllCards()" class="bi bi-arrow-right-square-fill text-primary btn"></i>
-      </div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col center-column">
+      <button class="bi bi-funnel-fill text-primary btn" aria-label="Filter">
+        Filter
+      </button>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-2 center-column">
+      <i class="bi bi-arrow-left-square-fill text-primary btn"></i>
+    </div>
+    <div class="col">
+      <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
+    </div>
+    <div class="col">
+      <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
+    </div>
+    <div class="col">
+      <app-animal-card [name]="getCard(Position.LEFT).name" [id]="getCard(Position.LEFT).id"></app-animal-card>
+    </div>
+    <div class="col-2 center-column">
+      <i (click)="setAllCards()" class="bi bi-arrow-right-square-fill text-primary btn"></i>
+    </div>
+  </div>
+  <div class="row">
+    Favoriten
   </div>
 </div>

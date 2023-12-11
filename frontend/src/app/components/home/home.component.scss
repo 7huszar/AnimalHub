@@ -14,14 +14,22 @@ body {
 .center-column {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
 }
 
 .bi-arrow-left-square-fill {
-  font-size: 5rem;
+  font-size: 5em;
 }
 
 .bi-arrow-right-square-fill {
-  font-size: 5rem;
+  font-size: 5em;
 }
+
+.bi-funnel-fill {
+  font-size: 2em;
+}
+
+.container-fluid {
+  padding-top: 2em;
+}
+
