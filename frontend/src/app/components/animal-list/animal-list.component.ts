@@ -11,8 +11,7 @@ export class AnimalListComponent {
 
   private animals: Animal[] =  [];
   displayedAnimals: any[] = [];
-  currentPage: number = 1;
-  itemsPerPage: number = 9;
+  p: number;
 
   constructor(private animalService: AnimalService) {
   }
@@ -25,25 +24,8 @@ export class AnimalListComponent {
   }
 
   displayAnimalCards(filter: string): void {
-    const startItem = (this.currentPage - 1) * this.itemsPerPage;
-    const endItem = this.currentPage * this.itemsPerPage;
     this.displayedAnimals = this.animals
       .filter(animal => filter === 'all' || animal.species === filter)
-      .slice(startItem, endItem);
-  }
-
-  nextPage(): void {
-    if (this.currentPage * this.itemsPerPage < this.animals.length) {
-      this.currentPage++;
-      this.displayAnimalCards('all');
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.displayAnimalCards('all');
-    }
   }
 
   editAnimal(animalId: number): void {
