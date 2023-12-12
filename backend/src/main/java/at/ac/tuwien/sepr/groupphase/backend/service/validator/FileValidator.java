@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +10,13 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class FileValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final AnimalRepository animalRepository;
     // ### HELPER METHODS
 
     Boolean stringIsEmpty(String s) {
@@ -38,17 +35,10 @@ public class FileValidator {
      * @param fileDto fileDto
      * @throws ValidationException when at least one value cannot be used / validated
      */
-    public void validateForCreate(CreateAnimalFileDto fileDto) throws ValidationException {
+    public void validateForCreate(CreateFileDto fileDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", fileDto);
 
         List<String> validationErrors = new ArrayList<>();
-
-        // # Animal Id
-        try {
-            animalRepository.findById(fileDto.getAnimalId()).orElseThrow(() -> new NotFoundException("Animal with given ID does not exist."));
-        } catch (NotFoundException e) {
-            validationErrors.add(e.getMessage());
-        }
 
         // # Name
 
@@ -70,7 +60,7 @@ public class FileValidator {
         if (fileDto.getFile().isEmpty()) {
             validationErrors.add("No File given");
         }
-        switch (fileDto.getFile().getContentType()) {
+        switch (Objects.requireNonNull(fileDto.getFile().getContentType())) {
             case "image/bmp":
                 // ALLOWED -> No validation error
                 break;

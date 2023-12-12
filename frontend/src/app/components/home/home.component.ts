@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {Animal} from "../../dtos/animal";
+import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 
 @Component({
@@ -10,11 +10,11 @@ import {AnimalService} from "../../services/animal.service";
 })
 export class HomeComponent implements OnInit {
 
-  private left :Animal;
-  private middle :Animal;
-  private right :Animal;
+  private left :AnimalDetailDto;
+  private middle :AnimalDetailDto;
+  private right :AnimalDetailDto;
 
-  private animalList :Animal[];
+  private animalList :AnimalDetailDto[];
 
   constructor(public authService: AuthService, private animalService :AnimalService) { }
 
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getCard(position: Position): Animal {
+  getCard(position: Position): AnimalDetailDto {
     if (this.animalList && this.animalList.length > 0) {
       switch (position) {
         case Position.LEFT:
