@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

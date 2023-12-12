@@ -1,17 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.*;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * Service to work with Shelters.
  */
 public interface ShelterService {
+
+
+    /**
+     * Search for horses in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in horse.
+     *
+     * @param searchParameters the search parameters to use in filtering.
+     * @return the horses where the given fields match.
+     */
+    Stream<ShelterListDto> search(ShelterSearchDto searchParameters);
+
 
     /**
      * Get all Shelters from database.

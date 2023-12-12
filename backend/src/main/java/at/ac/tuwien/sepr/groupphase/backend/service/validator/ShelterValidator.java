@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class ShelterValidator {
 
     // ### HELPER METHODS
 
-    Boolean stringIsEmpty(String s) {
+    private Boolean stringIsEmpty(String s) {
         if (s != null) {
             return s.isEmpty() || s.isBlank();
         } else {

@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;

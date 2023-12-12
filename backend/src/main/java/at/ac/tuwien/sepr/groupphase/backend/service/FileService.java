@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.CreateAnimalFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 

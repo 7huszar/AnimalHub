@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;

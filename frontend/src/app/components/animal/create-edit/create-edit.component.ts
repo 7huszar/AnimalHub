@@ -7,11 +7,8 @@ import {NgForm, NgModel} from '@angular/forms';
 import {Observable} from "rxjs";
 import {FileService} from "../../../services/file.service";
 import {CreateAnimalFile} from "../../../dtos/file";
-
-export enum AnimalCreateEditMode {
-  create,
-  edit,
-}
+import {Mode} from "../../../enums/modes";
+import {IdOnlyShelter} from "../../../dtos/shelter";
 
 @Component({
   selector: 'app-create-edit',
@@ -20,12 +17,15 @@ export enum AnimalCreateEditMode {
 })
 export class CreateEditComponent implements OnInit {
 
-  mode: AnimalCreateEditMode = AnimalCreateEditMode.create;
+  mode: Mode = Mode.CREATE;
   animal: Animal = {
     name: '',
     species: Species.dog,
     race: '',
-    birthDate: new Date()
+    birthDate: new Date(),
+    height: 0,
+    weight: 0,
+    shelter: new IdOnlyShelter('970846d3-aeba-4ce9-9057-3e222137a692')
   };
 
   private image: File = null;
@@ -81,9 +81,9 @@ export class CreateEditComponent implements OnInit {
 
   public get heading(): string {
     switch (this.mode) {
-      case AnimalCreateEditMode.create:
+      case Mode.CREATE:
         return 'Create New Animal';
-      case AnimalCreateEditMode.edit:
+      case Mode.EDIT:
         return 'Edit Animal';
       default:
         return '?';
@@ -92,9 +92,9 @@ export class CreateEditComponent implements OnInit {
 
   public get submitButtonText(): string {
     switch (this.mode) {
-      case AnimalCreateEditMode.create:
+      case Mode.CREATE:
         return 'Create';
-      case AnimalCreateEditMode.edit:
+      case Mode.EDIT:
         return 'Update';
       default:
         return '?';
@@ -102,7 +102,7 @@ export class CreateEditComponent implements OnInit {
   }
 
   get modeIsCreate(): boolean {
-    return this.mode === AnimalCreateEditMode.create;
+    return this.mode === Mode.CREATE;
   }
 
   ngOnInit(): void {
@@ -146,7 +146,7 @@ export class CreateEditComponent implements OnInit {
     if (form.valid) {
       let observable: Observable<Animal>;
       switch (this.mode) {
-        case AnimalCreateEditMode.create:
+        case Mode.CREATE:
           this.animalService.create(this.animal).subscribe({
             next: data => {
               this.uploadImage(data.id);
@@ -155,10 +155,7 @@ export class CreateEditComponent implements OnInit {
           });
 
           break;
-        case AnimalCreateEditMode.edit:
-          if(this.profilePictureChanged){
-            // delete old picture from database
-          }
+        case Mode.EDIT:
           // this.animalService.update(this.animal);
           break;
         default:

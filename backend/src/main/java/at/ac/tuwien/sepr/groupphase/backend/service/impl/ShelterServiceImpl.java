@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.*;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -20,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -30,6 +29,24 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
     private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
+
+
+
+
+    /**
+     * Search for horses in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in horse.
+     *
+     * @param searchParameters the search parameters to use in filtering.
+     * @return the horses where the given fields match.
+     */
+    @Override
+    public Stream<ShelterListDto> search(ShelterSearchDto searchParameters) {
+        var shelters = shelterRepository.findByNameIgnoreCaseContaining(searchParameters.name());
+
+        return shelters.stream()
+            .map(mapper::shelterToShelterListDto);
+    }
 
     @Override
     public List<ShelterDto> findAll() {
