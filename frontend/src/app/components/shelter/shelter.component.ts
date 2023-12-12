@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AnimalService} from "../../services/animal.service";
 import {Animal} from "../../dtos/animal";
-import {Shelter} from "../../dtos/shelter";
+
 
 
 @Component({
@@ -11,10 +11,10 @@ import {Shelter} from "../../dtos/shelter";
 })
 export class ShelterComponent implements OnInit {
   private animals: Animal[] = [];
-
   displayedAnimals: any[] = [];
 
-  constructor(private animalService: AnimalService) {
+  constructor(private animalService: AnimalService,
+  ) {
   }
 
   ngOnInit(): void {

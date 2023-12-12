@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.CreateAnimalFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

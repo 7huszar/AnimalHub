@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.CreateAnimalFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;

@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;

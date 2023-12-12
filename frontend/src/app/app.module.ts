@@ -27,29 +27,31 @@ import {ToastrModule} from "ngx-toastr";
 import { ShelterCreateEditComponent } from './components/shelter/shelter-create-edit/shelter-create-edit.component';
 import { AnimalListComponent } from './components/animal-list/animal-list.component';
 import {NgOptimizedImage} from "@angular/common";
+import {ConfirmDeleteDialogComponent} from "./components/confirm-delete-dialog/confirm-delete-dialog.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    HomeComponent,
-    LoginComponent,
-    CreateEditComponent,
-    LangSelectComponent,
-    MemberProfileComponent,
-    AdminPageComponent,
-    AnimalCardComponent,
-    RegisterComponent,
-    RegisterConfirmComponent,
-    ShelterCreateEditComponent,
-    ShelterComponent,
-    AnimalListComponent,
-  ],
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        FooterComponent,
+        HomeComponent,
+        LoginComponent,
+        CreateEditComponent,
+        LangSelectComponent,
+        MemberProfileComponent,
+        AdminPageComponent,
+        AnimalCardComponent,
+        RegisterComponent,
+        RegisterConfirmComponent,
+        ShelterCreateEditComponent,
+        ShelterComponent,
+        AnimalListComponent,
+        ConfirmDeleteDialogComponent,
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,

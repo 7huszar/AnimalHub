@@ -1,21 +1,24 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAnimalDto {
+public class AnimalDetailDto {
+
+    private UUID id;
 
     @NotNull(message = "Name must not be null")
     private String name;
@@ -36,15 +39,20 @@ public class CreateAnimalDto {
 
     private double weight;
 
+    private Instant createdOn;
+
     @Override
     public String toString() {
-        return "CreateAnimalDto{"
-            + "name='" + name + '\''
-            + ", species='" + species + '\''
+        return "AnimalDetailDto{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", species=" + species
             + ", race='" + race + '\''
-            + ", birthDate='" + birthDate + '\''
-            + ", height='" + height + '\''
-            + ", weight='" + weight + '\''
+            + ", birthDate=" + birthDate
+            + ", shelter=" + shelter
+            + ", height=" + height
+            + ", weight=" + weight
+            + ", createdOn=" + createdOn
             + '}';
     }
 }

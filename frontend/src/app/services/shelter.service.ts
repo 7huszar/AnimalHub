@@ -1,8 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Shelter} from '../dtos/shelter';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Shelter, ShelterListDto, ShelterSearch} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -47,19 +50,28 @@ export class ShelterService {
    * @param shelter      shelter -to-update
    * @return an Observable for the updated animal
    */
-  update(shelter : Shelter): Observable<Shelter> {
+  update(shelter: Shelter): Observable<Shelter> {
     return this.httpClient.put<Shelter>(
-      `${this.shelterBaseUri}/${shelter .id}`,
-      shelter );
+      `${this.shelterBaseUri}/${shelter.id}`,
+      shelter);
   }
 
   /**
-   * deletes the shelter with the given id
+   * Delete an existing horse in the system.
    *
-   * @param id id
+   * @param id the id of the horse to be deleted
    */
-  delete(id: string): Observable<any> {
-    return this.httpClient.delete<void>(this.shelterBaseUri+'/'+id);
+  delete(id: uuidv4): Observable<void> {
+    return this.httpClient.delete<void>(this.shelterBaseUri + '/' + id);
+  }
+
+
+  search(searchParams: ShelterSearch): Observable<ShelterListDto[]> {
+
+    let params = new HttpParams();
+    params = params.append('name', searchParams.name);
+    return this.httpClient.get<ShelterListDto[]>(this.shelterBaseUri + '/search', {params})
+      .pipe();
   }
 
 }
