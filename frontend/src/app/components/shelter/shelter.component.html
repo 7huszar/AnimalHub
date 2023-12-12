@@ -1,18 +1,8 @@
 <app-header></app-header>
 
 <div class="container">
-  <h1 class="mt-4 mb-4">shelter.name
+  <h1 class="mt-4 mb-4">{{ shelter.name }}
   </h1>
 
-  <div class="form-group">
-    <label for="filter">Filter by:</label>
-    <select id="filter" class="form-control">
-      <option value="all">All Animals</option>
-      <option value="mammal">Mammals</option>
-      <option value="bird">Birds</option>
-      <!-- Add more options as needed -->
-    </select>
-  </div>
-
-  <app-animal-list></app-animal-list>
+  <app-animal-list [animals]="animals"></app-animal-list>
 </div>

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AnimalService} from "../../services/animal.service";
-import {AnimalDetailDto} from "../../dtos/animal";
+import {AnimalDto} from "../../dtos/animal";
+import  {ShelterService} from "../../services/shelter.service";
+import {ShelterDetailDto} from "../../dtos/shelter";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 
@@ -10,23 +12,24 @@ import {AnimalDetailDto} from "../../dtos/animal";
   styleUrls: ['./shelter.component.scss']
 })
 export class ShelterComponent implements OnInit {
-  private animals: AnimalDetailDto[] = [];
-  displayedAnimals: AnimalDetailDto[] = [];
+  protected animals: AnimalDto[] = [];
+  protected shelter: ShelterDetailDto;
+  private name: string;
 
-  constructor(private animalService: AnimalService,
+  constructor(private shelterService: ShelterService,
+              private router: Router,
+              private route: ActivatedRoute
   ) {
   }
 
-  // TODO since this only wants the animals of the shelter, shelterservice is needed which will get shelter + its animals
   ngOnInit(): void {
-    this.animalService.findAll().subscribe(animals => {
-      this.animals = animals;
-      this.displayAnimalCards('all');
-    });
-  }
-
-  displayAnimalCards(filter: string): void {
-    this.displayedAnimals = this.animals.filter(animal => filter === 'all' || animal.species === filter);
+      this.route.params.subscribe(params => {
+        this.shelterService.findById(params['id']).subscribe(shelter => {
+          this.shelter = shelter;
+          this.animals = this.shelter.animals;
+          this.name = this.shelter.name;
+        });
+      });
   }
 
   editAnimal(animalId: number): void {
@@ -35,6 +38,6 @@ export class ShelterComponent implements OnInit {
   }
 
   onFilterChange(selectedFilter: string): void {
-    this.displayAnimalCards(selectedFilter);
+
   }
 }

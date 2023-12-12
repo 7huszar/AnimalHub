@@ -5,3 +5,19 @@
 .pagination-container {
   margin: 1rem 0 2rem 0;
 }
+
+.input-container {
+  display: flex;
+  justify-content: space-between;
+}
+.search-container {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}

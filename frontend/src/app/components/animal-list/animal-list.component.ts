@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import {AnimalService} from "../../services/animal.service";
-import {AnimalDetailDto} from "../../dtos/animal";
+import {Component, Input} from '@angular/core';
+import {AnimalDto} from "../../dtos/animal";
+import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-animal-list',
@@ -9,18 +10,18 @@ import {AnimalDetailDto} from "../../dtos/animal";
 })
 export class AnimalListComponent {
 
-  private animals: AnimalDetailDto[] = [];
-  displayedAnimals: any[] = [];
+  @Input() animals: AnimalDto[] = [];
+  displayedAnimals: AnimalDto[] = [];
   p: number;
+  searchTermSpecies: String;
+  searchTermName: String
 
-  constructor(private animalService: AnimalService) {
+  constructor(private router: Router,
+              public authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.animalService.findAll().subscribe(animals => {
-      this.animals = animals;
       this.displayAnimalCards('all');
-    });
   }
 
   displayAnimalCards(filter: string): void {
@@ -28,9 +29,23 @@ export class AnimalListComponent {
       .filter(animal => filter === 'all' || animal.species === filter)
   }
 
-  editAnimal(animalId: number): void {
-    // Implement logic to edit the animal with the specified ID
-    console.log('Editing animal with ID:', animalId);
+  editAnimal(animalId: String): void {
+    if (this.authService.isAdmin() || this.authService.isMember()) {
+      this.router.navigate(['/animal/edit', animalId]);
+    } else {
+      this.router.navigate(['/animal', animalId]);
+    }
   }
+  onInput(): void {
+    if (this.searchTermName) {
+      this.displayedAnimals = this.animals
+        .filter(animal => animal.name.toLowerCase().includes(this.searchTermName.toLowerCase()))
+    }
+    if (this.searchTermSpecies) {
+      this.displayedAnimals = this.animals
+        .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
+    }
+  }
+
 
 }

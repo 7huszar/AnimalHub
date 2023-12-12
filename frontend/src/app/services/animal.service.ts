@@ -100,23 +100,21 @@ export class AnimalService {
     if (searchParams.species) {
       params = params.append('species', searchParams.species);
     }
-    if (searchParams.race) {
-      params = params.append('race', searchParams.race);
-    }
-    if (searchParams.height) {
-      params = params.append('height', searchParams.height);
-    }
-    if (searchParams.weight) {
-      params = params.append('weight', searchParams.weight);
-    }
+    // if (searchParams.race) {
+    //   params = params.append('race', searchParams.race);
+    // }
+    // if (searchParams.height) {
+    //   params = params.append('height', searchParams.height);
+    // }
+    // if (searchParams.weight) {
+    //   params = params.append('weight', searchParams.weight);
+    // }
     if (searchParams.shelter) {
       params = params.append('shelter', searchParams.shelter.id);
     }
 
     return this.httpClient.get<AnimalListDto[]>(this.animalBaseUri, { params })
-      .pipe(tap(horses => horses.map(h => {
-        h.dateOfBirth = new Date(h.dateOfBirth); // Parse date string
-      })));
+      .pipe(tap(animals => animals.map(h => {})));
   }
 
 }

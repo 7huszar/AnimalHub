@@ -28,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: 'shelter', children: [
-      {path: '', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
+      {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
       {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}}
     ]
