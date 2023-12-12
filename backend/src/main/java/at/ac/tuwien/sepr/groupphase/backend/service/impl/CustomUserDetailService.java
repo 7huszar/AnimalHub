@@ -1,11 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -31,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -126,5 +124,16 @@ public class CustomUserDetailService implements UserService {
             .build();
 
         userRepository.save(user);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        LOGGER.debug("Delete Shelter with id: " + id);
+
+        var shelter = userRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        userRepository.delete(shelter);
     }
 }

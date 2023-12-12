@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user;
 
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,13 +16,18 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserDetailDto {
 
+    private UUID id;
+
     @NotNull(message = "Email must not be null")
     private String email;
+    private UserRole role;
 
     @Override
     public String toString() {
         return "ShelterDetailDto{"
+            + ", id='" + id + '\''
             + ", name='" + email + '\''
+            + ", role='" + role + '\''
             + '}';
     }
 }

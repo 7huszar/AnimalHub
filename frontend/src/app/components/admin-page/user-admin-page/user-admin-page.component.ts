@@ -17,7 +17,7 @@ export class UserAdminPageComponent implements OnInit {
 
   searchChangedObservable = new Subject<void>();
   searchParams: UserSearch = {
-    email: ''
+    email: '',
   };
   bannerError: string | null = null;
 
@@ -41,7 +41,6 @@ export class UserAdminPageComponent implements OnInit {
   }
 
   reloadUsers() {
-
     this.userService.search(this.searchParams)
       .subscribe({
         next: data => {

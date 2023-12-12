@@ -1,25 +1,22 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
-import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = UserEndpoint.BASE_PATH)
@@ -38,6 +35,14 @@ public class UserEndpoint {
         LOGGER.debug("request parameters: {}", searchParameters);
 
         return userService.search(searchParameters);
+    }
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
+        userService.delete(id);
     }
 
 }
