@@ -16,8 +16,7 @@
   <div id="animal-cards" class="row">
     <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let animal of displayedAnimals | paginate: { itemsPerPage: 12, currentPage: p }">
       <div class="card animal-card">
-        <img src="assets/img/gratisography-cool-cat.png" class="w-100" alt="test picture">
-        <!--<img [src]="animal.imageUrl" class="card-img-top" alt="Animal Image">  -->
+        <img (load)="loadAnimalPic(animal.id)" [ngSrc]="animalImageURL" class="w-100" alt="animal-image">
         <div class="card-body">
           <h5 class="card-title">{{ animal.name }}</h5>
           <p class="card-text">Type: {{ animal.species }}</p>

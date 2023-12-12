@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
+import {AnimalService} from "../../services/animal.service";
 
 @Component({
   selector: 'app-animal-list',
@@ -14,10 +15,12 @@ export class AnimalListComponent {
   displayedAnimals: AnimalDto[] = [];
   p: number;
   searchTermSpecies: String;
-  searchTermName: String
+  searchTermName: String;
+  animalImageURL: any = null;
 
   constructor(private router: Router,
-              public authService: AuthService) {
+              public authService: AuthService,
+              private animalService: AnimalService) {
   }
 
   ngOnInit(): void {
@@ -31,9 +34,9 @@ export class AnimalListComponent {
 
   editAnimal(animalId: String): void {
     if (this.authService.isAdmin() || this.authService.isMember()) {
-      this.router.navigate(['/animal/edit', animalId]);
+      this.router.navigate(['/animal/edit', animalId]).then(r => console.log(r));
     } else {
-      this.router.navigate(['/animal', animalId]);
+      this.router.navigate(['/animal', animalId]).then(r => console.log(r));
     }
   }
   onInput(): void {
@@ -45,6 +48,18 @@ export class AnimalListComponent {
       this.displayedAnimals = this.animals
         .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
     }
+  }
+
+  protected loadAnimalPic(animalId: string): any {
+    this.animalService.getProfileImage(animalId).subscribe({
+      next: data => {
+        console.log("loaded image ", data);
+        this.animalImageURL = URL.createObjectURL(data);
+        return this.animalImageURL;
+      }, error: err => {
+        console.error(err)
+      }
+    });
   }
 
 
