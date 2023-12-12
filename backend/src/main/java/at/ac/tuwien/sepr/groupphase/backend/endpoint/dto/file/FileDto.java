@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

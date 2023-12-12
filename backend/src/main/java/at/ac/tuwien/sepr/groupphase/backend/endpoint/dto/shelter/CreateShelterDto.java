@@ -1,23 +1,20 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.AnimalDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShelterDetailDto {
-
-    private UUID id;
+public class CreateShelterDto {
 
     @NotNull(message = "Name must not be null")
     private String name;
@@ -31,20 +28,18 @@ public class ShelterDetailDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
-    private Set<AnimalDto> animals;
-
     private Instant createdOn;
 
     @Override
     public String toString() {
-        return "ShelterDetailDto{"
-            + "id=" + id
+        return "CreateShelterDto{"
             + ", name='" + name + '\''
             + ", address=" + address
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email=" + email + '\''
-            + ", animals=" + animals + '\''
             + ", createdOn=" + createdOn + '\''
             + '}';
     }
+
+
 }
