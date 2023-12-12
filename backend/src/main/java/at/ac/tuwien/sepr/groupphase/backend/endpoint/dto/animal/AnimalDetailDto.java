@@ -1,6 +1,6 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

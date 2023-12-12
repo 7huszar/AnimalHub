@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos.FileDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos.FileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import org.mapstruct.Mapper;
 

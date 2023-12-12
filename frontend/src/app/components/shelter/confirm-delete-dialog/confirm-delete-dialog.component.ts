@@ -1,8 +1,8 @@
 import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
-import {ShelterService} from "../../services/shelter.service";
-import {AdminPageComponent} from "../admin-page/admin-page.component";
+import {ShelterService} from "../../../services/shelter.service";
+import {AdminPageComponent} from "../../admin-page/shelter-admin-page/admin-page.component";
 
 @Component({
   selector: 'app-confirm-delete-dialog',

@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter;
 
 import java.util.UUID;
 

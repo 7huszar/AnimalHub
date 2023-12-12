@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelterDtos.ShelterSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -34,11 +34,11 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterValidator validator;
 
     /**
-     * Search for horses in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in horse.
+     * Search for users in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
      *
      * @param searchParameters the search parameters to use in filtering.
-     * @return the horses where the given fields match.
+     * @return the users where the given fields match.
      */
     @Override
     public List<ShelterListDto> search(ShelterSearchDto searchParameters) {

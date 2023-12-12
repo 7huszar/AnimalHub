@@ -114,7 +114,7 @@ export class AnimalService {
     }
 
     return this.httpClient.get<AnimalListDto[]>(this.animalBaseUri, { params })
-      .pipe(tap(horses => horses.map(h => {
+      .pipe(tap(shelters => shelters.map(h => {
         h.dateOfBirth = new Date(h.dateOfBirth); // Parse date string
       })));
   }
