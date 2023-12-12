@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalFileDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.io.IOException;
@@ -17,10 +18,10 @@ public interface FileService {
      * Validate and then create a new file in the persistent data storage with the given parameters.
      *
      * @param fileDto with file to store
-     * @return the created file as FileDetailDto
+     * @return the created file as FileDto
      * @throws ValidationException if the data given for the animal is in itself incorrect (no name, name too long …)
      */
-    FileDetailDto create(CreateAnimalFileDto fileDto) throws ValidationException, IOException;
+    FileDto create(CreateFileDto fileDto) throws ValidationException, IOException;
 
     /**
      * Get the file with given ID from the database.

@@ -1,20 +1,38 @@
 import {Species} from './species';
-import {Shelter} from "./shelter";
+import {ShelterDto} from "./shelter";
 
-/**
- * Interface for animals with all details
- */
-export interface Animal {
-  id?: string;
-  name: string;
-  species: Species;
-  race: string;
-  sex?: string;
-  birthDate: Date;
-  height?: number;
-  weight?: number;
-  shelter?: Shelter;
-  createdOn?: Date;
+
+export interface AnimalDto {
+  id: string,
+  name: string,
+  species: Species,
+  race: string,
+  birthDate: Date,
+  height: number,
+  weight: number,
+  createdOn: Date
+}
+
+export interface AnimalDetailDto {
+  id: string,
+  name: string,
+  species: Species,
+  race: string,
+  birthDate: Date,
+  shelter: ShelterDto,
+  height: number,
+  weight: number,
+  createdOn: Date
+}
+
+export interface CreateAnimalDto {
+  name: string,
+  species: Species,
+  race: string,
+  birthDate: Date,
+  shelter: ShelterDto,
+  height: number,
+  weight: number
 }
 
 /**
@@ -26,4 +44,17 @@ export interface AnimalListDto {
   species: Species;
   race: string;
   dateOfBirth: Date;
+}
+
+/**
+ * Interface for searching animals
+ */
+export interface AnimalSearch {
+  name?: string;
+  species?: Species;
+  race?: string;
+  birthDate?: Date;
+  height?: number;
+  weight?: number;
+  shelter?: ShelterDto;
 }

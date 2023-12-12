@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {Animal} from "../../dtos/animal";
+import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -12,18 +12,11 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class HomeComponent implements OnInit {
 
-  private left :Animal;
-  private middle :Animal;
-  private right :Animal;
+  private left :AnimalDetailDto;
+  private middle :AnimalDetailDto;
+  private right :AnimalDetailDto;
 
-  private animalList :Animal[];
-  private defaultAnimal: Animal = {
-    name: "Schnappi das kleine Krokodil",
-    id: "1",
-    species: null,
-    race: null,
-    birthDate: null
-  };
+  private animalList :AnimalDetailDto[];
 
   constructor(
     public authService: AuthService,
@@ -32,15 +25,17 @@ export class HomeComponent implements OnInit {
     private translator :TranslateService) { }
 
   ngOnInit() {
-    this.setAllCards();
+    this.animalService.findAll().subscribe({
+      next :data => {
+        this.animalList = data;
+      },
+      error :error => {
+        console.error("Failed to load animals", error);
+      }
+    });
   }
 
-  /**
-   * replaces one of the animals shown in the cards.
-   *
-   * @param position
-   */
-  setCard(position: Position) {
+  loadCard(position :Position) {
     if (this.animalList && this.animalList.length > 0) {
       switch (position) {
         case Position.LEFT:
@@ -53,33 +48,9 @@ export class HomeComponent implements OnInit {
           this.right = this.animalList.pop();
       }
     }
-
-    return this.defaultAnimal;
   }
 
-  loadCards() :void {
-    this.animalService.findAll().subscribe({
-      next :data => {
-        this.animalList = data;
-        console.log(this.animalList);
-      },
-      error :error => {
-        console.error("Failed to load animals", error);
-        let title :string = 'error';
-        this.translator.get("HOME.LOAD_FAILED").subscribe( (translation :string) => {
-          title = translation;
-        });
-        this.notifier.notifyError(error, title);
-      }
-    });
-  }
-
-    /**
-   * used to get the animals according to position, to use
-   *
-   * @param position
-   */
-  getCard(position: Position): Animal {
+  getCard(position: Position): AnimalDetailDto {
     if (this.animalList && this.animalList.length > 0) {
       switch (position) {
         case Position.LEFT:
@@ -93,26 +64,7 @@ export class HomeComponent implements OnInit {
           return null;
       }
     }
-    return this.defaultAnimal;
-  }
-
-  setAllCards() {
-    if (this.animalList) {
-      this.setCard(Position.LEFT);
-      this.setCard(Position.MIDDLE);
-      this.setCard(Position.RIGHT);
-    } else {
-      this.loadCards();
-      this.setAllCardsOnce()
-    }
-  }
-
-  private setAllCardsOnce() {
-    if (this.animalList) {
-      this.setCard(Position.LEFT);
-      this.setCard(Position.MIDDLE);
-      this.setCard(Position.RIGHT);
-    }
+    return null;
   }
 
   protected readonly AuthService = AuthService;

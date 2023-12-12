@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,4 +75,21 @@ public class ShelterEndpoint {
         return shelterService.update(shelterDto);
     }
 
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
+        shelterService.delete(id);
+    }
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @GetMapping("/search")
+    @Operation(summary = "Get list of filtered shelters", security = @SecurityRequirement(name = "apiKey"))
+    public List<ShelterListDto> searchShelters(ShelterSearchDto searchParameters) {
+        LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("request parameters: {}", searchParameters);
+        return shelterService.search(searchParameters);
+    }
 }
+

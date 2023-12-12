@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnimalDetailDto {
+public class AnimalDto {
 
     private UUID id;
 
@@ -31,27 +31,9 @@ public class AnimalDetailDto {
     @NotNull(message = "Birth Date must not be null")
     private LocalDate birthDate;
 
-    @NotNull(message = "Shelter must not be null")
-    private ShelterDto shelter;
-
     private double height;
 
     private double weight;
 
     private Instant createdOn;
-
-    @Override
-    public String toString() {
-        return "AnimalDetailDto{"
-            + "id=" + id
-            + ", name='" + name + '\''
-            + ", species=" + species
-            + ", race='" + race + '\''
-            + ", birthDate=" + birthDate
-            + ", shelter=" + shelter
-            + ", height=" + height
-            + ", weight=" + weight
-            + ", createdOn=" + createdOn
-            + '}';
-    }
 }

@@ -4,6 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -20,30 +21,38 @@ import { AdminPageComponent } from './components/admin-page/admin-page.component
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
 import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
-import { AnimalHomepageComponent } from './components/animal-homepage/animal-homepage.component';
+import {ShelterComponent} from "./components/shelter/shelter.component";
+
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
+import { ShelterCreateEditComponent } from './components/shelter/shelter-create-edit/shelter-create-edit.component';
+import { AnimalListComponent } from './components/animal-list/animal-list.component';
+import {NgOptimizedImage} from "@angular/common";
+import {ConfirmDeleteDialogComponent} from "./components/confirm-delete-dialog/confirm-delete-dialog.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    HomeComponent,
-    LoginComponent,
-    CreateEditComponent,
-    LangSelectComponent,
-    MemberProfileComponent,
-    AdminPageComponent,
-    AnimalCardComponent,
-    RegisterComponent,
-    RegisterConfirmComponent,
-    AnimalHomepageComponent,
-  ],
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        FooterComponent,
+        HomeComponent,
+        LoginComponent,
+        CreateEditComponent,
+        LangSelectComponent,
+        MemberProfileComponent,
+        AdminPageComponent,
+        AnimalCardComponent,
+        RegisterComponent,
+        RegisterConfirmComponent,
+        ShelterCreateEditComponent,
+        ShelterComponent,
+        AnimalListComponent,
+        ConfirmDeleteDialogComponent,
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -52,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgbModule,
     FormsModule,
     BrowserAnimationsModule,
+    NgxPaginationModule,
     ToastrModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -60,7 +70,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'de'
-    })
+    }),
+    NgOptimizedImage
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
