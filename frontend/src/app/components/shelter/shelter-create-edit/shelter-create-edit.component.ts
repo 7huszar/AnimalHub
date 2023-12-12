@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForm, NgModel} from "@angular/forms";
 import {Mode} from "../../../enums/modes";
-import {Shelter} from "../../../dtos/shelter";
+import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
-import {FileService} from "../../../services/file.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -14,11 +13,13 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class ShelterCreateEditComponent implements OnInit{
 
   mode: Mode = Mode.CREATE;
-  shelter: Shelter = {
+  shelter: ShelterDto = {
+    id: '',
     name: '',
     address: '',
     phoneNumber: '',
-    email: ''
+    email: '',
+    createdOn: null
   }
 
   private shelterImage: File = null;
@@ -26,7 +27,6 @@ export class ShelterCreateEditComponent implements OnInit{
   private shelterImageChanged: boolean = false;
 
   constructor(private shelterService: ShelterService,
-              private fileService: FileService,
               private router: Router,
               private route: ActivatedRoute) {
   }
@@ -34,6 +34,8 @@ export class ShelterCreateEditComponent implements OnInit{
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
+      // TODO FIX
+      /*
       if (!this.modeIsCreate) {
         this.route.params.subscribe(params => {
           const id = params['id'];
@@ -47,6 +49,7 @@ export class ShelterCreateEditComponent implements OnInit{
           });
         });
       }
+      */
     });
   }
 

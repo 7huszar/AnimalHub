@@ -1,14 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {debounceTime, Subject} from "rxjs";
 import {ToastrService} from "ngx-toastr";
-import {Shelter, ShelterListDto, ShelterSearch} from "../../dtos/shelter";
+import {ShelterListDto, ShelterSearch} from "../../dtos/shelter";
 import {ShelterService} from "../../services/shelter.service";
-
-
-export enum ShelterCreateEditMode {
-  create,
-  edit,
-}
 
 @Component({
   selector: 'app-admin-page',
@@ -17,34 +11,22 @@ export enum ShelterCreateEditMode {
 })
 export class AdminPageComponent implements OnInit{
 
-  mode: ShelterCreateEditMode = ShelterCreateEditMode.create;
-  shelter: Shelter = {
-    address: "",
-    email: "",
-    phoneNumber: "",
-    name: ''
-  };
-
   idForDeletion: string = "";
   nameForDeletion: string = "";
-  shelters: ShelterListDto[] = [];
+  shelters: ShelterListDto[] = []; // TODO use ShelterDto
   searchChangedObservable = new Subject<void>();
   searchParams: ShelterSearch = {
     name: ''
   };
   searchName: string | null = null;
   bannerError: string | null = null;
-  private service: ShelterService;
 
 
   constructor(
     private notification: ToastrService,
     private shelterService: ShelterService  // Inject ShelterService
 
-  ) {
-    this.service = shelterService;  // Assign it to the private variable
-
-  }
+  ) {}
 
 
   ngOnInit(): void {
@@ -65,7 +47,7 @@ export class AdminPageComponent implements OnInit{
       this.searchParams.name = this.searchName;
     }
 
-    this.service.search(this.searchParams)
+    this.shelterService.search(this.searchParams)
       .subscribe({
         next: data => {
           this.shelters = data;

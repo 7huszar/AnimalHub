@@ -64,20 +64,20 @@ public class ShelterEndpoint {
     }
 
     @Secured(UserRole.Values.ADMIN_VALUE)
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
+        shelterService.delete(id);
+    }
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
     @GetMapping("/search")
     @Operation(summary = "Get list of filtered shelters", security = @SecurityRequirement(name = "apiKey"))
     public List<ShelterListDto> searchShelters(ShelterSearchDto searchParameters) {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("request parameters: {}", searchParameters);
         return shelterService.search(searchParameters);
-    }
-
-    @Secured(UserRole.Values.ADMIN_VALUE)
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
-        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
-        shelterService.delete(id);
     }
 }
 

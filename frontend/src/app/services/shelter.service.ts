@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Shelter, ShelterListDto, ShelterSearch} from '../dtos/shelter';
+import {CreateShelterDto, ShelterDetailDto, ShelterDto, ShelterListDto, ShelterSearch} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -20,8 +19,8 @@ export class ShelterService {
   /**
    * Loads all shelter from the backend
    */
-  findAll(): Observable<Shelter[]> {
-    return this.httpClient.get<Shelter[]>(this.shelterBaseUri);
+  findAll(): Observable<ShelterDto[]> {
+    return this.httpClient.get<ShelterDto[]>(this.shelterBaseUri);
   }
 
   /**
@@ -29,9 +28,9 @@ export class ShelterService {
    *
    * @param id of shelter to load
    */
-  findById(id: string): Observable<Shelter> {
+  findById(id: string): Observable<ShelterDetailDto> {
     console.log('Load shelter with id: ' + id);
-    return this.httpClient.get<Shelter>(this.shelterBaseUri + '/' + id);
+    return this.httpClient.get<ShelterDetailDto>(this.shelterBaseUri + '/' + id);
   }
 
   /**
@@ -39,9 +38,9 @@ export class ShelterService {
    *
    * @param shelter  to persist
    */
-  create(shelter: Shelter): Observable<Shelter> {
+  create(shelter: CreateShelterDto): Observable<ShelterDto> {
     console.log('Create shelter  with name: ' + shelter.name);
-    return this.httpClient.post<Shelter>(this.shelterBaseUri, shelter);
+    return this.httpClient.post<ShelterDto>(this.shelterBaseUri, shelter);
   }
 
   /**
@@ -50,10 +49,8 @@ export class ShelterService {
    * @param shelter      shelter -to-update
    * @return an Observable for the updated animal
    */
-  update(shelter: Shelter): Observable<Shelter> {
-    return this.httpClient.put<Shelter>(
-      `${this.shelterBaseUri}/${shelter.id}`,
-      shelter);
+  update(shelter: ShelterDto): Observable<ShelterDto> {
+    return this.httpClient.put<ShelterDto>(this.shelterBaseUri + '/' + shelter.id, shelter);
   }
 
   /**
@@ -61,7 +58,7 @@ export class ShelterService {
    *
    * @param id the id of the horse to be deleted
    */
-  delete(id: uuidv4): Observable<void> {
+  delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(this.shelterBaseUri + '/' + id);
   }
 

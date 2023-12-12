@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {AnimalService} from "../../services/animal.service";
-import {Animal} from "../../dtos/animal";
+import {AnimalDetailDto} from "../../dtos/animal";
 
 @Component({
   selector: 'app-animal-list',
@@ -9,7 +9,7 @@ import {Animal} from "../../dtos/animal";
 })
 export class AnimalListComponent {
 
-  private animals: Animal[] =  [];
+  private animals: AnimalDetailDto[] = [];
   displayedAnimals: any[] = [];
   p: number;
 

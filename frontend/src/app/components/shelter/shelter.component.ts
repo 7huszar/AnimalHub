@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AnimalService} from "../../services/animal.service";
-import {Animal} from "../../dtos/animal";
+import {AnimalDetailDto} from "../../dtos/animal";
 
 
 
@@ -10,13 +10,14 @@ import {Animal} from "../../dtos/animal";
   styleUrls: ['./shelter.component.scss']
 })
 export class ShelterComponent implements OnInit {
-  private animals: Animal[] = [];
-  displayedAnimals: any[] = [];
+  private animals: AnimalDetailDto[] = [];
+  displayedAnimals: AnimalDetailDto[] = [];
 
   constructor(private animalService: AnimalService,
   ) {
   }
 
+  // TODO since this only wants the animals of the shelter, shelterservice is needed which will get shelter + its animals
   ngOnInit(): void {
     this.animalService.findAll().subscribe(animals => {
       this.animals = animals;

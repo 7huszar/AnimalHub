@@ -1,11 +1,7 @@
-import {Species} from './species';
-import {Shelter} from "./shelter";
-
 /**
  * Interface for creating new Files
  */
-export interface CreateAnimalFile {
-  animalId: string,
+export interface CreateFileDto {
   name: string,
   summary?: string,
   file: File
@@ -14,13 +10,20 @@ export interface CreateAnimalFile {
 /**
  * Interface for getting files from backend & displaying them
  */
-export interface DetailFile {
-  id: number,
+export interface FileDetailDto {
+  id: string,
   name: string,
   summary?: string,
-  created: Date,
+  createdOn: Date,
   contentMimeType: string,
   contentLength: number,
   file: Blob
 }
 
+export interface FileDto {
+  id: string,
+  name: string,
+  summary?: string,
+  createdOn: Date,
+  contentMimeType: string
+}
