@@ -4,7 +4,7 @@ import {UserAdminPageComponent} from "../../admin-page/user-admin-page/user-admi
 import {UserService} from "../../../services/user.service";
 
 @Component({
-  selector: 'user-app-confirm-delete-dialog',
+  selector: 'app-user-confirm-delete-dialog', // Change to a unique selector
   templateUrl: './user-confirm-delete-dialog.component.html',
   styleUrls: ['./user-confirm-delete-dialog.component.scss'],
 })

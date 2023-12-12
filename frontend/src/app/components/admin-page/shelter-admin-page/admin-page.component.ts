@@ -19,7 +19,6 @@ export class AdminPageComponent implements OnInit {
   searchParams: ShelterSearch = {
     name: ''
   };
-  searchName: string | null = null;
   bannerError: string | null = null;
 
 
