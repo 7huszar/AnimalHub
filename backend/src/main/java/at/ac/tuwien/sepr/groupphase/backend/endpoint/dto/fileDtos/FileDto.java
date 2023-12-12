@@ -1,33 +1,36 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAnimalFileDto {
+public class FileDto {
 
-    private UUID animalId;
+    private UUID id;
 
     private String name;
 
     private String summary;
 
-    private MultipartFile file;
+    private Instant createdOn;
+
+    private String contentMimeType;
 
     @Override
     public String toString() {
-        return "FileDetailDto{"
+        return "FileDto{"
+            + "id=" + id
             + ", name='" + name + '\''
             + ", summary='" + summary + '\''
-            + ", file='" + file + '\''
+            + ", createdOn=" + createdOn
             + '}';
     }
 }

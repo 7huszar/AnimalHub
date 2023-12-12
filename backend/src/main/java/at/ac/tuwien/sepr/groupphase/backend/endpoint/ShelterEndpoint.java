@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = ShelterEndpoint.BASE_PATH)
@@ -65,22 +64,20 @@ public class ShelterEndpoint {
     }
 
     @Secured(UserRole.Values.ADMIN_VALUE)
-    @Operation(summary = "Get list of filtered shelters", security = @SecurityRequirement(name = "apiKey"))
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
+        shelterService.delete(id);
+    }
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
     @GetMapping("/search")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public Stream<ShelterListDto> searchShelters(ShelterSearchDto searchParameters) {
+    @Operation(summary = "Get list of filtered shelters", security = @SecurityRequirement(name = "apiKey"))
+    public List<ShelterListDto> searchShelters(ShelterSearchDto searchParameters) {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("request parameters: {}", searchParameters);
         return shelterService.search(searchParameters);
-    }
-
-    @DeleteMapping("{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id) {
-        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
-        LOGGER.debug("###################################################" + id);
-        shelterService.delete(UUID.fromString(id));
     }
 }
 

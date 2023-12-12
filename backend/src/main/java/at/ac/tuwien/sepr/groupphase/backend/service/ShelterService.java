@@ -5,7 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
  * Service to work with Shelters.
@@ -20,7 +19,7 @@ public interface ShelterService {
      * @param searchParameters the search parameters to use in filtering.
      * @return the horses where the given fields match.
      */
-    Stream<ShelterListDto> search(ShelterSearchDto searchParameters);
+    List<ShelterListDto> search(ShelterSearchDto searchParameters);
 
 
     /**

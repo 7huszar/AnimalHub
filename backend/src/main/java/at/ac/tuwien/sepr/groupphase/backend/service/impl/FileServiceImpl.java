@@ -1,13 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animalDtos.CreateAnimalFileDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.fileDtos.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.files.FileRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileContentStore;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
@@ -32,40 +31,26 @@ public class FileServiceImpl implements FileService {
     private final FileValidator validator;
     private final FileMapper mapper;
 
-    private final AnimalRepository animalRepository;
-
     @Override
-    public FileDetailDto create(CreateAnimalFileDto fileDto) throws ValidationException, IOException {
+    public FileDto create(CreateFileDto fileDto) throws ValidationException, IOException {
         LOGGER.debug("Create new File: " + fileDto);
 
         validator.validateForCreate(fileDto);
-        File entity = File.builder()
+        var entity = File.builder()
             .name(fileDto.getName())
             .summary(fileDto.getSummary())
             .contentMimeType(fileDto.getFile().getContentType())
             .build();
 
-        File savedFile = fileRepository.save(entity);
+        var savedFile = fileRepository.save(entity);
 
         fileContentStore.setContent(savedFile, fileDto.getFile().getInputStream());
 
         // Save updated content-related information
-        File fileWithAllInformation = fileRepository.save(savedFile);
+        savedFile = fileRepository.save(savedFile);
 
-        Animal animal = animalRepository.findById(fileDto.getAnimalId()).orElseThrow(() -> new NotFoundException("Animal with given ID does not exist."));
-
-        animal.setProfilePicture(fileWithAllInformation);
-
-        animalRepository.save(animal);
-
-        // Create detailDto fr returning
-        FileDetailDto detailDto = mapper.fileToFileDetailDto(fileWithAllInformation);
-
-        // Get the actual file content as an InputStreamResource from the fileContentStore
-        detailDto.setFile(new InputStreamResource(fileContentStore.getContent(fileWithAllInformation)));
-
-        // return complete FileDetailDto
-        return detailDto;
+        // return complete FileDto
+        return mapper.fileToFileDto(savedFile);
     }
 
     @Override
@@ -84,5 +69,4 @@ public class FileServiceImpl implements FileService {
         // return complete FileDetailDto
         return detailDto;
     }
-
 }

@@ -36,11 +36,13 @@ public class File {
     @Column(length = 400)
     private String summary;
 
+    @Column(name = "created_on")
     @CreationTimestamp
-    private Instant created;
+    private Instant createdOn;
 
     @ContentId
     private String contentId;
+
     @ContentLength
     private long contentLength;
 
