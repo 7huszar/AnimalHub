@@ -1,24 +1,24 @@
 <app-header></app-header>
 
 <!--<h1 class="display-1">{{animal.name}}</h1>-->
-<div class="container-fluid">
+<div class="container-fluid" style="background-color: lightgray">
   <div class="row">
     <div class="col">
       <div class="headings">
         <div style="display: block; overflow: auto">
           <h1 style=" float: left">{{ animal.name }}</h1>
-          <h1 style=" float: right">{{ animal.shelter.name }}</h1>
+          <h1 style=" float: right">shelter</h1>
         </div>
         <div style="display: block">
-          <h3>{{ animal.species }}</h3>
+          <h3>{{ animal.race }}</h3>
         </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-5">
+    <div class="col-auto">
       <div class="media">
-        <img src="/assets/img/gratisography-cool-cat.png" alt="Generic placeholder image"  width="100%">
+        <img [ngSrc]="animalImageURL" alt="ProfileImage">
       </div>
     </div>
     <div class="col">
@@ -32,10 +32,6 @@
           <div class="col">{{ animal.race }}</div>
         </div>
         <div class="row" style="height: 15%">
-          <div class="col-md-2">Sex:</div>
-          <div class="col">{{ animal.sex }}</div>
-        </div>
-        <div class="row" style="height: 15%">
           <div class="col-md-2">Date of birth:</div>
           <div class="col">{{ animal.birthDate }}</div>
         </div>
@@ -47,9 +43,15 @@
           <div class="col-md-2">Weight:</div>
           <div class="col">{{ animal.weight }}</div>
         </div>
-        <div class="row fixed-button">
-          <div class="col">
+        <div class="row fixed-button align-items-end w-100">
+          <div class="col-auto">
             <button type="button" class="btn btn-primary">Für {{ animal.name }} spenden</button>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary">{{ animal.name }} adoptieren</button>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary">{{ animal.name }} adoptieren</button>
           </div>
         </div>
       </div>

@@ -29,6 +29,7 @@ import { ShelterCreateEditComponent } from './components/shelter/shelter-create-
 import { AnimalListComponent } from './components/animal-list/animal-list.component';
 import {NgOptimizedImage} from "@angular/common";
 import {ConfirmDeleteDialogComponent} from "./components/confirm-delete-dialog/confirm-delete-dialog.component";
+import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -41,6 +42,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         FooterComponent,
         HomeComponent,
         LoginComponent,
+        AnimalHomepageComponent,
         CreateEditComponent,
         LangSelectComponent,
         MemberProfileComponent,
