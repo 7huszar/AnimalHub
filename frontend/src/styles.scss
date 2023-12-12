@@ -65,3 +65,75 @@ $primary:       #64B5F6;
     min-width: 0;
   }
 }
+
+.center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.custom-label {
+  // phone
+  @extend .col;
+  @extend .offset-1;
+  // medium
+  @extend .offset-md-0;
+  @extend .col-md-4;
+  @extend .text-md-end;
+}
+
+.custom-field {
+  // phone
+  @extend .col-10;
+  @extend .offset-1;
+  // medium
+  @extend .offset-md-0;
+  @extend .col-md-8;
+}
+
+.custom-input {
+  // phone
+  @extend .col-12;
+  // small
+  @extend .col-sm-6;
+}
+
+.custom-form {
+  @extend .mt-4;
+}
+
+.custom-row-inner {
+  @extend .row;
+  @extend .gy-1;
+}
+
+.custom-row {
+  // phone
+  @extend .mb-4;
+  @extend .row;
+  @extend .gy-4;
+  // small
+  @extend .mb-sm-4;
+}
+
+.selected-pic {
+  @extend .col-10;
+  @extend .offset-1;
+  @extend .center-column;
+  @extend .mb-4;
+}
+
+.custom-submit {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .float-end;
+}
+
+@media screen and (max-width: map-get($grid-breakpoints, 'sm')) {
+  .selected-pic {
+    height: 90vw;
+  }
+  .custom-submit {
+    border-radius: 0;
+  }
+}
