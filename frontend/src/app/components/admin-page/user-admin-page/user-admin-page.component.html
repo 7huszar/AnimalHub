@@ -11,7 +11,6 @@
   </a>
 </div>
 
-
 <div class="d-flex justify-content-start mt-3">
   <div class="ms-1">
     <label for="searchUserEmail" class="col-form-label">Search for User</label>
@@ -21,6 +20,27 @@
              [(ngModel)]="searchParams.email"
              (ngModelChange)="searchChanged()"
              placeholder="Enter User Email">
+      <button class="btn btn-primary" (click)="searchChanged()" aria-label="Search">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-start mt-3">
+  <div class="ms-1">
+    <label for="searchUserRole" class="form-label">Search for Role</label>
+    <div class="input-group">
+      <select id="searchUserRole" name="searchUserRole"
+              class="form-select"
+              [(ngModel)]="searchParams.role"
+              (ngModelChange)="searchChanged()"
+      >
+        <option value="" disabled selected>Select Role</option>
+        <option value="USER">USER</option>
+        <option value="MEMBER">MEMBER</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
       <button class="btn btn-primary" (click)="searchChanged()" aria-label="Search">
         <i class="bi bi-search"></i>
       </button>
@@ -41,7 +61,7 @@
       <td>{{ user.email }}</td>
       <td>
         <div class="btn-group">
-          <a class="btn btn-sm btn-warning" [routerLink]="['/user/edit', user.id]" aria-label="Edit user">
+          <a class="btn btn-sm btn-warning" [routerLink]="['/users/edit', user.id]" aria-label="Edit user">
             <i class="bi bi-pencil"></i> Edit
           </a>
           <button type="button" class="btn btn-sm btn-danger"
@@ -56,6 +76,6 @@
     </tr>
     </tbody>
   </table>
-  <app-user-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [Mode]="0"></app-user-confirm-delete-dialog>
-
+  <app-user-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion"
+                                  [Mode]="0"></app-user-confirm-delete-dialog>
 </div>

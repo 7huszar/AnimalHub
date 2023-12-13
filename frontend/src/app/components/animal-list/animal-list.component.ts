@@ -3,7 +3,6 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
-import {Type} from "../../enums/type";
 import {Mode} from "../../enums/modes";
 
 @Component({
@@ -53,19 +52,5 @@ export class AnimalListComponent {
 
   }
 
-  protected loadAnimalPic(animalId: string): any {
-    this.animalService.getProfileImage(animalId).subscribe({
-      next: data => {
-        console.log("loaded image ", data);
-        this.animalImageURL = URL.createObjectURL(data);
-        return this.animalImageURL;
-      }, error: err => {
-        console.error(err)
-      }
-    });
-  }
-
-
-  protected readonly Type = Type;
   protected readonly Mode = Mode;
 }

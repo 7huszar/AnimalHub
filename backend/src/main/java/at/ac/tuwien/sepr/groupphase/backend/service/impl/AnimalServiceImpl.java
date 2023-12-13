@@ -134,4 +134,24 @@ public class AnimalServiceImpl implements AnimalService {
         return null; // TODO implement
     }
 
+    @Override
+    public List<FileDto> getContents(UUID id) {
+        return null; // TODO implement
+    }
+
+    @Override
+    public FileDetailDto getContent(UUID id, UUID fileId) {
+        return null; // TODO implement
+    }
+
+    @Override
+    public FileDto addContent(UUID id, CreateFileDto fileDto) {
+        return null; // TODO implement
+    }
+
+    @Override
+    public void deleteContent(UUID id, UUID fileId) {
+        // TODO implement
+    }
+
 }

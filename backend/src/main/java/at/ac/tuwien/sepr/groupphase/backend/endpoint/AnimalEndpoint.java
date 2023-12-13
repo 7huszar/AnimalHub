@@ -134,4 +134,47 @@ public class AnimalEndpoint {
 
         return animalService.updateProfileImage(id, createFileDto);
     }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("{id}/files/content")
+    @Operation(summary = "Get content information about animal", security = @SecurityRequirement(name = "apiKey"))
+    public List<FileDto> getContents(@PathVariable UUID id) {
+        LOGGER.info("GET " + BASE_PATH + "/{}/files", id);
+
+        return animalService.getContents(id);
+    }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("{id}/files/content/{fileId}")
+    @Operation(summary = "Get content of animal", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<?> getContent(@PathVariable UUID id, @PathVariable UUID fileId) {
+        LOGGER.info("GET " + BASE_PATH + "/{}/files/{}", id, fileId);
+        var fileDto = animalService.getContent(id, fileId);
+
+        var headers = new HttpHeaders();
+        headers.set("Content-Type", fileDto.getContentMimeType());
+        headers.setContentLength(fileDto.getContentLength());
+
+        return new ResponseEntity<>(fileDto.getFile(), headers, HttpStatus.OK);
+    }
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @PostMapping("{id}/files/content")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Add content to animal", security = @SecurityRequirement(name = "apiKey"))
+    public FileDto addContent(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("POST " + BASE_PATH + "/{}/files", id);
+        var createFileDto = new CreateFileDto(name, summary, file);
+
+        return animalService.addContent(id, createFileDto);
+    }
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @DeleteMapping("{id}/files/content/{fileId}")
+    @Operation(summary = "Deletes content of animal", security = @SecurityRequirement(name = "apiKey"))
+    public void deleteContent(@PathVariable UUID id, @PathVariable UUID fileId) {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}/files/{}", id, fileId);
+
+        animalService.deleteContent(id, fileId);
+    }
 }
