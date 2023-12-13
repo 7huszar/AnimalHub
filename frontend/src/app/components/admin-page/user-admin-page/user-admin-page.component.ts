@@ -18,6 +18,7 @@ export class UserAdminPageComponent implements OnInit {
   searchChangedObservable = new Subject<void>();
   searchParams: UserSearch = {
     email: '',
+    role:'',
   };
   bannerError: string | null = null;
 

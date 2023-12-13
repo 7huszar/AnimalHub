@@ -38,7 +38,7 @@ public class Shelter {
     @Column(nullable = false, length = 200)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     private File profilePicture;
 
     @Column(nullable = false, length = 400)
@@ -51,7 +51,7 @@ public class Shelter {
     @Column(nullable = false, length = 100)
     private String email;
 
-    @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shelter", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Animal> animals;
 
     @Column(name = "created_on")
