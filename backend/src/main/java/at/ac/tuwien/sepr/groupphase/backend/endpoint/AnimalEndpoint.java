@@ -162,7 +162,7 @@ public class AnimalEndpoint {
     @PostMapping("{id}/files/content")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add content to animal", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto addContent(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) {
+    public FileDto addContent(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, IOException {
         LOGGER.info("POST " + BASE_PATH + "/{}/files", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 
