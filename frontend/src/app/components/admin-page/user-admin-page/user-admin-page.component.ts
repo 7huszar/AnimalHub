@@ -29,7 +29,11 @@ export class UserAdminPageComponent implements OnInit {
   ) {
   }
 
-
+  public onDeleteError(event: { error: string | null, errorMessage: string }) {
+    if (event.error !== null) {
+      this.notification.error(`Error: ${event.errorMessage}`, 'Deletion Error');
+    }
+  }
   ngOnInit(): void {
     this.reloadUsers();
     this.searchChangedObservable

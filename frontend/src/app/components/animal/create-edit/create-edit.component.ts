@@ -3,10 +3,9 @@ import {Species} from "../../../dtos/species";
 import {AnimalService} from "../../../services/animal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from '@angular/forms';
-import {Observable} from "rxjs";
 import {Mode} from "../../../enums/modes";
 import {IdOnlyShelter} from "../../../dtos/shelter";
-import {AnimalDetailDto, CreateAnimalDto} from "../../../dtos/animal";
+import {CreateAnimalDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
 
 @Component({
@@ -26,7 +25,7 @@ export class CreateEditComponent implements OnInit {
     birthDate: new Date(),
     height: 0,
     weight: 0,
-    shelter: new IdOnlyShelter('67652260-8655-4186-be59-36366ad94922')
+    shelter: new IdOnlyShelter('5a260f95-b6c7-48fb-a252-0188b4ebe8dc')
   };
 
   private image: File = null;
@@ -146,9 +145,7 @@ export class CreateEditComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.animal);
     // TODO FIX
-
     if (form.valid) {
-      let observable: Observable<AnimalDetailDto>;
       switch (this.mode) {
         case Mode.CREATE:
           this.animalService.create(this.animal).subscribe({
@@ -175,7 +172,6 @@ export class CreateEditComponent implements OnInit {
       //   }
       // });
     }
-
   }
 
   public onDelete() {
@@ -200,16 +196,7 @@ export class CreateEditComponent implements OnInit {
 
   uploadImage(id: string) {
     // TODO FIX
-    console.log("uploading image with animal id ", id);
-
     const createFile: CreateFileDto = {name: this.image.name, summary: "", file: this.image}
-    this.animalService.setProfileImage(id, createFile).subscribe({
-      next: data => {
-        console.log(data)
-      }, error: err => {
-        console.log(err)
-      }
-    });
-
+    this.animalService.setProfileImage(id,  createFile).subscribe();
   }
 }

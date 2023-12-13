@@ -17,9 +17,11 @@ import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -29,6 +31,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
 
@@ -136,17 +139,40 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public List<FileDto> getContents(UUID id) {
-        return null; // TODO implement
+
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        Hibernate.initialize(animal.getContent());
+
+        return animal.getContent().stream().map(fileMapper::fileToFileDto).toList();
     }
 
     @Override
     public FileDetailDto getContent(UUID id, UUID fileId) {
-        return null; // TODO implement
+
+        // TODO check animal id
+
+        return fileService.findById(fileId);
     }
 
     @Override
-    public FileDto addContent(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        Hibernate.initialize(animal.getContent());
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        animal.getContent().add(file);
+        animalRepository.save(animal);
+
+        return createdFile;
     }
 
     @Override

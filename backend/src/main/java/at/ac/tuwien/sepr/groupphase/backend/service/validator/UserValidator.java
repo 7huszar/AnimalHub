@@ -1,13 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +34,22 @@ public class UserValidator {
             throw new ValidationException("Failed to validate registration data", validationErrors);
         }
     }
+
+
+    public void validateUserCredentialsForUpdate(UserDetailDto user) throws ValidationException {
+        List<String> validationErrors = new ArrayList<>();
+        if (user == null) {
+            throw new ValidationException("Failed to validate registration data", validationErrors);
+        }
+        if (!user.getRole().equals(UserRole.USER) && !user.getRole().equals(UserRole.ADMIN) && !user.getRole().equals(UserRole.MEMBER)) {
+            validationErrors.add("Invalid Role " + user.getRole());
+        }
+
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException("Failed to validate registration data", validationErrors);
+        }
+    }
+
 
     /**
      * Checks if an email has a valid RFC format.
