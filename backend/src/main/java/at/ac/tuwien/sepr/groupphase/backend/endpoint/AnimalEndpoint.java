@@ -116,6 +116,7 @@ public class AnimalEndpoint {
 
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PostMapping("{id}/files/profileImg")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Sets animal's profile image", security = @SecurityRequirement(name = "apiKey"))
     public FileDto setProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, ConflictException, IOException {
         LOGGER.info("POST " + BASE_PATH + "/{}/files/profileImg", id);
