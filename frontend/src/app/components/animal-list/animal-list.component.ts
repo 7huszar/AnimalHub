@@ -50,4 +50,8 @@ export class AnimalListComponent {
   }
 
   protected readonly Mode = Mode;
+
+  deleteAnimal(id: string) {
+
+  }
 }

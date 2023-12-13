@@ -18,7 +18,10 @@
         <div class="card-body">
           <h5 class="card-title">{{ animal.name }}</h5>
           <p class="card-text">{{ animal.species.charAt(0).toUpperCase() + animal.species.toLowerCase().slice(1) }}</p>
-          <button class="btn btn-primary" (click)="editAnimal(animal.id)">Details</button>
+            <button class="btn btn-primary" (click)="editAnimal(animal.id)">Details</button>
+            <button class="btn btn-danger" *ngIf="authService.isMember()" (click)="deleteAnimal(animal.id)" style="position: absolute; bottom: 1rem; right: 1rem;">
+              <i class="bi bi-trash"></i>
+            </button>
         </div>
       </div>
     </div>
