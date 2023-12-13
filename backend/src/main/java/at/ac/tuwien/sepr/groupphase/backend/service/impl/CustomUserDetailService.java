@@ -23,8 +23,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -97,11 +95,15 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
+        // tmp solution
+        ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
+            && applicationUser.getRole() != UserRole.INACTIVE
             && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
         ) {
             List<String> roles = userDetails.getAuthorities()
