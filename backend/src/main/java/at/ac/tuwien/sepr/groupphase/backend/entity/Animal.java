@@ -43,7 +43,7 @@ public class Animal {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     private File profilePicture;
 
     @Enumerated(EnumType.ORDINAL)
@@ -66,7 +66,7 @@ public class Animal {
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
 
-    @OneToMany(targetEntity = File.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = File.class, cascade = CascadeType.REMOVE)
     private Set<File> content;
 
     @Column(name = "created_on")

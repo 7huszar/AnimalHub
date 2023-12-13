@@ -84,6 +84,27 @@ export class AnimalService {
     return this.httpClient.put<FileDto>(this.animalBaseUri + '/' + id + '/files/profileImg', form);
   }
 
+  getContents(id: string): Observable<FileDto[]> {
+    return this.httpClient.get<FileDto[]>(this.animalBaseUri + '/' + id + '/files');
+  }
+
+  getContent(id: string, fileId: string): Observable<Blob> {
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/' + fileId, { responseType: 'blob' });
+  }
+
+  addContent(id: string, file: CreateFileDto): Observable<FileDto> {
+    const form = new FormData();
+    form.append('name', file.name);
+    form.append('summary', file.summary);
+    form.append('file', file.file);
+
+    return this.httpClient.post<FileDto>(this.animalBaseUri + '/' + id + '/files', form);
+  }
+
+  deleteContent(id: string, fileId: string): Observable<void> {
+    return this.httpClient.delete<void>(this.animalBaseUri + '/' + id + '/files/' + fileId);
+  }
+
   /**
    * Searches for animals with the given parameters
    *
