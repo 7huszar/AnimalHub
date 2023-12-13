@@ -32,6 +32,7 @@ import {ConfirmDeleteDialogComponent} from "./components/shelter/confirm-delete-
 import {UserAdminPageComponent} from "./components/admin-page/user-admin-page/user-admin-page.component";
 import {UserConfirmDeleteDialogComponent} from "./components/user/confirm-delete-dialog/user-confirm-delete-dialog.component";
 import { ContentComponent } from './components/content/content.component';
+import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -44,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    AnimalHomepageComponent,
     CreateEditComponent,
     LangSelectComponent,
     MemberProfileComponent,

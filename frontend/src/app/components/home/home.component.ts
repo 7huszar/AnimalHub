@@ -16,7 +16,10 @@ export class HomeComponent implements OnInit {
   private middle :AnimalDetailDto;
   private right :AnimalDetailDto;
 
-  private animalList :AnimalDetailDto[];
+  private animalList: AnimalDetailDto[];
+  private likedAnimals: string[];
+  private dislikedAnimals: string[];
+
 
   constructor(
     public authService: AuthService,
@@ -28,6 +31,9 @@ export class HomeComponent implements OnInit {
     this.animalService.findAll().subscribe({
       next :data => {
         this.animalList = data;
+        this.loadCard(Position.LEFT);
+        this.loadCard(Position.MIDDLE);
+        this.loadCard(Position.RIGHT);
       },
       error :error => {
         console.error("Failed to load animals", error);
@@ -65,6 +71,13 @@ export class HomeComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  likeAnimal(id: string) {
+    this.likedAnimals.push(id);
+  }
+  dislikeAnimal(id: string) {
+    this.dislikedAnimals.push(id);
   }
 
   protected readonly AuthService = AuthService;

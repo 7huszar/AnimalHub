@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-animal-card',
@@ -7,15 +7,21 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class AnimalCardComponent implements OnInit{
 
-  @Input() name :string = "Schnappi das kleine Krokodil";
+  @Input() name :string;
   @Input() id :number | unknown;
-  like() :void {
+  @Output() dislike = new EventEmitter<void>();
+  @Output() like = new EventEmitter<void>();
+
+
+  /*like() :void {
     console.log("like");
   }
 
   dislike() :void {
     console.log("dislike")
   }
+
+   */
 
   ngOnInit(): void {
   }
