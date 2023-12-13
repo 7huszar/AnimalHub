@@ -25,7 +25,7 @@ export class CreateEditComponent implements OnInit {
     birthDate: new Date(),
     height: 0,
     weight: 0,
-    shelter: new IdOnlyShelter('970846d3-aeba-4ce9-9057-3e222137a692')
+    shelter: new IdOnlyShelter('67652260-8655-4186-be59-36366ad94922')
   };
 
   private image: File = null;

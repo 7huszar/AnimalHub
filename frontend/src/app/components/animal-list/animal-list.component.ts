@@ -2,7 +2,6 @@ import {Component, Input} from '@angular/core';
 import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
-import {AnimalService} from "../../services/animal.service";
 import {Mode} from "../../enums/modes";
 
 @Component({
@@ -17,11 +16,9 @@ export class AnimalListComponent {
   p: number;
   searchTermSpecies: String;
   searchTermName: String;
-  animalImageURL: any = null;
 
   constructor(private router: Router,
-              public authService: AuthService,
-              private animalService: AnimalService) {
+              public authService: AuthService) {
   }
 
   ngOnInit(): void {

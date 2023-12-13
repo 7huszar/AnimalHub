@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {AnimalDetailDto, AnimalDto} from "../../dtos/animal";
+import {AnimalDto} from "../../dtos/animal";
 import  {ShelterService} from "../../services/shelter.service";
 import {ShelterDetailDto} from "../../dtos/shelter";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
+import {Mode} from "../../enums/modes";
 
 
 
@@ -16,7 +16,6 @@ import {ToastrService} from "ngx-toastr";
 export class ShelterComponent implements OnInit {
   protected animals: AnimalDto[] = [];
   protected shelter: ShelterDetailDto;
-  private name: string;
 
   constructor(private shelterService: ShelterService,
               private router: Router,
@@ -30,7 +29,6 @@ export class ShelterComponent implements OnInit {
         this.shelterService.findById(params['id']).subscribe({next: shelter => {
           this.shelter = shelter;
           this.animals = this.shelter.animals;
-          this.name = this.shelter.name;
           },
           error: error => {
             console.error('Error finding shelter', error);
@@ -40,13 +38,5 @@ export class ShelterComponent implements OnInit {
       });
   }
 
-
-  editAnimal(animalId: number): void {
-    // Implement logic to edit the animal with the specified ID
-    console.log('Editing animal with ID:', animalId);
-  }
-
-  onFilterChange(selectedFilter: string): void {
-
-  }
+  protected readonly Mode = Mode;
 }
