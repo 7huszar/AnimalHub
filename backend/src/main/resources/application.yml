@@ -89,7 +89,7 @@ spring:
 server:
   shutdown: graceful
 ---
-# email configuration
+# email configuration - production
 spring:
   mail:
     host: smtp.gmail.com
@@ -105,3 +105,18 @@ spring:
           starttls:
             enable: true
             required: true
+---
+# email configuration - dev and test
+spring:
+  profiles: test
+  mail:
+    host: localhost
+    port: 1989
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
