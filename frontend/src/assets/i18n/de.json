@@ -50,5 +50,16 @@
     "INTERNAL_SERVER_ERROR": "Interne Fehler in unserem Server - Entschuldigung"
   },
 
-  "LOGO" : "Logo mit der Aufschrift AnimalHub"
+  "LOGO" : "Logo mit der Aufschrift AnimalHub",
+
+  "ANIMAL_HOMEPAGE": {
+    "SPECIES": "Tierart:",
+    "RACE": "Rasse:",
+    "BIRTHDATE": "Geburtsdatum:",
+    "HEIGHT": "Größe:",
+    "WEIGHT": "Gewicht:",
+    "CONTENT": "Medien",
+    "DONATE_1": "Spende an ",
+    "ADOPT": "Adoptiere "
+  }
 }
