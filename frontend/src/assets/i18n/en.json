@@ -61,5 +61,16 @@
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
     "ADOPT": "Adopt "
+  },
+
+  "SHELTER_HOMEPAGE": {
+    "ADDRESS": "Address:",
+    "PHONE": "Phone:",
+    "EMAIL": "E-mail:"
+  },
+
+  "ANIMAL_LIST": {
+    "NAME": "Name",
+    "SPECIES": "Species"
   }
 }

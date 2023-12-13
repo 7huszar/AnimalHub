@@ -1,18 +1,33 @@
 <app-header></app-header>
 
+<div class="banner">
+  <app-content [mode]="Mode.SHELTER" [id]="shelter.id" setClass="banner-img-top"/>
+</div>
+
 <div class="container">
-  <h1 class="mt-4 mb-4">shelter.name
-  </h1>
-
-  <div class="form-group">
-    <label for="filter">Filter by:</label>
-    <select id="filter" class="form-control">
-      <option value="all">All Animals</option>
-      <option value="mammal">Mammals</option>
-      <option value="bird">Birds</option>
-      <!-- Add more options as needed -->
-    </select>
+  <div class="shelter-details">
+    <h1 class="mt-4 mb-4" style="margin-left: 1rem">{{ shelter.name }}
+    </h1>
+    <div class="row">
+      <div class="col">
+        <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 1rem">
+          <div class="row align-items-end" style="height: auto">
+            <div class="col-auto" style="">{{'SHELTER_HOMEPAGE.ADDRESS' | translate}}</div>
+            <div class="col">{{ shelter.address }}</div>
+          </div>
+          <div class="row align-items-end" style="height: auto">
+            <div class="col-auto">{{'SHELTER_HOMEPAGE.PHONE' | translate}}</div>
+            <div class="col">{{ shelter.phoneNumber }}</div>
+          </div>
+          <div class="row align-items-end" style="height: auto">
+            <div class="col-auto">{{'SHELTER_HOMEPAGE.EMAIL' | translate}}</div>
+            <div class="col">{{ shelter.email }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <br/>
 
-  <app-animal-list></app-animal-list>
+  <app-animal-list [animals]="animals"></app-animal-list>
 </div>
