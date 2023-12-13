@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {AnimalService} from "../../services/animal.service";
 import {AnimalDetailDto} from "../../dtos/animal";
+import {Type} from "../../enums/type";
+import {Mode} from "../../enums/modes";
 
 @Component({
   selector: 'app-animal-list',
@@ -10,7 +12,7 @@ import {AnimalDetailDto} from "../../dtos/animal";
 export class AnimalListComponent {
 
   private animals: AnimalDetailDto[] = [];
-  displayedAnimals: any[] = [];
+  displayedAnimals: AnimalDetailDto[] = [];
   p: number;
 
   constructor(private animalService: AnimalService) {
@@ -28,9 +30,11 @@ export class AnimalListComponent {
       .filter(animal => filter === 'all' || animal.species === filter)
   }
 
-  editAnimal(animalId: number): void {
+  editAnimal(animalId: string): void {
     // Implement logic to edit the animal with the specified ID
     console.log('Editing animal with ID:', animalId);
   }
 
+  protected readonly Type = Type;
+  protected readonly Mode = Mode;
 }

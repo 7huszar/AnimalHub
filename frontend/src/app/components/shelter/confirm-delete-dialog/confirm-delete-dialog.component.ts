@@ -1,8 +1,7 @@
 import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
-import {ShelterService} from "../../services/shelter.service";
-import {AdminPageComponent} from "../admin-page/admin-page.component";
+import {ShelterService} from "../../../services/shelter.service";
+import {AdminPageComponent} from "../../admin-page/shelter-admin-page/admin-page.component";
 
 @Component({
   selector: 'app-confirm-delete-dialog',
@@ -22,7 +21,6 @@ export class ConfirmDeleteDialogComponent {
   constructor(
     private service: ShelterService,
     private notification: ToastrService,
-    private router: Router,
     private adminPageComponent: AdminPageComponent,
   ) {
   }
@@ -38,9 +36,6 @@ export class ConfirmDeleteDialogComponent {
               case ShelterDeleteMode.delete:
                 break;
               case ShelterDeleteMode.edit:
-                this.router.navigate(['/shelter']);
-                break;
-              case ShelterDeleteMode.details:
                 this.adminPageComponent.reloadShelters();
                 break;
             }
@@ -55,7 +50,6 @@ export class ConfirmDeleteDialogComponent {
 }
 
 export enum ShelterDeleteMode {
-  details,
   edit,
   delete
 }

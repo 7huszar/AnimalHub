@@ -1,9 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import org.h2.engine.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -12,4 +16,7 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     ApplicationUser findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    List<ApplicationUser> findUsersByEmailIgnoreCaseContaining(String email);
+
 }

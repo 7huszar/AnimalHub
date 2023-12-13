@@ -34,11 +34,11 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterValidator validator;
 
     /**
-     * Search for horses in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in horse.
+     * Search for users in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
      *
      * @param searchParameters the search parameters to use in filtering.
-     * @return the horses where the given fields match.
+     * @return the users where the given fields match.
      */
     @Override
     public List<ShelterListDto> search(ShelterSearchDto searchParameters) {
