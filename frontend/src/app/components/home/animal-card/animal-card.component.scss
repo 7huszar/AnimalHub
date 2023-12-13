@@ -20,9 +20,9 @@
   background-attachment: fixed;
 }
 .bg-image {
-  position:relative;
-  overflow:hidden;
-  background-repeat:no-repeat;
-  background-size:cover;
-  background-position:center center;
+  position: relative;
+  overflow: hidden;
+  width: 30em;
+  height: 20em;
+  object-fit: cover;
 }

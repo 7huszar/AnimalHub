@@ -23,7 +23,7 @@
 <div class="card p-2" style="width: 100%;">
   <a routerLink="/animal/{{id}}" style="position: relative">
     <div class="bg-image">
-      <img src="assets/img/gratisography-cool-cat.png" class="w-100" alt="test picture">
+      <app-content [mode]="Mode.ANIMAL" [id]="id" setClass="img-fluid"></app-content>
       <div
         class="mask"
         style="

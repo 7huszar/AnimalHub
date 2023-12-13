@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Mode} from "../../../enums/modes";
 
 @Component({
   selector: 'app-animal-card',
@@ -12,6 +13,7 @@ export class AnimalCardComponent implements OnInit{
   @Output() dislike = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
 
+  animalImageURL: any = null;
 
   /*like() :void {
     console.log("like");
@@ -25,4 +27,6 @@ export class AnimalCardComponent implements OnInit{
 
   ngOnInit(): void {
   }
+
+  protected readonly Mode = Mode;
 }
