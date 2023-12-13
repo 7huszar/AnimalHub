@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
@@ -17,6 +18,8 @@ import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
@@ -134,16 +137,19 @@ public class CustomUserDetailService implements UserService {
 
     @Transactional
     @Override
-    public void verify(String token) {
+    public void verify(String token) throws NotAuthorizedException {
         String email;
-        Claims claims = Jwts.parser()
-            .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
-            .build()
-            .parseSignedClaims(token)
-            .getPayload();
+        try {
+            Claims claims = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-        email = claims.get("email", String.class);
-
+            email = claims.get("email", String.class);
+        } catch (JwtException e) {
+            throw new NotAuthorizedException(e);
+        }
         userRepository.updateRole(email, UserRole.USER);
     }
 

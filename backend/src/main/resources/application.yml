@@ -47,7 +47,7 @@ security:
     # 12 hours in milliseconds
     expiration-time: 43200000
     # 10 minutes
-    verification-expiration-time': 600000
+    verification-expiration-time: 600000
 
 management:
   server:
@@ -108,15 +108,20 @@ spring:
 ---
 # email configuration - dev and test
 spring:
-  profiles: test
+  config:
+    activate:
+      on-profile: dev
   mail:
     host: localhost
-    port: 1989
     username:
     password:
     properties:
       mail:
+        transport:
+          protocol: smtp
         smtp:
+          port: 1989
           auth: false
           starttls:
             enable: false
+            required: false

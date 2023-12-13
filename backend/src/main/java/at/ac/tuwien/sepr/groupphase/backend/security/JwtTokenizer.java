@@ -40,7 +40,7 @@ public class JwtTokenizer {
             .setAudience(securityProperties.getJwtAudience())
             .setSubject("verification")
             .claim("email", user)
-            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
+            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtVerificationExpirationTime()))
             .compact();
         return token;
     }
