@@ -1,0 +1,56 @@
+<app-header></app-header>
+
+<br>
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+
+  <div class="row">
+
+    <div class="mg-2 col-lg-6">
+      <div class="row">
+        <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Email
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <span>{{ user.email }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mb-2 col-lg-6">
+    <div class="row">
+      <label for="userRole" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Role
+      </label>
+      <div class="col-md-10 col-lg-8"
+      >
+        <select class="form-select"
+                id="userRole"
+                name="userRole"
+                [(ngModel)]="user.role"
+                required
+        >
+          <option value="USER">USER</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="MEMBER">MEMBER</option>
+
+        </select>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mt-4 d-flex flex-row">
+    <button type="button" class="btn btn-danger">
+      <i class="bi bi-trash"></i>
+    </button>
+    <span class="flex-grow-1"></span>
+    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+      {{ submitButtonText }}
+    </button>
+  </div>
+</form>
+
+
+

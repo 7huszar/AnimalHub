@@ -33,6 +33,7 @@ import {UserAdminPageComponent} from "./components/admin-page/user-admin-page/us
 import {
   UserConfirmDeleteDialogComponent
 } from "./components/user/confirm-delete-dialog/user-confirm-delete-dialog.component";
+import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -58,6 +59,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmDeleteDialogComponent,
     UserConfirmDeleteDialogComponent,
     UserAdminPageComponent,
+    UserEditComponent,
   ],
   imports: [
     BrowserModule,

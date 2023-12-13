@@ -24,9 +24,9 @@ public class UserDetailDto {
 
     @Override
     public String toString() {
-        return "ShelterDetailDto{"
+        return "UserDetailDto{"
             + ", id='" + id + '\''
-            + ", name='" + email + '\''
+            + ", email='" + email + '\''
             + ", role='" + role + '\''
             + '}';
     }
