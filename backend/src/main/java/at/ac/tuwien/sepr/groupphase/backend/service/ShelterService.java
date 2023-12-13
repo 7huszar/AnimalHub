@@ -1,12 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,4 +75,12 @@ public interface ShelterService {
      */
     void delete(UUID id);
 
+    // TODO comment
+    FileDetailDto getProfileImage(UUID id);
+
+    // TODO comment
+    FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException;
+
+    // TODO comment
+    FileDto updateProfileImage(UUID id, CreateFileDto fileDto);
 }

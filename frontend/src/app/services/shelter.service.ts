@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {CreateShelterDto, ShelterDetailDto, ShelterDto, ShelterListDto, ShelterSearch} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
+import {CreateFileDto, FileDto} from "../dtos/file";
 
 
 
@@ -60,6 +61,28 @@ export class ShelterService {
    */
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(this.shelterBaseUri + '/' + id);
+  }
+
+  getProfileImage(id: string): Observable<Blob> {
+    return this.httpClient.get(this.shelterBaseUri + '/' + id + '/files/profileImg', { responseType: 'blob' });
+  }
+
+  setProfileImage(id: string, file: CreateFileDto): Observable<FileDto> {
+    const form = new FormData();
+    form.append('name', file.name);
+    form.append('summary', file.summary);
+    form.append('file', file.file);
+
+    return this.httpClient.post<FileDto>(this.shelterBaseUri + '/' + id + '/files/profileImg', form);
+  }
+
+  updateProfileImage(id: string, file: CreateFileDto): Observable<FileDto> {
+    const form = new FormData();
+    form.append('name', file.name);
+    form.append('summary', file.summary);
+    form.append('file', file.file);
+
+    return this.httpClient.put<FileDto>(this.shelterBaseUri + '/' + id + '/files/profileImg', form);
   }
 
 
