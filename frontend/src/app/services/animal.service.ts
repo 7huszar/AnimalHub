@@ -85,11 +85,11 @@ export class AnimalService {
   }
 
   getContents(id: string): Observable<FileDto[]> {
-    return this.httpClient.get<FileDto[]>(this.animalBaseUri + '/' + id + '/files');
+    return this.httpClient.get<FileDto[]>(this.animalBaseUri + '/' + id + '/files/content');
   }
 
   getContent(id: string, fileId: string): Observable<Blob> {
-    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/' + fileId, { responseType: 'blob' });
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/content/' + fileId, { responseType: 'blob' });
   }
 
   addContent(id: string, file: CreateFileDto): Observable<FileDto> {
@@ -98,11 +98,11 @@ export class AnimalService {
     form.append('summary', file.summary);
     form.append('file', file.file);
 
-    return this.httpClient.post<FileDto>(this.animalBaseUri + '/' + id + '/files', form);
+    return this.httpClient.post<FileDto>(this.animalBaseUri + '/' + id + '/files/content', form);
   }
 
   deleteContent(id: string, fileId: string): Observable<void> {
-    return this.httpClient.delete<void>(this.animalBaseUri + '/' + id + '/files/' + fileId);
+    return this.httpClient.delete<void>(this.animalBaseUri + '/' + id + '/files/content/' + fileId);
   }
 
   /**
