@@ -77,7 +77,7 @@ public interface AnimalService {
 
     FileDetailDto getContent(UUID id, UUID fileId);
 
-    FileDto addContent(UUID id, CreateFileDto fileDto);
+    FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException;
 
     void deleteContent(UUID id, UUID fileId);
 }

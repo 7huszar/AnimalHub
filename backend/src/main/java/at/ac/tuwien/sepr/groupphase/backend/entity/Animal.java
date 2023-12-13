@@ -23,8 +23,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -67,7 +67,7 @@ public class Animal {
     private Shelter shelter;
 
     @OneToMany(targetEntity = File.class, cascade = CascadeType.REMOVE)
-    private Set<File> content;
+    private List<File> content;
 
     @Column(name = "created_on")
     @CreationTimestamp
