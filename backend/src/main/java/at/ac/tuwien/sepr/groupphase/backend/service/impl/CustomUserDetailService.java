@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +40,26 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
     private final ConflictValidator conflictChecker;
+    private final UserMapper userMapper;
+
+
+    /**
+     * Search for users in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
+     *
+     * @param searchParameters the search parameters to use in filtering.
+     * @return the users where the given fields match.
+     */
+    @Override
+    public List<UserDetailDto> search(UserSearchDto searchParameters) {
+        var users = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
+        if (searchParameters.email() == null) {
+            users = userRepository.findAll();
+        }
+
+        return users.stream()
+            .map(userMapper::applicationUserToUserDetailDto).toList();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -100,5 +124,16 @@ public class CustomUserDetailService implements UserService {
             .build();
 
         userRepository.save(user);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        LOGGER.debug("Delete Shelter with id: " + id);
+
+        var shelter = userRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        userRepository.delete(shelter);
     }
 }

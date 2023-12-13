@@ -1,12 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,11 +22,11 @@ public interface ShelterService {
 
 
     /**
-     * Search for horses in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in horse.
+     * Search for shelters in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
      *
      * @param searchParameters the search parameters to use in filtering.
-     * @return the horses where the given fields match.
+     * @return the shelters where the given fields match.
      */
     List<ShelterListDto> search(ShelterSearchDto searchParameters);
 
@@ -70,4 +75,12 @@ public interface ShelterService {
      */
     void delete(UUID id);
 
+    // TODO comment
+    FileDetailDto getProfileImage(UUID id);
+
+    // TODO comment
+    FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException;
+
+    // TODO comment
+    FileDto updateProfileImage(UUID id, CreateFileDto fileDto);
 }

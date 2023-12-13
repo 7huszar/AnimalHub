@@ -36,7 +36,7 @@ export interface CreateAnimalDto {
 }
 
 /**
- * Interface for listing animals in horse-search
+ * Interface for listing animals in animal-search
  */
 export interface AnimalListDto {
   id: string;

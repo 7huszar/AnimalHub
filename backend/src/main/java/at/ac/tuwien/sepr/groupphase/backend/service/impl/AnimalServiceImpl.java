@@ -103,7 +103,7 @@ public class AnimalServiceImpl implements AnimalService {
         );
 
         Optional.ofNullable(animal.getProfilePicture()).orElseThrow(
-            () -> new NotFoundException("Animal does not have a profil image.")
+            () -> new NotFoundException("Animal does not have a profile image.")
         );
 
         return fileService.findById(animal.getProfilePicture().getId());
@@ -121,10 +121,10 @@ public class AnimalServiceImpl implements AnimalService {
         }
 
         var createdFile = fileService.create(createFileDto);
-
         var file = fileMapper.fileDtoToFile(createdFile);
 
         animal.setProfilePicture(file);
+        animalRepository.save(animal);
 
         return createdFile;
     }
