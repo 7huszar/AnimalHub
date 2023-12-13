@@ -6,6 +6,8 @@ import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {Species} from "../../dtos/species";
 import {ShelterDto} from "../../dtos/shelter";
+import {Mode} from "../../enums/modes";
+import {Type} from "../../enums/type";
 
 @Component({
   selector: 'app-animal-homepage',
@@ -66,4 +68,6 @@ export class AnimalHomepageComponent implements OnInit{
     });
   }
 
+  protected readonly Mode = Mode;
+  protected readonly Type = Type;
 }

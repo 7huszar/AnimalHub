@@ -26,7 +26,7 @@ export class CreateEditComponent implements OnInit {
     birthDate: new Date(),
     height: 0,
     weight: 0,
-    shelter: new IdOnlyShelter('2fda3011-bc29-4a95-9f20-8c418f3f2238')
+    shelter: new IdOnlyShelter('f78daf38-cd64-48c9-8c9a-44c13f8eafa3')
   };
 
   private image: File = null;
@@ -114,25 +114,19 @@ export class CreateEditComponent implements OnInit {
         this.heightSet = true;
 
         // TODO FIX
-        /*
+
         this.route.params.subscribe(params => {
           this.animalService.findById(this.route.snapshot.paramMap.get('id')!).subscribe({
-            next: (data: Animal) => {
+            next: (data: AnimalDetailDto) => {
               if (data) {
-                this.animal.id = data.id;
-                this.animal.name = data.name;
-                this.animal.species = data.species;
-                this.animal.race = data.race;
-                this.animal.birthDate = data.birthDate;
-                this.animal.weight = data.weight;
-                this.animal.height = data.height;
+                this.animal = data;
               }
             },
             error: (error) => {
               console.error('Error loading animal data:', error);
             }
           });
-        });*/
+        });
       }
     });
   }

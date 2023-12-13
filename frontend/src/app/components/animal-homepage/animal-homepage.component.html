@@ -18,7 +18,7 @@
   <div class="row">
     <div class="col" style="max-width: 30em">
       <div class="media">
-        <img [ngSrc]="animalImageURL" alt="ProfileImage" class="w-100">
+        <app-content [mode]="Mode.ANIMAL" [id]="animal.id"></app-content>
       </div>
     </div>
     <div class="col">
@@ -37,11 +37,11 @@
         </div>
         <div class="row align-items-end" style="height: auto">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
-          <div class="col">{{ animal.height }}</div>
+          <div class="col">{{ animal.height }} m</div>
         </div>
         <div class="row align-items-end" style="height: auto">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
-          <div class="col">{{ animal.weight }}</div>
+          <div class="col">{{ animal.weight }} kg</div>
         </div>
         <div class="row fixed-button align-items-end w-100">
           <div class="col-auto">
