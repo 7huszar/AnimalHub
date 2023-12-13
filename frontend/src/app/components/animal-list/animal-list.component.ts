@@ -3,7 +3,6 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
-import {AnimalDetailDto} from "../../dtos/animal";
 import {Type} from "../../enums/type";
 import {Mode} from "../../enums/modes";
 
@@ -52,6 +51,7 @@ export class AnimalListComponent {
         .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
     }
 
+  }
 
   protected loadAnimalPic(animalId: string): any {
     this.animalService.getProfileImage(animalId).subscribe({
