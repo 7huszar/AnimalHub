@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {CreateShelterDto, ShelterDetailDto, ShelterDto, ShelterListDto, ShelterSearch} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {UserDetailDto, UserSearch} from "../dtos/user";
@@ -30,8 +29,8 @@ export class UserService {
    * @param id of user to load
    */
   findById(id: string): Observable<UserDetailDto> {
-    console.log('Load shelter with id: ' + id);
-    return this.httpClient.get<ShelterDetailDto>(this.usersBaseUri + '/' + id);
+    console.log('Load user with id: ' + id);
+    return this.httpClient.get<UserDetailDto>(this.usersBaseUri + '/' + id);
   }
 
   /**
@@ -47,11 +46,11 @@ export class UserService {
   /**
    * Updates the given user in the persistent data storage.
    *
-   * @param user      user -to-update
-   * @return an Observable for the updated animal
+   * @param user user -to-update
+   * @return an Observable for the updated user
    */
   update(user: UserDetailDto): Observable<UserDetailDto> {
-    return this.httpClient.put<UserDetailDto>(this.usersBaseUri + '/' + user.id, user);
+    return this.httpClient.put<UserDetailDto>(this.usersBaseUri + '/edit/' + user.id, user);
   }
 
   /**
@@ -68,7 +67,9 @@ export class UserService {
 
     let params = new HttpParams();
     params = params.append('email', searchParams.email);
-    console.log(searchParams.email)
+    if(searchParams.role){
+      params = params.append('role', searchParams.role);
+    }
     return this.httpClient.get<UserDetailDto[]>(this.usersBaseUri + '/search', {params})
       .pipe();
   }

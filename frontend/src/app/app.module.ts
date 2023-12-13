@@ -31,7 +31,8 @@ import {NgOptimizedImage} from "@angular/common";
 import {ConfirmDeleteDialogComponent} from "./components/shelter/confirm-delete-dialog/confirm-delete-dialog.component";
 import {UserAdminPageComponent} from "./components/admin-page/user-admin-page/user-admin-page.component";
 import {UserConfirmDeleteDialogComponent} from "./components/user/confirm-delete-dialog/user-confirm-delete-dialog.component";
-import { ContentComponent } from './components/content/content.component';
+import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
+import {ContentComponent} from "./components/content/content.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -57,6 +58,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmDeleteDialogComponent,
     UserConfirmDeleteDialogComponent,
     UserAdminPageComponent,
+    UserEditComponent,
     ContentComponent,
   ],
   imports: [
