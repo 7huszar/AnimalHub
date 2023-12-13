@@ -72,4 +72,12 @@ public interface AnimalService {
 
     // TODO comment
     FileDto updateProfileImage(UUID id, CreateFileDto fileDto);
+
+    List<FileDto> getContents(UUID id);
+
+    FileDetailDto getContent(UUID id, UUID fileId);
+
+    FileDto addContent(UUID id, CreateFileDto fileDto);
+
+    void deleteContent(UUID id, UUID fileId);
 }

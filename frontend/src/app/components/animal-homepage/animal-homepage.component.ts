@@ -4,6 +4,8 @@ import {AnimalService} from "../../services/animal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
+import {Species} from "../../dtos/species";
+import {ShelterDto} from "../../dtos/shelter";
 
 @Component({
   selector: 'app-animal-homepage',
@@ -12,7 +14,19 @@ import {ToastrService} from "ngx-toastr";
 })
 export class AnimalHomepageComponent implements OnInit{
 
-  animal: AnimalDetailDto;
+  animal: AnimalDetailDto = {
+    birthDate: undefined,
+    createdOn: undefined,
+    height: 0,
+    id: "",
+    name: "",
+    race: "",
+    shelter: undefined,
+    species: undefined,
+    weight: 0
+  };
+
+  animalImageURL: any = null;
 
   constructor(
     private service: AnimalService,
@@ -30,12 +44,24 @@ export class AnimalHomepageComponent implements OnInit{
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
+            this.loadAnimalPic();
           },
           error: error => {
             console.error('Error finding animal', error);
             this.notification.error("Could Not find animal");
           }
         });
+      }
+    });
+  }
+
+  private loadAnimalPic(): void {
+    this.service.getProfileImage(this.animal.id).subscribe({
+      next: data => {
+        console.log("loaded image ", data);
+        this.animalImageURL = URL.createObjectURL(data);
+      }, error: err => {
+        console.error(err)
       }
     });
   }

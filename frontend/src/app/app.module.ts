@@ -31,7 +31,8 @@ import {NgOptimizedImage} from "@angular/common";
 import {ConfirmDeleteDialogComponent} from "./components/shelter/confirm-delete-dialog/confirm-delete-dialog.component";
 import {UserAdminPageComponent} from "./components/admin-page/user-admin-page/user-admin-page.component";
 import {UserConfirmDeleteDialogComponent} from "./components/user/confirm-delete-dialog/user-confirm-delete-dialog.component";
-import { ContentComponent } from './components/content/content.component';
+import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
+import {ContentComponent} from "./components/content/content.component";
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -45,10 +46,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    AnimalHomepageComponent,
     CreateEditComponent,
     LangSelectComponent,
     MemberProfileComponent,
+    AnimalHomepageComponent,
     AdminPageComponent,
     AnimalCardComponent,
     RegisterComponent,
@@ -59,6 +60,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmDeleteDialogComponent,
     UserConfirmDeleteDialogComponent,
     UserAdminPageComponent,
+    UserEditComponent,
     ContentComponent,
   ],
   imports: [

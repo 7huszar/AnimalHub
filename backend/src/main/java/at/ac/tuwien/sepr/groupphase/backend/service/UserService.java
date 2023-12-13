@@ -70,4 +70,24 @@ public interface UserService extends UserDetailsService {
      * @code NotFoundException thrown when the id does not point to any user in the persistent data store.
      */
     void delete(UUID id);
+
+
+    /**
+     * Get the user with given ID from the database.
+     *
+     * @param id user id
+     * @return the user with ID {@code id}
+     * @code NotFoundException when there is no user with the given ID
+     */
+    UserDetailDto findById(UUID id);
+
+
+    /**
+     * Updates the user with the data given in {@code userDetailDto} in the persistent data store.
+     *
+     * @param userDetailDto the user to update
+     * @return the updated user
+     * @code NotFoundException when there is no user with the given ID
+     */
+    UserDetailDto update(UserDetailDto userDetailDto);
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {AnimalService} from "../../services/animal.service";
 import {AnimalDetailDto} from "../../dtos/animal";
-import {Type} from "../../enums/type";
 import {Mode} from "../../enums/modes";
 
 @Component({
@@ -35,6 +34,5 @@ export class AnimalListComponent {
     console.log('Editing animal with ID:', animalId);
   }
 
-  protected readonly Type = Type;
   protected readonly Mode = Mode;
 }

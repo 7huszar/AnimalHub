@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,11 +53,29 @@ public class CustomUserDetailService implements UserService {
      */
     @Override
     public List<UserDetailDto> search(UserSearchDto searchParameters) {
-        var users = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
-        if (searchParameters.email() == null) {
-            users = userRepository.findAll();
-        }
 
+        List<ApplicationUser> users = new ArrayList<>();
+
+        if (searchParameters.email() == null || searchParameters.email().isEmpty()) {
+            if (searchParameters.role() == null) {
+                users = userRepository.findAll();
+            } else {
+                users = userRepository.findApplicationUsersByRole(searchParameters.role());
+            }
+
+        } else {
+
+            var foundUsers = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
+            if (searchParameters.role() == null) {
+                users = foundUsers;
+            } else {
+                for (ApplicationUser foundUser : foundUsers) {
+                    if (userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()) != null) {
+                        users.add(userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()));
+                    }
+                }
+            }
+        }
         return users.stream()
             .map(userMapper::applicationUserToUserDetailDto).toList();
     }
@@ -135,5 +154,30 @@ public class CustomUserDetailService implements UserService {
         );
 
         userRepository.delete(shelter);
+    }
+
+    @Override
+    public UserDetailDto update(UserDetailDto userDetailDto) {
+        LOGGER.debug("Update Shelter with id: " + userDetailDto.getId() + ", with following data:" + userDetailDto);
+
+
+        ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
+            () -> new NotFoundException("User does not exist.")
+        );
+        oldEntity.setRole(userDetailDto.getRole());
+
+        return userMapper.applicationUserToUserDetailDto(userRepository.save(oldEntity));
+    }
+
+
+    @Override
+    public UserDetailDto findById(UUID id) {
+        LOGGER.debug("Get User with id: " + id);
+
+        var user = userRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        return userMapper.applicationUserToUserDetailDto(user);
     }
 }

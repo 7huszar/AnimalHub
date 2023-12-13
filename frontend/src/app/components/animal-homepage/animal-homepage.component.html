@@ -7,48 +7,51 @@
       <div class="headings">
         <div style="display: block; overflow: auto">
           <h1 style=" float: left">{{ animal.name }}</h1>
-          <h1 style=" float: right">{{ animal.shelter.name }}</h1>
+          <h1 style=" float: right">shelter</h1>
         </div>
         <div style="display: block">
-          <h3>{{ animal.species }}</h3>
+          <h2>{{ animal.race }}</h2>
         </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-5">
+    <div class="col" style="max-width: 30em">
       <div class="media">
-        <img src="/assets/img/gratisography-cool-cat.png" alt="Generic placeholder image"  width="100%">
+        <img [ngSrc]="animalImageURL" alt="ProfileImage" class="w-100">
       </div>
     </div>
     <div class="col">
-      <div class="container position-relative" style="height: 100%">
-        <div class="row" style="height: 15%">
-          <div class="col-md-2">Species:</div>
+      <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
+        <div class="row align-items-end" style="height: auto">
+          <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
           <div class="col">{{ animal.species }}</div>
         </div>
-        <div class="row" style="height: 15%">
-          <div class="col-md-2">Race:</div>
+        <div class="row align-items-end" style="height: auto">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
           <div class="col">{{ animal.race }}</div>
         </div>
-        <div class="row" style="height: 15%">
-          <div class="col-md-2">Sex:</div>
-        </div>
-        <div class="row" style="height: 15%">
-          <div class="col-md-2">Date of birth:</div>
+        <div class="row align-items-end" style="height: auto">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.BIRTHDATE' | translate}}</div>
           <div class="col">{{ animal.birthDate }}</div>
         </div>
-        <div class="row" style="height: 15%">
-          <div class="col-md-2">Height:</div>
+        <div class="row align-items-end" style="height: auto">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
           <div class="col">{{ animal.height }}</div>
         </div>
-        <div class="row" style="height: 15%">
-          <div class="col-md-2">Weight:</div>
+        <div class="row align-items-end" style="height: auto">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
           <div class="col">{{ animal.weight }}</div>
         </div>
-        <div class="row fixed-button">
-          <div class="col">
-            <button type="button" class="btn btn-primary">Für {{ animal.name }} spenden</button>
+        <div class="row fixed-button align-items-end w-100">
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.DONATE_1' | translate}}{{ animal.name }}</button>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
+          </div>
+          <div class="col justify-self-end">
+            <app-lang-select></app-lang-select>
           </div>
         </div>
       </div>
@@ -59,10 +62,13 @@
     <div class="col">
       <div class="headings">
         <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
-          <h1 style=" float: left">Media</h1>
+          <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
         </div>
       </div>
       <div class="content">
+        <div class="row">
+          <app-content></app-content>
+        </div>
         <div class="row">
           <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
             <img
@@ -107,7 +113,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
