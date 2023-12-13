@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
 
     List<ApplicationUser> findUsersByEmailIgnoreCaseContaining(String email);
 
+    ApplicationUser findApplicationUserById(UUID id);
+
 }
