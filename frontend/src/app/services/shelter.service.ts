@@ -54,9 +54,9 @@ export class ShelterService {
   }
 
   /**
-   * Delete an existing horse in the system.
+   * Delete an existing shelter in the system.
    *
-   * @param id the id of the horse to be deleted
+   * @param id the id of the shelter to be deleted
    */
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(this.shelterBaseUri + '/' + id);

@@ -17,11 +17,11 @@ public interface ShelterService {
 
 
     /**
-     * Search for horses in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in horse.
+     * Search for shelters in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
      *
      * @param searchParameters the search parameters to use in filtering.
-     * @return the horses where the given fields match.
+     * @return the shelters where the given fields match.
      */
     List<ShelterListDto> search(ShelterSearchDto searchParameters);
 

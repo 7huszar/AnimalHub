@@ -62,8 +62,8 @@ export class AnimalService {
     return this.httpClient.delete<void>(this.animalBaseUri+'/'+id);
   }
 
-  getProfileImage(id: string): Observable<File> {
-    return this.httpClient.get<File>(this.animalBaseUri + '/' + id + '/files/profileImg');
+  getProfileImage(id: string): Observable<Blob> {
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/profileImg', { responseType: 'blob' });
   }
 
   setProfileImage(id: string, file: CreateFileDto): Observable<FileDto> {
@@ -114,7 +114,7 @@ export class AnimalService {
     }
 
     return this.httpClient.get<AnimalListDto[]>(this.animalBaseUri, { params })
-      .pipe(tap(horses => horses.map(h => {
+      .pipe(tap(shelters => shelters.map(h => {
         h.dateOfBirth = new Date(h.dateOfBirth); // Parse date string
       })));
   }

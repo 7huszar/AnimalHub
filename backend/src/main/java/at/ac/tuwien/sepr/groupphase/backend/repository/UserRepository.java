@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -16,6 +17,9 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     ApplicationUser findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    List<ApplicationUser> findUsersByEmailIgnoreCaseContaining(String email);
+
 
     @Modifying
     @Query("update ApplicationUser u set u.status = :status where u.email = :email")

@@ -3,4 +3,8 @@ export enum Mode {
   EDIT,
   USER,
   MEMBER,
+  ADMIN,
+  ANIMAL,
+  SHELTER,
+  FILE
 }
