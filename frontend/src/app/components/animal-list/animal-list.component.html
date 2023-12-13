@@ -2,11 +2,11 @@
   <div class="col input-container">
     <div class="input-group">
       <div class="search-container">
-        <input [(ngModel)]="searchTermName" (input)="onInput()" placeholder="Name" class="form-control">
+        <input [(ngModel)]="searchTermName" (input)="onInput()" placeholder="{{'ANIMAL_LIST.NAME' | translate}}" class="form-control">
         <i class="bi bi-search search-icon"></i>
       </div>
       <div class="search-container">
-        <input [(ngModel)]="searchTermSpecies" (input)="onInput()" placeholder="Species" class="form-control">
+        <input [(ngModel)]="searchTermSpecies" (input)="onInput()" placeholder="{{'ANIMAL_LIST.SPECIES' | translate}}" class="form-control">
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -17,7 +17,7 @@
         <app-content [mode]="Mode.ANIMAL" [id]="animal.id" setClass="card-img-top"/>
         <div class="card-body">
           <h5 class="card-title">{{ animal.name }}</h5>
-          <p class="card-text">Type: {{ animal.species }}</p>
+          <p class="card-text">{{ animal.species.charAt(0).toUpperCase() + animal.species.toLowerCase().slice(1) }}</p>
           <button class="btn btn-primary" (click)="editAnimal(animal.id)">Details</button>
         </div>
       </div>
@@ -26,4 +26,7 @@
   <div class="d-flex justify-content-center pagination-container">
     <pagination-controls (pageChange)="p = $event"></pagination-controls>
   </div>
+</div>
+<div class="lang" style="position: absolute; bottom: 2rem; right: 1rem;" >
+  <app-lang-select></app-lang-select>
 </div>
