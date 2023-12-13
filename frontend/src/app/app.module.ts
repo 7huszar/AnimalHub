@@ -14,20 +14,24 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import { CreateEditComponent } from './components/animal/create-edit/create-edit.component';
-import { LangSelectComponent } from './components/lang-select/lang-select.component';
-import { MemberProfileComponent } from './components/home/member-profile/member-profile.component';
-import { AdminPageComponent } from './components/admin-page/admin-page.component';
-import { RegisterComponent } from './components/register/register.component';
-import { RegisterConfirmComponent } from './components/register/register-confirm/register-confirm.component';
-import { AnimalCardComponent } from './components/home/animal-card/animal-card.component';
+import {CreateEditComponent} from './components/animal/create-edit/create-edit.component';
+import {LangSelectComponent} from './components/lang-select/lang-select.component';
+import {MemberProfileComponent} from './components/home/member-profile/member-profile.component';
+import {AdminPageComponent} from './components/admin-page/shelter-admin-page/admin-page.component';
+import {RegisterComponent} from './components/register/register.component';
+import {RegisterConfirmComponent} from './components/register/register-confirm/register-confirm.component';
+import {AnimalCardComponent} from './components/home/animal-card/animal-card.component';
 import {ShelterComponent} from "./components/shelter/shelter.component";
 
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
-import { ShelterCreateEditComponent } from './components/shelter/shelter-create-edit/shelter-create-edit.component';
-import { AnimalListComponent } from './components/animal-list/animal-list.component';
+import {ShelterCreateEditComponent} from './components/shelter/shelter-create-edit/shelter-create-edit.component';
+import {AnimalListComponent} from './components/animal-list/animal-list.component';
 import {NgOptimizedImage} from "@angular/common";
+import {ConfirmDeleteDialogComponent} from "./components/shelter/confirm-delete-dialog/confirm-delete-dialog.component";
+import {UserAdminPageComponent} from "./components/admin-page/user-admin-page/user-admin-page.component";
+import {UserConfirmDeleteDialogComponent} from "./components/user/confirm-delete-dialog/user-confirm-delete-dialog.component";
+import { ContentComponent } from './components/content/content.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -50,6 +54,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShelterCreateEditComponent,
     ShelterComponent,
     AnimalListComponent,
+    ConfirmDeleteDialogComponent,
+    UserConfirmDeleteDialogComponent,
+    UserAdminPageComponent,
+    ContentComponent,
   ],
   imports: [
     BrowserModule,

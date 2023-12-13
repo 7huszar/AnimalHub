@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Animal, AnimalListDto, AnimalSearch} from '../dtos/animal';
+import {AnimalDetailDto, AnimalListDto, AnimalSearch, CreateAnimalDto} from '../dtos/animal';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {tap} from "rxjs/operators";
+import {CreateFileDto, FileDto} from "../dtos/file";
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,8 @@ export class AnimalService {
   /**
    * Loads all animals from the backend
    */
-  findAll(): Observable<Animal[]> {
-    return this.httpClient.get<Animal[]>(this.animalBaseUri);
+  findAll(): Observable<AnimalDetailDto[]> {
+    return this.httpClient.get<AnimalDetailDto[]>(this.animalBaseUri);
   }
 
   /**
@@ -27,9 +28,9 @@ export class AnimalService {
    *
    * @param id of animal to load
    */
-  findById(id: string): Observable<Animal> {
+  findById(id: string): Observable<AnimalDetailDto> {
     console.log('Load animal with id: ' + id);
-    return this.httpClient.get<Animal>(this.animalBaseUri + '/' + id);
+    return this.httpClient.get<AnimalDetailDto>(this.animalBaseUri + '/' + id);
   }
 
   /**
@@ -37,9 +38,9 @@ export class AnimalService {
    *
    * @param animal to persist
    */
-  create(animal: Animal): Observable<Animal> {
+  create(animal: CreateAnimalDto): Observable<AnimalDetailDto> {
     console.log('Create animal with name: ' + animal.name);
-    return this.httpClient.post<Animal>(this.animalBaseUri, animal);
+    return this.httpClient.post<AnimalDetailDto>(this.animalBaseUri, animal);
   }
 
   /**
@@ -48,10 +49,8 @@ export class AnimalService {
    * @param animal       animal-to-update
    * @return an Observable for the updated animal
    */
-  update(animal: Animal): Observable<Animal> {
-    return this.httpClient.put<Animal>(
-      `${this.animalBaseUri}/${animal.id}`,
-      animal);
+  update(animal: AnimalDetailDto): Observable<AnimalDetailDto> {
+    return this.httpClient.put<AnimalDetailDto>(this.animalBaseUri + '/' + animal.id, animal);
   }
 
   /**
@@ -61,6 +60,28 @@ export class AnimalService {
    */
   delete(id: string): Observable<any> {
     return this.httpClient.delete<void>(this.animalBaseUri+'/'+id);
+  }
+
+  getProfileImage(id: string): Observable<Blob> {
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/profileImg', { responseType: 'blob' });
+  }
+
+  setProfileImage(id: string, file: CreateFileDto): Observable<FileDto> {
+    const form = new FormData();
+    form.append('name', file.name);
+    form.append('summary', file.summary);
+    form.append('file', file.file);
+
+    return this.httpClient.post<FileDto>(this.animalBaseUri + '/' + id + '/files/profileImg', form);
+  }
+
+  updateProfileImage(id: string, file: CreateFileDto): Observable<FileDto> {
+    const form = new FormData();
+    form.append('name', file.name);
+    form.append('summary', file.summary);
+    form.append('file', file.file);
+
+    return this.httpClient.put<FileDto>(this.animalBaseUri + '/' + id + '/files/profileImg', form);
   }
 
   /**
@@ -93,7 +114,7 @@ export class AnimalService {
     }
 
     return this.httpClient.get<AnimalListDto[]>(this.animalBaseUri, { params })
-      .pipe(tap(horses => horses.map(h => {
+      .pipe(tap(shelters => shelters.map(h => {
         h.dateOfBirth = new Date(h.dateOfBirth); // Parse date string
       })));
   }

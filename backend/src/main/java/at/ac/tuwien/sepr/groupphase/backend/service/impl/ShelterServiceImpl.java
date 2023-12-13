@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -30,6 +32,21 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
     private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
+
+    /**
+     * Search for users in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
+     *
+     * @param searchParameters the search parameters to use in filtering.
+     * @return the users where the given fields match.
+     */
+    @Override
+    public List<ShelterListDto> search(ShelterSearchDto searchParameters) {
+        var shelters = shelterRepository.findByNameIgnoreCaseContaining(searchParameters.name());
+
+        return shelters.stream()
+            .map(mapper::shelterToShelterListDto).toList();
+    }
 
     @Override
     public List<ShelterDto> findAll() {

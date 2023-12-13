@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AnimalDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateAnimalDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateShelterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import org.mapstruct.Mapper;
@@ -40,4 +42,8 @@ public interface AnimalShelterMapper {
     Shelter shelterDetailDtoToShelter(ShelterDetailDto shelterDto);
 
     ShelterDto createShelterDtoToShelterDto(CreateShelterDto shelterDto);
+
+    ShelterListDto shelterSearchDtoToShelterListDto(ShelterSearchDto shelterSearchDto);
+
+    ShelterListDto shelterToShelterListDto(Shelter shelter);
 }

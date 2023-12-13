@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Shelter} from '../dtos/shelter';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {CreateShelterDto, ShelterDetailDto, ShelterDto, ShelterListDto, ShelterSearch} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +19,8 @@ export class ShelterService {
   /**
    * Loads all shelter from the backend
    */
-  findAll(): Observable<Shelter[]> {
-    return this.httpClient.get<Shelter[]>(this.shelterBaseUri);
+  findAll(): Observable<ShelterDto[]> {
+    return this.httpClient.get<ShelterDto[]>(this.shelterBaseUri);
   }
 
   /**
@@ -26,9 +28,9 @@ export class ShelterService {
    *
    * @param id of shelter to load
    */
-  findById(id: string): Observable<Shelter> {
+  findById(id: string): Observable<ShelterDetailDto> {
     console.log('Load shelter with id: ' + id);
-    return this.httpClient.get<Shelter>(this.shelterBaseUri + '/' + id);
+    return this.httpClient.get<ShelterDetailDto>(this.shelterBaseUri + '/' + id);
   }
 
   /**
@@ -36,9 +38,9 @@ export class ShelterService {
    *
    * @param shelter  to persist
    */
-  create(shelter: Shelter): Observable<Shelter> {
+  create(shelter: CreateShelterDto): Observable<ShelterDto> {
     console.log('Create shelter  with name: ' + shelter.name);
-    return this.httpClient.post<Shelter>(this.shelterBaseUri, shelter);
+    return this.httpClient.post<ShelterDto>(this.shelterBaseUri, shelter);
   }
 
   /**
@@ -47,19 +49,26 @@ export class ShelterService {
    * @param shelter      shelter -to-update
    * @return an Observable for the updated animal
    */
-  update(shelter : Shelter): Observable<Shelter> {
-    return this.httpClient.put<Shelter>(
-      `${this.shelterBaseUri}/${shelter .id}`,
-      shelter );
+  update(shelter: ShelterDto): Observable<ShelterDto> {
+    return this.httpClient.put<ShelterDto>(this.shelterBaseUri + '/' + shelter.id, shelter);
   }
 
   /**
-   * deletes the shelter with the given id
+   * Delete an existing shelter in the system.
    *
-   * @param id id
+   * @param id the id of the shelter to be deleted
    */
-  delete(id: string): Observable<any> {
-    return this.httpClient.delete<void>(this.shelterBaseUri+'/'+id);
+  delete(id: string): Observable<void> {
+    return this.httpClient.delete<void>(this.shelterBaseUri + '/' + id);
+  }
+
+
+  search(searchParams: ShelterSearch): Observable<ShelterListDto[]> {
+
+    let params = new HttpParams();
+    params = params.append('name', searchParams.name);
+    return this.httpClient.get<ShelterListDto[]>(this.shelterBaseUri + '/search', {params})
+      .pipe();
   }
 
 }
