@@ -11,11 +11,13 @@ import {UserService} from "../../../services/user.service";
 
 export class UserConfirmDeleteDialogComponent {
 
+  public deleteError: string | null = null;
+  @Output() deleteErrorEvent = new EventEmitter<{ error: string | null, errorMessage: string }>();
+
   @Input() deleteWhat: string | undefined = '';
   @Input() DeleteId: string | undefined = '';
   @Input() Mode: UserDeleteMode | undefined;
 
-  @Output() confirm = new EventEmitter<void>();
   @HostBinding('class') cssClass = 'modal-fade';
 
   constructor(
@@ -39,16 +41,24 @@ export class UserConfirmDeleteDialogComponent {
                 break;
             }
           },
-          error: error => {
+          error: (error) => {
             console.error('Error deleting user', error);
-            this.notification.error(error.error.message, error.error.error);
-          }
+
+            if (error.status === 409) {
+              // Conflict error
+              this.deleteError = error.error || 'Conflict error occurred during deletion.';
+            } else {
+              this.deleteError = 'An error occurred during deletion.';
+            }
+
+            this.deleteErrorEvent.emit({ error: this.deleteError, errorMessage: this.deleteError || '' });
+          },
         });
     }
   }
-}
 
-export enum UserDeleteMode {
+}
+  export enum UserDeleteMode {
   edit,
   delete
 }

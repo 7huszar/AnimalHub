@@ -69,7 +69,7 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the user to be deleted.
      * @code NotFoundException thrown when the id does not point to any user in the persistent data store.
      */
-    void delete(UUID id);
+    void delete(UUID id) throws ConflictException;
 
 
     /**
@@ -89,5 +89,5 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto);
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
 }
