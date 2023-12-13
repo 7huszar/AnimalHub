@@ -13,6 +13,7 @@ export class ContentComponent implements OnChanges{
   @Input() id: string;
   @Input() mode: Mode;
   @Input() type: Type;
+  @Input() setClass: string;
 
   protected content: any;
 
