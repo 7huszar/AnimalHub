@@ -13,8 +13,20 @@ export class NotifierService {
     private translator :TranslateService
   ) { }
 
-  notifyError(error :any, title :string) {
+  notifyError(bodyKey :string, titleKey :string) :void {
+    this.translator.get(bodyKey).subscribe( (bodyTranslation :string) => {
+      this.translator.get(titleKey).subscribe( (titleTranslation :string) => {
+        this.notification.error(bodyTranslation, titleTranslation);
+      })
+    })
+  }
+
+  notifyStdError(error :any, titleKey :string) {
     // status == 0 means no response (not a member of HttpStatusCode)
+    let title :string = 'error';
+    this.translator.get(titleKey).subscribe((titleTranslation :string) => {
+      title = titleTranslation;
+    });
     if (error.status === 0) {
       this.translator.get('NOTIFIER.CONNECTION_FAILED').subscribe( (translation :string) => {
         this.notification.error(translation, title);

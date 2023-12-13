@@ -45,18 +45,15 @@ export class RegisterComponent {
        },
        error: error => {
         console.error("failed to register", error);
-        let title :string;
-        this.translator.get('REGISTER.FAILED_REGISTRATION').subscribe((translation :string) => {
-          title = translation;
-        });
+        let title :string = 'REGISTER.FAILED_REGISTRATION';
+
         // Account already exists
         if (error.status == HttpStatusCode.Conflict) {
-          this.translator.get('REGISTER.ALREADY_EXISTS').subscribe((translation :string) => {
-            this.notification.error(translation, title);
-          });
+          this.notifier.notifyError('REGISTER.ALREADY_EXISTS', title);
+
         } else {
           // standard error banners
-          this.notifier.notifyError(error, title);
+          this.notifier.notifyStdError(error, title);
         }
        }
      });

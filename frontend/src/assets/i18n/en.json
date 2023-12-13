@@ -36,7 +36,11 @@
     "MAIL_INVALID": "invalid e-mail address",
     "PWD_MISS_MATCH": "passwords don't match",
     "FAILED_REGISTRATION": "failed to register account",
-    "ALREADY_EXISTS": "account already exists"
+    "ALREADY_EXISTS": "account already exists",
+    "CONFIRM": {
+      "ERROR": "failed to verify e-mail",
+      "INVALID_TOKEN": "invalid token, please ask for a new one"
+    }
   },
 
   "HEADER": {

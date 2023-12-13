@@ -1,2 +1,14 @@
-<button type="button" (click)="verify()" class="btn btn-primary mb-2">verify</button>
-<button type="button" (click)="discard()" class="btn btn-primary mb-2">discard</button>
+<div *ngIf="!success" class="container">
+  <div class="row">
+    <div class="col">
+      <button type="button" (click)="verify()" class="btn btn-primary mb-2">verify</button>
+    </div>
+    <div class="col">
+      <button type="button" (click)="discard()" class="btn btn-primary mb-2">discard</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="success" class="h6">
+  E-Mail successfully verified! Open login page of Animal Hub in another tab and start your journey.
+</div>
