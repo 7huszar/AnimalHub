@@ -7,10 +7,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
-import at.ac.tuwien.sepr.groupphase.backend.enums.UserStatus;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -47,10 +47,10 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
-    private final JavaMailSender emailSender;
     private final SecurityProperties securityProperties;
     private final ConflictValidator conflictChecker;
     private final UserMapper userMapper;
+    private final MailService mail;
 
 
     /**
@@ -122,18 +122,12 @@ public class CustomUserDetailService implements UserService {
         ApplicationUser user = ApplicationUser.builder()
             .email(userLoginDto.getEmail())
             .password(passwordEncoder.encode(userLoginDto.getPassword()))
-            .role(UserRole.USER)
-            .status(UserStatus.UNVERIFIED)
+            .role(UserRole.INACTIVE)
             .build();
 
-        userRepository.save(user);
+        mail.sendVerificationMail(userLoginDto.getEmail());
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("animalhub.service@gmail.com");
-        message.setTo(userLoginDto.getEmail());
-        message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(userLoginDto.getEmail()));
-        emailSender.send(message);
+        userRepository.save(user);
     }
 
     @Transactional
@@ -148,7 +142,7 @@ public class CustomUserDetailService implements UserService {
 
         email = claims.get("email", String.class);
 
-        userRepository.updateStatus(email, UserStatus.ACTIVE);
+        userRepository.updateRole(email, UserRole.USER);
     }
 
     @Override
