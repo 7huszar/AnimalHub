@@ -63,7 +63,7 @@ export class AnimalService {
   }
 
   getProfileImage(id: string): Observable<Blob> {
-    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/profileImg', { responseType: 'blob' });
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/profileImg', {responseType: 'blob'});
   }
 
   setProfileImage(id: string, file: CreateFileDto): Observable<FileDto> {

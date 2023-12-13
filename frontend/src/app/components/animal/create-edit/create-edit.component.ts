@@ -6,7 +6,8 @@ import {NgForm, NgModel} from '@angular/forms';
 import {Observable} from "rxjs";
 import {Mode} from "../../../enums/modes";
 import {IdOnlyShelter} from "../../../dtos/shelter";
-import {CreateAnimalDto} from "../../../dtos/animal";
+import {AnimalDetailDto, CreateAnimalDto} from "../../../dtos/animal";
+import {CreateFileDto} from "../../../dtos/file";
 
 @Component({
   selector: 'app-create-edit',
@@ -145,9 +146,9 @@ export class CreateEditComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.animal);
     // TODO FIX
-    /*
+
     if (form.valid) {
-      let observable: Observable<Animal>;
+      let observable: Observable<AnimalDetailDto>;
       switch (this.mode) {
         case Mode.CREATE:
           this.animalService.create(this.animal).subscribe({
@@ -174,7 +175,7 @@ export class CreateEditComponent implements OnInit {
       //   }
       // });
     }
-    */
+
   }
 
   public onDelete() {
@@ -199,9 +200,16 @@ export class CreateEditComponent implements OnInit {
 
   uploadImage(id: string) {
     // TODO FIX
-    /*
-    const createFile: CreateAnimalFile = {name: this.image.name, summary: "", file: this.image, animalId: id}
-    this.fileService.create(createFile);
-     */
+    console.log("uploading image with animal id ", id);
+
+    const createFile: CreateFileDto = {name: this.image.name, summary: "", file: this.image}
+    this.animalService.setProfileImage(id, createFile).subscribe({
+      next: data => {
+        console.log(data)
+      }, error: err => {
+        console.log(err)
+      }
+    });
+
   }
 }
