@@ -76,6 +76,6 @@
     </tr>
     </tbody>
   </table>
-  <app-user-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion"
-                                  [Mode]="0"></app-user-confirm-delete-dialog>
+  <app-user-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [Mode]="0"
+                                  (deleteErrorEvent)="onDeleteError($event)"></app-user-confirm-delete-dialog>
 </div>

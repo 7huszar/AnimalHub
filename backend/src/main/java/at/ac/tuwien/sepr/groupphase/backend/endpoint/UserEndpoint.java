@@ -4,6 +4,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +50,7 @@ public class UserEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) throws ConflictException {
         LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
         userService.delete(id);
     }

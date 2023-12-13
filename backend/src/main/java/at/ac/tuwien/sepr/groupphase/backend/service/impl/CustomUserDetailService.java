@@ -146,21 +146,21 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID id) throws ConflictException {
         LOGGER.debug("Delete Shelter with id: " + id);
 
+        conflictChecker.checkUserDeleteConflicts(id);
         var shelter = userRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
-
         userRepository.delete(shelter);
     }
 
     @Override
-    public UserDetailDto update(UserDetailDto userDetailDto) {
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException {
         LOGGER.debug("Update Shelter with id: " + userDetailDto.getId() + ", with following data:" + userDetailDto);
 
-
+        userValidator.validateUserCredentialsForUpdate(userDetailDto);
         ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
             () -> new NotFoundException("User does not exist.")
         );
