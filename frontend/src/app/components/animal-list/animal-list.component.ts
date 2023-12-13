@@ -3,6 +3,9 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
+import {AnimalDetailDto} from "../../dtos/animal";
+import {Type} from "../../enums/type";
+import {Mode} from "../../enums/modes";
 
 @Component({
   selector: 'app-animal-list',
@@ -48,7 +51,7 @@ export class AnimalListComponent {
       this.displayedAnimals = this.animals
         .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
     }
-  }
+
 
   protected loadAnimalPic(animalId: string): any {
     this.animalService.getProfileImage(animalId).subscribe({
@@ -63,4 +66,6 @@ export class AnimalListComponent {
   }
 
 
+  protected readonly Type = Type;
+  protected readonly Mode = Mode;
 }

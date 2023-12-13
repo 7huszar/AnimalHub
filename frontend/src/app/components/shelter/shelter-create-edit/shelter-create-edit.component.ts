@@ -111,4 +111,9 @@ export class ShelterCreateEditComponent implements OnInit{
     }
     return 'Update';
   }
+
+  hasLoadedImg() :boolean {
+    return this.shelterImageChanged;
+  }
+
 }

@@ -1,5 +1,3 @@
-
-
 <div class="container">
   <div class="col input-container">
     <div class="input-group">
@@ -16,7 +14,7 @@
   <div id="animal-cards" class="row">
     <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let animal of displayedAnimals | paginate: { itemsPerPage: 12, currentPage: p }">
       <div class="card animal-card">
-        <img (load)="loadAnimalPic(animal.id)" [ngSrc]="animalImageURL" class="w-100" alt="animal-image">
+        <app-content [type]="Type.IMAGE" [mode]="Mode.ANIMAL" [id]="animal.id" setClass="card-img-top"/>
         <div class="card-body">
           <h5 class="card-title">{{ animal.name }}</h5>
           <p class="card-text">Type: {{ animal.species }}</p>

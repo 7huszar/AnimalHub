@@ -54,7 +54,7 @@ export class ShelterService {
   }
 
   /**
-   * Delete an existing delete in the system.
+   * Delete an existing shelter in the system.
    *
    * @param id the id of the shelter to be deleted
    */

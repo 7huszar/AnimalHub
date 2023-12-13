@@ -125,6 +125,7 @@ public class AnimalServiceImpl implements AnimalService {
         var file = fileMapper.fileDtoToFile(createdFile);
 
         animal.setProfilePicture(file);
+        animalRepository.save(animal);
 
         return createdFile;
     }
