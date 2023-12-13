@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AnimalDetailDto, AnimalDto, AnimalListDto} from "../../dtos/animal";
+import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";

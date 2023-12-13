@@ -18,11 +18,11 @@
   <div class="row">
     <div class="col-auto">
       <div class="media">
-        <img [ngSrc]="animalImageURL" alt="ProfileImage">
+        <img [ngSrc]="animalImageURL" alt="ProfileImage" class="img-fluid" style="max-height: 30em">
       </div>
     </div>
     <div class="col">
-      <div class="container position-relative" style="height: 100%">
+      <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
         <div class="row" style="height: 15%">
           <div class="col-md-2">Species:</div>
           <div class="col">{{ animal.species }}</div>
