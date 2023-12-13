@@ -52,6 +52,6 @@ export class AnimalListComponent {
   protected readonly Mode = Mode;
 
   deleteAnimal(id: string) {
-
+    this.router.navigate(['/animal/delete', id]).then(r => console.log(r));
   }
 }
