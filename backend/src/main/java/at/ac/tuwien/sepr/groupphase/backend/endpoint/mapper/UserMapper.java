@@ -4,7 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(uses = AnimalShelterMapper.class)
 public interface UserMapper {
     UserDetailDto applicationUserToUserDetailDto(ApplicationUser user);
 

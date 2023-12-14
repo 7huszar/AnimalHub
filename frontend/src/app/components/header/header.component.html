@@ -14,7 +14,7 @@
           <a class="nav-link" routerLink="/admin">{{'HEADER.ADMIN_PAGE' | translate}}</a>
         </li>
         <li *ngIf="authService.isMember()" class="nav-item">
-          <a class="nav-link" routerLink="/member-profile">{{'HEADER.MEMBER_PAGE' | translate}}</a>
+          <a class="nav-link" routerLink="/shelter/{{authService.getUser().shelter.id}}">{{'HEADER.MEMBER_PAGE' | translate}}</a>
         </li>
       </ul>
     </div>

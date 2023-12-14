@@ -54,12 +54,12 @@
           <div class="col-auto">
             <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
           </div>
-          <div class="col-auto">
+          <div *ngIf="canUpload()" class="col-auto">
             <input type="file" id="newContent" name="newContent" accept="image/png, image/jpeg, image/gif, image/bmp, video/mp4, video/mpeg"
                    (change)="onNewContentSelected($event)" class="form-control">
           </div>
-          <div class="col-auto">
-            <button type="button" class="btn btn-primary" [disabled]="newContent == undefined" (click)="onUpload()">Upload</button>
+          <div *ngIf="canUpload()" class="col-auto">
+            <button type="button" class="btn btn-primary" [disabled]="newContent === null" (click)="onUpload()">Upload</button>
           </div>
         </div>
       </div>

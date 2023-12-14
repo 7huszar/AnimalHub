@@ -53,6 +53,8 @@ public interface UserService extends UserDetailsService {
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
+    UserDetailDto getCurrentUser();
+
     /**
      * Search for users in the persistent data store matching all provided fields.
      * The name is considered a match, if the search string is a substring of the field in user.
@@ -90,4 +92,5 @@ public interface UserService extends UserDetailsService {
      * @code NotFoundException when there is no user with the given ID
      */
     UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
+
 }

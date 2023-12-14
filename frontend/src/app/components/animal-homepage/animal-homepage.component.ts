@@ -9,6 +9,7 @@ import {ShelterDto} from "../../dtos/shelter";
 import {Mode} from "../../enums/modes";
 import {Type} from "../../enums/type";
 import {CreateFileDto, FileDto} from "../../dtos/file";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-animal-homepage',
@@ -34,6 +35,7 @@ export class AnimalHomepageComponent implements OnInit{
   protected contents: FileDto[];
   protected newContent: File = null;
   constructor(
+      protected authService: AuthService,
     private service: AnimalService,
     private router: Router,
     private route: ActivatedRoute,
@@ -78,11 +80,13 @@ export class AnimalHomepageComponent implements OnInit{
   public onUpload(): void {
     const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: ""};
     this.service.addContent(this.animal.id, createFileDto).subscribe({
-      next: data => {
-        console.log(data);
+      next: fileDto => {
+        console.log(fileDto);
+        this.newContent = null;
+        this.contents.unshift(fileDto);
       },
       error: err => {
-        console.error(err);
+        console.error(err); // TODO handle
       }
     });
   }
@@ -101,6 +105,10 @@ export class AnimalHomepageComponent implements OnInit{
       age--;
     }
     this.animalAge = age;
+  }
+
+  protected canUpload(): boolean {
+    return this.authService.isAdmin() || (this.animal.shelter !== null && this.authService.isMemberOf(this.animal.shelter.id));
   }
 
   protected readonly Mode = Mode;

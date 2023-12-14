@@ -5,6 +5,8 @@ import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
 import {Globals} from '../global/globals';
+import {UserDetailDto} from "../dtos/user";
+import {ShelterDto} from "../dtos/shelter";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +14,7 @@ import {Globals} from '../global/globals';
 export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
+  private userUri: string = this.globals.backendUri + '/users/current';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
@@ -28,6 +31,15 @@ export class AuthService {
       );
   }
 
+  private loadUser(): void {
+    this.httpClient.get<UserDetailDto>(this.userUri).subscribe({
+      next: userDto => {
+        localStorage.setItem('authUser', JSON.stringify(userDto));
+      }, error: err => {
+        console.error('Error loading user.', err);
+      }
+    });
+  }
 
   /**
    * Check if a valid JWT token is saved in the localStorage
@@ -39,10 +51,15 @@ export class AuthService {
   logoutUser() {
     console.log('Logout');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authUser');
   }
 
   getToken() {
     return localStorage.getItem('authToken');
+  }
+
+  getUser(): UserDetailDto {
+    return JSON.parse(localStorage.getItem('authUser')) as UserDetailDto;
   }
 
   /**
@@ -65,6 +82,7 @@ export class AuthService {
 
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
+    this.loadUser();
   }
 
   private getTokenExpirationDate(token: string): Date {
@@ -93,4 +111,21 @@ export class AuthService {
     return decoded.rol.includes('USER_ROLE');
   }
 
+  isMemberOf(shelterId: string): boolean {
+    if (!this.isMember())
+      return false;
+
+    const user = this.getUser();
+
+    return user !== null && user.shelter !== null && user.shelter.id === shelterId;
+  }
+
+  getUserShelter(): ShelterDto {
+    if (!this.isMember())
+      return null;
+
+    if (this.getUser().shelter !== null) {
+      return this.getUser().shelter;
+    }
+  }
 }
