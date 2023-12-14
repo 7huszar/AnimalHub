@@ -8,6 +8,7 @@ import {Species} from "../../dtos/species";
 import {ShelterDto} from "../../dtos/shelter";
 import {Mode} from "../../enums/modes";
 import {Type} from "../../enums/type";
+import {CreateFileDto, FileDto} from "../../dtos/file";
 
 @Component({
   selector: 'app-animal-homepage',
@@ -25,11 +26,13 @@ export class AnimalHomepageComponent implements OnInit{
     race: "",
     shelter: undefined,
     species: undefined,
-    weight: 0
+    weight: 0,
   };
+  // TODO: Alter, Erfahrung,
+  protected animalAge: number;
 
-  animalImageURL: any = null;
-
+  protected contents: FileDto[];
+  protected newContent: File = null;
   constructor(
     private service: AnimalService,
     private router: Router,
@@ -46,7 +49,7 @@ export class AnimalHomepageComponent implements OnInit{
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
-            this.loadAnimalPic();
+            this.calculateAge(this.animal.birthDate)
           },
           error: error => {
             console.error('Error finding animal', error);
@@ -55,19 +58,50 @@ export class AnimalHomepageComponent implements OnInit{
         });
       }
     });
+    this.service.getContents(this.animal.id).subscribe({
+      next: data => {
+        this.contents = data;
+      },
+      error: error => {
+        console.error('Error finding contents', error);
+        this.notification.error("Could Not find contents of animal");
+      }
+    })
   }
 
-  private loadAnimalPic(): void {
-    this.service.getProfileImage(this.animal.id).subscribe({
+  public onNewContentSelected(event: any): void {
+    if (event.target.files[0]) {
+      this.newContent = event.target.files[0];
+    }
+  }
+
+  public onUpload(): void {
+    const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: ""};
+    this.service.addContent(this.animal.id, createFileDto).subscribe({
       next: data => {
-        console.log("loaded image ", data);
-        this.animalImageURL = URL.createObjectURL(data);
-      }, error: err => {
-        console.error(err)
+        console.log(data);
+      },
+      error: err => {
+        console.error(err);
       }
     });
   }
 
+  public calculateAge(birthdate: Date): void {
+    const today = new Date();
+    const birthdateDate = new Date(birthdate);
+
+    let age = today.getFullYear() - birthdateDate.getFullYear();
+
+    // Check if the birthday has occurred this year
+    const todayMonth = today.getMonth();
+    const birthdateMonth = birthdateDate.getMonth();
+
+    if (todayMonth < birthdateMonth || (todayMonth === birthdateMonth && today.getDate() < birthdateDate.getDate())) {
+      age--;
+    }
+    this.animalAge = age;
+  }
+
   protected readonly Mode = Mode;
-  protected readonly Type = Type;
 }

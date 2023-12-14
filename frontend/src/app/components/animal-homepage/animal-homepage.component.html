@@ -7,7 +7,7 @@
       <div class="headings">
         <div style="display: block; overflow: auto">
           <h1 style=" float: left">{{ animal.name }}</h1>
-          <h1 style=" float: right">shelter</h1>
+          <h1 style=" float: right">{{ animal.shelter.name }}</h1>
         </div>
         <div style="display: block">
           <h2>{{ animal.race }}</h2>
@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col" style="max-width: 30em">
+    <div class="col" style="max-width: 30em; min-height: 20em">
       <div class="media">
         <app-content [mode]="Mode.ANIMAL" [id]="animal.id"></app-content>
       </div>
@@ -36,6 +36,10 @@
           <div class="col">{{ animal.birthDate }}</div>
         </div>
         <div class="row align-items-end" style="height: auto">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
+          <div class="col">{{ animalAge }}</div>
+        </div>
+        <div class="row align-items-end" style="height: auto">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
           <div class="col">{{ animal.height }} m</div>
         </div>
@@ -50,6 +54,13 @@
           <div class="col-auto">
             <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
           </div>
+          <div class="col-auto">
+            <input type="file" id="newContent" name="newContent" accept="image/png, image/jpeg, image/gif, image/bmp, video/mp4, video/mpeg"
+                   (change)="onNewContentSelected($event)" class="form-control">
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary" [disabled]="newContent == undefined" (click)="onUpload()">Upload</button>
+          </div>
           <div class="col justify-self-end">
             <app-lang-select></app-lang-select>
           </div>
@@ -59,59 +70,14 @@
   </div>
 
   <div class="row">
-    <div class="col">
-      <div class="headings">
-        <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
-          <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
-        </div>
+    <div class="headings">
+      <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
+        <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
       </div>
-      <div class="content">
-        <div class="row">
-          <app-content></app-content>
-        </div>
-        <div class="row">
-          <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
-              class="w-100 shadow-1-strong rounded mb-4"
-              alt="Boat on Calm Water"
-            />
-
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain1.webp"
-              class="w-100 shadow-1-strong rounded mb-4"
-              alt="Wintry Mountain Landscape"
-            />
-          </div>
-
-          <div class="col-lg-4 mb-4 mb-lg-0">
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain2.webp"
-              class="w-100 shadow-1-strong rounded mb-4"
-              alt="Mountains in the Clouds"
-            />
-
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
-              class="w-100 shadow-1-strong rounded mb-4"
-              alt="Boat on Calm Water"
-            />
-          </div>
-
-          <div class="col-lg-4 mb-4 mb-lg-0">
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(18).webp"
-              class="w-100 shadow-1-strong rounded mb-4"
-              alt="Waves at Sea"
-            />
-
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain3.webp"
-              class="w-100 shadow-1-strong rounded mb-4"
-              alt="Yosemite National Park"
-            />
-          </div>
-        </div>
+    </div>
+    <div class="content">
+      <div *ngFor="let content of contents" class="item rounded">
+        <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="item rounded-4"></app-content>
       </div>
     </div>
   </div>
