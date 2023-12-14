@@ -61,6 +61,7 @@
       </div>
     </div>
   </div>
+
   <div class="custom-row">
     <div class="custom-input">
       <div class="custom-row-inner">
@@ -74,27 +75,28 @@
       </div>
     </div>
   </div>
-</form>
-    <div class="row">
-      <div class="selected-pic" [style.background-color]="hasLoadedImg() ? 'white' : 'lightgrey'">
-        <div class="m-1 text-center">
-          profile picture
-        </div>
-        <img [ngSrc]="shelterImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
-      </div>
-      <div class="custom-submit">
-        <button type="button" class="btn btn-danger" *ngIf="!modeIsCreate" (click)="onDelete()">
-          <i class="bi bi-trash"></i>
-        </button>
-        <span class="flex-grow-1"></span>
-        <button type="submit" class="custom-button" [disabled]="!form.valid">
-          {{submitButtonText}}
-        </button>
-      </div>
-    </div>
 
   <div class="row">
-
-
-</div>
+    <div class="selected-pic" [style.background-color]="hasLoadedImg() ? 'white' : 'lightgrey'">
+      <div class="m-1 text-center">
+        profile picture
+      </div>
+      <img [ngSrc]="shelterImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
+    </div>
+    <div class="custom-submit">
+      <div class="row">
+        <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+          <button type="submit" class="custom-button" [disabled]="!form.valid">
+            {{submitButtonText}}
+          </button>
+        </div>
+        <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+          <button type="button" class="btn btn-danger custom-button mt-sm-4" *ngIf="!modeIsCreate" (click)="onDelete()">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 </div>

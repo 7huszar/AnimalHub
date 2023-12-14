@@ -26,16 +26,16 @@ const routes: Routes = [
 
   {
     path: 'animal', children: [
-      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.CREATE}},
+      {path: 'create/:shelterId', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.CREATE}},
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.EDIT}},
       {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: AnimalHomepageComponent}
     ]
   },
   {
     path: 'shelter', children: [
-      {path: '', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent},
       {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
-      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}}
+      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}},
+      {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent}
     ]
   },
   {

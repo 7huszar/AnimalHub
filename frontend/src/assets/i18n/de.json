@@ -65,5 +65,16 @@
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
     "ADOPT": "Adoptiere "
+  },
+
+  "SHELTER_HOMEPAGE": {
+    "ADDRESS": "Addresse:",
+    "PHONE": "Telefon-Nr.:",
+    "EMAIL": "E-mail:"
+  },
+
+  "ANIMAL_LIST": {
+    "NAME": "Name",
+    "SPECIES": "Tierart"
   }
 }
