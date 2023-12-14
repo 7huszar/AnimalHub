@@ -18,7 +18,7 @@ import java.util.UUID;
 public interface UserService extends UserDetailsService {
 
     /**
-     * Find a user in the context of Spring Security based on the email address
+     * Find a user in the context of Spring Security based on the email address.
      * <br>
      * For more information have a look at this tutorial:
      *
