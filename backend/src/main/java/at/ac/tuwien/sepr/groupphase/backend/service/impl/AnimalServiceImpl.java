@@ -142,8 +142,21 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Animal does not exist.")
+        );
+
+        // TODO remove old image
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        animal.setProfilePicture(file);
+        animalRepository.save(animal);
+
+        return createdFile;
     }
 
     @Override

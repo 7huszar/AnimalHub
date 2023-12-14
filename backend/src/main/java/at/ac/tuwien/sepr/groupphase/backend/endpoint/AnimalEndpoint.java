@@ -128,7 +128,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}/files/profileImg")
     @Operation(summary = "Updates animal's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto updateProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) {
+    public FileDto updateProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, IOException {
         LOGGER.info("PUT " + BASE_PATH + "/{}/files/profileImg", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 

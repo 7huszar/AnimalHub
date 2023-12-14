@@ -156,7 +156,20 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+
+        var shelter = shelterRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        // TODO remove old image
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        shelter.setProfilePicture(file);
+        shelterRepository.save(shelter);
+
+        return createdFile;
     }
 }

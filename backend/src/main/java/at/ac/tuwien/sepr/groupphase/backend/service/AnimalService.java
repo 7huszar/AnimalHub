@@ -71,7 +71,7 @@ public interface AnimalService {
     FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException;
 
     // TODO comment
-    FileDto updateProfileImage(UUID id, CreateFileDto fileDto);
+    FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException;
 
     List<FileDto> getContents(UUID id);
 

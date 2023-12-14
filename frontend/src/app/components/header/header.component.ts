@@ -17,4 +17,14 @@ export class HeaderComponent implements OnInit {
     this.authService.logoutUser();
   }
 
+  isMemberWithShelter(): boolean {
+    return this.authService.isMember() && this.authService.getUser().shelter !== null;
+  }
+
+  getShelterId(): string {
+    if (!this.isMemberWithShelter())
+      return null;
+
+    return this.authService.getUser().shelter.id;
+  }
 }
