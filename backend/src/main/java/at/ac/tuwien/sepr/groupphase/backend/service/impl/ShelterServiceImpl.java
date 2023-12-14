@@ -91,6 +91,7 @@ public class ShelterServiceImpl implements ShelterService {
 
         // Set the animal set for the new entity to avoid hibernate errors
         newEntity.setAnimals(oldEntity.getAnimals());
+        newEntity.setProfilePicture(oldEntity.getProfilePicture());
 
         newEntity = shelterRepository.save(newEntity);
         return mapper.shelterToShelterDto(newEntity);

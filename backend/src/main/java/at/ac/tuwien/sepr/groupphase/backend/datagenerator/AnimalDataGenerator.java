@@ -22,7 +22,7 @@ import java.util.UUID;
 public class AnimalDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int AMOUNT = 3;
+    private static final int AMOUNT = 18;
     private static final String NAME = "Herbert";
     private static final Species SPECIES = Species.CAT;
     private static final String RACE = "Brown Cat";

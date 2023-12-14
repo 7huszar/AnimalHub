@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from '@angular/forms';
 import {Mode} from "../../../enums/modes";
 import {IdOnlyShelter} from "../../../dtos/shelter";
-import {CreateAnimalDto} from "../../../dtos/animal";
+import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
 
 @Component({
@@ -17,58 +17,22 @@ export class CreateEditComponent implements OnInit {
 
   mode: Mode = Mode.CREATE;
 
-  // TODO here would be a AnimalDetailDto also needed for Mode.EDIT, maybe use AnimalDetailDto always with empty string id for create and make this into a CreateAnimalDto for CREATE
-  animal: CreateAnimalDto = {
-    name: '',
-    species: Species.dog,
-    race: '',
-    birthDate: new Date(),
-    height: 0,
-    weight: 0,
-    shelter: new IdOnlyShelter('5a260f95-b6c7-48fb-a252-0188b4ebe8dc')
+  animal: AnimalDetailDto = {
+    id: null,
+    name: null,
+    species: null,
+    race: null,
+    birthDate: null,
+    shelter: null,
+    height: null,
+    weight: null,
+    createdOn: null
   };
 
-  private image: File = null;
-  private heightSet: boolean = false;
-  private weightSet: boolean = false;
-  private birthDateSet: boolean = false;
-  private profilePictureChanged: boolean = false;
+  private animalImage: File = null;
+  protected animalImageURL: any = null;
 
   today: String = new Date().toISOString().slice(0, 10);
-
-
-  get height(): number | null {
-    return this.heightSet
-      ? this.animal.height
-      : null;
-  }
-
-  set height(value: number) {
-    this.heightSet = true;
-    this.animal.height = value;
-  }
-
-  get weight(): number | null {
-    return this.weightSet
-      ? this.animal.weight
-      : null;
-  }
-
-  set weight(value: number) {
-    this.weightSet = true;
-    this.animal.weight = value;
-  }
-
-  get birthDate(): Date | null {
-    return this.birthDateSet
-      ? this.animal.birthDate
-      : null;
-  }
-
-  set birthDate(value: Date) {
-    this.birthDateSet = true;
-    this.animal.birthDate = value;
-  }
 
 
   constructor(
@@ -78,6 +42,7 @@ export class CreateEditComponent implements OnInit {
   ) {
   }
 
+  /* TODO maybe?
   public get heading(): string {
     switch (this.mode) {
       case Mode.CREATE:
@@ -88,52 +53,106 @@ export class CreateEditComponent implements OnInit {
         return '?';
     }
   }
-
-  public get submitButtonText(): string {
-    switch (this.mode) {
-      case Mode.CREATE:
-        return 'Create';
-      case Mode.EDIT:
-        return 'Update';
-      default:
-        return '?';
-    }
-  }
-
-  get modeIsCreate(): boolean {
-    return this.mode === Mode.CREATE;
-  }
+   */
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
-      if (!this.modeIsCreate) {
-        this.birthDateSet = true;
-        this.weightSet = true;
-        this.heightSet = true;
-
-        // TODO FIX
-        /*
+      if (this.modeIsCreate) {
         this.route.params.subscribe(params => {
-          this.animalService.findById(this.route.snapshot.paramMap.get('id')!).subscribe({
-            next: (data: Animal) => {
-              if (data) {
-                this.animal.id = data.id;
-                this.animal.name = data.name;
-                this.animal.species = data.species;
-                this.animal.race = data.race;
-                this.animal.birthDate = data.birthDate;
-                this.animal.weight = data.weight;
-                this.animal.height = data.height;
-              }
-            },
-            error: (error) => {
-              console.error('Error loading animal data:', error);
+          const shelterId = params['shelterId'];
+          this.animal.shelter = new IdOnlyShelter(shelterId);
+        });
+      } else {
+        this.route.params.subscribe(params => {
+          const id = params['id'];
+          this.animalService.findById(id).subscribe({
+            next: animalDetailDto => {
+              this.animal = animalDetailDto;
+              this.animalService.getProfileImage(this.animal.id).subscribe({
+                next: blob => {
+                  this.animalImageURL = URL.createObjectURL(blob);
+                }, error: err => {
+                  console.error(); // TODO handle
+                }
+              })
+            }, error: err => {
+              console.error(err); // TODO handle
             }
           });
-        });*/
+        });
       }
     });
+  }
+
+  public onSubmit(form: NgForm): void {
+    if (this.modeIsCreate) {
+      this.animalService.create(this.animal).subscribe({
+        next: animalDto => {
+          console.log('animal created', animalDto);
+          if (this.animalImage !== null) {
+            const createFileDto: CreateFileDto = {file: this.animalImage, name: this.animalImage.name, summary: ''};
+            this.animalService.setProfileImage(animalDto.id, createFileDto).subscribe({
+              next: fileDto => {
+                console.log('animal profile image set', fileDto);
+                this.navigateSuccess(animalDto.id);
+              }, error: err => {
+                console.error(err); // TODO handle
+              }
+            });
+          } else {
+            this.navigateSuccess(animalDto.id);
+          }
+        }, error: err => {
+          console.error(err); // TODO handle
+        }
+      });
+    } else {
+      this.animalService.update(this.animal).subscribe({
+        next: animalDto => {
+          console.log('animal updated', animalDto);
+          if (this.animalImage !== null) {
+            const createFileDto: CreateFileDto = {file: this.animalImage, name: this.animalImage.name, summary: ''};
+            this.animalService.updateProfileImage(animalDto.id, createFileDto).subscribe({
+              next: fileDto => {
+                console.log('animal profile image updated', fileDto);
+                this.navigateSuccess(animalDto.id);
+              }, error: err => {
+                console.error(err); // TODO handle
+              }
+            });
+          } else {
+            this.navigateSuccess(animalDto.id);
+          }
+        }, error: err => {
+          console.error(err); // TODO handle
+        }
+      });
+    }
+  }
+
+  public onDelete() {
+    this.animalService.delete(this.animal.id).subscribe({
+      next: data => {
+        this.router.navigate(['/shelter/', this.animal.shelter.id])
+      }, error: err => {
+        console.error(err); // TODO handle
+      }
+    });
+  }
+
+  private navigateSuccess(id: string): void {
+    this.router.navigate(['/animal/', id]);
+  }
+
+  public onImageSelected(event: any): void {
+    const img = event.target.files[0];
+    if (img > 52428800) {
+      console.error("File is too big!"); // TODO handle
+    } else {
+      this.animalImage = img;
+      this.animalImageURL = URL.createObjectURL(this.animalImage);
+    }
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -142,61 +161,18 @@ export class CreateEditComponent implements OnInit {
     };
   }
 
-  public onSubmit(form: NgForm): void {
-    console.log('is form valid?', form.valid, this.animal);
-    // TODO FIX
-    if (form.valid) {
-      switch (this.mode) {
-        case Mode.CREATE:
-          this.animalService.create(this.animal).subscribe({
-            next: data => {
-              this.uploadImage(data.id);
-              this.router.navigate(['/home']);
-            }
-          });
+  get modeIsCreate(): boolean {
+    return this.mode === Mode.CREATE;
+  }
 
-          break;
-        case Mode.EDIT:
-          // this.animalService.update(this.animal);
-          break;
-        default:
-          console.error('Unknown AnimalCreateEditMode', this.mode);
-          return;
-      }
-      // observable.subscribe({
-      //   next: data => {
-      //     this.router.navigate(['/animals']);
-      //   },
-      //   error: error => {
-      //     console.error('Error creating animal', error);
-      //   }
-      // });
+  get submitButtonText(): string {
+    if (this.modeIsCreate) {
+      return 'Create';
     }
+    return 'Update';
   }
 
-  public onDelete() {
-    this.animalService.delete(this.route.snapshot.paramMap.get('id')!).subscribe({
-        next: data => {
-          this.router.navigate(['/home']);
-        }, error: error => {
-          console.error('Error deleting animal', error);
-        }
-      }
-    );
-  }
-
-  onImageSelected(event: any): void {
-    if (event.target.files[0].size > 52428800) {
-      alert("File is too big!");
-    } else {
-      this.image = event.target.files[0];
-      this.profilePictureChanged = true;
-    }
-  }
-
-  uploadImage(id: string) {
-    // TODO FIX
-    const createFile: CreateFileDto = {name: this.image.name, summary: "", file: this.image}
-    this.animalService.setProfileImage(id,  createFile).subscribe();
+  hasLoadedImg(): boolean {
+    return this.animalImageURL !== null;
   }
 }

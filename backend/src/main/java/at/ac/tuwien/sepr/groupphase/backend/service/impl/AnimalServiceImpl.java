@@ -71,9 +71,18 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.debug("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
-        Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
-        entity = animalRepository.save(entity);
-        return mapper.animalToAnimalDetailDto(entity);
+        Animal newEntity = mapper.animalDetailDtoToAnimal(animalDto);
+
+        // Get old entity for content collection
+        Animal oldEntity = animalRepository.findById(newEntity.getId()).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        newEntity.setProfilePicture(oldEntity.getProfilePicture());
+        newEntity.setContent(oldEntity.getContent());
+
+        newEntity = animalRepository.save(newEntity);
+        return mapper.animalToAnimalDetailDto(newEntity);
     }
 
     @Override

@@ -3,6 +3,7 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {Mode} from "../../enums/modes";
+import {AnimalService} from "../../services/animal.service";
 
 @Component({
   selector: 'app-animal-list',
@@ -18,11 +19,12 @@ export class AnimalListComponent {
   searchTermName: String;
 
   constructor(private router: Router,
-              public authService: AuthService) {
+              public authService: AuthService,
+              private animalService: AnimalService) {
   }
 
   ngOnInit(): void {
-      this.displayAnimalCards('all');
+    this.displayAnimalCards('all');
   }
 
   displayAnimalCards(filter: string): void {
@@ -37,6 +39,7 @@ export class AnimalListComponent {
       this.router.navigate(['/animal', animalId]).then(r => console.log(r));
     }
   }
+
   onInput(): void {
     if (this.searchTermName) {
       this.displayedAnimals = this.animals
@@ -52,6 +55,14 @@ export class AnimalListComponent {
   protected readonly Mode = Mode;
 
   deleteAnimal(id: string) {
-    this.router.navigate(['/animal/delete', id]).then(r => console.log(r));
+    this.animalService.delete(id).subscribe({
+      next: () => {
+        this.animals = this.animals.filter(animal => animal.id !== id);
+        this.displayAnimalCards('all');
+      },
+      error: error => {
+        console.error('Error deleting animal', error);
+      }
+    });
   }
 }
