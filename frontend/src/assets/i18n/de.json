@@ -37,9 +37,15 @@
     "PWD_MISS_MATCH": "Passwörter sind nicht gleich",
     "FAILED_REGISTRATION": "Account konnte nicht erstellt werden",
     "ALREADY_EXISTS": "Account existiert bereits",
+    "CHECK_MAILBOX": "Überprüfe deine Mailbox um deine E-Mail zu verifizieren",
     "CONFIRM": {
       "ERROR": "E-Mail Verifizierung fehlgeschlagen",
-      "INVALID_TOKEN": "ungültiger Token, bitte fordere einen neuen an"
+      "INVALID_TOKEN": "ungültiger Token, bitte fordere einen neuen an",
+      "VERIFY": "verifizieren",
+      "DISCARD": "abbrechen",
+      "SUCCESS": "E-mail erfolgreich verifiziert",
+      "ABORT_WARN": "Verifizierung abgebrochen",
+      "VERIFY_TEXT": "Willst du deine E-Mail Adresse verifizieren?"
     }
 
   },

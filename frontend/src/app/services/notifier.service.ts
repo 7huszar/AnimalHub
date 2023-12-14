@@ -13,6 +13,18 @@ export class NotifierService {
     private translator :TranslateService
   ) { }
 
+  notifyWarn(titleKey :string) :void {
+    this.translator.get(titleKey).subscribe((titleTranslation :string) => {
+      this.notification.warning(titleTranslation);
+    });
+  }
+
+  notifySuccess(titleKey :string) :void {
+    this.translator.get(titleKey).subscribe((titleTranslation :string) =>{
+      this.notification.success(titleTranslation);
+    });
+  }
+
   notifyError(bodyKey :string, titleKey :string) :void {
     this.translator.get(bodyKey).subscribe( (bodyTranslation :string) => {
       this.translator.get(titleKey).subscribe( (titleTranslation :string) => {

@@ -11,7 +11,6 @@ import {HttpStatusCode} from "@angular/common/http";
 })
 export class RegisterConfirmComponent implements OnInit{
   private token :string;
-  public success :boolean = false;
   constructor(private route :ActivatedRoute,
               private service :RegisterService,
               private router :Router,
@@ -25,7 +24,8 @@ export class RegisterConfirmComponent implements OnInit{
     console.log(this.token);
     this.service.verifyEmail(this.token).subscribe({
       next :data => {
-        this.success = true;
+        this.notifier.notifySuccess('REGISTER.CONFIRM.SUCCESS');
+        this.router.navigate(['']);
       },
       error :error => {
         switch (error.status) {
@@ -41,7 +41,7 @@ export class RegisterConfirmComponent implements OnInit{
   }
 
   discard() :void {
-    // TODO should definitely do smth else
+    this.notifier.notifyWarn('REGISTER.CONFIRM.ABORT_WARN');
     this.router.navigate(['/']);
   }
 

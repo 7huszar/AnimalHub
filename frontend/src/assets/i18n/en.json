@@ -37,9 +37,15 @@
     "PWD_MISS_MATCH": "passwords don't match",
     "FAILED_REGISTRATION": "failed to register account",
     "ALREADY_EXISTS": "account already exists",
+    "CHECK_MAILBOX" : "Check your mailbox to verify your e-mail.",
     "CONFIRM": {
       "ERROR": "failed to verify e-mail",
-      "INVALID_TOKEN": "invalid token, please ask for a new one"
+      "INVALID_TOKEN": "invalid token, please ask for a new one",
+      "VERIFY": "verify",
+      "DISCARD": "abort",
+      "SUCCESS": "e-mail successfully verified",
+      "ABORT_WARN": "verification aborted",
+      "VERIFY_TEXT": "Do you want to verify your e-mail?"
     }
   },
 
