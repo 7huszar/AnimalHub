@@ -20,7 +20,9 @@
 
   "HOME": {
     "ACCOUNT": "manage account",
-    "LOAD_FAILED": "failed to load animals"
+    "LOAD_FAILED": "failed to load animals",
+    "DONATE_1": "Donate to ",
+    "ADOPT": "Adopt "
   },
 
   "REGISTER": {

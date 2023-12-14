@@ -16,9 +16,10 @@ export class HomeComponent implements OnInit {
   private middle :AnimalDetailDto;
   private right :AnimalDetailDto;
 
-  private animalList: AnimalDetailDto[];
-  private likedAnimals: string[];
-  private dislikedAnimals: string[];
+  protected animalList: AnimalDetailDto[];
+  protected likedAnimals: AnimalDetailDto[];
+  protected dislikedAnimals: AnimalDetailDto[];
+  counter = 1;
 
 
   constructor(
@@ -31,9 +32,8 @@ export class HomeComponent implements OnInit {
     this.animalService.findAll().subscribe({
       next :data => {
         this.animalList = data;
-        this.loadCard(Position.LEFT);
-        this.loadCard(Position.MIDDLE);
-        this.loadCard(Position.RIGHT);
+        this.loadCards();
+        console.log(this.animalList)
       },
       error :error => {
         console.error("Failed to load animals", error);
@@ -41,18 +41,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  loadCard(position :Position) {
-    if (this.animalList && this.animalList.length > 0) {
-      switch (position) {
-        case Position.LEFT:
-          this.left = this.animalList.pop();
-          break;
-        case Position.MIDDLE:
-          this.middle = this.animalList.pop();
-          break;
-        case Position.RIGHT:
-          this.right = this.animalList.pop();
-      }
+  loadCards() {
+    if (this.animalList && this.animalList.length > 0 && this.counter < this.animalList.length) {
+      this.right = this.animalList[this.counter - 1];
+      this.middle = this.animalList[this.counter];
+      this.left = this.animalList[this.counter + 1];
     }
   }
 
@@ -73,11 +66,32 @@ export class HomeComponent implements OnInit {
     return null;
   }
 
-  likeAnimal(id: string) {
-    this.likedAnimals.push(id);
+  like(animal: AnimalDetailDto) {
+    this.likedAnimals.push(animal);
+    console.log(animal);
   }
-  dislikeAnimal(id: string) {
-    this.dislikedAnimals.push(id);
+  dislike(animal: AnimalDetailDto) {
+    this.dislikedAnimals.push(animal);
+  }
+  leftClick(): void {
+    for (let i = 0; i < 3; i++) {
+      if (this.counter + 2 < this.animalList.length) {
+        this.right = this.middle;
+        this.middle = this.left;
+        this.left = this.animalList[this.counter + 2];
+        this.counter++;
+      }
+    }
+  }
+  rightClick(): void {
+    for (let i = 0; i < 3; i++) {
+      if (this.counter - 2 >= 0) {
+        this.left = this.middle;
+        this.middle = this.right;
+        this.right = this.animalList[this.counter - 2];
+        this.counter--;
+      }
+    }
   }
 
   protected readonly AuthService = AuthService;

@@ -20,7 +20,10 @@
 
   "HOME": {
     "ACCOUNT": "Account verwalten",
-    "LOAD_FAILED": "Tiere konnten nicht geladen werden"
+    "LOAD_FAILED": "Tiere konnten nicht geladen werden",
+    "DONATE_1": "Spende an ",
+    "ADOPT": "Adoptiere "
+
   },
 
   "REGISTER": {
