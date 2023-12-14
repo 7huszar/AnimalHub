@@ -4,6 +4,7 @@ import {Mode} from "../../../enums/modes";
 import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CreateFileDto} from "../../../dtos/file";
 
 @Component({
   selector: 'app-shelter-create-edit',
@@ -34,13 +35,11 @@ export class ShelterCreateEditComponent implements OnInit{
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
-      // TODO FIX
-      /*
       if (!this.modeIsCreate) {
         this.route.params.subscribe(params => {
           const id = params['id'];
           this.shelterService.findById(id).subscribe({
-            next: (data: Shelter) => {
+            next: (data: ShelterDto) => {
               this.shelter = data;
             }, error: (error) => {
               alert('Error loading shelter!');
@@ -49,7 +48,6 @@ export class ShelterCreateEditComponent implements OnInit{
           });
         });
       }
-      */
     });
   }
 
@@ -57,13 +55,14 @@ export class ShelterCreateEditComponent implements OnInit{
     if (this.modeIsCreate) {
       this.shelterService.create(this.shelter).subscribe({
         next: data => {
-          // TODO upload file
+          this.uploadImage(data.id, this.shelterImage);
           this.router.navigate(['/home']);
         }
       });
     } else {
       this.shelterService.update(this.shelter).subscribe({
         next: data => {
+          // TODO update image();
           this.router.navigate(['/home']);
         }
       });
@@ -93,6 +92,17 @@ export class ShelterCreateEditComponent implements OnInit{
     this.shelterImage = img;
     this.shelterImageURL = URL.createObjectURL(this.shelterImage);
     return true;
+  }
+
+  private uploadImage(id: string, file: File): void {
+    const createFileDto: CreateFileDto = {file: file, name: file.name, summary: ""};
+    this.shelterService.setProfileImage(id, createFileDto).subscribe({
+      next: data => {
+        console.log('shelter profile picture set', data);
+      }, error: err => {
+        console.error(err);
+      }
+    });
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
