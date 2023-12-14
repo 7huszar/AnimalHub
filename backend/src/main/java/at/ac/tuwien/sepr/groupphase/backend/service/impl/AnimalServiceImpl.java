@@ -81,7 +81,7 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.trace("findById({}) ", id);
 
         var animal = animalRepository.findById(id).orElseThrow(
-            () -> new NotFoundException("Animal does not exist.")
+            () -> new NotFoundException("Animal with id " + id + " does not exist.")
         );
 
         return mapper.animalToAnimalDetailDto(animal);
@@ -92,7 +92,7 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.trace("delete({})", id);
 
         var shelter = animalRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Shelter does not exist.")
+                () -> new NotFoundException("Animal with id " + id + " does not exist.")
         );
 
         animalRepository.delete(shelter);
