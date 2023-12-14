@@ -38,11 +38,6 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'admin', children: [
-      {path: '', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
-    ]
-  },
-  {
     path: 'users', children: [
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: UserEditComponent}
     ]

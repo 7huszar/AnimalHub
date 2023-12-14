@@ -1,8 +1,8 @@
 import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
-import {ShelterService} from "../../../services/shelter.service";
-import {AdminPageComponent} from "../../admin-page/shelter-admin-page/admin-page.component";
-import {UserService} from "../../../services/user.service";
+import {ShelterService} from "../../services/shelter.service";
+import {AdminPageComponent} from "../admin-page/shelter-admin-page/admin-page.component";
+import {UserService} from "../../services/user.service";
 import {logMessages} from "@angular-devkit/build-angular/src/tools/esbuild/utils";
 
 @Component({
