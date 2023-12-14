@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForm, NgModel} from "@angular/forms";
 import {Mode} from "../../../enums/modes";
-import {ShelterDetailDto, ShelterDto} from "../../../dtos/shelter";
+import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CreateFileDto} from "../../../dtos/file";
@@ -38,17 +38,17 @@ export class ShelterCreateEditComponent implements OnInit{
         this.route.params.subscribe(params => {
           const id = params['id'];
           this.shelterService.findById(id).subscribe({
-            next: (data: ShelterDetailDto) => {
-              this.shelter = data;
+            next: shelterDetailDto => {
+              this.shelter = shelterDetailDto;
               this.shelterService.getProfileImage(this.shelter.id).subscribe({
                 next: blob => {
                   this.shelterImageURL = URL.createObjectURL(blob);
                 }, error: err => {
-                  console.log(err); // TODO handle
+                  console.error(err); // TODO handle
                 }
               });
             }, error: err => {
-              console.log('Error loading shelter: ', err); // TODO handle
+              console.error('Error loading shelter: ', err); // TODO handle
             }
           });
         });
@@ -112,6 +112,10 @@ export class ShelterCreateEditComponent implements OnInit{
     });
   }
 
+  private navigateSuccess(id: string): void {
+    this.router.navigate(['/shelter/', id]);
+  }
+
   public onImageSelected(event: any): void {
     const img = event.target.files[0];
     if (img.size > 52428800) {
@@ -128,10 +132,6 @@ export class ShelterCreateEditComponent implements OnInit{
     };
   }
 
-  private navigateSuccess(id: string): void {
-    this.router.navigate(['/shelter/', id]);
-  }
-
   get modeIsCreate(): boolean {
     return this.mode === Mode.CREATE;
   }
@@ -143,7 +143,7 @@ export class ShelterCreateEditComponent implements OnInit{
     return 'Update';
   }
 
-  hasLoadedImg() :boolean {
-    return this.shelterImageURL != null;
+  hasLoadedImg(): boolean {
+    return this.shelterImageURL !== null;
   }
 }
