@@ -76,15 +76,14 @@ export class ConfirmDeleteDialogComponent {
 
 
   public deleteEntity() {
+    console.log("kek")
+    console.log(this.deleteWhat)
+    console.log(this.DeleteId)
     switch (this.Mode) {
       case entityDeleteMode.user:
-        console.log(this.deleteWhat)
-        console.log(this.DeleteId)
         this.deleteUser()
         break;
       case entityDeleteMode.shelter:
-        console.log(this.deleteWhat)
-        console.log(this.DeleteId)
         this.deleteShelter()
         break;
     }
