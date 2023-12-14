@@ -12,7 +12,6 @@ import {CreateEditComponent} from './components/animal/create-edit/create-edit.c
 import {ShelterCreateEditComponent} from "./components/shelter/shelter-create-edit/shelter-create-edit.component";
 import {ShelterComponent} from "./components/shelter/shelter.component";
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
-import {UserAdminPageComponent} from "./components/admin-page/user-admin-page/user-admin-page.component";
 import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
 
 
@@ -36,12 +35,6 @@ const routes: Routes = [
       {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}},
       {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent}
-    ]
-  },
-  {
-    path: 'admin', children: [
-      {path: '', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
-      {path: 'users', canActivate: mapToCanActivate([AuthGuard]), component: UserAdminPageComponent}
     ]
   },
   {
