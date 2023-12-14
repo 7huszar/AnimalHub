@@ -7,7 +7,7 @@
       <div class="headings">
         <div style="display: block; overflow: auto">
           <h1 style=" float: left">{{ animal.name }}</h1>
-          <h1 style=" float: right">{{ animal.shelter.name }}</h1>
+          <h1 style=" float: right" [routerLink]="['/shelter', animal.shelter.id]">{{ animal.shelter.name }}</h1>
         </div>
         <div style="display: block">
           <h2>{{ animal.race }}</h2>
@@ -23,27 +23,27 @@
     </div>
     <div class="col">
       <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
-        <div class="row align-items-end" style="height: auto">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
           <div class="col">{{ animal.species }}</div>
         </div>
-        <div class="row align-items-end" style="height: auto">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
           <div class="col">{{ animal.race }}</div>
         </div>
-        <div class="row align-items-end" style="height: auto">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.BIRTHDATE' | translate}}</div>
           <div class="col">{{ animal.birthDate }}</div>
         </div>
-        <div class="row align-items-end" style="height: auto">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
           <div class="col">{{ animalAge }}</div>
         </div>
-        <div class="row align-items-end" style="height: auto">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
           <div class="col">{{ animal.height }} m</div>
         </div>
-        <div class="row align-items-end" style="height: auto">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
           <div class="col">{{ animal.weight }} kg</div>
         </div>
@@ -61,9 +61,6 @@
           <div class="col-auto">
             <button type="button" class="btn btn-primary" [disabled]="newContent == undefined" (click)="onUpload()">Upload</button>
           </div>
-          <div class="col justify-self-end">
-            <app-lang-select></app-lang-select>
-          </div>
         </div>
       </div>
     </div>
@@ -76,10 +73,13 @@
       </div>
     </div>
     <div class="content">
-      <div *ngFor="let content of contents" class="item rounded">
-        <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="item rounded-4"></app-content>
+      <div *ngFor="let content of contents" class="item">
+        <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="rounded-4"></app-content>
       </div>
     </div>
+  </div>
+  <div class="lang-select">
+    <app-lang-select></app-lang-select>
   </div>
 </div>
 
