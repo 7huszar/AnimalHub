@@ -14,18 +14,17 @@ import { UserDetailDto, UserSearch } from '../../../dtos/user';
 export class AdminPageComponent implements OnInit {
 
   typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
 
   // Shelter-related properties
-  shelterIdForDeletion: string = '';
-  shelterNameForDeletion: string = '';
   shelters: ShelterListDto[] = [];
   shelterSearchParams: ShelterSearch = {
     name: '',
   };
 
   // User-related properties
-  userIdForDeletion: string = '';
-  userNameForDeletion: string = '';
   users: UserDetailDto[] = [];
   userSearchParams: UserSearch = {
     email: '',
@@ -41,6 +40,7 @@ export class AdminPageComponent implements OnInit {
     private shelterService: ShelterService,
     private userService: UserService
   ) {}
+
 
   ngOnInit(): void {
     this.reloadShelters();
@@ -79,8 +79,8 @@ export class AdminPageComponent implements OnInit {
   }
 
   shelterForDeletion(name: string, id: string) {
-    this.shelterIdForDeletion = id;
-    this.shelterNameForDeletion = name;
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
     this.typeForDeletion = "Shelter";
   }
 
@@ -107,8 +107,8 @@ export class AdminPageComponent implements OnInit {
   }
 
   userForDeletion(name: string, id: string) {
-    this.userIdForDeletion = id;
-    this.userNameForDeletion = name;
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
     this.typeForDeletion = "User";
   }
 

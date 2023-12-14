@@ -3,6 +3,7 @@ import {ToastrService} from "ngx-toastr";
 import {ShelterService} from "../../../services/shelter.service";
 import {AdminPageComponent} from "../../admin-page/shelter-admin-page/admin-page.component";
 import {UserService} from "../../../services/user.service";
+import {logMessages} from "@angular-devkit/build-angular/src/tools/esbuild/utils";
 
 @Component({
   selector: 'app-confirm-delete-dialog',
@@ -19,7 +20,6 @@ export class ConfirmDeleteDialogComponent {
   @Input() deleteWhat: string | undefined = '';
   @Input() deleteType: string | undefined = '';
   @Input() DeleteId: string | undefined = '';
-  @Input() Mode: entityDeleteMode | undefined;
 
   @Output() confirm = new EventEmitter<void>();
   @HostBinding('class') cssClass = 'modal-fade';
@@ -76,23 +76,20 @@ export class ConfirmDeleteDialogComponent {
 
 
   public deleteEntity() {
-    console.log("kek")
     console.log(this.deleteWhat)
     console.log(this.DeleteId)
-    switch (this.Mode) {
-      case entityDeleteMode.user:
-        this.deleteUser()
-        break;
-      case entityDeleteMode.shelter:
-        this.deleteShelter()
-        break;
+    console.log(this.deleteType)
+    if (this.deleteType === 'User') {
+      console.log("user")
+      this.deleteUser()
+    } else {
+      console.log("shelter")
+      this.deleteShelter()
     }
   }
 }
 
-export enum entityDeleteMode {
-  user,
-  shelter
-}
+
+
 
 
