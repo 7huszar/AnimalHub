@@ -2,6 +2,8 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AnimalService} from "../../services/animal.service";
 import {Type} from "../../enums/type";
 import {Mode} from "../../enums/modes";
+import {FileDto} from "../../dtos/file";
+import {ShelterService} from "../../services/shelter.service";
 
 @Component({
   selector: 'app-content',
@@ -12,42 +14,67 @@ export class ContentComponent implements OnChanges{
 
   @Input() id: string;
   @Input() mode: Mode;
-  @Input() type: Type;
+  @Input() file: FileDto;
   @Input() setClass: string;
 
+  private type: Type;
   protected content: any;
 
-  constructor(private animalService: AnimalService) {
+  constructor(private animalService: AnimalService,
+              private shelterService: ShelterService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.id != null && this.mode != null && this.type != null) {
+    if (this.id != null && this.mode != null) {
       if (this.mode === Mode.ANIMAL) {
         this.loadAnimalProfileImage(changes.id.currentValue);
       } else if (this.mode === Mode.SHELTER) {
         this.loadShelterProfileImage(changes.id.currentValue);
-      } else if (this.mode === Mode.FILE) {
+      } else if (this.mode === Mode.CONTENT) {
         this.loadFile(changes.id.currentValue);
       }
     }
   }
 
   private loadAnimalProfileImage(id: string): void {
+    this.type = Type.IMAGE;
     this.animalService.getProfileImage(id).subscribe({
-      next: file => {
-        this.content = URL.createObjectURL(file);
+      next: blob => {
+        this.content = URL.createObjectURL(blob);
       }, error: err => {
         // TODO handle error
+        console.error(err);
       }
     })
   }
 
   private loadShelterProfileImage(id: string): void {
-    // TODO implement
+    this.type = Type.IMAGE;
+    this.shelterService.getProfileImage(id).subscribe({
+      next: blob => {
+        this.content = URL.createObjectURL(blob);
+      }, error: err => {
+        // TODO handle error
+      }
+    });
   }
 
   private loadFile(id: string): void {
-    // TODO implement
+    if (this.file !== undefined) {
+      if (this.file.contentMimeType.startsWith('image')) {
+        this.type = Type.IMAGE;
+      } else if (this.file.contentMimeType.startsWith('video')) {
+        this.type = Type.VIDEO;
+      }
+
+      this.animalService.getContent(id, this.file.id).subscribe({
+        next: blob => {
+          this.content = URL.createObjectURL(blob);
+        }, error: err => {
+          // TODO handle error
+        }
+      })
+    }
   }
 
   protected isImage(): boolean {

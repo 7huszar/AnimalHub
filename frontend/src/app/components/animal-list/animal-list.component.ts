@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import {AnimalService} from "../../services/animal.service";
-import {AnimalDetailDto} from "../../dtos/animal";
-import {Type} from "../../enums/type";
+import {Component, Input} from '@angular/core';
+import {AnimalDto} from "../../dtos/animal";
+import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 import {Mode} from "../../enums/modes";
+import {AnimalService} from "../../services/animal.service";
 
 @Component({
   selector: 'app-animal-list',
@@ -11,18 +12,20 @@ import {Mode} from "../../enums/modes";
 })
 export class AnimalListComponent {
 
-  private animals: AnimalDetailDto[] = [];
-  displayedAnimals: AnimalDetailDto[] = [];
+  @Input() animals: AnimalDto[] = [];
+  @Input() shelterId: string;
+  displayedAnimals: AnimalDto[] = [];
   p: number;
+  searchTermSpecies: String;
+  searchTermName: String;
 
-  constructor(private animalService: AnimalService) {
+  constructor(private router: Router,
+              public authService: AuthService,
+              private animalService: AnimalService) {
   }
 
   ngOnInit(): void {
-    this.animalService.findAll().subscribe(animals => {
-      this.animals = animals;
-      this.displayAnimalCards('all');
-    });
+    this.displayAnimalCards('all');
   }
 
   displayAnimalCards(filter: string): void {
@@ -30,11 +33,45 @@ export class AnimalListComponent {
       .filter(animal => filter === 'all' || animal.species === filter)
   }
 
-  editAnimal(animalId: string): void {
-    // Implement logic to edit the animal with the specified ID
-    console.log('Editing animal with ID:', animalId);
+  editAnimal(animalId: String): void {
+    if (this.isPrivileged()) {
+      this.router.navigate(['/animal/edit', animalId]).then(r => console.log(r));
+    } else {
+      this.router.navigate(['/animal', animalId]).then(r => console.log(r));
+    }
   }
 
-  protected readonly Type = Type;
+  onInput(): void {
+    if (this.searchTermName) {
+      this.displayedAnimals = this.animals
+        .filter(animal => animal.name.toLowerCase().includes(this.searchTermName.toLowerCase()))
+    }
+    if (this.searchTermSpecies) {
+      this.displayedAnimals = this.animals
+        .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
+    }
+
+  }
+
+  isPrivileged(): boolean {
+    return this.authService.isAdmin() || this.authService.isMemberOf(this.shelterId);
+  }
+
   protected readonly Mode = Mode;
+
+  deleteAnimal(id: string) {
+    this.animalService.delete(id).subscribe({
+      next: () => {
+        this.animals = this.animals.filter(animal => animal.id !== id);
+        this.displayAnimalCards('all');
+      },
+      error: error => {
+        console.error('Error deleting animal', error);
+      }
+    });
+  }
+
+  addAnimal() {
+    this.router.navigate(['/animal/create', this.shelterId]).then(r => console.log(r));
+  }
 }

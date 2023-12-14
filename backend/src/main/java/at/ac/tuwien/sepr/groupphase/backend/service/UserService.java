@@ -5,9 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +17,9 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Find a user in the context of Spring Security based on the email address
+     * <br>
+     * For more information have a look at this tutorial:
+     * https://www.baeldung.com/spring-security-authentication-with-a-database
      *
      * @param email the email address
      * @return a Spring Security user
@@ -53,6 +54,8 @@ public interface UserService extends UserDetailsService {
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
+    UserDetailDto getCurrentUser();
+
     /**
      * Search for users in the persistent data store matching all provided fields.
      * The name is considered a match, if the search string is a substring of the field in user.
@@ -69,7 +72,7 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the user to be deleted.
      * @code NotFoundException thrown when the id does not point to any user in the persistent data store.
      */
-    void delete(UUID id);
+    void delete(UUID id) throws ConflictException;
 
     /**
      * Verifies e-mail of user given by token claim.
@@ -80,4 +83,25 @@ public interface UserService extends UserDetailsService {
      */
     @Transactional
     void verify(String token) throws NotAuthorizedException;
+
+
+    /**
+     * Get the user with given ID from the database.
+     *
+     * @param id user id
+     * @return the user with ID {@code id}
+     * @code NotFoundException when there is no user with the given ID
+     */
+    UserDetailDto findById(UUID id);
+
+
+    /**
+     * Updates the user with the data given in {@code userDetailDto} in the persistent data store.
+     *
+     * @param userDetailDto the user to update
+     * @return the updated user
+     * @code NotFoundException when there is no user with the given ID
+     */
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
+
 }

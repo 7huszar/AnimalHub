@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -40,7 +43,7 @@ public class Animal {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private File profilePicture;
 
     @Enumerated(EnumType.ORDINAL)
@@ -60,8 +63,11 @@ public class Animal {
     private double weight;
 
     @ManyToOne
-    @JoinColumn(name = "shelter_id", nullable = true)
+    @JoinColumn(name = "shelter_id")
     private Shelter shelter;
+
+    @OneToMany(targetEntity = File.class, cascade = CascadeType.REMOVE)
+    private List<File> content;
 
     @Column(name = "created_on")
     @CreationTimestamp

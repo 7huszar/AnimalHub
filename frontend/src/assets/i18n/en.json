@@ -19,7 +19,10 @@
   },
 
   "HOME": {
-    "ACCOUNT": "manage account"
+    "ACCOUNT": "manage account",
+    "LOAD_FAILED": "failed to load animals",
+    "DONATE_1": "Donate to ",
+    "ADOPT": "Adopt "
   },
 
   "REGISTER": {
@@ -60,5 +63,28 @@
     "INTERNAL_SERVER_ERROR": "internal server error - we apologize"
   },
 
-  "LOGO" : "Logo with the writing AnimalHub"
+  "LOGO" : "Logo with the writing AnimalHub",
+
+  "ANIMAL_HOMEPAGE": {
+    "SPECIES": "Species:",
+    "RACE": "Race:",
+    "BIRTHDATE": "Date of birth:",
+    "AGE": "Age:",
+    "HEIGHT": "Height:",
+    "WEIGHT": "Weight:",
+    "CONTENT": "Content",
+    "DONATE_1": "Donate to ",
+    "ADOPT": "Adopt "
+  },
+
+  "SHELTER_HOMEPAGE": {
+    "ADDRESS": "Address:",
+    "PHONE": "Phone:",
+    "EMAIL": "E-mail:"
+  },
+
+  "ANIMAL_LIST": {
+    "NAME": "Name",
+    "SPECIES": "Species"
+  }
 }

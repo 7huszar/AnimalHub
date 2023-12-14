@@ -16,6 +16,10 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
 
     ApplicationUser findByEmail(String email);
 
+    List<ApplicationUser> findApplicationUsersByRole(UserRole role);
+
+    ApplicationUser findApplicationUsersByRoleAndIdEquals(UserRole role, UUID id);
+
     boolean existsByEmail(String email);
 
     List<ApplicationUser> findUsersByEmailIgnoreCaseContaining(String email);
@@ -24,4 +28,7 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     @Modifying
     @Query("update ApplicationUser u set u.role = :role where u.email = :email")
     void updateRole(@Param(value = "email") String email, @Param(value = "role") UserRole status);
+
+    ApplicationUser findApplicationUserById(UUID id);
+
 }

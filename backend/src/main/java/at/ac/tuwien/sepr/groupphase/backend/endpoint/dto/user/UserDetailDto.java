@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,13 +21,16 @@ public class UserDetailDto {
 
     @NotNull(message = "Email must not be null")
     private String email;
+
     private UserRole role;
+
+    private ShelterDto shelter;
 
     @Override
     public String toString() {
-        return "ShelterDetailDto{"
+        return "UserDetailDto{"
             + ", id='" + id + '\''
-            + ", name='" + email + '\''
+            + ", email='" + email + '\''
             + ", role='" + role + '\''
             + '}';
     }

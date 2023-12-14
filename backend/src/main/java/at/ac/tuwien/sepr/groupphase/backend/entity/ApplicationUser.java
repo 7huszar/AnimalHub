@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +31,13 @@ public class ApplicationUser {
 
     @Column(unique = true)
     private String email;
+
     private String password;
+
     private UserRole role;
+
+    @OneToOne
+    private Shelter shelter;
 
     @Override
     public String toString() {

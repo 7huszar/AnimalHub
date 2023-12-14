@@ -19,7 +19,11 @@
   },
 
   "HOME": {
-    "ACCOUNT": "Account verwalten"
+    "ACCOUNT": "Account verwalten",
+    "LOAD_FAILED": "Tiere konnten nicht geladen werden",
+    "DONATE_1": "Spende an ",
+    "ADOPT": "Adoptiere "
+
   },
 
   "REGISTER": {
@@ -61,5 +65,28 @@
     "INTERNAL_SERVER_ERROR": "Interne Fehler in unserem Server - Entschuldigung"
   },
 
-  "LOGO" : "Logo mit der Aufschrift AnimalHub"
+  "LOGO" : "Logo mit der Aufschrift AnimalHub",
+
+  "ANIMAL_HOMEPAGE": {
+    "SPECIES": "Tierart:",
+    "RACE": "Rasse:",
+    "BIRTHDATE": "Geburtsdatum:",
+    "AGE": "Alter:",
+    "HEIGHT": "Größe:",
+    "WEIGHT": "Gewicht:",
+    "CONTENT": "Medien",
+    "DONATE_1": "Spende an ",
+    "ADOPT": "Adoptiere "
+  },
+
+  "SHELTER_HOMEPAGE": {
+    "ADDRESS": "Addresse:",
+    "PHONE": "Telefon-Nr.:",
+    "EMAIL": "E-mail:"
+  },
+
+  "ANIMAL_LIST": {
+    "NAME": "Name",
+    "SPECIES": "Tierart"
+  }
 }

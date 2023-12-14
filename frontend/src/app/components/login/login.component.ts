@@ -19,8 +19,9 @@ export class LoginComponent implements OnInit {
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
-  error = false;
   failedLogin :boolean = false;
+  isEmailInvalid :boolean = false;
+  isPwdInvalid :boolean = false;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -31,6 +32,17 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
+    });
+    this.loginForm.valueChanges.subscribe(() => {
+      if (this.failedLogin) {
+        this.submitted = false;
+      }
+    });
+    this.loginForm.get('username').valueChanges.subscribe(() => {
+      this.isEmailInvalid = false;
+    });
+    this.loginForm.get('password').valueChanges.subscribe(() => {
+      this.isPwdInvalid = false;
     });
   }
 
@@ -44,6 +56,7 @@ export class LoginComponent implements OnInit {
       this.authenticateUser(authRequest);
     } else {
       console.log('Invalid input');
+      this.failedLogin = false;
     }
   }
 
@@ -77,20 +90,14 @@ export class LoginComponent implements OnInit {
          if (error.status == HttpStatusCode.Unauthorized) {
             this.notification.notifyError('LOGIN.BAD_CREDENTIALS', title);
           this.failedLogin = true;
+          this.isEmailInvalid = true;
+          this.isPwdInvalid = true;
         } else {
            // standard errors, we do not anticpate
            this.notification.notifyStdError(error, title);
          }
-        this.error = true;
       }
     });
-  }
-
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = false;
   }
 
   ngOnInit() {
@@ -104,5 +111,12 @@ export class LoginComponent implements OnInit {
     return this.submitted ? 'is-invalid' : '';
   }
 
+  invalidEmail() :string {
+    return this.isEmailInvalid ? 'is-invalid' : '';
+  }
+
+  invalidPwd() :string {
+    return this.isPwdInvalid ? 'is-invalid' : '';
+  }
 
 }

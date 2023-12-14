@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +37,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,11 +65,29 @@ public class CustomUserDetailService implements UserService {
      */
     @Override
     public List<UserDetailDto> search(UserSearchDto searchParameters) {
-        var users = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
-        if (searchParameters.email() == null) {
-            users = userRepository.findAll();
-        }
 
+        List<ApplicationUser> users = new ArrayList<>();
+
+        if (searchParameters.email() == null || searchParameters.email().isEmpty()) {
+            if (searchParameters.role() == null) {
+                users = userRepository.findAll();
+            } else {
+                users = userRepository.findApplicationUsersByRole(searchParameters.role());
+            }
+
+        } else {
+
+            var foundUsers = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
+            if (searchParameters.role() == null) {
+                users = foundUsers;
+            } else {
+                for (ApplicationUser foundUser : foundUsers) {
+                    if (userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()) != null) {
+                        users.add(userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()));
+                    }
+                }
+            }
+        }
         return users.stream()
             .map(userMapper::applicationUserToUserDetailDto).toList();
     }
@@ -154,13 +174,51 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public UserDetailDto getCurrentUser() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        var user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new NotFoundException("User could not be found.");
+        }
+
+        return userMapper.applicationUserToUserDetailDto(user);
+    }
+
+    @Override
+    public void delete(UUID id) throws ConflictException {
         LOGGER.debug("Delete Shelter with id: " + id);
 
+        conflictChecker.checkUserDeleteConflicts(id);
         var shelter = userRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
-
         userRepository.delete(shelter);
+    }
+
+    @Override
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException {
+        LOGGER.debug("Update Shelter with id: " + userDetailDto.getId() + ", with following data:" + userDetailDto);
+
+        userValidator.validateUserCredentialsForUpdate(userDetailDto);
+        ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
+            () -> new NotFoundException("User does not exist.")
+        );
+        oldEntity.setRole(userDetailDto.getRole());
+
+        return userMapper.applicationUserToUserDetailDto(userRepository.save(oldEntity));
+    }
+
+
+    @Override
+    public UserDetailDto findById(UUID id) {
+        LOGGER.debug("Get User with id: " + id);
+
+        var user = userRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        return userMapper.applicationUserToUserDetailDto(user);
     }
 }

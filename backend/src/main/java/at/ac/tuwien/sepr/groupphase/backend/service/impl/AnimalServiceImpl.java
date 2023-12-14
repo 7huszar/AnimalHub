@@ -17,9 +17,11 @@ import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -29,6 +31,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
 
@@ -68,9 +71,18 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.debug("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
-        Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
-        entity = animalRepository.save(entity);
-        return mapper.animalToAnimalDetailDto(entity);
+        Animal newEntity = mapper.animalDetailDtoToAnimal(animalDto);
+
+        // Get old entity for content collection
+        Animal oldEntity = animalRepository.findById(newEntity.getId()).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        newEntity.setProfilePicture(oldEntity.getProfilePicture());
+        newEntity.setContent(oldEntity.getContent());
+
+        newEntity = animalRepository.save(newEntity);
+        return mapper.animalToAnimalDetailDto(newEntity);
     }
 
     @Override
@@ -103,7 +115,7 @@ public class AnimalServiceImpl implements AnimalService {
         );
 
         Optional.ofNullable(animal.getProfilePicture()).orElseThrow(
-            () -> new NotFoundException("Animal does not have a profil image.")
+            () -> new NotFoundException("Animal does not have a profile image.")
         );
 
         return fileService.findById(animal.getProfilePicture().getId());
@@ -121,7 +133,6 @@ public class AnimalServiceImpl implements AnimalService {
         }
 
         var createdFile = fileService.create(createFileDto);
-
         var file = fileMapper.fileDtoToFile(createdFile);
 
         animal.setProfilePicture(file);
@@ -131,8 +142,64 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Animal does not exist.")
+        );
+
+        // TODO remove old image
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        animal.setProfilePicture(file);
+        animalRepository.save(animal);
+
+        return createdFile;
+    }
+
+    @Override
+    public List<FileDto> getContents(UUID id) {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        Hibernate.initialize(animal.getContent());
+
+        return animal.getContent().stream().map(fileMapper::fileToFileDto).toList();
+    }
+
+    @Override
+    public FileDetailDto getContent(UUID id, UUID fileId) {
+
+        // TODO check animal id
+
+        return fileService.findById(fileId);
+    }
+
+    @Override
+    public FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        Hibernate.initialize(animal.getContent());
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        animal.getContent().add(file);
+        animalRepository.save(animal);
+
+        return createdFile;
+    }
+
+    @Override
+    public void deleteContent(UUID id, UUID fileId) {
+        // TODO implement
     }
 
 }

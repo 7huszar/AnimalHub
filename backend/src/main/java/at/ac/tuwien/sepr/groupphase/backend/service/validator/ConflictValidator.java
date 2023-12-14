@@ -3,8 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 
@@ -17,6 +20,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -58,6 +62,22 @@ public class ConflictValidator {
         validateAnimalDetails(mapper.createAnimalDtoToAnimalDetailDto(animalDto));
     }
 
+    public void checkUserDeleteConflicts(UUID id) throws ConflictException {
+        LOGGER.trace("checkUserDeleteConflicts({})", id);
+
+        if (userRepository.findApplicationUserById(id) == null) {
+            throw new NotFoundException("User does not exist");
+        } else {
+            ApplicationUser user = userRepository.findApplicationUserById(id);
+            if (user.getRole().equals(UserRole.ADMIN)) {
+                throw new ConflictException("Cannot delete another Admin");
+
+            }
+        }
+
+    }
 }
+
+
 
 

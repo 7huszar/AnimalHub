@@ -6,5 +6,5 @@ export enum Mode {
   ADMIN,
   ANIMAL,
   SHELTER,
-  FILE
+  CONTENT
 }
