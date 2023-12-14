@@ -16,12 +16,11 @@ export class ConfirmDeleteDialogComponent {
   public deleteError: string | null = null;
   @Output() deleteErrorEvent = new EventEmitter<{ error: string | null, errorMessage: string }>();
 
-
   @Input() deleteWhat: string | undefined = '';
   @Input() deleteType: string | undefined = '';
   @Input() DeleteId: string | undefined = '';
 
-  @Output() confirm = new EventEmitter<void>();
+
   @HostBinding('class') cssClass = 'modal-fade';
 
   constructor(
@@ -67,7 +66,6 @@ export class ConfirmDeleteDialogComponent {
             } else {
               this.deleteError = 'An error occurred during deletion.';
             }
-
             this.deleteErrorEvent.emit({error: this.deleteError, errorMessage: this.deleteError || ''});
           },
         });
