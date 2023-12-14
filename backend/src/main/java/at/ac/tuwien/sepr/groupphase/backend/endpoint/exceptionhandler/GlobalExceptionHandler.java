@@ -24,9 +24,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Register all your Java exceptions here to map them into meaningful HTTP exceptions
+ * Register all your Java exceptions here to map them into meaningful HTTP exceptions.
  * If you have special cases which are only important for specific endpoints, use ResponseStatusExceptions
- * https://www.baeldung.com/exception-handling-for-rest-with-spring#responsestatusexception
  */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // TODO doku
     @ExceptionHandler(value = {ValidationException.class})
-    protected ResponseEntity<Object> handleValidationException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleValidationException(Exception ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
@@ -73,7 +72,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.error(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
-
 
     // TODO handle IOException.
 

@@ -7,12 +7,13 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
+import at.ac.tuwien.sepr.groupphase.backend.service.conflict.UserConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -40,8 +41,8 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
-    private final ConflictValidator conflictChecker;
     private final UserMapper userMapper;
+    private final UserConflict conflict;
 
 
     /**
@@ -126,7 +127,7 @@ public class CustomUserDetailService implements UserService {
     public void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
-        conflictChecker.checkRegisterConflicts(userLoginDto.getEmail());
+        conflict.conflictForRegister(userLoginDto.getEmail());
         /*
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
@@ -146,10 +147,10 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(UUID id) throws ConflictException {
+    public void delete(UUID id) throws ConflictException, NotAuthorizedException {
         LOGGER.debug("Delete Shelter with id: " + id);
 
-        conflictChecker.checkUserDeleteConflicts(id);
+        conflict.conflictForDelete(id);
         var shelter = userRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );

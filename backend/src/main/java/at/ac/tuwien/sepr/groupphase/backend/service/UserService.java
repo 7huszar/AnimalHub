@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,10 +17,7 @@ import java.util.UUID;
 public interface UserService extends UserDetailsService {
 
     /**
-     * Find a user in the context of Spring Security based on the email address
-     * <br>
-     * For more information have a look at this tutorial:
-     * https://www.baeldung.com/spring-security-authentication-with-a-database
+     * Find a user in the context of Spring Security based on the email address.
      *
      * @param email the email address
      * @return a Spring Security user
@@ -69,7 +67,7 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the user to be deleted.
      * @code NotFoundException thrown when the id does not point to any user in the persistent data store.
      */
-    void delete(UUID id) throws ConflictException;
+    void delete(UUID id) throws ConflictException, NotAuthorizedException;
 
 
     /**
