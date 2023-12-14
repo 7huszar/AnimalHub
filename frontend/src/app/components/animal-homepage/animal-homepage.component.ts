@@ -28,7 +28,7 @@ export class AnimalHomepageComponent implements OnInit{
     species: undefined,
     weight: 0,
   };
-  // TODO: Alter, Erfahrung,
+  // TODO: add fitting animal attributes
   protected animalAge: number;
 
   protected contents: FileDto[];
