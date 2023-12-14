@@ -5,6 +5,9 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Configuration for thread pool used for most likely e-mails.
+ */
 @Component
 @ConfigurationProperties(prefix = "threadpool")
 @Getter

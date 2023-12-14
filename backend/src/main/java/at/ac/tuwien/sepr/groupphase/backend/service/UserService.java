@@ -19,9 +19,6 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Find a user in the context of Spring Security based on the email address
-     * <br>
-     * For more information have a look at this tutorial:
-     * https://www.baeldung.com/spring-security-authentication-with-a-database
      *
      * @param email the email address
      * @return a Spring Security user
@@ -52,6 +49,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param userLoginDto contains e-mail and password
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
+     * @throws ConflictException if user already exists
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
@@ -73,6 +71,13 @@ public interface UserService extends UserDetailsService {
      */
     void delete(UUID id);
 
+    /**
+     * Verifies e-mail of user given by token claim.
+     * More precisely, the status of the role of the user is set from UserRole.INACTIVE to UserRole.USER.
+     *
+     * @param token Verification token
+     * @throws NotAuthorizedException if the token is invalid in any kind
+     */
     @Transactional
     void verify(String token) throws NotAuthorizedException;
 }
