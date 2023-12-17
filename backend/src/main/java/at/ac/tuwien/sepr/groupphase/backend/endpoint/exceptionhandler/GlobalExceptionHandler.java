@@ -72,14 +72,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {ConflictException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    protected ErrorListExceptionDto handleConflictException(ErrorListException e) {
+    protected ResponseEntity<Object> handleConflictException(ErrorListException e, WebRequest request) {
         LOGGER.warn(e.getMessage());
-        return new ErrorListExceptionDto()
+        return handleExceptionInternal(e, new ErrorListExceptionDto()
             .setUiErrorDescriptor(e.uiErrorSummary())
             .setErrors(e.errors())
-            .setUiErrors(e.uiErrors());
+            .setUiErrors(e.uiErrors()), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     // TODO handle IOException.
