@@ -46,8 +46,14 @@ security:
     audience: secure-app
     # 12 hours in milliseconds
     expiration-time: 43200000
-    # 10 minutes
-    verification-expiration-time: 600000
+  act:
+    jwt:
+      secret: ?E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v9
+      type: JWT
+      issuer: user-service
+      audience: user-activation
+      # 10 minutes
+      expiration-time: 600000
 
 management:
   server:

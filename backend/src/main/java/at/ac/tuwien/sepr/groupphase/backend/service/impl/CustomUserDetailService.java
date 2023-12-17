@@ -149,7 +149,7 @@ public class CustomUserDetailService implements UserService {
             .role(UserRole.INACTIVE)
             .build();
 
-        mail.sendVerificationMail(userLoginDto.getEmail());
+        mail.sendVerificationMail(userLoginDto.getEmail(), "en");
 
         userRepository.save(user);
     }

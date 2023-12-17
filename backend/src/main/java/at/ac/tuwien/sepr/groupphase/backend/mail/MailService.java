@@ -25,12 +25,12 @@ public class MailService {
      * @param email E-mail to be verified
      */
     @Async
-    public void sendVerificationMail(String email) {
+    public void sendVerificationMail(String email, String language) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email));
+        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language));
         emailSender.send(message);
     }
 }
