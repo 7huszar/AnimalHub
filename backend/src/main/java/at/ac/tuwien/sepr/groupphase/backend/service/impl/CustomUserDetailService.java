@@ -96,7 +96,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
+    public ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findByEmail(email);
         if (applicationUser != null) {
@@ -147,7 +147,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(UUID id) throws ConflictException, NotAuthorizedException {
+    public void delete(UUID id) throws ConflictException, NotAuthorizedException, NotFoundException {
         LOGGER.debug("Delete Shelter with id: " + id);
 
         conflict.conflictForDelete(id);
@@ -158,7 +158,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException {
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
         LOGGER.debug("Update Shelter with id: " + userDetailDto.getId() + ", with following data:" + userDetailDto);
 
         userValidator.validateUserCredentialsForUpdate(userDetailDto);
@@ -172,7 +172,7 @@ public class CustomUserDetailService implements UserService {
 
 
     @Override
-    public UserDetailDto findById(UUID id) {
+    public UserDetailDto findById(UUID id) throws NotFoundException {
         LOGGER.debug("Get User with id: " + id);
 
         var user = userRepository.findById(id).orElseThrow(

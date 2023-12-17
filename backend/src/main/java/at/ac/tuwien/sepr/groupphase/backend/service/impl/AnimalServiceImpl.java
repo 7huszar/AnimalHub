@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,7 +78,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto findById(UUID id) {
+    public AnimalDetailDto findById(UUID id) throws NotFoundException {
         LOGGER.trace("findById({}) ", id);
 
         var animal = animalRepository.findById(id).orElseThrow(
@@ -88,7 +89,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID id) throws NotFoundException {
         LOGGER.trace("delete({})", id);
 
         var shelter = animalRepository.findById(id).orElseThrow(
@@ -99,7 +100,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDetailDto getProfileImage(UUID id) {
+    public FileDetailDto getProfileImage(UUID id) throws NotFoundException {
         LOGGER.trace("getProfileImage({})", id);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
@@ -113,14 +114,14 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException {
+    public FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException {
         LOGGER.trace("setProfileImage({},{})", id, createFileDto);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
         );
 
         if (animal.getProfilePicture() != null) {
-            throw new ConflictException("Profile Image already set.");
+            throw new ConflictException("Profile Image already set.", Collections.singletonList(""));
         }
 
         var createdFile = fileService.create(createFileDto);
@@ -138,7 +139,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public List<FileDto> getContents(UUID id) {
+    public List<FileDto> getContents(UUID id) throws NotFoundException {
         LOGGER.trace("getContents({})", id);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
@@ -150,7 +151,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDetailDto getContent(UUID id, UUID fileId) {
+    public FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException {
         LOGGER.trace("getContent({},{})", id, fileId);
         // TODO check animal id
 
@@ -158,7 +159,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+    public FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
         LOGGER.trace("addContent({},{})", id, fileDto);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")

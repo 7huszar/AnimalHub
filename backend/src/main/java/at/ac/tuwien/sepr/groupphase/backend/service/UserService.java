@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +33,7 @@ public interface UserService extends UserDetailsService {
      * @param email the email address
      * @return a application user
      */
-    ApplicationUser findApplicationUserByEmail(String email);
+    ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException;
 
     /**
      * Log in a user.
@@ -67,7 +68,7 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the user to be deleted.
      * @code NotFoundException thrown when the id does not point to any user in the persistent data store.
      */
-    void delete(UUID id) throws ConflictException, NotAuthorizedException;
+    void delete(UUID id) throws ConflictException, NotAuthorizedException, NotFoundException;
 
 
     /**
@@ -77,7 +78,7 @@ public interface UserService extends UserDetailsService {
      * @return the user with ID {@code id}
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto findById(UUID id);
+    UserDetailDto findById(UUID id) throws NotFoundException;
 
 
     /**
@@ -87,5 +88,5 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
 }

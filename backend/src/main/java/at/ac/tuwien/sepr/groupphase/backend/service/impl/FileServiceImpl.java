@@ -54,7 +54,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileDetailDto findById(UUID id) {
+    public FileDetailDto findById(UUID id) throws NotFoundException {
         LOGGER.debug("Get File with id: " + id);
 
         File entity = fileRepository.findById(id).orElseThrow(

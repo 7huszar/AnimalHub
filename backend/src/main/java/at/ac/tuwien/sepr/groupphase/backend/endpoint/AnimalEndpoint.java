@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +60,7 @@ public class AnimalEndpoint {
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get animal with specific id", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto findById(@PathVariable UUID id) {
+    public AnimalDetailDto findById(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/{}", id);
         return animalService.findById(id);
     }
@@ -80,7 +81,7 @@ public class AnimalEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
     @Operation(summary = "Update specific animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto update(@PathVariable UUID id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException {
+    public AnimalDetailDto update(@PathVariable UUID id, @Valid @RequestBody AnimalDetailDto animalDto) throws ValidationException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", animalDto);
         animalDto.setId(id);
@@ -95,7 +96,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @DeleteMapping("{id}")
     @Operation(summary = "Deletes specific animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
         animalService.delete(id);
     }
@@ -103,7 +104,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/profileImg")
     @Operation(summary = "Get animal's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<?> getProfileImage(@PathVariable UUID id) {
+    public ResponseEntity<?> getProfileImage(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/{}/files/profileImg", id);
         var fileDto = animalService.getProfileImage(id);
 
@@ -118,7 +119,8 @@ public class AnimalEndpoint {
     @PostMapping("{id}/files/profileImg")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Sets animal's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto setProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, ConflictException, IOException {
+    public FileDto setProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file)
+        throws ValidationException, ConflictException, IOException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/{}/files/profileImg", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 
@@ -128,7 +130,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}/files/profileImg")
     @Operation(summary = "Updates animal's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto updateProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) {
+    public FileDto updateProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws NotFoundException {
         LOGGER.info("PUT " + BASE_PATH + "/{}/files/profileImg", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 
@@ -138,7 +140,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/content")
     @Operation(summary = "Get content information about animal", security = @SecurityRequirement(name = "apiKey"))
-    public List<FileDto> getContents(@PathVariable UUID id) {
+    public List<FileDto> getContents(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/{}/files", id);
 
         return animalService.getContents(id);
@@ -147,7 +149,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/content/{fileId}")
     @Operation(summary = "Get content of animal", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<?> getContent(@PathVariable UUID id, @PathVariable UUID fileId) {
+    public ResponseEntity<?> getContent(@PathVariable UUID id, @PathVariable UUID fileId) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/{}/files/{}", id, fileId);
         var fileDto = animalService.getContent(id, fileId);
 
@@ -162,7 +164,7 @@ public class AnimalEndpoint {
     @PostMapping("{id}/files/content")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add content to animal", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto addContent(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, IOException {
+    public FileDto addContent(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, IOException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/{}/files", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 

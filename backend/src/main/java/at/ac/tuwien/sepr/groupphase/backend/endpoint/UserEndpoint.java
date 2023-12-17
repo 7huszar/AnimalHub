@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +52,7 @@ public class UserEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) throws ConflictException, NotAuthorizedException {
+    public void delete(@PathVariable UUID id) throws ConflictException, NotAuthorizedException, NotFoundException {
         LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
         userService.delete(id);
     }
@@ -59,7 +60,7 @@ public class UserEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "Get user by id", security = @SecurityRequirement(name = "apiKey"))
-    public UserDetailDto findById(@PathVariable UUID id) {
+    public UserDetailDto findById(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/{}", id);
         return userService.findById(id);
     }
@@ -67,7 +68,7 @@ public class UserEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("edit/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException {
+    public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
         LOGGER.info("PUT " + BASE_PATH + "/{}", id);
         LOGGER.debug("RequestBody:{}", userDetailDto);
         userDetailDto.setId(id);
