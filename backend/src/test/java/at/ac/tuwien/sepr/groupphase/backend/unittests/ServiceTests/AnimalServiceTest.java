@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
@@ -112,7 +113,7 @@ public class AnimalServiceTest implements TestData {
 
 
     @Test
-    public void createNewAnimalWithSuccess() throws ValidationException, ConflictException {
+    public void createNewAnimalWithSuccess() throws ValidationException, ConflictException, NotFoundException {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
@@ -224,7 +225,7 @@ public class AnimalServiceTest implements TestData {
     }
 
     @Test
-    public void deleteShelterAndAnimalsInItSuccessfully() throws ValidationException, ConflictException {
+    public void deleteShelterAndAnimalsInItSuccessfully() throws ValidationException, ConflictException, NotFoundException {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)

@@ -51,7 +51,7 @@ public class ShelterServiceTest {
     }
 
     @Test
-    public void findByIdWithSuccess() throws ValidationException {
+    public void findByIdWithSuccess() throws ValidationException, NotFoundException {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
@@ -114,7 +114,7 @@ public class ShelterServiceTest {
     }
 
     @Test
-    public void deleteShelterWithSuccess() throws ValidationException {
+    public void deleteShelterWithSuccess() throws ValidationException, NotFoundException {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
@@ -141,7 +141,7 @@ public class ShelterServiceTest {
     }
 
     @Test
-    public void deleteShelterUnsuccessfully() throws ValidationException {
+    public void deleteShelterUnsuccessfully() throws ValidationException, NotFoundException {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
@@ -169,7 +169,7 @@ public class ShelterServiceTest {
     }
 
     @Test
-    public void updateShelterUnsuccessfully() throws ValidationException {
+    public void updateShelterUnsuccessfully() throws ValidationException, NotFoundException {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
