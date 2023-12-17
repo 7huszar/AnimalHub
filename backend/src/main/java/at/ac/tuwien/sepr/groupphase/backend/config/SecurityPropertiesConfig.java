@@ -27,6 +27,12 @@ public class SecurityPropertiesConfig {
         return new ActJwt();
     }
 
+    @Bean
+    @ConfigurationProperties(prefix = "security.pwd.jwt")
+    protected PwdJwt pwdJwt() {
+        return new PwdJwt();
+    }
+
     @Getter
     @Setter
     public static class Auth {
@@ -48,6 +54,16 @@ public class SecurityPropertiesConfig {
     @Getter
     @Setter
     public static class ActJwt {
+        private String secret;
+        private String type;
+        private String issuer;
+        private String audience;
+        private Long expirationTime;
+    }
+
+    @Getter
+    @Setter
+    public static class PwdJwt {
         private String secret;
         private String type;
         private String issuer;

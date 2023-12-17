@@ -51,7 +51,15 @@ security:
       secret: ?E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v9
       type: JWT
       issuer: user-service
-      audience: user-activation
+      audience: user-service
+      # 10 minutes
+      expiration-time: 600000
+  pwd:
+    jwt:
+      secret: ?E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v9
+      type: JWT
+      issuer: user-service
+      audience: pwd-service
       # 10 minutes
       expiration-time: 600000
 

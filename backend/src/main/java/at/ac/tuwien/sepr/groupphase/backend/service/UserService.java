@@ -47,10 +47,11 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Registers a user and sends an e-mail to verify given e-mail.
+     * The role of the user is initially set to UserRole.INACTIVE.
      *
      * @param userLoginDto contains e-mail and password
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
-     * @throws ConflictException   if user already exists
+     * @throws ConflictException if user already exists
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 

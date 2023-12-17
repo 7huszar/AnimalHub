@@ -14,6 +14,7 @@ public class SecurityProperties {
     private final SecurityPropertiesConfig.Auth auth;
     private final SecurityPropertiesConfig.Jwt jwt;
     private final SecurityPropertiesConfig.ActJwt actJwt;
+    private final SecurityPropertiesConfig.PwdJwt pwdJwt;
 
     public String getAuthHeader() {
         return auth.getHeader();
@@ -65,6 +66,26 @@ public class SecurityProperties {
 
     public Long getActJwtExpirationTime() {
         return actJwt.getExpirationTime();
+    }
+
+    public String getPwdJwtSecret() {
+        return pwdJwt.getSecret();
+    }
+
+    public String getPwdJwtType() {
+        return pwdJwt.getType();
+    }
+
+    public String getPwdJwtIssuer() {
+        return pwdJwt.getIssuer();
+    }
+
+    public String getPwdJwtAudience() {
+        return pwdJwt.getAudience();
+    }
+
+    public Long getPwdJwtExpirationTime() {
+        return pwdJwt.getExpirationTime();
     }
 
 }
