@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.ErrorListExceptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.SingleExceptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ErrorListException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.SingleException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -38,17 +38,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // TODO doku
     @ExceptionHandler(value = {NotFoundException.class})
-    protected ResponseEntity<Object> handleNotFoundException(RuntimeException ex, WebRequest request) {
-        LOGGER.warn(ex.getMessage());
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    protected ResponseEntity<Object> handleNotFoundException(SingleException e, WebRequest request) {
+        LOGGER.warn(e.getMessage());
+
+        SingleExceptionDto responseBody = new SingleExceptionDto()
+            .setMessage(e.getMessage())
+            .setUiError(e.uiError());
+
+        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 
     // TODO doku
     @ExceptionHandler(value = {ValidationException.class})
-    protected ResponseEntity<Object> handleValidationException(Exception ex, WebRequest request) {
-        LOGGER.warn(ex.getMessage());
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    protected ResponseEntity<Object> handleValidationException(ErrorListException e, WebRequest request) {
+        LOGGER.warn(e.getMessage());
+
+        ErrorListExceptionDto responseBody = new ErrorListExceptionDto()
+            .setUiErrorDescriptor(e.uiErrorSummary())
+            .setErrors(e.errors())
+            .setUiErrors(e.uiErrors());
+
+        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     // TODO doku
@@ -61,23 +72,31 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handles NotAuthorizedException thrown in the REST Controller.
      *
-     * @param ex      RuntimeException cached from REST Controller
+     * @param e      RuntimeException cached from REST Controller
      * @param request the initial {@link WebRequest}
      * @return {@link ResponseEntity} with HttpStatus.UNAUTHORIZED
      */
     @ExceptionHandler(value = {NotAuthorizedException.class})
-    protected ResponseEntity<Object> handleNotAuthorizedException(Exception ex, WebRequest request) {
-        LOGGER.error(ex.getMessage());
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    protected ResponseEntity<Object> handleNotAuthorizedException(SingleException e, WebRequest request) {
+        LOGGER.error(e.getMessage());
+
+        SingleExceptionDto responseBody = new SingleExceptionDto()
+            .setMessage(e.getMessage())
+            .setUiError(e.uiError());
+
+        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler(value = {ConflictException.class})
     protected ResponseEntity<Object> handleConflictException(ErrorListException e, WebRequest request) {
         LOGGER.warn(e.getMessage());
-        return handleExceptionInternal(e, new ErrorListExceptionDto()
+
+        ErrorListExceptionDto responseBody = new ErrorListExceptionDto()
             .setUiErrorDescriptor(e.uiErrorSummary())
             .setErrors(e.errors())
-            .setUiErrors(e.uiErrors()), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+            .setUiErrors(e.uiErrors());
+
+        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     // TODO handle IOException.
