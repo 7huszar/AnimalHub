@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.repository.files;
+package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
@@ -10,4 +10,5 @@ import java.util.UUID;
 @RepositoryRestResource(path = "files", collectionResourceRel = "files")
 public interface FileRepository extends JpaRepository<File, UUID> {
 
+    File getByName(String name);
 }

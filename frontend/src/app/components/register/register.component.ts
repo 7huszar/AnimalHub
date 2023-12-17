@@ -18,6 +18,7 @@ export class RegisterComponent {
   loginForm: UntypedFormGroup;
   // After first submission attempt, form validation will start
   submitted = false;
+  success :boolean = false;
 
   constructor(private formBuilder: UntypedFormBuilder,
               private router: Router,
@@ -41,22 +42,19 @@ export class RegisterComponent {
      this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
        next :data => {
         console.log("successfully registered", data);
-        this.router.navigate(['']);
+        this.success = true;
        },
        error: error => {
         console.error("failed to register", error);
-        let title :string;
-        this.translator.get('REGISTER.FAILED_REGISTRATION').subscribe((translation :string) => {
-          title = translation;
-        });
+        let title :string = 'REGISTER.FAILED_REGISTRATION';
+
         // Account already exists
         if (error.status == HttpStatusCode.Conflict) {
-          this.translator.get('REGISTER.ALREADY_EXISTS').subscribe((translation :string) => {
-            this.notification.error(translation, title);
-          });
+          this.notifier.notifyError('REGISTER.ALREADY_EXISTS', title);
+
         } else {
           // standard error banners
-          this.notifier.notifyError(error, title);
+          this.notifier.notifyStdError(error, title);
         }
        }
      });

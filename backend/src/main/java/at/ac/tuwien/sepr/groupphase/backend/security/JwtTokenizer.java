@@ -30,7 +30,7 @@ public class JwtTokenizer {
         return securityProperties.getAuthTokenPrefix() + token;
     }
 
-    /*
+
     public String getActivationToken(String user) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
         String token = Jwts.builder()
@@ -40,9 +40,9 @@ public class JwtTokenizer {
             .setAudience(securityProperties.getJwtAudience())
             .setSubject("verification")
             .claim("email", user)
-            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
+            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtVerificationExpirationTime()))
             .compact();
         return token;
     }
-     */
+
 }

@@ -4,6 +4,7 @@ import {Mode} from "../../../enums/modes";
 import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CreateFileDto} from "../../../dtos/file";
 
 @Component({
   selector: 'app-shelter-create-edit',
@@ -24,7 +25,6 @@ export class ShelterCreateEditComponent implements OnInit{
 
   private shelterImage: File = null;
   protected shelterImageURL: any = null;
-  private shelterImageChanged: boolean = false;
 
   constructor(private shelterService: ShelterService,
               private router: Router,
@@ -34,37 +34,69 @@ export class ShelterCreateEditComponent implements OnInit{
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
-      // TODO FIX
-      /*
       if (!this.modeIsCreate) {
         this.route.params.subscribe(params => {
           const id = params['id'];
           this.shelterService.findById(id).subscribe({
-            next: (data: Shelter) => {
-              this.shelter = data;
-            }, error: (error) => {
-              alert('Error loading shelter!');
-              console.log('Error loading shelter: ', error);
+            next: shelterDetailDto => {
+              this.shelter = shelterDetailDto;
+              this.shelterService.getProfileImage(this.shelter.id).subscribe({
+                next: blob => {
+                  this.shelterImageURL = URL.createObjectURL(blob);
+                }, error: err => {
+                  console.error(err); // TODO handle
+                }
+              });
+            }, error: err => {
+              console.error('Error loading shelter: ', err); // TODO handle
             }
           });
         });
       }
-      */
     });
   }
 
   public onSubmit(form: NgForm): void {
     if (this.modeIsCreate) {
       this.shelterService.create(this.shelter).subscribe({
-        next: data => {
-          // TODO upload file
-          this.router.navigate(['/home']);
+        next: shelterDto => {
+          console.log('shelter created', shelterDto);
+          if (this.shelterImage !== null) {
+            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+            this.shelterService.setProfileImage(shelterDto.id, createFileDto).subscribe({
+              next: fileDto => {
+                console.log('shelter profile image set', fileDto);
+                this.navigateSuccess(shelterDto.id);
+              }, error: err => {
+                console.error(err); // TODO handle
+              }
+            });
+          } else {
+            this.navigateSuccess(shelterDto.id);
+          }
+        }, error: err => {
+          console.error(err); // TODO handle
         }
       });
     } else {
       this.shelterService.update(this.shelter).subscribe({
-        next: data => {
-          this.router.navigate(['/home']);
+        next: shelterDto => {
+          console.log('shelter updated', shelterDto);
+          if (this.shelterImage !== null) {
+            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+            this.shelterService.updateProfileImage(shelterDto.id, createFileDto).subscribe({
+              next: fileDto => {
+                console.log('shelter profile image updated', fileDto);
+                this.navigateSuccess(shelterDto.id);
+              }, error: err => {
+                console.error(err); // TODO handle
+              }
+            })
+          } else {
+            this.navigateSuccess(shelterDto.id);
+          }
+        }, error: err => {
+          console.error(err); // TODO handle
         }
       });
     }
@@ -73,26 +105,25 @@ export class ShelterCreateEditComponent implements OnInit{
   public onDelete(): void {
     this.shelterService.delete(this.shelter.id).subscribe({
       next: data => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/admin']);
+      }, error: err => {
+        console.error(err); // TODO handle
       }
     });
   }
 
-  public onImageSelected(event: any): void {
-    if (this.setImage(event.target.files[0])) {
-      this.shelterImageChanged = true;
-    }
+  private navigateSuccess(id: string): void {
+    this.router.navigate(['/shelter/', id]);
   }
 
-  private setImage(img: File): boolean {
+  public onImageSelected(event: any): void {
+    const img = event.target.files[0];
     if (img.size > 52428800) {
-      alert("File is too big!");
-      return false;
+      console.error("File is too big!"); // TODO handle
+    } else {
+      this.shelterImage = img;
+      this.shelterImageURL = URL.createObjectURL(this.shelterImage);
     }
-
-    this.shelterImage = img;
-    this.shelterImageURL = URL.createObjectURL(this.shelterImage);
-    return true;
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -112,8 +143,7 @@ export class ShelterCreateEditComponent implements OnInit{
     return 'Update';
   }
 
-  hasLoadedImg() :boolean {
-    return this.shelterImageChanged;
+  hasLoadedImg(): boolean {
+    return this.shelterImageURL !== null;
   }
-
 }

@@ -27,9 +27,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notification :ToastrService,
-    private translator :TranslateService,
-    private notifier :NotifierService
+    private notification :NotifierService
    ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
@@ -87,21 +85,16 @@ export class LoginComponent implements OnInit {
       },
       error: error => {
         console.error('Failed to log in:', error);
-        let title: string;
-        this.translator.get('LOGIN.LOGIN_FAILED').subscribe((translation: string) => {
-          title = translation;
-        });
+        let title: string = 'LOGIN.LOGIN_FAILED';
         // status == 401 / Unauthorized - wrong login credentials
          if (error.status == HttpStatusCode.Unauthorized) {
-          this.translator.get('LOGIN.BAD_CREDENTIALS').subscribe((message: string) => {
-            this.notification.error(message, title);
-          });
+            this.notification.notifyError('LOGIN.BAD_CREDENTIALS', title);
           this.failedLogin = true;
           this.isEmailInvalid = true;
           this.isPwdInvalid = true;
         } else {
            // standard errors, we do not anticpate
-           this.notifier.notifyError(error, title);
+           this.notification.notifyStdError(error, title);
          }
       }
     });

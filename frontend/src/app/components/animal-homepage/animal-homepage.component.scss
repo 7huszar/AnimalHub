@@ -13,8 +13,16 @@ body {
 .content {
   padding-left: 3rem;
   padding-right: 3rem;
-  padding-top: 1rem;
-  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+
+.item {
+  max-width: 20em;
+  overflow: hidden;
 }
 
 .fixed-button {
@@ -48,6 +56,15 @@ h2 {
 
 .container > div > div:nth-child(2) {
   font-size: 1.5em;
+}
+
+.lang-select {
+  position: relative;
+  padding-bottom: 2em;
+}
+
+.row align-items-end {
+  height: 50em;
 }
 
 

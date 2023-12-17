@@ -7,7 +7,7 @@
 </div>
 
 
-<div class="my-tmp">
+<div class="my-tmp" *ngIf="!success">
   <div class="row mb-4">
     <div class="col-md-12">
       <span class="anchor" id="formLogin"></span>
@@ -79,6 +79,10 @@
     </div>
 
   </div>
+</div>
+
+<div class="my-tmp h6 text-center" style="font-size: large" *ngIf="success">
+  {{'REGISTER.CHECK_MAILBOX' | translate}}
 </div>
 
 <div class="position-absolute end-0 bottom-0 mb-4 me-4">

@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -32,5 +33,13 @@ public interface FileService {
      * @code NotFoundException when there is no file with the given ID
      */
     FileDetailDto findById(UUID id) throws NotFoundException;
+
+
+    /**
+     * Get all files from the database.
+     *
+     * @return all files from the database.
+     */
+    List<FileDetailDto> findAll();
 
 }

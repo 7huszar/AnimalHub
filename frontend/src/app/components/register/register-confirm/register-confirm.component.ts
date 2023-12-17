@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../../../services/auth.service";
 import {RegisterService} from "../../../services/register.service";
+import {NotifierService} from "../../../services/notifier.service";
+import {HttpStatusCode} from "@angular/common/http";
 
 @Component({
   selector: 'app-register-confirm',
@@ -11,21 +12,37 @@ import {RegisterService} from "../../../services/register.service";
 export class RegisterConfirmComponent implements OnInit{
   private token :string;
   constructor(private route :ActivatedRoute,
-              private auth :AuthService,
               private service :RegisterService,
-              private router :Router) {
+              private router :Router,
+              private notifier :NotifierService) {
   }
   ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get("token");
   }
 
   verify() :void {
-    this.service.verifyEmail(this.token).subscribe();
+    console.log(this.token);
+    this.service.verifyEmail(this.token).subscribe({
+      next :data => {
+        this.notifier.notifySuccess('REGISTER.CONFIRM.SUCCESS');
+        this.router.navigate(['']);
+      },
+      error :error => {
+        switch (error.status) {
+          case HttpStatusCode.Unauthorized:
+            this.notifier.notifyError('REGISTER.CONFIRM.INVALID_TOKEN', 'REGISTER.CONFIRM.ERROR');
+            break;
+          default:
+            this.notifier.notifyStdError(error, 'REGISTER.CONFIRM.ERROR');
+            break;
+        }
+      }
+    });
   }
 
   discard() :void {
-    // TODO should definitely do smth else
-    this.router.navigate(['']);
+    this.notifier.notifyWarn('REGISTER.CONFIRM.ABORT_WARN');
+    this.router.navigate(['/']);
   }
 
 }

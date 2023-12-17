@@ -47,7 +47,7 @@ security:
     # 12 hours in milliseconds
     expiration-time: 43200000
     # 10 minutes
-    verification-expiration-time': 600000
+    verification-expiration-time: 600000
 
 management:
   server:
@@ -76,6 +76,10 @@ management:
       export:
         enabled: true
 
+threadpool:
+  corePoolSize: 2
+  maxPoolSize: 16
+  queueCapacity: 128
 ---
 spring:
   config:
@@ -88,3 +92,40 @@ spring:
 #      filesystem-root: ""
 server:
   shutdown: graceful
+---
+# email configuration - production
+spring:
+  mail:
+    host: smtp.gmail.com
+    username: animalhub.service@gmail.com
+    password: ryyexjjzyqlreupo
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enable: true
+            required: true
+---
+# email configuration - dev and test
+spring:
+  config:
+    activate:
+      on-profile: dev
+  mail:
+    host: localhost
+    username:
+    password:
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 1989
+          auth: false
+          starttls:
+            enable: false
+            required: false

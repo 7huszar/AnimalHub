@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.AnimalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -72,9 +73,18 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.trace("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
-        Animal entity = mapper.animalDetailDtoToAnimal(animalDto);
-        entity = animalRepository.save(entity);
-        return mapper.animalToAnimalDetailDto(entity);
+        Animal newEntity = mapper.animalDetailDtoToAnimal(animalDto);
+
+        // Get old entity for content collection
+        Animal oldEntity = animalRepository.findById(newEntity.getId()).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        newEntity.setProfilePicture(oldEntity.getProfilePicture());
+        newEntity.setContent(oldEntity.getContent());
+
+        newEntity = animalRepository.save(newEntity);
+        return mapper.animalToAnimalDetailDto(newEntity);
     }
 
     @Override
@@ -93,7 +103,7 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.trace("delete({})", id);
 
         var shelter = animalRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Animal with id " + id + " does not exist.")
+            () -> new NotFoundException("Shelter does not exist.")
         );
 
         animalRepository.delete(shelter);
@@ -134,8 +144,21 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        // TODO remove old image
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        animal.setProfilePicture(file);
+        animalRepository.save(animal);
+
+        return createdFile;
     }
 
     @Override

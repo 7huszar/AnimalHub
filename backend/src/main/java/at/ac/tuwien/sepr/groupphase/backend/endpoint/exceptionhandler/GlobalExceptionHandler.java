@@ -61,7 +61,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handles NotAuthorizedException thrown in the REST Controller.
      *
-     * @param ex RuntimeException cached from REST Controller
+     * @param ex      RuntimeException cached from REST Controller
      * @param request the initial {@link WebRequest}
      * @return {@link ResponseEntity} with HttpStatus.UNAUTHORIZED
      */

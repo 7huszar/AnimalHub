@@ -77,7 +77,7 @@ export class UserEditComponent implements OnInit {
       observable.subscribe({
         next: data => {
           this.notification.success(`User ${this.user.email} successfully ${this.modeActionFinished}.`);
-          this.router.navigate(['/admin/users']);
+          this.router.navigate(['/admin']);
         },
         error: error => {
 

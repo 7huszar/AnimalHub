@@ -5,9 +5,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,8 +48,11 @@ public interface UserService extends UserDetailsService {
      *
      * @param userLoginDto contains e-mail and password
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
+     * @throws ConflictException   if user already exists
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
+
+    UserDetailDto getCurrentUser();
 
     /**
      * Search for users in the persistent data store matching all provided fields.
@@ -70,6 +72,16 @@ public interface UserService extends UserDetailsService {
      */
     void delete(UUID id) throws ConflictException, NotAuthorizedException, NotFoundException;
 
+    /**
+     * Verifies e-mail of user given by token claim.
+     * More precisely, the status of the role of the user is set from UserRole.INACTIVE to UserRole.USER.
+     *
+     * @param token Verification token
+     * @throws NotAuthorizedException if the token is invalid in any kind
+     */
+    @Transactional
+    void verify(String token) throws NotAuthorizedException;
+
 
     /**
      * Get the user with given ID from the database.
@@ -88,5 +100,6 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
+
 }

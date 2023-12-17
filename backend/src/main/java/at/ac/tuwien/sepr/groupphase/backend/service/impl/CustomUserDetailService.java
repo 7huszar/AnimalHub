@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
@@ -10,17 +11,24 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.UserConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,8 +49,11 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
+    private final SecurityProperties securityProperties;
+    private final ConflictValidator conflictChecker;
     private final UserMapper userMapper;
     private final UserConflict conflict;
+    private final MailService mail;
 
 
     /**
@@ -107,11 +118,15 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
+        // tmp solution
+        ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
+            && applicationUser.getRole() != UserRole.INACTIVE
             && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
         ) {
             List<String> roles = userDetails.getAuthorities()
@@ -128,22 +143,47 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
         conflict.conflictForRegister(userLoginDto.getEmail());
-        /*
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("animalhub.service@gmail.com");
-        message.setTo(userLoginDto.getEmail());
-        message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(userLoginDto.getEmail()));
-        emailSender.send(message);
-         */
 
         ApplicationUser user = ApplicationUser.builder()
             .email(userLoginDto.getEmail())
             .password(passwordEncoder.encode(userLoginDto.getPassword()))
-            .role(UserRole.USER)
+            .role(UserRole.INACTIVE)
             .build();
 
+        mail.sendVerificationMail(userLoginDto.getEmail());
+
         userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void verify(String token) throws NotAuthorizedException {
+        String email;
+        try {
+            Claims claims = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+            email = claims.get("email", String.class);
+        } catch (JwtException e) {
+            throw new NotAuthorizedException(e);
+        }
+        userRepository.updateRole(email, UserRole.USER);
+    }
+
+    @Override
+    public UserDetailDto getCurrentUser() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        var user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new NotFoundException("User could not be found.");
+        }
+
+        return userMapper.applicationUserToUserDetailDto(user);
     }
 
     @Override

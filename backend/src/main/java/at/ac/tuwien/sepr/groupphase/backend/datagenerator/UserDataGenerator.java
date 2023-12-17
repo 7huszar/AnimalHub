@@ -3,17 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 
-@Profile("generateData")
 @Component
 @RequiredArgsConstructor
 public class UserDataGenerator {
@@ -22,8 +19,7 @@ public class UserDataGenerator {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostConstruct
-    private void generateUsers() {
+    public void generateUsers() {
         if (!userRepository.findAll().isEmpty()) {
             LOGGER.debug("users already exist");
         } else {

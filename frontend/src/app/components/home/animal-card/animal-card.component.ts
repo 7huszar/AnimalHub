@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AnimalListDto} from "../../../dtos/animal";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Mode} from "../../../enums/modes";
 
 @Component({
   selector: 'app-animal-card',
@@ -8,9 +8,14 @@ import {AnimalListDto} from "../../../dtos/animal";
 })
 export class AnimalCardComponent implements OnInit{
 
-  @Input() animal :AnimalListDto;
+  @Input() name :string;
+  @Input() id :number | unknown;
+  @Output() dislike = new EventEmitter<void>();
+  @Output() like = new EventEmitter<void>();
 
-  like() :void {
+  animalImageURL: any = null;
+
+  /*like() :void {
     console.log("like");
   }
 
@@ -18,6 +23,10 @@ export class AnimalCardComponent implements OnInit{
     console.log("dislike")
   }
 
+   */
+
   ngOnInit(): void {
   }
+
+  protected readonly Mode = Mode;
 }
