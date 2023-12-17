@@ -41,5 +41,6 @@ public class MailService {
         message.setTo(email);
         message.setSubject("Animal Hub reset password");
         message.setText("http://localhost:4200/#/tmp/" + jwtTokenizer.getPasswordToken(email, language));
+        emailSender.send(message);
     }
 }

@@ -13,6 +13,7 @@ import {ShelterCreateEditComponent} from "./components/shelter/shelter-create-ed
 import {ShelterComponent} from "./components/shelter/shelter.component";
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
 import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
+import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 
 
 const routes: Routes = [
@@ -22,7 +23,7 @@ const routes: Routes = [
   {path: 'home', canActivate: mapToCanActivate([AuthGuard]), component: HomeComponent},
   {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
   {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
-
+  {path: 'password/request-reset', component: PasswordResetComponent},
   {
     path: 'animal', children: [
       {path: 'create/:shelterId', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.CREATE}},

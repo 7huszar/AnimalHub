@@ -3,9 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
-import {ToastrService} from "ngx-toastr";
 import {HttpStatusCode} from "@angular/common/http";
-import {TranslateService} from "@ngx-translate/core";
 import {NotifierService} from "../../services/notifier.service";
 
 @Component({
@@ -13,7 +11,7 @@ import {NotifierService} from "../../services/notifier.service";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   loginForm: UntypedFormGroup;
   // After first submission attempt, form validation will start
@@ -98,9 +96,6 @@ export class LoginComponent implements OnInit {
          }
       }
     });
-  }
-
-  ngOnInit() {
   }
 
   validForm() :string {

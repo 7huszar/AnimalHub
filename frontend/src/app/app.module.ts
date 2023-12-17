@@ -32,6 +32,7 @@ import {ConfirmDeleteDialogComponent} from "./components/confirm-delete-dialog/c
 import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
 import {ContentComponent} from "./components/content/content.component";
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -58,6 +59,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmDeleteDialogComponent,
     UserEditComponent,
     ContentComponent,
+    PasswordResetComponent,
   ],
   imports: [
     BrowserModule,

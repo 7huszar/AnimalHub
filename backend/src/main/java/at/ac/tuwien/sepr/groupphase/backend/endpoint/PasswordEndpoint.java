@@ -23,6 +23,7 @@ public class PasswordEndpoint {
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void requestPasswordRequest(PasswordResetDto passwordResetDto) {
+        LOGGER.debug("reset password for {}", passwordResetDto);
         service.requestPasswordReset(passwordResetDto);
     }
 }
