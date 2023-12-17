@@ -33,4 +33,13 @@ public class MailService {
         message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language));
         emailSender.send(message);
     }
+
+    @Async
+    public void sendResetPasswordMail(String email, String language) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("animalhub.service@gmail.com");
+        message.setTo(email);
+        message.setSubject("Animal Hub reset password");
+        message.setText("http://localhost:4200/#/tmp/" + jwtTokenizer.getPasswordToken(email, language));
+    }
 }

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
@@ -219,5 +220,12 @@ public class CustomUserDetailService implements UserService {
         );
 
         return userMapper.applicationUserToUserDetailDto(user);
+    }
+
+    @Override
+    public void requestPasswordReset(PasswordResetDto passwordResetDto) {
+        LOGGER.trace("requestPasswordReset({})", passwordResetDto);
+
+        mail.sendResetPasswordMail(passwordResetDto.email(), passwordResetDto.lang());
     }
 }

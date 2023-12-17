@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -105,4 +106,5 @@ public interface UserService extends UserDetailsService {
      */
     UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
 
+    void requestPasswordReset(PasswordResetDto passwordResetDto);
 }
