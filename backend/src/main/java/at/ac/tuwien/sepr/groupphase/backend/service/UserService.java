@@ -5,6 +5,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +23,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param email the email address
      * @return a Spring Security user
-     * @throws UsernameNotFoundException is thrown if the specified user does not exists
+     * @throws UsernameNotFoundException is thrown if the specified user does not exist
      */
     @Override
     UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
@@ -30,7 +32,7 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the email address.
      *
      * @param email the email address
-     * @return a application user
+     * @return an application user
      */
     ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException;
 
@@ -52,7 +54,7 @@ public interface UserService extends UserDetailsService {
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
-    UserDetailDto getCurrentUser();
+    UserDetailDto getCurrentUser() throws NotFoundException;
 
     /**
      * Search for users in the persistent data store matching all provided fields.
@@ -100,6 +102,6 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
 
 }

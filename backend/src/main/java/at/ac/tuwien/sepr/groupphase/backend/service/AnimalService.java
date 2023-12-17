@@ -5,8 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -74,7 +72,7 @@ public interface AnimalService {
     FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException;
 
     // TODO comment
-    FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException;
+    FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException;
 
     List<FileDto> getContents(UUID id) throws NotFoundException;
 

@@ -8,13 +8,11 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.FileContentStore;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.FileValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,7 +27,7 @@ public class FileServiceImpl implements FileService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final FileRepository fileRepository;
-    private final FileContentStore fileContentStore;
+    // private final FileContentStore fileContentStore;
     private final FileValidator validator;
     private final FileMapper mapper;
 
@@ -46,7 +44,7 @@ public class FileServiceImpl implements FileService {
 
         var savedFile = fileRepository.save(entity);
 
-        fileContentStore.setContent(savedFile, fileDto.getFile().getInputStream());
+        // fileContentStore.setContent(savedFile, fileDto.getFile().getInputStream());
 
         // Save updated content-related information
         savedFile = fileRepository.save(savedFile);
@@ -66,7 +64,7 @@ public class FileServiceImpl implements FileService {
         FileDetailDto detailDto = mapper.fileToFileDetailDto(entity);
 
         // Get the actual file content as an InputStreamResource from the fileContentStore
-        detailDto.setFile(new InputStreamResource(fileContentStore.getContent(entity)));
+        // detailDto.setFile(new InputStreamResource(fileContentStore.getContent(entity)));
 
         // return complete FileDetailDto
         return detailDto;
@@ -81,7 +79,7 @@ public class FileServiceImpl implements FileService {
 
         fileRepository.findAll().forEach((file) -> {
             FileDetailDto dto = mapper.fileToFileDetailDto(file);
-            dto.setFile(new InputStreamResource(fileContentStore.getContent(file)));
+            // dto.setFile(new InputStreamResource(fileContentStore.getContent(file)));
             returnList.add(dto);
         });
 

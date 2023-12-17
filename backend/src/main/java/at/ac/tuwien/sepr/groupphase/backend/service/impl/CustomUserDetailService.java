@@ -50,7 +50,6 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
     private final SecurityProperties securityProperties;
-    private final ConflictValidator conflictChecker;
     private final UserMapper userMapper;
     private final UserConflict conflict;
     private final MailService mail;
@@ -168,13 +167,13 @@ public class CustomUserDetailService implements UserService {
 
             email = claims.get("email", String.class);
         } catch (JwtException e) {
-            throw new NotAuthorizedException(e);
+            throw new NotAuthorizedException(e.getMessage());
         }
         userRepository.updateRole(email, UserRole.USER);
     }
 
     @Override
-    public UserDetailDto getCurrentUser() {
+    public UserDetailDto getCurrentUser() throws NotFoundException {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         var user = userRepository.findByEmail(email);

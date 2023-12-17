@@ -16,7 +16,6 @@ import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.AnimalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
-import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -69,7 +68,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException {
+    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException, NotFoundException {
         LOGGER.trace("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
@@ -144,7 +143,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
 
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")

@@ -43,7 +43,7 @@ public class UserEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("/current")
     @Operation(summary = "Get the current logged in user", security = @SecurityRequirement(name = "apiKey"))
-    public UserDetailDto getCurrentUser() {
+    public UserDetailDto getCurrentUser() throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/current");
 
         return userService.getCurrentUser();
