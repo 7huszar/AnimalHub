@@ -34,13 +34,19 @@ public class MailService {
         emailSender.send(message);
     }
 
+    /**
+     * Sends an email with a link to reset password of user.
+     *
+     * @param email E-mail/username of user where password is needed to be reset
+     * @param language Language used for the reset
+     */
     @Async
     public void sendResetPasswordMail(String email, String language) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animal Hub reset password");
-        message.setText("http://localhost:4200/#/tmp/" + jwtTokenizer.getPasswordToken(email, language));
+        message.setText("http://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
     }
 }

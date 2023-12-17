@@ -19,8 +19,6 @@ export class PasswordService {
     let params = new HttpParams();
     params = params.append('email', email);
     params = params.append('lang', lang);
-    console.log(params.get('email'));
-    console.log(email);
 
     return this.http.get(this.baseUri, {params});
   }

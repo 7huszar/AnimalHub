@@ -33,6 +33,7 @@ import {UserEditComponent} from "./components/user/create-edit/user-edit.compone
 import {ContentComponent} from "./components/content/content.component";
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { PasswordVerifyComponent } from './components/password-reset/password-verify/password-verify.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -60,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UserEditComponent,
     ContentComponent,
     PasswordResetComponent,
+    PasswordVerifyComponent,
   ],
   imports: [
     BrowserModule,
