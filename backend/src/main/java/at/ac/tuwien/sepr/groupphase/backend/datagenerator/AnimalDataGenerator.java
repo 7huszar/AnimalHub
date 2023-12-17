@@ -4,64 +4,71 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
-import jakarta.annotation.PostConstruct;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Profile("generateData")
 @Component
 @RequiredArgsConstructor
 public class AnimalDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int AMOUNT = 18;
-    private static final String NAME = "Herbert";
-    private static final Species SPECIES = Species.CAT;
-    private static final String RACE = "Brown Cat";
-    private static final LocalDate BIRTH_DATE = LocalDate.now();
-    private static final double HEIGHT = 0.4;
-    private static final double WEIGHT = 20;
-
-    private static final Shelter SHELTER = Shelter.builder()
-        .id(UUID.randomUUID())
-        .name("TEST Gruft")
-        .address("Teststrasse 1")
-        .phoneNumber("+43 4241 403938")
-        .email("die@gruft")
-        .build();
-
+    private static final int amount = 22;
 
     private final AnimalRepository animalRepository;
+    private final FileRepository fileRepository;
     private final ShelterRepository shelterRepository;
 
-    @PostConstruct
-    private void generateAnimals() {
+
+    public void generateAnimals() {
         if (!animalRepository.findAll().isEmpty()) {
             LOGGER.debug("animals already generated");
         } else {
-            LOGGER.debug("generating demo shelter ({})", SHELTER);
-            Shelter shelter = shelterRepository.save(SHELTER);
-            LOGGER.debug("generating {} animal entries", AMOUNT);
-            for (int i = 1; i <= AMOUNT; i++) {
+            LOGGER.debug("generating {} animal entries", amount);
+            Map<String, String> animalConfig = new HashMap<String, String>();
+            try {
+                animalConfig = new ObjectMapper().readValue(new File("src/test/resources/demo data/AnimalConfig.json"), HashMap.class);
+
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+
+            List<Shelter> allShelters = shelterRepository.findAll();
+            int shelterIndex = 0;
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            for (int animalIndex = 1; animalIndex <= amount; animalIndex++) {
+
                 Animal animal = Animal.builder()
-                    .name(NAME + i)
-                    .species(SPECIES)
-                    .race(RACE)
-                    .birthDate(BIRTH_DATE)
-                    .height(HEIGHT)
-                    .weight(WEIGHT)
-                    .shelter(shelter)
+                    .name(animalConfig.get("NAME " + animalIndex))
+                    .profilePicture(fileRepository.getByName(animalConfig.get("PROFILE_PICTURE_NAME " + animalIndex)))
+                    .species((Species.valueOf(animalConfig.get("SPECIES " + animalIndex))))
+                    .race(animalConfig.get("RACE " + animalIndex))
+                    .birthDate(LocalDate.parse(animalConfig.get("BIRTH_DATE " + animalIndex), dateFormatter))
+                    .height(Double.parseDouble(animalConfig.get("HEIGHT " + animalIndex)))
+                    .weight(Double.parseDouble(animalConfig.get("WEIGHT " + animalIndex)))
+                    .shelter(allShelters.get(shelterIndex))
                     .build();
                 LOGGER.debug("saving animal {}", animal);
                 animalRepository.save(animal);
+
+                ++shelterIndex;
+                if (shelterIndex >= allShelters.size()) {
+                    shelterIndex = 0;
+                }
+
             }
         }
     }

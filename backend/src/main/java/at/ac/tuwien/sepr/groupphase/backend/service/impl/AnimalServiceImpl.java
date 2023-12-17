@@ -101,7 +101,7 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.debug("Delete Animal with id: " + id);
 
         var shelter = animalRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Shelter does not exist.")
+            () -> new NotFoundException("Shelter does not exist.")
         );
 
         animalRepository.delete(shelter);
@@ -145,7 +145,7 @@ public class AnimalServiceImpl implements AnimalService {
     public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
 
         var animal = animalRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Animal does not exist.")
+            () -> new NotFoundException("Animal does not exist.")
         );
 
         // TODO remove old image

@@ -159,7 +159,7 @@ public class ShelterServiceImpl implements ShelterService {
     public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
 
         var shelter = shelterRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Shelter does not exist.")
+            () -> new NotFoundException("Shelter does not exist.")
         );
 
         // TODO remove old image

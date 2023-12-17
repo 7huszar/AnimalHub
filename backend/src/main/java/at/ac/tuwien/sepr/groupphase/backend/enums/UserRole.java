@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.enums;
 
 import lombok.Getter;
 
-import java.security.Permission;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -51,7 +51,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param userLoginDto contains e-mail and password
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
-     * @throws ConflictException if user already exists
+     * @throws ConflictException   if user already exists
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
