@@ -29,6 +29,10 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     @Query("update ApplicationUser u set u.role = :role where u.email = :email")
     void updateRole(@Param(value = "email") String email, @Param(value = "role") UserRole status);
 
+    @Modifying
+    @Query("update ApplicationUser u set u.password = :password where u.email = :email")
+    void updatePassword(@Param(value = "email") String email, @Param(value = "password") String password);
+
     ApplicationUser findApplicationUserById(UUID id);
 
 }

@@ -36,6 +36,8 @@ public class MailService {
 
     /**
      * Sends an email with a link to reset password of user.
+     * Token is valid for 10 min. {@link at.ac.tuwien.sepr.groupphase.backend.config.SecurityPropertiesConfig}.
+     * E-Mail is sent in own thread.
      *
      * @param email E-mail/username of user where password is needed to be reset
      * @param language Language used for the reset

@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
@@ -223,9 +224,34 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestPasswordReset(PasswordResetDto passwordResetDto) {
-        LOGGER.trace("requestPasswordReset({})", passwordResetDto);
+    public void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) {
+        LOGGER.trace("requestPasswordReset({})", passwordRequestResetDto);
 
-        mail.sendResetPasswordMail(passwordResetDto.email(), passwordResetDto.lang());
+        mail.sendResetPasswordMail(passwordRequestResetDto.email(), passwordRequestResetDto.lang());
     }
+
+    @Transactional
+    @Override
+    public void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException {
+        String email;
+        try {
+            Claims claims = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+                .build()
+                .parseSignedClaims(resetDto.token())
+                .getPayload();
+
+            email = claims.get("email", String.class);
+        } catch (JwtException e) {
+            throw new NotAuthorizedException(e.getMessage());
+        }
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new NotFoundException("User by email " + email + " does not exist");
+        }
+
+        userRepository.updatePassword(email, passwordEncoder.encode(resetDto.password()));
+
+    }
+
 }
