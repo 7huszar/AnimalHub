@@ -86,5 +86,13 @@
   "ANIMAL_LIST": {
     "NAME": "Name",
     "SPECIES": "Species"
+  },
+
+  "PWD": {
+    "INSTRUCTION": "Type in your e-mail to reset your password",
+    "MAIL": "e-mail",
+    "CONTINUE": "continue",
+    "INFO": "Look at your mailbox for a link to reset your password",
+    "FAILED": "reset failed"
   }
 }

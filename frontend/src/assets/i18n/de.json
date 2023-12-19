@@ -88,5 +88,14 @@
   "ANIMAL_LIST": {
     "NAME": "Name",
     "SPECIES": "Tierart"
+  },
+
+  "PWD": {
+    "INSTRUCTION": "Gib deine E-Mail an um dein Passwort zurückzusetzen",
+    "MAIL": "E-Mail",
+    "CONTINUE": "fortfahren",
+    "INFO": "Schau in dein Postfach für einen Link um dein Passwort zurück zu setzen",
+    "FAILED": "Zurücksetzen fehlgeschlagen"
   }
+
 }
