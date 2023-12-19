@@ -95,7 +95,11 @@
     "MAIL": "E-Mail",
     "CONTINUE": "fortfahren",
     "INFO": "Schau in dein Postfach für einen Link um dein Passwort zurück zu setzen",
-    "FAILED": "Zurücksetzen fehlgeschlagen"
+    "FAILED": "Zurücksetzen fehlgeschlagen",
+    "RESET": {
+      "FAILED": "Passwort Zurücksetzen fehlgeschlagen",
+      "REQUEST_NEW": "Link abgelaufen oder Benutzer existiert nicht"
+    }
   }
 
 }

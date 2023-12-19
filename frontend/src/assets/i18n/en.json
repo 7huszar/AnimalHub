@@ -93,6 +93,10 @@
     "MAIL": "e-mail",
     "CONTINUE": "continue",
     "INFO": "Look at your mailbox for a link to reset your password",
-    "FAILED": "reset failed"
+    "FAILED": "reset failed",
+    "RESET": {
+      "FAILED": "failed reseting password",
+      "REQUEST_NEW": "link expired or user not existent"
+    }
   }
 }
