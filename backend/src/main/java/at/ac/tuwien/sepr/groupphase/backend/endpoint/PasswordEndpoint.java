@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,12 @@ public class PasswordEndpoint {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException {
-        service.resetPassword(resetDto);
+    public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException {
+        try {
+            service.resetPassword(resetDto);
+        } catch (NotFoundException | JwtException e) {
+            throw new NotAuthorizedException("Could not reset password");
+        }
+
     }
 }

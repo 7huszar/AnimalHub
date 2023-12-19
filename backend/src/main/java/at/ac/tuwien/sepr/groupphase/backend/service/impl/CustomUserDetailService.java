@@ -232,19 +232,16 @@ public class CustomUserDetailService implements UserService {
 
     @Transactional
     @Override
-    public void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException {
+    public void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException {
         String email;
-        try {
-            Claims claims = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
-                .build()
-                .parseSignedClaims(resetDto.token())
-                .getPayload();
 
-            email = claims.get("email", String.class);
-        } catch (JwtException e) {
-            throw new NotAuthorizedException(e.getMessage());
-        }
+        Claims claims = Jwts.parser()
+            .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+            .build()
+            .parseSignedClaims(resetDto.token())
+            .getPayload();
+
+        email = claims.get("email", String.class);
 
         if (!userRepository.existsByEmail(email)) {
             throw new NotFoundException("User by email " + email + " does not exist");

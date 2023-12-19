@@ -23,9 +23,7 @@ export class RegisterComponent {
   constructor(private formBuilder: UntypedFormBuilder,
               private router: Router,
               private service :RegisterService,
-              private notifier :NotifierService,
-              private translator :TranslateService,
-              private notification :ToastrService) {
+              private notifier :NotifierService,) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],

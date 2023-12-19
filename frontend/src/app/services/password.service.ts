@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpBackend, HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
+import {PasswordResetDto} from "../dtos/password";
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,9 @@ export class PasswordService {
     params = params.append('lang', lang);
 
     return this.http.get(this.baseUri, {params});
+  }
+
+  public resetPassword(passwordResetDto :PasswordResetDto) :Observable<any>{
+    return this.http.put(this.baseUri, passwordResetDto);
   }
 }

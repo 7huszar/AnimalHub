@@ -10,6 +10,7 @@ import {PasswordService} from "../../services/password.service";
 export class PasswordResetComponent {
 
   emailForm :UntypedFormGroup;
+  submitted :boolean = false;
 
   constructor(private formBuilder: UntypedFormBuilder, private service :PasswordService) {
     this.emailForm = this.formBuilder.group({
@@ -20,6 +21,7 @@ export class PasswordResetComponent {
   requestPasswordReset() :void {
     if (this.emailForm.valid) {
       this.service.requestPasswordReset(this.emailForm.controls.email.value, 'en').subscribe();
+      this.submitted = true;
     }
   }
 
