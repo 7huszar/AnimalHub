@@ -224,7 +224,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) {
+    public void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException {
+        userValidator.validatePasswordRequestResetDto(passwordRequestResetDto);
         LOGGER.trace("requestPasswordReset({})", passwordRequestResetDto);
 
         mail.sendResetPasswordMail(passwordRequestResetDto.email(), passwordRequestResetDto.lang());

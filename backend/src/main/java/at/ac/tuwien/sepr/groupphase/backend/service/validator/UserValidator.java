@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -8,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class UserValidator {
         }
         if (userLoginDto.getEmail() == null || userLoginDto.getEmail().isBlank()) {
             validationErrors.add("no e-mail given");
-        } else if (!isValidEmail(userLoginDto.getEmail())) {
+        } else if (isInvalidEmail(userLoginDto.getEmail())) {
             validationErrors.add("invalid e-mail");
         }
 
@@ -51,6 +54,12 @@ public class UserValidator {
     }
 
 
+    public void validatePasswordRequestResetDto(PasswordRequestResetDto resetDto) throws ValidationException {
+        if (isInvalidEmail(resetDto.email())) {
+            throw new ValidationException("Failed validation for password reset request data", Collections.singletonList("invalid e-mail"));
+        }
+    }
+
     /**
      * Checks if an email has a valid RFC format.
      *
@@ -58,7 +67,7 @@ public class UserValidator {
      * @return true if valid, false if not
      */
 
-    private boolean isValidEmail(String email) {
-        return true;
+    private boolean isInvalidEmail(String email) {
+        return email == null || !Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$").matcher(email).matches();
     }
 }

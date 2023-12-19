@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestRes
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class PasswordEndpoint {
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void requestPasswordRequest(PasswordRequestResetDto passwordRequestResetDto) {
+    public void requestPasswordRequest(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException {
         LOGGER.debug("reset password for {}", passwordRequestResetDto);
         service.requestPasswordReset(passwordRequestResetDto);
     }
