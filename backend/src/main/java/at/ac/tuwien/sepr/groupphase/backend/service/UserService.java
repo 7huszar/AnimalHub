@@ -107,6 +107,14 @@ public interface UserService extends UserDetailsService {
      */
     UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
 
+    /**
+     * Sends an e-mail with a token valid to reset a password of an existing user. <br>
+     * Languages of user are either Englisch en or German de
+     *
+     * @param passwordRequestResetDto e-mail of user to reset password and language of mail sent
+     * @throws ValidationException if e-mail is not correct
+     * @throws NotFoundException if user does not exist
+     */
     void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException;
 
     void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException;
