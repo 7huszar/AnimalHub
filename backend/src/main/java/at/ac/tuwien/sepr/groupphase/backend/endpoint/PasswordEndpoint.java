@@ -31,7 +31,11 @@ public class PasswordEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void requestPasswordRequest(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException {
         LOGGER.debug("reset password for {}", passwordRequestResetDto);
-        service.requestPasswordReset(passwordRequestResetDto);
+        try {
+            service.requestPasswordReset(passwordRequestResetDto);
+        } catch (NotFoundException e) {
+            // Do nothing, so malicious user can't check for existence of e-mail in system
+        }
     }
 
     @PutMapping
