@@ -30,7 +30,7 @@ public class AnimalConflict {
         LOGGER.trace("conflictsForCreate({})", animalDto);
         List<String> conflictErrors = new ArrayList<>();
 
-        if (shelterRepository.existsById(animalDto.getShelter().getId())) {
+        if (!shelterRepository.existsById(animalDto.getShelter().getId())) {
             conflictErrors.add("Shelter does not exist with id " + animalDto.getShelter().getId() + " does not exist.");
         }
         if (!conflictErrors.isEmpty()) {
