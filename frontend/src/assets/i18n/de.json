@@ -98,7 +98,8 @@
     "FAILED": "Zurücksetzen fehlgeschlagen",
     "RESET": {
       "FAILED": "Passwort Zurücksetzen fehlgeschlagen",
-      "REQUEST_NEW": "Link abgelaufen oder Benutzer existiert nicht"
+      "REQUEST_NEW": "Link abgelaufen oder Benutzer existiert nicht",
+      "SUCCESS": "successfully reset password"
     }
   }
 

@@ -96,7 +96,8 @@
     "FAILED": "reset failed",
     "RESET": {
       "FAILED": "failed reseting password",
-      "REQUEST_NEW": "link expired or user not existent"
+      "REQUEST_NEW": "link expired or user not existent",
+      "SUCCESS": "Passwort erfolgreich zurückgesetzt"
     }
   }
 }
