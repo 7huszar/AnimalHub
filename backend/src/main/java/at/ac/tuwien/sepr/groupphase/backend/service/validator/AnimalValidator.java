@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class AnimalValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalShelterMapper mapper;
+    private final ShelterService shelterService;
 
     // ### HELPER METHODS
 
@@ -106,6 +108,9 @@ public class AnimalValidator {
         }
 
         // # Shelter
+        if (animalDto.getShelter() == null || animalDto.getShelter().getId() == null) {
+            validationErrors.add("Shelter must not be null");
+        }
 
         return validationErrors;
     }

@@ -12,8 +12,8 @@ import java.util.List;
  */
 public abstract class ErrorListException extends Exception {
     private final List<String> errors;
-    private List<String> uiErrors = null;
     private final String messageSummary;
+    private List<String> uiErrors = null;
     @Accessors(fluent = true)
     @Getter
     private String uiErrorSummary = "";

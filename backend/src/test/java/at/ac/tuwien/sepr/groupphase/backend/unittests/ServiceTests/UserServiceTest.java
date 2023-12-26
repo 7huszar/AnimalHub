@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 @SpringBootTest
-public class UserServiceTest implements TestData {
+public class UserServiceTest extends TestBase {
 
     @Autowired
-    private UserService service;
+    UserService service;
+
+
 
 /*
     @Test

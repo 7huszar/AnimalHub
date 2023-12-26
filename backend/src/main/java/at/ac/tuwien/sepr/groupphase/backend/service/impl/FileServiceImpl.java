@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,7 +76,7 @@ public class FileServiceImpl implements FileService {
     public List<FileDetailDto> findAll() {
         LOGGER.debug("Find all Files");
 
-        List<FileDetailDto> returnList = Collections.emptyList();
+        List<FileDetailDto> returnList = new ArrayList<>();
 
 
         fileRepository.findAll().forEach((file) -> {

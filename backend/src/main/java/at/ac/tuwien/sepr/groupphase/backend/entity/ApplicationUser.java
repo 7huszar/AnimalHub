@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,12 +19,12 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@Table
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "applicationuser")
 public class ApplicationUser {
 
     @Id
@@ -37,6 +39,7 @@ public class ApplicationUser {
     private UserRole role;
 
     @OneToOne
+    @JoinColumn(name = "shelter_id", nullable = true)
     private Shelter shelter;
 
     @Override
@@ -46,6 +49,7 @@ public class ApplicationUser {
             + ", email='" + email + '\''
             + ", password='" + password + '\''
             + ", role=" + role + '\''
+            + ", shelter=" + shelter + '\''
             + '}';
     }
 }

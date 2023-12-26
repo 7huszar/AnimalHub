@@ -6,7 +6,7 @@ import java.util.List;
 public class ConflictException extends ErrorListException {
 
     public ConflictException(String messageSummary, List<String> errors, List<String> uiErrors, String uiErrorSummary,
-                              String uiErrorPrefix) {
+                             String uiErrorPrefix) {
         super(messageSummary, errors, uiErrors, uiErrorSummary, uiErrorPrefix);
     }
 

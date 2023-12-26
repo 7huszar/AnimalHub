@@ -112,6 +112,15 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
+    public List<ShelterDto> findByNameIgnoreCase(String name) {
+        LOGGER.debug("Find Shelters with name containing {}", name);
+
+        return shelterRepository.findByNameIgnoreCaseContaining(name).stream()
+            .map(mapper::shelterToShelterDto).toList();
+    }
+
+
+    @Override
     public void delete(UUID id) throws NotFoundException {
         LOGGER.debug("Delete Shelter with id: " + id);
 

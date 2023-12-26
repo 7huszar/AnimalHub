@@ -54,10 +54,12 @@ public class FileValidator {
             if (fileDto.getSummary().length() > 400) {
                 validationErrors.add("Summary is too long");
             }
+        } else {
+            validationErrors.add("No summary given");
         }
 
         // # File
-        if (fileDto.getFile().isEmpty()) {
+        if (fileDto.getFile() == null || fileDto.getFile().isEmpty()) {
             validationErrors.add("No File given");
         }
         switch (Objects.requireNonNull(fileDto.getFile().getContentType())) {

@@ -18,8 +18,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -52,7 +52,10 @@ public class Shelter {
     private String email;
 
     @OneToMany(mappedBy = "shelter", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<Animal> animals;
+    private List<Animal> animals;
+
+    @OneToOne(mappedBy = "shelter", cascade = CascadeType.REMOVE)
+    private ApplicationUser user;
 
     @Column(name = "created_on")
     @CreationTimestamp

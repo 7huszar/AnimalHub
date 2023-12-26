@@ -68,6 +68,9 @@ public interface ShelterService {
      */
     ShelterDetailDto findById(UUID id) throws NotFoundException;
 
+    // TODO doku
+    List<ShelterDto> findByNameIgnoreCase(String name);
+
     /**
      * Delete the shelter with the given id from the persistent data store.
      *

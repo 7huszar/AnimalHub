@@ -1,34 +1,72 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.File;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
-@Profile("generateData")
+@Profile({"generateData", "test"})
 @Component
 @RequiredArgsConstructor
 public class AllDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private final FileDataGenerator fileDataGenerator;
-    private final ShelterDataGenerator shelterDataGenerator;
-    private final AnimalDataGenerator animalDataGenerator;
-    private final UserDataGenerator userDataGenerator;
-
-
+    @Autowired
+    private final FileRepository fileRepository;
+    @Autowired
+    private final ShelterRepository shelterRepository;
+    @Autowired
+    private final AnimalRepository animalRepository;
+    @Autowired
+    private final UserRepository userRepository;
+    @Autowired
+    private FileDataGenerator fileDataGenerator;
+    @Autowired
+    private ShelterDataGenerator shelterDataGenerator;
+    @Autowired
+    private AnimalDataGenerator animalDataGenerator;
+    @Autowired
+    private UserDataGenerator userDataGenerator;
 
     @PostConstruct
-    private void generateData() {
-        LOGGER.debug("generating data... (Files, Shelters, Animals & Users)");
+    public void generateData() {
+        LOGGER.debug("generating data... (Files -> Shelters -> Animals -> Users)");
         fileDataGenerator.generateFiles();
         shelterDataGenerator.generateShelters();
         animalDataGenerator.generateAnimals();
         userDataGenerator.generateUsers();
     }
+
+    public void clearData() {
+        userRepository.deleteAll();
+        animalRepository.deleteAll();
+        shelterRepository.deleteAll();
+        fileRepository.deleteAll();
+    }
+
+    public List<Shelter> getAllShelterEntities() {
+        return shelterRepository.findAll();
+    }
+
+    public List<Animal> getAllAnimalEntities() {
+        return animalRepository.findAll();
+    }
+
+    public List<File> getAllFileEntities() {
+        return fileRepository.findAll();
+    }
+
 }
