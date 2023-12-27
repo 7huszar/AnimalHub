@@ -1,9 +1,10 @@
 import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
-import {ToastrService} from "ngx-toastr";
 import {ShelterService} from "../../services/shelter.service";
-import {AdminPageComponent} from "../admin-page/shelter-admin-page/admin-page.component";
 import {UserService} from "../../services/user.service";
-import {logMessages} from "@angular-devkit/build-angular/src/tools/esbuild/utils";
+import {HttpStatusCode} from "@angular/common/http";
+import {NotifierService} from "../../services/notifier.service";
+import {Router} from "@angular/router";
+import {AnimalService} from "../../services/animal.service";
 
 @Component({
   selector: 'app-confirm-delete-dialog',
@@ -13,7 +14,6 @@ import {logMessages} from "@angular-devkit/build-angular/src/tools/esbuild/utils
 
 export class ConfirmDeleteDialogComponent {
 
-  public deleteError: string | null = null;
   @Output() deleteErrorEvent = new EventEmitter<{ error: string | null, errorMessage: string }>();
 
   @Input() deleteWhat: string | undefined = '';
@@ -24,10 +24,12 @@ export class ConfirmDeleteDialogComponent {
   @HostBinding('class') cssClass = 'modal-fade';
 
   constructor(
-    private service: ShelterService,
-    private notification: ToastrService,
-    private adminPageComponent: AdminPageComponent,
+    private shelterService: ShelterService,
+    private animalService: AnimalService,
+    private notification :NotifierService,
     private userService: UserService,
+    private router: Router,
+
   ) {
   }
 
@@ -35,18 +37,26 @@ export class ConfirmDeleteDialogComponent {
   public deleteShelter() {
     if (this.DeleteId != null) {
 
-      this.service.delete(this.DeleteId)
+      this.animalService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.success(`Shelter ${this.deleteWhat} successfully deleted.`);
-            this.adminPageComponent.reloadShelters();
+            this.notification.notifySuccess(`Animal ${this.deleteWhat} successfully deleted.`);
+            this.reloadAdmin()
           },
           error: error => {
-            console.error('Error deleting shelter', error);
-            this.notification.error(error.error.message, error.error.error);
+            console.error('Error deleting Animal', error);
+            this.notification.notifyError(error.error.message, error.error.error);
           }
         });
     }
+  }
+
+  reloadAdmin() {
+    this.router.navigate(['/admin'])
+  }
+
+  reloadAnimal() {
+    this.router.navigate(['/shelter/' + this.DeleteId])
   }
 
   public deleteUser() {
@@ -54,35 +64,53 @@ export class ConfirmDeleteDialogComponent {
       this.userService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.success(`User ${this.deleteWhat} successfully deleted.`);
-            this.adminPageComponent.reloadUsers();
+            this.notification.notifySuccess(`User ${this.deleteWhat} successfully deleted.`);
+            this.reloadAdmin()
           },
-          error: (error) => {
+          error: error => {
             console.error('Error deleting user', error);
+            let title: string = 'ADMIN_PAGE.FAILED';
 
-            if (error.status === 409) {
-              // Conflict error
-              this.deleteError = error.error || 'Conflict error occurred during deletion.';
+            // status == 401 / Unauthorized - deleting admin not allowed
+            if (error.status == HttpStatusCode.Unauthorized) {
+              this.notification.notifyError('ADMIN_PAGE.INFO', title);
             } else {
-              this.deleteError = 'An error occurred during deletion.';
+              // standard errors, we do not anticpate
+              this.notification.notifyStdError(error, title);
             }
-            this.deleteErrorEvent.emit({error: this.deleteError, errorMessage: this.deleteError || ''});
+          }
+
+        });
+    }
+  }
+
+
+  public deleteAnimal() {
+    if (this.DeleteId != null) {
+
+      this.shelterService.delete(this.DeleteId)
+        .subscribe({
+          next: () => {
+            this.notification.notifySuccess(`Shelter ${this.deleteWhat} successfully deleted.`);
+            this.reloadAnimal()
+            //this.adminPageComponent.reloadShelters();
           },
+          error: error => {
+            console.error('Error deleting shelter', error);
+            this.notification.notifyError(error.error.message, error.error.error);
+          }
         });
     }
   }
 
 
   public deleteEntity() {
-    console.log(this.deleteWhat)
-    console.log(this.DeleteId)
-    console.log(this.deleteType)
     if (this.deleteType === 'User') {
-      console.log("user")
       this.deleteUser()
-    } else {
-      console.log("shelter")
+    } else if(this.deleteType === 'Shelter') {
       this.deleteShelter()
+    }else{
+      this.deleteAnimal()
     }
   }
 }
