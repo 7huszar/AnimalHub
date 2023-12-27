@@ -18,7 +18,6 @@ export class ShelterComponent implements OnInit {
   protected shelter: ShelterDetailDto;
 
   constructor(private shelterService: ShelterService,
-              private router: Router,
               private route: ActivatedRoute,
               private notification: ToastrService
   ) {

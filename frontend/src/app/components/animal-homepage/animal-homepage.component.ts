@@ -4,10 +4,7 @@ import {AnimalService} from "../../services/animal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
-import {Species} from "../../dtos/species";
-import {ShelterDto} from "../../dtos/shelter";
 import {Mode} from "../../enums/modes";
-import {Type} from "../../enums/type";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
 
@@ -37,7 +34,6 @@ export class AnimalHomepageComponent implements OnInit{
   constructor(
       protected authService: AuthService,
     private service: AnimalService,
-    private router: Router,
     private route: ActivatedRoute,
     private notification: ToastrService,
   ) {
