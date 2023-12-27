@@ -5,7 +5,6 @@ import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CreateFileDto} from "../../../dtos/file";
-import {NotifierService} from "../../../services/notifier.service";
 import {ToastrService} from "ngx-toastr";
 
 @Component({

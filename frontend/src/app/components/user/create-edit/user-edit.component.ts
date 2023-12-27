@@ -26,8 +26,14 @@ export class UserEditComponent implements OnInit {
   ) {
   }
 
-  public get heading(): string {
-    return 'Update User';
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
+  userForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "User";
   }
 
   public get submitButtonText(): string {
@@ -57,12 +63,6 @@ export class UserEditComponent implements OnInit {
           })
       }
     });
-  }
-
-  public dynamicCssClassesForInput(input: NgModel): any {
-    return {
-      'is-invalid': !input.valid && !input.pristine,
-    };
   }
 
 

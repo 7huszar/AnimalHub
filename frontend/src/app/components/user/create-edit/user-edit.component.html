@@ -42,14 +42,20 @@
 
 
   <div class="mt-4 d-flex flex-row">
-    <button type="button" class="btn btn-danger">
-      <i class="bi bi-trash"></i>
+
+    <button type="button" class="btn btn-sm btn-danger"
+            (click)="userForDeletion(user.email, user.id)"
+            data-bs-toggle="modal"
+            data-bs-target="#confirm-delete-dialog"
+            aria-label="Delete shelter">
+      <i class="bi bi-trash"></i> Delete
     </button>
     <span class="flex-grow-1"></span>
     <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
       {{ submitButtonText }}
     </button>
   </div>
+  <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
 </form>
 
 

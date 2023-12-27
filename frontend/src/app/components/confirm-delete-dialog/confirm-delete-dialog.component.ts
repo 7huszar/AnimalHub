@@ -36,12 +36,13 @@ export class ConfirmDeleteDialogComponent {
 
   public deleteShelter() {
     if (this.DeleteId != null) {
+      console.log(this.DeleteId)
 
-      this.animalService.delete(this.DeleteId)
+      this.shelterService.delete(this.DeleteId)
         .subscribe({
           next: () => {
             this.notification.notifySuccess(`Animal ${this.deleteWhat} successfully deleted.`);
-            this.reloadAdmin()
+            this.reloadAdmin();
           },
           error: error => {
             console.error('Error deleting Animal', error);
@@ -51,9 +52,14 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
+
+//TODO This is not good ? window.location sollte in der einzelphase nicht benutzt werden bitte alternative finden
   reloadAdmin() {
-    this.router.navigate(['/admin'])
+    this.router.navigateByUrl('/admin', { skipLocationChange: true }).then(() => {
+      window.location.reload();
+    });
   }
+
 
   reloadAnimal() {
     this.router.navigate(['/shelter/' + this.DeleteId])
@@ -65,7 +71,7 @@ export class ConfirmDeleteDialogComponent {
         .subscribe({
           next: () => {
             this.notification.notifySuccess(`User ${this.deleteWhat} successfully deleted.`);
-            this.reloadAdmin()
+            this.reloadAdmin();
           },
           error: error => {
             console.error('Error deleting user', error);
@@ -88,11 +94,11 @@ export class ConfirmDeleteDialogComponent {
   public deleteAnimal() {
     if (this.DeleteId != null) {
 
-      this.shelterService.delete(this.DeleteId)
+      this.animalService.delete(this.DeleteId)
         .subscribe({
           next: () => {
             this.notification.notifySuccess(`Shelter ${this.deleteWhat} successfully deleted.`);
-            this.reloadAnimal()
+            this.reloadAnimal();
             //this.adminPageComponent.reloadShelters();
           },
           error: error => {
@@ -102,7 +108,6 @@ export class ConfirmDeleteDialogComponent {
         });
     }
   }
-
 
   public deleteEntity() {
     if (this.deleteType === 'User') {
