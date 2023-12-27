@@ -16,8 +16,8 @@ import {AuthService} from "../../services/auth.service";
 export class AnimalHomepageComponent implements OnInit{
 
   animal: AnimalDetailDto = {
-    birthDate: undefined,
-    createdOn: undefined,
+    birthDate: null,
+    createdOn: null,
     height: 0,
     id: "",
     name: "",
@@ -26,11 +26,12 @@ export class AnimalHomepageComponent implements OnInit{
     species: undefined,
     weight: 0,
   };
+
   // TODO: add fitting animal attributes
   protected animalAge: number;
-
   protected contents: FileDto[];
   protected newContent: File = null;
+
   constructor(
       protected authService: AuthService,
     private service: AnimalService,
@@ -47,6 +48,7 @@ export class AnimalHomepageComponent implements OnInit{
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
+            console.log(this.animal)
             this.calculateAge(this.animal.birthDate)
           },
           error: error => {
