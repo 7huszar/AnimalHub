@@ -6,13 +6,11 @@
     <div class="col">
       <div class="headings">
         <div style="display: block; overflow: auto">
-          <h1 style=" float: left">{{ animal.name }}</h1>
+          <h1 style="float: left">{{ animal?.name }}</h1>
+          <button style="float: right;" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">
+            {{ "View " + animal?.shelter?.name }}
+          </button>
         </div>
-
-        <button style="float: right;" class="btn btn-primary" [routerLink]="['/shelter', animal.shelter.id]">
-          {{ "View " + animal.shelter.name }}
-        </button>
-
         <div style="display: block">
           <h2>{{ animal.race }}</h2>
         </div>
