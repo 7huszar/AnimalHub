@@ -101,6 +101,10 @@
       "REQUEST_NEW": "Link abgelaufen oder Benutzer existiert nicht",
       "SUCCESS": "successfully reset password"
     }
-  }
+  },
 
+  "ADMIN_PAGE": {
+    "INFO": "Cannot delete another admin",
+    "FAILED": "deletion failed"
+  }
 }

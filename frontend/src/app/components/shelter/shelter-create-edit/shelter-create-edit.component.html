@@ -85,18 +85,23 @@
     </div>
     <div class="custom-submit">
       <div class="row">
-        <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+        <div class="col-12 col-sm-6">
           <button type="submit" class="custom-button" [disabled]="!form.valid">
             {{submitButtonText}}
           </button>
         </div>
-        <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
-          <button type="button" class="btn btn-danger custom-button mt-sm-4" *ngIf="!modeIsCreate" (click)="onDelete()">
-            <i class="bi bi-trash"></i>
+        <div *ngIf="!modeIsCreate" class="col-12 col-sm-6">
+          <button type="button" class="custom-danger-btn" style="width:100%"
+                  (click)="shelterForDeletion(shelter.name, shelter.id)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirm-delete-dialog"
+                  aria-label="Delete shelter">
+            <i class="bi bi-trash"></i> Delete
           </button>
         </div>
       </div>
     </div>
   </div>
+  <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
 </form>
 </div>

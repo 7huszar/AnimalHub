@@ -29,6 +29,10 @@ export class CreateEditComponent implements OnInit {
     createdOn: null
   };
 
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
   private animalImage: File = null;
   protected animalImageURL: any = null;
 
@@ -54,6 +58,13 @@ export class CreateEditComponent implements OnInit {
     }
   }
    */
+
+  animalForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "Animal";
+  }
+
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -84,6 +95,7 @@ export class CreateEditComponent implements OnInit {
       }
     });
   }
+
 
   public onSubmit(form: NgForm): void {
     if (this.modeIsCreate) {
@@ -131,15 +143,6 @@ export class CreateEditComponent implements OnInit {
     }
   }
 
-  public onDelete() {
-    this.animalService.delete(this.animal.id).subscribe({
-      next: data => {
-        this.router.navigate(['/shelter/', this.animal.shelter.id])
-      }, error: err => {
-        console.error(err); // TODO handle
-      }
-    });
-  }
 
   private navigateSuccess(id: string): void {
     this.router.navigate(['/animal/', id]);
