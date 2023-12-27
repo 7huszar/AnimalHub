@@ -99,5 +99,10 @@
       "REQUEST_NEW": "link expired or user not existent",
       "SUCCESS": "Passwort erfolgreich zurückgesetzt"
     }
+  },
+
+  "ADMIN_PAGE": {
+    "INFO": "Man kann keinen anderen Admin löschen",
+    "FAILED": "Löschung kaputt"
   }
 }

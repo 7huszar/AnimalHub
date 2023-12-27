@@ -129,6 +129,13 @@ $primary:       #64B5F6;
   @extend .float-end;
 }
 
+.custom-danger-btn {
+  @extend .btn;
+  @extend .btn-danger;
+  @extend .float-end;
+
+}
+
 .custom-submit {
   @extend .p-0;
   @extend .p-sm-2;

@@ -24,8 +24,18 @@ export class AnimalListComponent {
               private animalService: AnimalService) {
   }
 
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
   ngOnInit(): void {
     this.displayAnimalCards('all');
+  }
+
+  animalForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "Shelter";
   }
 
   displayAnimalCards(filter: string): void {

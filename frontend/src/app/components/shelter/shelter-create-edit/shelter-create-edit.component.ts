@@ -5,6 +5,8 @@ import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CreateFileDto} from "../../../dtos/file";
+import {NotifierService} from "../../../services/notifier.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-shelter-create-edit',
@@ -12,6 +14,11 @@ import {CreateFileDto} from "../../../dtos/file";
   styleUrls: ['./shelter-create-edit.component.scss']
 })
 export class ShelterCreateEditComponent implements OnInit{
+
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
 
   mode: Mode = Mode.CREATE;
   shelter: ShelterDto = {
@@ -28,6 +35,7 @@ export class ShelterCreateEditComponent implements OnInit{
 
   constructor(private shelterService: ShelterService,
               private router: Router,
+              private notification: ToastrService,
               private route: ActivatedRoute) {
   }
 
@@ -86,6 +94,7 @@ export class ShelterCreateEditComponent implements OnInit{
             const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
             this.shelterService.updateProfileImage(shelterDto.id, createFileDto).subscribe({
               next: fileDto => {
+                this.notification.success(`Shelter successfully updated.`);
                 console.log('shelter profile image updated', fileDto);
                 this.navigateSuccess(shelterDto.id);
               }, error: err => {
@@ -94,6 +103,7 @@ export class ShelterCreateEditComponent implements OnInit{
             })
           } else {
             this.navigateSuccess(shelterDto.id);
+            this.notification.success(`Shelter successfully updated.`);
           }
         }, error: err => {
           console.error(err); // TODO handle
@@ -102,18 +112,14 @@ export class ShelterCreateEditComponent implements OnInit{
     }
   }
 
-  public onDelete(): void {
-    this.shelterService.delete(this.shelter.id).subscribe({
-      next: data => {
-        this.router.navigate(['/admin']);
-      }, error: err => {
-        console.error(err); // TODO handle
-      }
-    });
+  shelterForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "Shelter";
   }
 
   private navigateSuccess(id: string): void {
-    this.router.navigate(['/shelter/', id]);
+    this.router.navigate(['/admin']);
   }
 
   public onImageSelected(event: any): void {
