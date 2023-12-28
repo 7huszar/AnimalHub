@@ -49,6 +49,10 @@
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
           <div class="col">{{ animal.weight }} kg</div>
         </div>
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.SHELTER' | translate}}</div>
+          <div class="col">{{ animal.shelter?.name }} </div>
+        </div>
         <div class="row fixed-button align-items-end w-100">
           <div class="col-auto">
             <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.DONATE_1' | translate}}{{ animal.name }}</button>
