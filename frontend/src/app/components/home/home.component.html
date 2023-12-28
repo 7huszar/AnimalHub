@@ -15,26 +15,27 @@
       <i class="bi bi-arrow-left-square-fill text-primary btn" (click)="leftClick()"></i>
     </div>
     <div class="col">
-      <app-animal-card [name]="getCard(Position.LEFT).name"
-                       [id]="getCard(Position.LEFT).id"
+      <app-animal-card [name]="getCard(Position.LEFT)?.name"
+                       [id]="getCard(Position.LEFT)?.id"
                        (like)="like(getCard(Position.LEFT))"
                        (dislike)="dislike(getCard(Position.LEFT))">
       </app-animal-card>
     </div>
     <div class="col">
-      <app-animal-card [name]="getCard(Position.MIDDLE).name"
-                       [id]="getCard(Position.MIDDLE).id"
+      <app-animal-card [name]="getCard(Position.MIDDLE)?.name"
+                       [id]="getCard(Position.MIDDLE)?.id"
                        (like)="like(getCard(Position.MIDDLE))"
                        (dislike)="dislike(getCard(Position.MIDDLE))">
       </app-animal-card>
     </div>
     <div class="col">
-      <app-animal-card [name]="getCard(Position.RIGHT).name"
-                       [id]="getCard(Position.RIGHT).id"
+      <app-animal-card [name]="getCard(Position.RIGHT)?.name"
+                       [id]="getCard(Position.RIGHT)?.id"
                        (like)="like(getCard(Position.RIGHT))"
                        (dislike)="dislike(getCard(Position.RIGHT))">
       </app-animal-card>
     </div>
+
     <div class="col-1 center-column">
       <i class="bi bi-arrow-right-square-fill text-primary btn" (click)="rightClick()"></i>
     </div>
