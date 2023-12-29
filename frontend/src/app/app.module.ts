@@ -34,6 +34,7 @@ import {ContentComponent} from "./components/content/content.component";
 import {AnimalHomepageComponent} from "./pages/animal-homepage/animal-homepage.component";
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { PasswordVerifyComponent } from './pages/password-reset/password-verify/password-verify.component';
+import { CircleLoadComponent } from './components/circle-load/circle-load.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -62,6 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ContentComponent,
     PasswordResetComponent,
     PasswordVerifyComponent,
+    CircleLoadComponent,
   ],
   imports: [
     BrowserModule,

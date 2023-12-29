@@ -1,0 +1,17 @@
+<svg [attr.width]="radius * 2" [attr.height]="radius * 2">
+  <circle class="custom-circle"
+          [attr.r]="radius - 8"
+          [attr.cx]="radius"
+          [attr.cy]="radius"
+          stroke="green"
+          stroke-width="4"
+          fill="transparent"
+          [style.stroke-dasharray]="radius * 2 * Math.PI"
+          [style.stroke-dashoffset]="radius * 2 * Math.PI - (radius * 2 * Math.PI * fill)"
+          [style.transition-duration]="time.toString() + 's'">
+  </circle>
+</svg>
+
+<button class="btn btn-primary" (click)="click()">
+  click
+</button>
