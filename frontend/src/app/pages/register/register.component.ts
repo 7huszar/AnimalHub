@@ -17,6 +17,7 @@ export class RegisterComponent {
   // After first submission attempt, form validation will start
   submitted = false;
   success :boolean = false;
+  resent :boolean = false;
 
   constructor(private formBuilder: UntypedFormBuilder,
               private router: Router,
@@ -77,6 +78,13 @@ export class RegisterComponent {
    */
   pwdMatch() :boolean {
     return this.loginForm.controls.password.value === this.loginForm.controls.password_repeat.value;
+  }
+
+  resend() :void {
+    setTimeout(() => {
+      this.resent = false;
+    }, 10_000);
+    this.resent = true;
   }
 
 }
