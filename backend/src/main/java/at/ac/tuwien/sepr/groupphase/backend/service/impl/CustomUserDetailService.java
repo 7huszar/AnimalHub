@@ -25,6 +25,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -146,16 +147,16 @@ public class CustomUserDetailService implements UserService {
         userValidator.validateUserCredentials(userLoginDto);
         conflict.conflictForRegister(userLoginDto.getEmail());
 
-
+        LocalDateTime regStamp = LocalDateTime.now();
 
         ApplicationUser user = ApplicationUser.builder()
             .email(userLoginDto.getEmail())
             .password(passwordEncoder.encode(userLoginDto.getPassword()))
             .role(UserRole.INACTIVE)
-            .registrationStamp(LocalDateTime.now())
+            .registrationStamp(regStamp)
             .build();
 
-        mail.sendVerificationMail(userLoginDto.getEmail(), "en");
+        mail.sendVerificationMail(userLoginDto.getEmail(), "en", regStamp);
 
         userRepository.save(user);
     }
@@ -164,6 +165,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public void verify(String token) throws NotAuthorizedException {
         String email;
+        LocalDateTime regStamp;
         try {
             Claims claims = Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
@@ -172,8 +174,13 @@ public class CustomUserDetailService implements UserService {
                 .getPayload();
 
             email = claims.get("email", String.class);
+            regStamp = claims.get("regStamp", LocalDateTime.class);
         } catch (JwtException e) {
             throw new NotAuthorizedException(e.getMessage());
+        }
+        ApplicationUser user = userRepository.findByEmail(email);
+        if (!regStamp.equals(user.getRegistrationStamp())) {
+            throw new NotAuthorizedException("verification time expired");
         }
         userRepository.updateRole(email, UserRole.USER);
     }
