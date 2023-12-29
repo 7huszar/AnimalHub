@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -37,6 +38,9 @@ public class ApplicationUser {
     private String password;
 
     private UserRole role;
+
+    @Column(nullable = false)
+    private LocalDateTime registrationStamp;
 
     @OneToOne
     @JoinColumn(name = "shelter_id", nullable = true)
