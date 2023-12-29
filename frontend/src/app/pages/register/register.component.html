@@ -81,8 +81,17 @@
   </div>
 </div>
 
-<div class="my-tmp h6 text-center" style="font-size: large" *ngIf="success">
-  {{'REGISTER.CHECK_MAILBOX' | translate}}
+<div class="my-tmp text-center" style="font-size: large" *ngIf="success && !resent">
+  <div class="h6">
+    {{'REGISTER.CHECK_MAILBOX' | translate}}
+  </div>
+  <button class="btn btn-primary" (click)="resend()">
+    resend link
+  </button>
+</div>
+
+<div class="my-tmp" *ngIf="resent">
+  <app-circle-load [time]="10" [radius]="120"></app-circle-load>
 </div>
 
 <div class="position-absolute end-0 bottom-0 mb-4 me-4">
