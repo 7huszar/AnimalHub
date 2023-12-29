@@ -14,13 +14,13 @@ import {HttpStatusCode} from "@angular/common/http";
 export class RegisterComponent {
 
   loginForm: UntypedFormGroup;
+
   // After first submission attempt, form validation will start
-  submitted = false;
-  success :boolean = false;
-  resent :boolean = false;
+  submitted: boolean = false;
+  success: boolean = false;
+  resent: boolean = false;
 
   constructor(private formBuilder: UntypedFormBuilder,
-              private router: Router,
               private service :RegisterService,
               private notifier :NotifierService,) {
     this.loginForm = this.formBuilder.group({

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-circle-load',
@@ -8,11 +8,9 @@ import {Component, Input, OnInit} from '@angular/core';
 export class CircleLoadComponent {
   @Input() radius: number;
   @Input() time: number;
+  @Input() start: boolean = false;
 
-  protected readonly Math = Math;
   fill: number = 0.0;
 
-  click() :void{
-    this.fill = 1.0;
-  }
+  protected readonly Math = Math;
 }

@@ -1,17 +1,13 @@
 <svg [attr.width]="radius * 2" [attr.height]="radius * 2">
   <circle class="custom-circle"
-          [attr.r]="radius - 8"
+          [attr.r]="radius - 16"
           [attr.cx]="radius"
           [attr.cy]="radius"
           stroke="green"
-          stroke-width="4"
+          stroke-width="8"
           fill="transparent"
-          [style.stroke-dasharray]="radius * 2 * Math.PI"
-          [style.stroke-dashoffset]="radius * 2 * Math.PI - (radius * 2 * Math.PI * fill)"
-          [style.transition-duration]="time.toString() + 's'">
+          [style.stroke-dasharray]="(radius - 16) * 2 * Math.PI"
+          [style.transition-duration]="start ? time.toString() + 's' : 0"
+          [style.stroke-dashoffset]="start ? 0 : (radius -16) * 2 * Math.PI">
   </circle>
 </svg>
-
-<button class="btn btn-primary" (click)="click()">
-  click
-</button>
