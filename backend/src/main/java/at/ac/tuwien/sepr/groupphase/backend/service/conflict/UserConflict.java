@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -23,9 +24,14 @@ public class UserConflict {
 
     public void conflictForRegister(String email) throws ConflictException {
         LOGGER.debug("conflictsForRegister({})", email);
-        if (userRepository.existsByEmail(email)) {
-            throw new ConflictException("Could not register user",
-                Collections.singletonList("Application user already registered by the name %s".formatted(email)));
+
+        ApplicationUser user = userRepository.findByEmail(email);
+        if (user == null) {
+            return;
+        }
+
+        if (LocalDateTime.now().isBefore(user.getRegistrationStamp().plusMinutes(30))) {
+            throw new ConflictException("Could not register user", Collections.singletonList("User already registered"));
         }
     }
 
