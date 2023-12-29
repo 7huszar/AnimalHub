@@ -4,9 +4,7 @@ import {Router} from '@angular/router';
 import {RegisterService} from "../../services/register.service";
 import {AuthRequest} from "../../dtos/auth-request";
 import {NotifierService} from "../../services/notifier.service";
-import {TranslateService} from "@ngx-translate/core";
 import {HttpStatusCode} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',

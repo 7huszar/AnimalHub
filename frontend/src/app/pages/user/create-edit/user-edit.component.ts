@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForm, NgModel} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {Observable} from 'rxjs';

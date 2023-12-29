@@ -1,9 +1,7 @@
 import {Component} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {PasswordService} from "../../services/password.service";
-import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../services/notifier.service";
-import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-password-reset',
