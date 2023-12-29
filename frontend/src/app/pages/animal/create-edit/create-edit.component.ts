@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Species} from "../../../dtos/species";
 import {AnimalService} from "../../../services/animal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from '@angular/forms';
