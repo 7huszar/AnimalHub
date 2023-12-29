@@ -3,13 +3,28 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-1"></div>
     <div class="col center-column">
-      <button class="bi bi-funnel-fill text-primary btn align-self-start" aria-label="Filter" style="padding-left: 0">
+      <button class="bi bi-funnel-fill text-primary btn align-self-start" aria-label="Filter">
         Filter
       </button>
     </div>
+    <div class="col-1 text-end">
+      <button class="bi bi-list text-white btn btn-primary rounded align-self-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Menu
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <!-- Dropdown items go here -->
+        <a class="dropdown-item" href="#">Favourites</a>
+        <a class="dropdown-item" href="#">My Profile</a>
+        <a class="dropdown-item" href="#">View Adopted Animals</a>
+        <a class="dropdown-item" [routerLink]="['/admin']">This is an Example Use it</a>
+
+      </div>
+    </div>
   </div>
+
+
+
   <div class="row">
     <div class="col-1 center-column">
       <i class="bi bi-arrow-left-square-fill text-primary btn" (click)="leftClick()"></i>
