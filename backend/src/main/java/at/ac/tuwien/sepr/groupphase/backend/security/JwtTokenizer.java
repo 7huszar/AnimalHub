@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class JwtTokenizer {
     }
 
 
-    public String getActivationToken(String user, String language) {
+    public String getActivationToken(String user, String language, LocalDateTime regStamp) {
         byte[] signingKey = securityProperties.getActJwtSecret().getBytes();
         return Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
@@ -41,6 +42,7 @@ public class JwtTokenizer {
             .setSubject("verification")
             .claim("email", user)
             .claim("language", language)
+            .claim("regstamp", regStamp.toString())
             .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getActJwtExpirationTime()))
             .compact();
     }

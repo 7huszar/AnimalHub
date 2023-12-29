@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * Component offering services to send e-mail.
  * Emails are sent in own threads.
@@ -25,12 +27,12 @@ public class MailService {
      * @param email E-mail to be verified
      */
     @Async
-    public void sendVerificationMail(String email, String language) {
+    public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language));
+        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language, regStamp));
         emailSender.send(message);
     }
 
