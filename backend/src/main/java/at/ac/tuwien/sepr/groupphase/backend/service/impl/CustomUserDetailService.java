@@ -38,6 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -145,10 +146,13 @@ public class CustomUserDetailService implements UserService {
         userValidator.validateUserCredentials(userLoginDto);
         conflict.conflictForRegister(userLoginDto.getEmail());
 
+
+
         ApplicationUser user = ApplicationUser.builder()
             .email(userLoginDto.getEmail())
             .password(passwordEncoder.encode(userLoginDto.getPassword()))
             .role(UserRole.INACTIVE)
+            .registrationStamp(LocalDateTime.now())
             .build();
 
         mail.sendVerificationMail(userLoginDto.getEmail(), "en");
