@@ -39,7 +39,6 @@ public class ApplicationUser {
 
     private UserRole role;
 
-    @Column(nullable = false)
     private LocalDateTime registrationStamp;
 
     @OneToOne
