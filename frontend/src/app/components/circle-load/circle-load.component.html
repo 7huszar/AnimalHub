@@ -1,18 +1,18 @@
 <svg [attr.width]="radius * 2" [attr.height]="radius * 2">
-  <circle class="custom-circle"
+  <circle [@load]="{value: state, params:{perimeter: this.perimeter, time: this.time}}"
+          (@load.done)="inStart($event)"
+          class="custom-circle"
           [attr.r]="radius - 16"
           [attr.cx]="radius"
           [attr.cy]="radius"
           [attr.stroke]="color"
           stroke-width="8"
           fill="transparent"
-          [style.stroke-dasharray]="(radius - 16) * 2 * Math.PI"
-          [style.transition-duration]="start ? time.toString() + 's' : 0"
-          [style.stroke-dashoffset]="start ? 0 : (radius -16) * 2 * Math.PI">
+          [style.stroke-dasharray]="(radius - 16) * 2 * Math.PI">
   </circle>
-    <text *ngIf="start && !finished" x="50%" y="50%" text-anchor="middle" dy="0.3em" font-size="20" [attr.fill]="color">
-        {{remain}}
-    </text>
+  <text *ngIf="start" x="50%" y="50%" text-anchor="middle" dy="0.3em" font-size="20" [attr.fill]="color">
+    {{ remain }}
+  </text>
   <text *ngIf="finished" x="50%" y="50%" text-anchor="middle" dy="0.3em" font-size="20" [attr.fill]="color">
     OK
   </text>
