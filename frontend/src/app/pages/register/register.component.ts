@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {RegisterService} from "../../services/register.service";
@@ -6,6 +6,7 @@ import {AuthRequest} from "../../dtos/auth-request";
 import {NotifierService} from "../../services/notifier.service";
 import {HttpStatusCode} from "@angular/common/http";
 import {MailRequestDto} from "../../dtos/user";
+import {CircleLoadComponent} from "../../components/circle-load/circle-load.component";
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ import {MailRequestDto} from "../../dtos/user";
 export class RegisterComponent {
 
   loginForm: UntypedFormGroup;
+  @ViewChild('circleLoader') circleLoader: CircleLoadComponent;
 
   // After first submission attempt, form validation will start
   submitted: boolean = false;
@@ -93,10 +95,11 @@ export class RegisterComponent {
         console.log(error);
       }
     });
+    this.resent = true;
     setTimeout(() => {
       this.resent = false;
     }, 10_000);
-    this.resent = true;
+    this.circleLoader.startCountdown();
   }
 
 }

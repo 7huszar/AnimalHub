@@ -8,9 +8,14 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 export class CircleLoadComponent {
   @Input() radius: number;
   @Input() time: number;
-  @Input() start: boolean = false;
 
   fill: number = 0.0;
+  color: string = 'green';
+  start: boolean = false;
 
   protected readonly Math = Math;
+
+  startCountdown() :void {
+    this.start = true;
+  }
 }
