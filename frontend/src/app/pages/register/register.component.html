@@ -88,7 +88,7 @@
   <button class="btn btn-primary" (click)="resend()" [ngClass]="resent ? 'disabled' : null">
     resend link
   </button>
-  <app-circle-load [time]="10" [radius]="60" [start]="resent"></app-circle-load>
+  <app-circle-load #circleLoader [time]="10" [radius]="60"></app-circle-load>
 </div>
 
 <div class="position-absolute end-0 bottom-0 mb-4 me-4">
