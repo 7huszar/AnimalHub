@@ -157,6 +157,12 @@ public class CustomUserDetailService implements UserService {
 
         mail.sendVerificationMail(userLoginDto.getEmail(), "en", regStamp);
 
+        if (userRepository.existsByEmail(user.getEmail())) {
+            ApplicationUser old = userRepository.findByEmail(user.getEmail());
+            old.setPassword(user.getPassword());
+            old.setRegistrationStamp(user.getRegistrationStamp());
+            user = old;
+        }
         userRepository.save(user);
         return jwtTokenizer.getAuthToken(user.getEmail(), user.getRole().getPermissions());
     }
