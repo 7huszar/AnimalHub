@@ -11,3 +11,8 @@ export interface UserSearch {
   email?: string,
   role?:string,
 }
+
+export interface MailRequestDto {
+  email: string,
+  lang: string
+}

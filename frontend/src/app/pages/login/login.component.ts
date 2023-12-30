@@ -17,15 +17,15 @@ export class LoginComponent {
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
-  failedLogin :boolean = false;
-  isEmailInvalid :boolean = false;
-  isPwdInvalid :boolean = false;
+  failedLogin: boolean = false;
+  isEmailInvalid: boolean = false;
+  isPwdInvalid: boolean = false;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notification :NotifierService
+    private notification: NotifierService
    ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],

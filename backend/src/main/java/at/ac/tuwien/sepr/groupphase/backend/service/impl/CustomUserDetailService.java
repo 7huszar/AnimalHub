@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -25,7 +25,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -142,7 +141,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
+    public String register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
         conflict.conflictForRegister(userLoginDto.getEmail());
@@ -159,6 +158,15 @@ public class CustomUserDetailService implements UserService {
         mail.sendVerificationMail(userLoginDto.getEmail(), "en", regStamp);
 
         userRepository.save(user);
+        return jwtTokenizer.getAuthToken(user.getEmail(), user.getRole().getPermissions());
+    }
+
+    @Override
+    public void requestMail(PasswordRequestResetDto mailRequestDto) {
+        LOGGER.trace("requestMail({})", mailRequestDto);
+
+        ApplicationUser user = userRepository.findByEmail(mailRequestDto.email());
+        mail.sendVerificationMail(user.getEmail(), mailRequestDto.lang(), user.getRegistrationStamp());
     }
 
     @Transactional
