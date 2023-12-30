@@ -10,4 +10,10 @@
           [style.transition-duration]="start ? time.toString() + 's' : 0"
           [style.stroke-dashoffset]="start ? 0 : (radius -16) * 2 * Math.PI">
   </circle>
+    <text *ngIf="start && !finished" x="50%" y="50%" text-anchor="middle" dy="0.3em" font-size="20" [attr.fill]="color">
+        {{remain}}
+    </text>
+  <text *ngIf="finished" x="50%" y="50%" text-anchor="middle" dy="0.3em" font-size="20" [attr.fill]="color">
+    OK
+  </text>
 </svg>
