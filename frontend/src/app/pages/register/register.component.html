@@ -7,7 +7,7 @@
 </div>
 
 
-<div class="my-tmp" *ngIf="!success">
+<div class="my-tmp" *ngIf="success">
   <div class="row mb-4">
     <div class="col-md-12">
       <span class="anchor" id="formLogin"></span>
@@ -81,14 +81,14 @@
   </div>
 </div>
 
-<div class="my-tmp text-center" style="font-size: large" *ngIf="success">
+<div class="my-tmp text-center" style="font-size: large" *ngIf="!success">
   <div class="h6">
     {{'REGISTER.CHECK_MAILBOX' | translate}}
   </div>
   <button class="btn btn-primary" (click)="resend()" [ngClass]="resent ? 'disabled' : null">
     resend link
   </button>
-  <app-circle-load #circleLoader [time]="10" [radius]="60"></app-circle-load>
+  <app-circle-load #circleLoader [time]="5" [radius]="60"></app-circle-load>
 </div>
 
 <div class="position-absolute end-0 bottom-0 mb-4 me-4">
