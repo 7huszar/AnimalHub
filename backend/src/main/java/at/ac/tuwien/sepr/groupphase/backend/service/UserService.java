@@ -55,7 +55,9 @@ public interface UserService extends UserDetailsService {
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
      * @throws ConflictException if user already exists
      */
-    void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
+    String register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
+
+    void requestMail(PasswordRequestResetDto mailRequestDto);
 
     UserDetailDto getCurrentUser() throws NotFoundException;
 

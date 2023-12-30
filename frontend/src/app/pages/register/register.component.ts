@@ -5,6 +5,7 @@ import {RegisterService} from "../../services/register.service";
 import {AuthRequest} from "../../dtos/auth-request";
 import {NotifierService} from "../../services/notifier.service";
 import {HttpStatusCode} from "@angular/common/http";
+import {MailRequestDto} from "../../dtos/user";
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class RegisterComponent {
   submitted: boolean = false;
   success: boolean = false;
   resent: boolean = false;
+  mailRequest: MailRequestDto = {email: '', lang: ''};
 
   constructor(private formBuilder: UntypedFormBuilder,
               private service :RegisterService,
@@ -39,6 +41,8 @@ export class RegisterComponent {
      this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
        next :data => {
         console.log("successfully registered", data);
+        this.mailRequest.email = this.loginForm.controls.username.value;
+        this.mailRequest.lang = 'en';
         this.success = true;
        },
        error: error => {
@@ -81,6 +85,14 @@ export class RegisterComponent {
   }
 
   resend() :void {
+    this.service.requestMail(this.mailRequest).subscribe({
+      next: next => {
+        console.log(next);
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
     setTimeout(() => {
       this.resent = false;
     }, 10_000);
