@@ -1,4 +1,5 @@
 $primary:       #64B5F6;
+$secondary:     #ff80d5;
 @use "sass:map";
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
@@ -40,8 +41,22 @@ $primary:       #64B5F6;
 }
 
 
-.btn-primary {
+.btn.btn-primary {
   color: #ffffff;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary.hover {
+  background-color: $secondary;
+  border-color: $secondary;
+  color: #fff;
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary.active {
+  background-color: #b30086;
+  border-color: #b30086;
+  color: #fff;
 }
 
 @media screen and (max-width: map-get($grid-breakpoints, "md")) {
