@@ -24,7 +24,7 @@ public class StampedEmail implements Delayed {
     @Override
     public long getDelay(TimeUnit unit) {
         return TimeUnit.MICROSECONDS
-            .convert(Timestamp.valueOf(LocalDateTime.now()).getTime() + 60_000 - timestamp.getTime(), unit);
+            .convert(60_000 + timestamp.getTime() - Timestamp.valueOf(LocalDateTime.now()).getTime(), unit);
     }
 
     @Override

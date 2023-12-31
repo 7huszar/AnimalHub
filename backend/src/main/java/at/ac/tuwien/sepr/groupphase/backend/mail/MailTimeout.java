@@ -15,7 +15,6 @@ import java.util.concurrent.DelayQueue;
 @RequiredArgsConstructor
 @Repository
 public class MailTimeout {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Set<String> emails = new HashSet<>();
     private final DelayQueue<StampedEmail> blocked = new DelayQueue<>();
     private final TimeoutCleaner cleaner;
