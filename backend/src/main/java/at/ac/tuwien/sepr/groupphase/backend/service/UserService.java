@@ -86,7 +86,6 @@ public interface UserService extends UserDetailsService {
      * @param token Verification token
      * @throws NotAuthorizedException if the token is invalid in any kind
      */
-    @Transactional
     void verify(String token) throws NotAuthorizedException;
 
 
