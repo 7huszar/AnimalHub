@@ -2,11 +2,15 @@ package at.ac.tuwien.sepr.groupphase.backend.mail;
 
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
 /**
@@ -16,6 +20,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Component
 public class MailService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final JavaMailSender emailSender;
     private final JwtTokenizer jwtTokenizer;
     private final MailTimeout timeoutCollector;
@@ -30,6 +36,7 @@ public class MailService {
     @Async
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
         if (timeoutCollector.hasTimeout(email)) {
+            LOGGER.warn(email + " has timout");
             return;
         }
         timeoutCollector.addEmail(email);
@@ -51,6 +58,11 @@ public class MailService {
      */
     @Async
     public void sendResetPasswordMail(String email, String language) {
+        if (timeoutCollector.hasTimeout(email)) {
+            LOGGER.warn(email + " has timout");
+            return;
+        }
+        timeoutCollector.addEmail(email);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);

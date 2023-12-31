@@ -21,6 +21,7 @@ public class TimeoutCleaner {
         while (run) {
             try {
                 emails.remove(blocked.take().getEmail());
+                LOGGER.debug("removed something");
             } catch (InterruptedException e) {
                 LOGGER.trace("Thread of cleanBlockedMails() shutdown:\n" + e.getMessage());
                 run = false;
