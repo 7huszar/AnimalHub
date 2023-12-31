@@ -155,8 +155,6 @@ public class CustomUserDetailService implements UserService {
             .registrationStamp(regStamp)
             .build();
 
-        mail.sendVerificationMail(userLoginDto.getEmail(), "en", regStamp);
-
         if (userRepository.existsByEmail(user.getEmail())) {
             ApplicationUser old = userRepository.findByEmail(user.getEmail());
             old.setPassword(user.getPassword());
@@ -167,10 +165,13 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestMail(PasswordRequestResetDto mailRequestDto) {
+    public void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException{
         LOGGER.trace("requestMail({})", mailRequestDto);
 
         ApplicationUser user = userRepository.findByEmail(mailRequestDto.email());
+        if (user == null) {
+            throw new NotFoundException("user by email " + mailRequestDto.email() + " dosn't exist");
+        }
         mail.sendVerificationMail(user.getEmail(), mailRequestDto.lang(), user.getRegistrationStamp());
     }
 

@@ -81,11 +81,11 @@
   </div>
 </div>
 
-<div class="my-tmp text-center" style="font-size: large" *ngIf="success">
+<div class="my-tmp text-center" style="font-size: large" [hidden]="!success">
   <div class="h6">
     {{'REGISTER.CHECK_MAILBOX' | translate}}
   </div>
-  <button class="btn btn-primary" (click)="resend()" [ngClass]="resent ? 'disabled' : null">
+  <button class="btn btn-primary" (click)="request()" [ngClass]="resent ? 'disabled' : null">
     resend link
   </button>
   <app-circle-load #circleLoader [time]="mailRequestTimout/1000" [radius]="60"></app-circle-load>
