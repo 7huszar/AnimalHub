@@ -1,6 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
 import {RegisterService} from "../../services/register.service";
 import {AuthRequest} from "../../dtos/auth-request";
 import {NotifierService} from "../../services/notifier.service";

@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {PasswordService} from "../../services/password.service";
 import {NotifierService} from "../../services/notifier.service";
+import {CircleLoadComponent} from "../../components/circle-load/circle-load.component";
 
 @Component({
   selector: 'app-password-reset',
@@ -10,9 +11,13 @@ import {NotifierService} from "../../services/notifier.service";
 })
 export class PasswordResetComponent {
 
-  emailForm :UntypedFormGroup;
-  submitted :boolean = false;
-  sent :boolean = false;
+  @ViewChild('circleLoader') circleLoader: CircleLoadComponent;
+
+  emailForm: UntypedFormGroup;
+  submitted: boolean = false;
+  sent: boolean = false;
+  timeout: boolean = false;
+  waitingTime: number = 60_000;
 
   constructor(private formBuilder: UntypedFormBuilder,
               private service :PasswordService,
@@ -28,6 +33,17 @@ export class PasswordResetComponent {
       this.service.requestPasswordReset(this.emailForm.controls.email.value, 'en').subscribe({
         next :next => {
           this.sent = true;
+          this.timeout = true;
+          this.emailForm.get('email').disable();
+          console.log(this.emailForm.get('email').valid)
+          console.log(this.emailForm.get('email').errors)
+
+          this.circleLoader.startCountdown();
+          setTimeout(() => {
+            this.timeout = false;
+            this.emailForm.get('email').enable();
+            console.log(this.emailForm.get('email'));
+          }, this.waitingTime);
         },
         error :error => {
           console.error(error);
@@ -38,7 +54,10 @@ export class PasswordResetComponent {
   }
 
   validation() :string {
-    return this.emailForm.valid ? 'is-valid' : 'is-invalid';
+    return this.isValid() ? 'is-valid' : 'is-invalid';
   }
 
+  isValid() :boolean {
+    return this.emailForm.get('email').disabled ? true : this.emailForm.get('email').valid;
+  }
 }

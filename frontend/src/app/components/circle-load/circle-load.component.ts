@@ -45,10 +45,10 @@ export class CircleLoadComponent implements OnInit{
     this.finished = false;
     this.state = 'start';
     this.remain = this.time - 1;
-    this.color = 'red';
+    this.color = 'var(--bs-danger)';
     const intv = setInterval(() => {
       if (this.remain <= 0) {
-        this.color = 'green';
+        this.color = 'var(--bs-success)';
         this.start = false;
         this.finished = true;
         clearInterval(intv);
