@@ -33,9 +33,9 @@ public class RegistrationEndpoint {
     private final UserService service;
 
     @PostMapping
-    public String register(@RequestBody UserLoginDto userLoginDto) throws ValidationException, ConflictException {
+    public void register(@RequestBody UserLoginDto userLoginDto) throws ValidationException, ConflictException {
         LOGGER.info("POST " + userLoginDto.getEmail());
-        return service.register(userLoginDto);
+        service.register(userLoginDto);
     }
 
     @Secured(UserRole.Values.INACTIVE_ROLE)

@@ -141,7 +141,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public String register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
+    public void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
         conflict.conflictForRegister(userLoginDto.getEmail());
@@ -164,7 +164,6 @@ public class CustomUserDetailService implements UserService {
             user = old;
         }
         userRepository.save(user);
-        return jwtTokenizer.getAuthToken(user.getEmail(), user.getRole().getPermissions());
     }
 
     @Override

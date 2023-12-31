@@ -85,10 +85,6 @@ export class AuthService {
     this.loadUser();
   }
 
-  public setTmpToken(authResponse: string) :void {
-    localStorage.setItem('authToken', authResponse);
-  }
-
   private getTokenExpirationDate(token: string): Date {
 
     const decoded: any = jwtDecode(token);
