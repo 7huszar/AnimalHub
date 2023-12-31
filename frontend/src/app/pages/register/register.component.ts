@@ -46,6 +46,7 @@ export class RegisterComponent {
         this.mailRequest.email = this.loginForm.controls.username.value;
         this.mailRequest.lang = 'en';
         this.success = true;
+        this.request()
        },
        error: error => {
         console.error("failed to register", error);
@@ -86,10 +87,9 @@ export class RegisterComponent {
     return this.loginForm.controls.password.value === this.loginForm.controls.password_repeat.value;
   }
 
-  resend() :void {
+  request() :void {
     this.service.requestMail(this.mailRequest).subscribe({
       next: next => {
-        console.log(next);
       },
       error: error => {
         console.log(error);

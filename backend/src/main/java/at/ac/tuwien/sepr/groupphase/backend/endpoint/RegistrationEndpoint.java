@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.VerificationDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +42,12 @@ public class RegistrationEndpoint {
     @GetMapping
     public void requestMail(PasswordRequestResetDto mailRequest) {
         LOGGER.info("GET " + mailRequest);
-        this.service.requestMail(mailRequest);
+        try {
+            this.service.requestMail(mailRequest);
+        } catch (NotFoundException e) {
+            // ignore, not info about existence of application user
+        }
+
     }
 
     @PutMapping

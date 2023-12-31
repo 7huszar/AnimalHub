@@ -57,7 +57,7 @@ public interface UserService extends UserDetailsService {
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
-    void requestMail(PasswordRequestResetDto mailRequestDto);
+    void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException;
 
     UserDetailDto getCurrentUser() throws NotFoundException;
 
