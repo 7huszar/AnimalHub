@@ -33,11 +33,8 @@ export class RegisterService {
     return this.http.put(this.authBaseUri, verificationDto);
   }
 
-  register(userData :AuthRequest) :Observable<string> {
-    return this.http.post(this.authBaseUri, userData, {responseType: 'text'})
-      .pipe(
-        tap((authResponse: string) => this.authService.setTmpToken(authResponse))
-      );
+  register(userData :AuthRequest) :Observable<any> {
+    return this.http.post(this.authBaseUri, userData);
   }
 
   requestMail(email :MailRequestDto) :Observable<any> {
