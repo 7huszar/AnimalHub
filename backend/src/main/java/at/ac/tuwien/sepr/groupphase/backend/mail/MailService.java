@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class MailService {
     private final JavaMailSender emailSender;
     private final JwtTokenizer jwtTokenizer;
+    private final MailTimeout timeoutCollector;
 
     /**
      * Send a verification link to specified e-mail.
@@ -28,6 +29,10 @@ public class MailService {
      */
     @Async
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
+        if (timeoutCollector.hasTimeout(email)) {
+            return;
+        }
+        timeoutCollector.addEmail(email);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);

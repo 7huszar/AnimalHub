@@ -22,6 +22,7 @@ export class RegisterComponent {
   submitted: boolean = false;
   success: boolean = false;
   resent: boolean = false;
+  mailRequestTimout: number = 60_000;
   mailRequest: MailRequestDto = {email: '', lang: ''};
 
   constructor(private formBuilder: UntypedFormBuilder,
@@ -98,7 +99,7 @@ export class RegisterComponent {
     this.resent = true;
     setTimeout(() => {
       this.resent = false;
-    }, 10_000);
+    }, this.mailRequestTimout);
     this.circleLoader.startCountdown();
   }
 
