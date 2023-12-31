@@ -43,6 +43,6 @@ export class RegisterService {
     params = params.append('email', email.email);
     params = params.append('lang', email.lang);
 
-    return this.httpIntercepted.get(this.authBaseUri, {params});
+    return this.http.get(this.authBaseUri, {params});
   }
 }

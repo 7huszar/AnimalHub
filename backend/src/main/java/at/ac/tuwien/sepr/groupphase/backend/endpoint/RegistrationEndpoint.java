@@ -38,9 +38,7 @@ public class RegistrationEndpoint {
         service.register(userLoginDto);
     }
 
-    @Secured(UserRole.Values.INACTIVE_ROLE)
     @GetMapping
-    @Operation(summary = "request a new mail to verify e-mail", security = @SecurityRequirement(name = "apiKey"))
     public void requestMail(PasswordRequestResetDto mailRequest) {
         LOGGER.info("GET " + mailRequest);
         this.service.requestMail(mailRequest);
