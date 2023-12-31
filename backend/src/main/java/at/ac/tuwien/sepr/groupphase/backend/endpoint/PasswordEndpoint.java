@@ -33,7 +33,7 @@ public class PasswordEndpoint {
         LOGGER.debug("reset password for {}", passwordRequestResetDto);
         try {
             service.requestPasswordReset(passwordRequestResetDto);
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | NotAuthorizedException e) {
             // Do nothing, so malicious user can't check for existence of e-mail in system
         }
     }

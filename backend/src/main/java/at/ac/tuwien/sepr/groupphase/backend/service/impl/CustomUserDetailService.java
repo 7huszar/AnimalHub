@@ -249,12 +249,17 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestPasswordReset(PasswordRequestResetDto resetDto) throws ValidationException, NotFoundException {
+    public void requestPasswordReset(PasswordRequestResetDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         userValidator.validatePasswordRequestResetDto(resetDto);
         LOGGER.trace("requestPasswordReset({})", resetDto);
 
-        if (!userRepository.existsByEmail(resetDto.email())) {
+        ApplicationUser user = userRepository.findByEmail(resetDto.email());
+
+        if (user == null) {
             throw new NotFoundException("User by e-mail " + resetDto.email() + " does not exist");
+        }
+        if (user.getRole().equals(UserRole.INACTIVE)) {
+            throw new NotAuthorizedException("User by e-mail " + user.getEmail() + " is not active yet");
         }
 
         mail.sendResetPasswordMail(resetDto.email(), resetDto.lang());

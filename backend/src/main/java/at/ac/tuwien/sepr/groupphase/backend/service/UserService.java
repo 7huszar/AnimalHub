@@ -116,7 +116,7 @@ public interface UserService extends UserDetailsService {
      * @throws ValidationException if e-mail is not correct
      * @throws NotFoundException if user does not exist
      */
-    void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException;
+    void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
     void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException;
 }
