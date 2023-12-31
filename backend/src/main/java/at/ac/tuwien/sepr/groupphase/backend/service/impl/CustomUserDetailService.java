@@ -165,7 +165,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException{
+    public void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException {
         LOGGER.trace("requestMail({})", mailRequestDto);
 
         ApplicationUser user = userRepository.findByEmail(mailRequestDto.email());
