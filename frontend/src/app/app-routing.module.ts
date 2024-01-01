@@ -15,6 +15,7 @@ import {AnimalHomepageComponent} from "./pages/animal-homepage/animal-homepage.c
 import {UserEditComponent} from "./pages/user/create-edit/user-edit.component";
 import {PasswordResetComponent} from "./pages/password-reset/password-reset.component";
 import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/password-verify.component";
+import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
     path: 'shelter', children: [
       {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}},
+      {path: 'contact/:id', canActivate: mapToCanActivate([AuthGuard]), component: ContactFormComponent},
       {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent}
     ]
   },
