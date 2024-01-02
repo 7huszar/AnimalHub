@@ -179,7 +179,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public void verify(String token) throws NotAuthorizedException {
         String email;
-        LocalDateTime regStamp;
+        String regStamp;
         try {
             Claims claims = Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
@@ -188,12 +188,12 @@ public class CustomUserDetailService implements UserService {
                 .getPayload();
 
             email = claims.get("email", String.class);
-            regStamp = claims.get("regStamp", LocalDateTime.class);
+            regStamp = claims.get("regstamp", String.class);
         } catch (JwtException e) {
             throw new NotAuthorizedException(e.getMessage());
         }
         ApplicationUser user = userRepository.findByEmail(email);
-        if (!regStamp.equals(user.getRegistrationStamp())) {
+        if (!regStamp.equals(user.getRegistrationStamp().toString())) {
             throw new NotAuthorizedException("verification time expired");
         }
         userRepository.updateRole(email, UserRole.USER);
