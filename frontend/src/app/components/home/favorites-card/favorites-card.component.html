@@ -1,0 +1,25 @@
+<div class="card position-relative" style="border-width: thick; border-color: hotpink">
+  <div class="overflow-hidden">
+    <a routerLink="/animal/{{id}}" style="position: relative">
+      <div class="bg-image">
+        <app-content [mode]="Mode.ANIMAL" [id]="id" setClass="object-fit-scale"></app-content>
+        <div
+          class="mask"
+          style="
+      background: linear-gradient(
+        180deg,
+        hsla(9, 100%, 64%, 0) 75%,
+        hsla(0, 100%, 100%, 1) 100%
+      );
+    "
+        ></div>
+        <div class="card-img-overlay">
+          <h5 class="card-title" style="position:absolute; bottom: 0; color: black; font-size: xx-large">{{ name }}</h5>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="position-absolute top-0 start-100 translate-middle">
+    <i class="bi bi-x-circle-fill text-danger"></i>
+  </div>
+</div>

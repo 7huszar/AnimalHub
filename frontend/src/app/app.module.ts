@@ -34,6 +34,7 @@ import {UserConfirmDeleteDialogComponent} from "./components/user/confirm-delete
 import {UserEditComponent} from "./components/user/create-edit/user-edit.component";
 import {ContentComponent} from "./components/content/content.component";
 import {AnimalHomepageComponent} from "./components/animal-homepage/animal-homepage.component";
+import { FavoritesCardComponent } from './components/home/favorites-card/favorites-card.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -62,6 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UserAdminPageComponent,
     UserEditComponent,
     ContentComponent,
+    FavoritesCardComponent,
   ],
   imports: [
     BrowserModule,

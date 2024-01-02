@@ -20,10 +20,10 @@
   </div>
 </div>-->
 
-<div class="card p-2" style="width: 100%;">
-  <a routerLink="/animal/{{id}}" style="position: relative">
+<div class="card" style="width: 100%;">
+  <a routerLink="/animal/{{id}}" style="position: relative;">
     <div class="bg-image">
-      <app-content [mode]="Mode.ANIMAL" [id]="id" setClass="img-fluid"></app-content>
+      <app-content [mode]="Mode.ANIMAL" [id]="id" setClass="object-fit-cover"></app-content>
       <div
         class="mask"
         style="

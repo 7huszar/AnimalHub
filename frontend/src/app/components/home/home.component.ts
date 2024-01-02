@@ -4,7 +4,7 @@ import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
 import {TranslateService} from "@ngx-translate/core";
-
+import {indexOf} from "lodash";
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -17,8 +17,8 @@ export class HomeComponent implements OnInit {
   private right :AnimalDetailDto;
 
   protected animalList: AnimalDetailDto[];
-  protected likedAnimals: AnimalDetailDto[];
-  protected dislikedAnimals: AnimalDetailDto[];
+  protected likedAnimals: AnimalDetailDto[] = [];
+  protected dislikedAnimals: AnimalDetailDto[] = [];
   counter = 1;
 
 
@@ -67,11 +67,20 @@ export class HomeComponent implements OnInit {
   }
 
   like(animal: AnimalDetailDto) {
-    this.likedAnimals.push(animal);
-    console.log(animal);
+    if (this.dislikedAnimals.includes(animal)) {
+      this.dislikedAnimals.splice(this.dislikedAnimals.indexOf(animal), 1);
+    }
+    if (!this.likedAnimals.includes(animal)) {
+      this.likedAnimals.push(animal);
+    }
   }
   dislike(animal: AnimalDetailDto) {
-    this.dislikedAnimals.push(animal);
+    if (this.likedAnimals.includes(animal)) {
+      this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
+    }
+    if (!this.likedAnimals.includes(animal)) {
+      this.dislikedAnimals.push(animal);
+    }
   }
   leftClick(): void {
     for (let i = 0; i < 3; i++) {
@@ -96,6 +105,7 @@ export class HomeComponent implements OnInit {
 
   protected readonly AuthService = AuthService;
   protected readonly Position = Position;
+  protected readonly name = name;
 }
 
 enum Position {
