@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact;
 
 public record ContactMailDto(
     String to,

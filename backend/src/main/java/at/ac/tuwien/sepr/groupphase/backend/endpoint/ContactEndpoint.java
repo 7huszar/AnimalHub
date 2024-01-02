@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.ContactMailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
