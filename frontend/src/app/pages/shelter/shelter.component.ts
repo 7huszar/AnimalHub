@@ -25,6 +25,7 @@ export class ShelterComponent implements OnInit {
 
   ngOnInit(): void {
       this.route.params.subscribe(params => {
+
         this.shelterService.findById(params['id']).subscribe({next: shelter => {
           this.shelter = shelter;
           this.animals = this.shelter.animals;

@@ -34,6 +34,9 @@ export class AnimalListComponent {
     this.nameForDeletion = name;
     this.typeForDeletion = "Shelter";
   }
+  ngOnInit(): void {
+    this.displayAnimalCards('all');
+  }
 
   displayAnimalCards(filter: string): void {
     this.displayedAnimals = this.animals
