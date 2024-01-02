@@ -70,4 +70,23 @@ public class MailService {
         message.setText("http://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
     }
+
+    /**
+     * Asynchronously sends a contact email from a user to a shelter.
+     * The email is sent in its own thread.
+     *
+     * @param to The email address of the shelter
+     * @param from The email address of the user
+     * @param name The name of the user
+     * @param message The message from the user to the shelter
+     */
+    @Async
+    public void sendShelterContactMail(String to, String from, String name,  String message) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(from);
+        mailMessage.setTo(to);
+        mailMessage.setSubject("Animal Hub Contact from: " + name);
+        mailMessage.setText("Name: " + name + "\n" + "Message: " + message);
+        emailSender.send(mailMessage);
+    }
 }
