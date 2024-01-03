@@ -54,9 +54,17 @@
           <div class="col">{{ animal.shelter?.name }} </div>
         </div>
         <div class="row fixed-button align-items-end w-100">
+
+          <!-- Paypal -->
+          <h4>Donate to {{ animal?.name }} </h4>
           <div class="col-auto">
-            <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.DONATE_1' | translate}}{{ animal.name }}</button>
+            <a href="https://www.paypal.com/donate/?hosted_button_id=Q3UV965BMX2FW" target="_blank">
+              <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate with PayPal">
+            </a>
           </div>
+          <!-- end of paypal -->
+
+
           <div class="col-auto">
             <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
           </div>
@@ -84,6 +92,7 @@
       </div>
     </div>
   </div>
+
   <div class="lang-select">
     <app-lang-select></app-lang-select>
   </div>
