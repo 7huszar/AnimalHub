@@ -180,7 +180,7 @@ export class CreateEditComponent implements OnInit {
       return;
     }
     if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
-      this.setImage(event.dataTransfer.items[0]);
+      this.setImage(event.dataTransfer.items[0].getAsFile());
     } else {
       this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
     }
@@ -205,6 +205,7 @@ export class CreateEditComponent implements OnInit {
    *
    */
   private setImage(img: File): void {
+    console.log(img);
     // 52,4288 MB?
     if (img.size > 52428800) {
       console.error("File is too big!"); // TODO handle
