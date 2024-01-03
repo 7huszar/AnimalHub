@@ -74,6 +74,19 @@
         </div>
       </div>
     </div>
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterName" class="custom-label">
+          Paypal Donation ID
+        </label>
+        <div class="custom-field">
+          <input type="text" id="shelterDonationId" name="shelterDonationId" placeholder="Shelter donation Id"
+                 class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="shelter.donationId"
+                 maxlength="30" #shelterNameModel="ngModel" >
+        </div>
+ 9
+      </div>
+    </div>
   </div>
 
   <div class="row">
