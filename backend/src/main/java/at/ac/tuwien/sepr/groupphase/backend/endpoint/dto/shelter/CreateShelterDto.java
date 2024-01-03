@@ -28,6 +28,8 @@ public class CreateShelterDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
+    private String donationId;
+
     private Instant createdOn;
 
     @Override
@@ -37,6 +39,7 @@ public class CreateShelterDto {
             + ", address=" + address
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email=" + email + '\''
+            + ", donation=" + donationId + '\''
             + ", createdOn=" + createdOn + '\''
             + '}';
     }

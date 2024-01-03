@@ -21,6 +21,7 @@ export class ShelterCreateEditComponent implements OnInit{
 
   mode: Mode = Mode.CREATE;
   shelter: ShelterDto = {
+    donationId:'',
     id: '',
     name: '',
     address: '',
@@ -47,6 +48,7 @@ export class ShelterCreateEditComponent implements OnInit{
           this.shelterService.findById(id).subscribe({
             next: shelterDetailDto => {
               this.shelter = shelterDetailDto;
+              console.log(this.shelter.donationId)
               this.shelterService.getProfileImage(this.shelter.id).subscribe({
                 next: blob => {
                   this.shelterImageURL = URL.createObjectURL(blob);

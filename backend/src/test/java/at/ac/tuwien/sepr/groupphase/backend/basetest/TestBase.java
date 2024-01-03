@@ -42,6 +42,8 @@ public abstract class TestBase {
     protected String ANIMALS_BASE_URI = BASE_URI + "/animals";
     // ### SHELTER TestData
     protected String TEST_SHELTER_NAME = "TEST SHELTER";
+
+    protected String TEST_SHELTER_DONATION_ID = "Q3UV965BMX2FW";
     protected String TEST_SHELTER_ADDRESS = "TEST STREET 33, 0000 TEST";
     protected String TEST_SHELTER_PHONE_NUMBER = "+43 4241 403938";
     protected String TEST_SHELTER_EMAIL = "test@testing.com";
