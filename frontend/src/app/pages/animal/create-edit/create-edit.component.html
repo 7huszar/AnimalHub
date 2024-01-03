@@ -109,7 +109,7 @@
     </div>
 
     <div class="row">
-      <div class="selected-pic" [style.background-color]="hasLoadedImg() ? 'white' : 'lightgrey'">
+      <div class="selected-pic" (drop)="dropped($event)" [style.background-color]="hasLoadedImg() ? 'white' : 'lightgrey'">
         <div class="m-1 text-center">
           profile picture
         </div>

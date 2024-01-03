@@ -6,6 +6,7 @@ import {Mode} from "../../../enums/modes";
 import {IdOnlyShelter} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
+import * as events from "events";
 
 @Component({
   selector: 'app-create-edit',
@@ -176,5 +177,12 @@ export class CreateEditComponent implements OnInit {
 
   hasLoadedImg(): boolean {
     return this.animalImageURL !== null;
+  }
+
+  dropped(event: any) :void {
+    event.preventDefault();
+    console.log(event.dataTransfer.items);
+    this.animalImage = event.dataTransfer.items[0].getAsFile();
+    this.animalImageURL = URL.createObjectURL(this.animalImage);
   }
 }
