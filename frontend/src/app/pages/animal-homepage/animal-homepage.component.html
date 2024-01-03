@@ -22,6 +22,12 @@
       <div class="media">
         <app-content [mode]="Mode.ANIMAL" [id]="animal.id"></app-content>
       </div>
+      <!-- Paypal button -->
+
+        <h4>Subscribe to {{ animal?.name }} </h4>
+        <div id="paypal-button-container-P-2J073097VE083035WMWKWHZY" style="max-width: 150px;"></div>
+
+      <!-- end of paypal -->
     </div>
     <div class="col">
       <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
@@ -54,17 +60,6 @@
           <div class="col">{{ animal.shelter?.name }} </div>
         </div>
         <div class="row fixed-button align-items-end w-100">
-
-          <!-- Paypal -->
-          <h4>Donate to {{ animal?.name }} </h4>
-          <div class="col-auto">
-            <a [href]="'https://www.paypal.com/donate/?hosted_button_id=' + animal?.shelter?.donationId" target="_blank">
-              <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate with PayPal">
-            </a>
-          </div>
-          <!-- end of paypal -->
-
-
           <div class="col-auto">
             <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
           </div>
