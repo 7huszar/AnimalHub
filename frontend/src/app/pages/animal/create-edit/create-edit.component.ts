@@ -173,10 +173,6 @@ export class CreateEditComponent implements OnInit {
     return 'Update';
   }
 
-  hasLoadedImg(): boolean {
-    return this.animalImageURL !== null;
-  }
-
   public dropped(event: any) :void {
     event.preventDefault();
     event.stopPropagation();
@@ -184,8 +180,7 @@ export class CreateEditComponent implements OnInit {
       return;
     }
     if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
-      this.animalImage = event.dataTransfer.items[0].getAsFile();
-      this.animalImageURL = URL.createObjectURL(this.animalImage);
+      this.setImage(event.dataTransfer.items[0]);
     } else {
       this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
     }
