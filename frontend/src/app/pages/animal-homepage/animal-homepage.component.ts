@@ -77,7 +77,10 @@ export class AnimalHomepageComponent implements OnInit{
   ngAfterViewInit(): void {
     // Load the PayPal script dynamically
     const script = document.createElement('script');
-    script.src = 'https://www.paypal.com/sdk/js?client-id=Ab1LW12ffEdWKI-IZ0-9lP4zwT3StZNbZegGj_XDSZ4wC3OrZZ21UxWvWKJXFbsqvvnZxhJVSmLi-rsM&vault=true&intent=subscription';
+    //TODO first of all dont touch it or u lose money
+    //TODO change it for live version this is sandbox
+    //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
+    script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
     script.onload = () => {
       // PayPal script is loaded, render the button
       this.renderPayPalButton();
@@ -96,7 +99,8 @@ export class AnimalHomepageComponent implements OnInit{
     paypal.Buttons({
       createSubscription: (data, actions) => {
         return actions.subscription.create({
-          plan_id: 'P-2J073097VE083035WMWKWHZY',
+          //TODO this is subscription plan change it
+          plan_id: 'P-3SG76502UP218412UMWKYVRY',
         });
       },
       onApprove: (data, actions) => {
