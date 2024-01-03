@@ -180,6 +180,9 @@ export class CreateEditComponent implements OnInit {
   public dropped(event: any) :void {
     event.preventDefault();
     event.stopPropagation();
+    if (this.animalImageURL) {
+      return;
+    }
     if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
       this.animalImage = event.dataTransfer.items[0].getAsFile();
       this.animalImageURL = URL.createObjectURL(this.animalImage);
