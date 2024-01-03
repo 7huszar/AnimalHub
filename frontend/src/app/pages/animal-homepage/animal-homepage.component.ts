@@ -99,12 +99,14 @@ export class AnimalHomepageComponent implements OnInit{
     paypal.Buttons({
       createSubscription: (data, actions) => {
         return actions.subscription.create({
-          //TODO this is subscription plan change it
+          //TODO this is subscription plan change it in database to get individual plans
           plan_id: 'P-3SG76502UP218412UMWKYVRY',
         });
       },
       onApprove: (data, actions) => {
+        alert("payment successfull")
         alert(data.subscriptionID); // You can add an optional success message for the subscriber here
+        //TODO add stuff to manage subscriptions
       },
     }).render(this.el.nativeElement.querySelector('#paypal-button-container-P-2J073097VE083035WMWKWHZY'));
   }
