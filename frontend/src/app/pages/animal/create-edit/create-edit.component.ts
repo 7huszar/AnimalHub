@@ -6,6 +6,7 @@ import {Mode} from "../../../enums/modes";
 import {IdOnlyShelter} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
+import {NotifierService} from "../../../services/notifier.service";
 
 @Component({
   selector: 'app-create-edit',
@@ -32,6 +33,8 @@ export class CreateEditComponent implements OnInit {
   idForDeletion: string = '';
   nameForDeletion: string = '';
 
+  dropZoneColor: string = 'text-primary';
+
   private animalImage: File = null;
   protected animalImageURL: any = null;
 
@@ -41,7 +44,8 @@ export class CreateEditComponent implements OnInit {
   constructor(
     private animalService: AnimalService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notification: NotifierService
   ) {
   }
 
@@ -149,12 +153,7 @@ export class CreateEditComponent implements OnInit {
 
   public onImageSelected(event: any): void {
     const img = event.target.files[0];
-    if (img > 52428800) {
-      console.error("File is too big!"); // TODO handle
-    } else {
-      this.animalImage = img;
-      this.animalImageURL = URL.createObjectURL(this.animalImage);
-    }
+    this.setImage(img);
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -174,7 +173,45 @@ export class CreateEditComponent implements OnInit {
     return 'Update';
   }
 
-  hasLoadedImg(): boolean {
-    return this.animalImageURL !== null;
+  public dropped(event: any) :void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.animalImageURL) {
+      return;
+    }
+    if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
+      this.setImage(event.dataTransfer.items[0].getAsFile());
+    } else {
+      this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
+    }
+  }
+
+  public enterDropZone(event: any) :void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dropZoneColor = 'text-secondary';
+  }
+
+  public leaveDropZone(event: any) :void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dropZoneColor = 'text-primary';
+  }
+
+
+  /**
+   * Sets profile picture for animal.
+   * Max: 42.4288 MB, doesn't check whether img is null.
+   *
+   */
+  private setImage(img: File): void {
+    console.log(img);
+    // 52,4288 MB?
+    if (img.size > 52428800) {
+      console.error("File is too big!"); // TODO handle
+    } else {
+      this.animalImage = img;
+      this.animalImageURL = URL.createObjectURL(this.animalImage);
+    }
   }
 }
