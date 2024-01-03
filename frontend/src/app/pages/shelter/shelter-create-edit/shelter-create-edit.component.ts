@@ -5,7 +5,7 @@ import {ShelterDto} from "../../../dtos/shelter";
 import {ShelterService} from "../../../services/shelter.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CreateFileDto} from "../../../dtos/file";
-import {ToastrService} from "ngx-toastr";
+import {NotifierService} from "../../../services/notifier.service";
 
 @Component({
   selector: 'app-shelter-create-edit',
@@ -31,12 +31,14 @@ export class ShelterCreateEditComponent implements OnInit{
     createdOn: null
   }
 
+  dropZoneColor: string = 'text-primary';
+
   private shelterImage: File = null;
   protected shelterImageURL: any = null;
 
   constructor(private shelterService: ShelterService,
               private router: Router,
-              private notification: ToastrService,
+              private notification: NotifierService,
               private route: ActivatedRoute) {
   }
 
@@ -95,7 +97,7 @@ export class ShelterCreateEditComponent implements OnInit{
             const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
             this.shelterService.updateProfileImage(shelterDto.id, createFileDto).subscribe({
               next: fileDto => {
-                this.notification.success(`Shelter successfully updated.`);
+                this.notification.notifySuccess(`DUMMY.TITLE`);
                 console.log('shelter profile image updated', fileDto);
                 this.navigateSuccess(shelterDto.id);
               }, error: err => {
@@ -104,7 +106,7 @@ export class ShelterCreateEditComponent implements OnInit{
             })
           } else {
             this.navigateSuccess(shelterDto.id);
-            this.notification.success(`Shelter successfully updated.`);
+            this.notification.notifySuccess(`DUMMY.TITLE`);
           }
         }, error: err => {
           console.error(err); // TODO handle
@@ -125,12 +127,7 @@ export class ShelterCreateEditComponent implements OnInit{
 
   public onImageSelected(event: any): void {
     const img = event.target.files[0];
-    if (img.size > 52428800) {
-      console.error("File is too big!"); // TODO handle
-    } else {
-      this.shelterImage = img;
-      this.shelterImageURL = URL.createObjectURL(this.shelterImage);
-    }
+    this.setImage(img);
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -150,7 +147,45 @@ export class ShelterCreateEditComponent implements OnInit{
     return 'Update';
   }
 
-  hasLoadedImg(): boolean {
-    return this.shelterImageURL !== null;
+  public dropped(event: any) :void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.shelterImageURL) {
+      return;
+    }
+    if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
+      this.setImage(event.dataTransfer.items[0]);
+    } else {
+      this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
+    }
   }
+
+  public enterDropZone(event: any) :void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dropZoneColor = 'text-secondary';
+  }
+
+  public leaveDropZone(event: any) :void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dropZoneColor = 'text-primary';
+  }
+
+
+  /**
+   * Sets profile picture for animal.
+   * Max: 42.4288 MB, doesn't check whether img is null.
+   *
+   */
+  private setImage(img: File): void {
+    // 52,4288 MB?
+    if (img.size > 52428800) {
+      console.error("File is too big!"); // TODO handle
+    } else {
+      this.shelterImage = img;
+      this.shelterImageURL = URL.createObjectURL(this.shelterImage);
+    }
+  }
+
 }
