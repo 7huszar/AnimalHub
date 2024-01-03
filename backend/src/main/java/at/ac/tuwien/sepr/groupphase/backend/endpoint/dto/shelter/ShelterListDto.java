@@ -9,6 +9,7 @@ public record ShelterListDto(
     String phoneNumber,
     String email,
     String donationId,
+    String subscriptionId,
     Integer limit
 ) {
 }
