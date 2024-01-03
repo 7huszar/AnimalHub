@@ -107,5 +107,10 @@
   "ADMIN_PAGE": {
     "INFO": "Cannot delete another admin",
     "FAILED": "deletion failed"
+  },
+
+  "DUMMY": {
+    "TITLE": "OH NO, SMTH WENT WRONG",
+    "BODY": "TODO DO THIS"
   }
 }

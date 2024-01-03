@@ -108,10 +108,15 @@
       </div>
     </div>
 
+    <!-- upload image -->
     <div class="row">
-      <div class="selected-pic" (drop)="dropped($event)" [style.background-color]="hasLoadedImg() ? 'white' : 'lightgrey'">
+      <div class="selected-pic" (drop)="dropped($event)" (dragenter)="enterDropZone($event)" (dragleave)="leaveDropZone($event)"
+      [style.border-style]="animalImageURL ? 'none' : 'dashed'">
         <div class="m-1 text-center">
-          profile picture
+        </div>
+        <div *ngIf="!animalImageURL" style="pointer-events: none;">
+          <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
+          drag and drop
         </div>
         <img [ngSrc]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
       </div>
