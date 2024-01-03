@@ -53,7 +53,7 @@ export class AnimalHomepageComponent implements OnInit{
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
-            console.log(this.animal)
+            console.log(this.animal.shelter.subscriptionId)
             this.calculateAge(this.animal.birthDate)
           },
           error: error => {
@@ -100,7 +100,7 @@ export class AnimalHomepageComponent implements OnInit{
       createSubscription: (data, actions) => {
         return actions.subscription.create({
           //TODO this is subscription plan change it in database to get individual plans
-          plan_id: 'P-3SG76502UP218412UMWKYVRY',
+          plan_id: this.animal.shelter.subscriptionId,
         });
       },
       onApprove: (data, actions) => {

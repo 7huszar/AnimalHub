@@ -47,6 +47,9 @@ public class Shelter {
     @Column(nullable = true, length = 400)
     private String donationId;
 
+    @Column(nullable = true, length = 400)
+    private String subscriptionId;
+
     @Column(nullable = false, length = 50)
     private String phoneNumber;
 

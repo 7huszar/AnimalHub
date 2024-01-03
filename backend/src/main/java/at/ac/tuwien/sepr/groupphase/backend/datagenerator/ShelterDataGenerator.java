@@ -22,6 +22,8 @@ public class ShelterDataGenerator {
     private final String[] shelterPhoneNumbers = {"+43 4241 403938", "+37 3635 343332", "+31 3029 282726"};
     private final String[] shelterEmails = {"die@gruft.at", "innereien@herzheim.com", "nichtpflanzlich@dschungel.org"};
     private final String shelterDonationId = "Q3UV965BMX2FW";
+    private final String subscriptionId = "P-3SG76502UP218412UMWKYVRY";
+
 
 
     private final String[] shelterProfilePictureNames = {"shelter demo 1", "shelter demo 2", "shelter demo 3"};
@@ -39,6 +41,7 @@ public class ShelterDataGenerator {
                 Shelter shelter = Shelter.builder()
                     .name(shelterNames[i])
                     .donationId(shelterDonationId)
+                    .subscriptionId(subscriptionId)
                     .address(shelterAddresses[i])
                     .phoneNumber(shelterPhoneNumbers[i])
                     .email(shelterEmails[i])

@@ -30,6 +30,8 @@ public class CreateShelterDto {
 
     private String donationId;
 
+    private String subscriptionId;
+
     private Instant createdOn;
 
     @Override
@@ -40,6 +42,7 @@ public class CreateShelterDto {
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email=" + email + '\''
             + ", donation=" + donationId + '\''
+            + ", donation=" + subscriptionId + '\''
             + ", createdOn=" + createdOn + '\''
             + '}';
     }

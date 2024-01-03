@@ -8,6 +8,7 @@ import {AnimalDto} from "./animal";
 export interface CreateShelterDto {
   name: string,
   address: string,
+  donationId: string,
   phoneNumber: string,
   email: string
 }
@@ -17,6 +18,7 @@ export interface ShelterDetailDto {
   name: string,
   address: string,
   donationId: string,
+  subscriptionId: string,
   phoneNumber: string,
   email: string,
   animals?: AnimalDto[],
@@ -27,6 +29,7 @@ export interface ShelterDto {
   id: string,
   name: string,
   donationId: string,
+  subscriptionId: string,
   address: string,
   phoneNumber: string,
   email: string,
@@ -38,6 +41,7 @@ export interface ShelterListDto {
   id: string;
   name: string;
   donationId: string;
+  subscriptionId: string;
   address: String;
   phoneNumber: String;
   animals: Set<AnimalDto>;
@@ -51,6 +55,7 @@ export class IdOnlyShelter implements ShelterDto {
   id: string;
   address: string;
   donationId: string;
+  subscriptionId: string;
   email: string;
   name: string;
   phoneNumber: string;
