@@ -114,7 +114,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let user of users" class="center-td">
-            <td>{{ user.email }}</td>
+            <td>{{ user?.email }}</td>
             <td class="text-end"> <!-- Align the actions to the end (right) -->
               <div class="btn-group">
                 <a class="btn btn-sm btn-warning" [routerLink]="['/users/edit', user.id]" aria-label="Edit user">
