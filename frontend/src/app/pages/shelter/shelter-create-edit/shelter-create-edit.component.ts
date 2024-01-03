@@ -154,7 +154,7 @@ export class ShelterCreateEditComponent implements OnInit{
       return;
     }
     if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
-      this.setImage(event.dataTransfer.items[0]);
+      this.setImage(event.dataTransfer.items[0].getAsFile());
     } else {
       this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
     }
