@@ -61,6 +61,7 @@ public class ShelterServiceTest extends TestBase {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
+            .donationId(TEST_SHELTER_DONATION_ID)
             .address(TEST_SHELTER_ADDRESS)
             .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
             .email(TEST_SHELTER_EMAIL)
@@ -83,6 +84,8 @@ public class ShelterServiceTest extends TestBase {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
+            .donationId(TEST_SHELTER_DONATION_ID)
+            .donationId(TEST_SHELTER_DONATION_ID)
             .address("")
             .phoneNumber("")
             .email(TEST_SHELTER_EMAIL)
