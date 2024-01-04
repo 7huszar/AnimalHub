@@ -39,7 +39,17 @@
     "MAIL_INVALID": "invalid e-mail address",
     "PWD_MISS_MATCH": "passwords don't match",
     "FAILED_REGISTRATION": "failed to register account",
-    "ALREADY_EXISTS": "account already exists"
+    "ALREADY_EXISTS": "account already exists",
+    "CHECK_MAILBOX" : "Check your mailbox to verify your e-mail.",
+    "CONFIRM": {
+      "ERROR": "failed to verify e-mail",
+      "INVALID_TOKEN": "invalid token, please ask for a new one",
+      "VERIFY": "verify",
+      "DISCARD": "abort",
+      "SUCCESS": "e-mail successfully verified",
+      "ABORT_WARN": "verification aborted",
+      "VERIFY_TEXT": "Do you want to verify your e-mail?"
+    }
   },
 
   "HEADER": {
@@ -59,11 +69,13 @@
     "SPECIES": "Species:",
     "RACE": "Race:",
     "BIRTHDATE": "Date of birth:",
+    "AGE": "Age:",
     "HEIGHT": "Height:",
     "WEIGHT": "Weight:",
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
-    "ADOPT": "Adopt "
+    "ADOPT": "Adopt ",
+    "SHELTER": "Tierheim"
   },
 
   "SHELTER_HOMEPAGE": {
@@ -75,5 +87,28 @@
   "ANIMAL_LIST": {
     "NAME": "Name",
     "SPECIES": "Species"
+  },
+
+  "PWD": {
+    "INSTRUCTION": "Type in your e-mail to reset your password",
+    "MAIL": "e-mail",
+    "CONTINUE": "continue",
+    "INFO": "Look at your mailbox for a link to reset your password",
+    "FAILED": "reset failed",
+    "RESET": {
+      "FAILED": "failed reseting password",
+      "REQUEST_NEW": "link expired or user not existent",
+      "SUCCESS": "Passwort erfolgreich zurückgesetzt"
+    }
+  },
+
+  "ADMIN_PAGE": {
+    "INFO": "Man kann keinen anderen Admin löschen",
+    "FAILED": "Löschung kaputt"
+  },
+
+  "DUMMY": {
+    "TITLE": "OH NO, SMTH WENT WRONG",
+    "BODY": "TODO DO THIS"
   }
 }

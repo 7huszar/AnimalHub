@@ -14,8 +14,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
+import at.ac.tuwien.sepr.groupphase.backend.service.conflict.AnimalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
-import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,12 +43,11 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalShelterMapper mapper;
     private final AnimalValidator validator;
-
-    private final ConflictValidator conflictValidator;
+    private final AnimalConflict conflict;
 
     @Override
     public List<AnimalDetailDto> findAll() {
-        LOGGER.debug("Find all Animals");
+        LOGGER.trace("Find all Animals");
 
         return animalRepository.findAll().stream()
             .map(mapper::animalToAnimalDetailDto)
@@ -56,10 +56,11 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException {
-        LOGGER.debug("Create new Animal: " + animalDto);
+        LOGGER.trace("Create new Animal: " + animalDto);
 
         validator.validateForCreate(animalDto);
-        conflictValidator.validateForCreate(animalDto);
+        conflict.conflictForCreate(animalDto);
+
         Animal entity = mapper.createAnimalDtoToAnimal(animalDto);
 
         entity = animalRepository.save(entity);
@@ -67,8 +68,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException {
-        LOGGER.debug("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
+    public AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException, NotFoundException {
+        LOGGER.trace("Update Animal with id: " + animalDto.getId() + ", with following data:" + animalDto);
 
         validator.validateForUpdate(animalDto);
         Animal newEntity = mapper.animalDetailDtoToAnimal(animalDto);
@@ -86,30 +87,30 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto findById(UUID id) {
-        LOGGER.debug("Get Animal with id: " + id);
+    public AnimalDetailDto findById(UUID id) throws NotFoundException {
+        LOGGER.trace("findById({}) ", id);
 
         var animal = animalRepository.findById(id).orElseThrow(
-            () -> new NotFoundException("Animal does not exist.")
+            () -> new NotFoundException("Animal with id " + id + " does not exist.")
         );
 
         return mapper.animalToAnimalDetailDto(animal);
     }
 
     @Override
-    public void delete(UUID id) {
-        LOGGER.debug("Delete Animal with id: " + id);
+    public void delete(UUID id) throws NotFoundException {
+        LOGGER.trace("delete({})", id);
 
         var shelter = animalRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Shelter does not exist.")
+            () -> new NotFoundException("Shelter does not exist.")
         );
 
         animalRepository.delete(shelter);
     }
 
     @Override
-    public FileDetailDto getProfileImage(UUID id) {
-
+    public FileDetailDto getProfileImage(UUID id) throws NotFoundException {
+        LOGGER.trace("getProfileImage({})", id);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
         );
@@ -122,14 +123,14 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException {
-
+    public FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException {
+        LOGGER.trace("setProfileImage({},{})", id, createFileDto);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
         );
 
         if (animal.getProfilePicture() != null) {
-            throw new ConflictException("Profile Image already set.");
+            throw new ConflictException("Profile Image already set.", Collections.singletonList(""));
         }
 
         var createdFile = fileService.create(createFileDto);
@@ -142,13 +143,26 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
+
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        // TODO remove old image
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        animal.setProfilePicture(file);
+        animalRepository.save(animal);
+
+        return createdFile;
     }
 
     @Override
-    public List<FileDto> getContents(UUID id) {
-
+    public List<FileDto> getContents(UUID id) throws NotFoundException {
+        LOGGER.trace("getContents({})", id);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
         );
@@ -159,16 +173,16 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDetailDto getContent(UUID id, UUID fileId) {
-
+    public FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException {
+        LOGGER.trace("getContent({},{})", id, fileId);
         // TODO check animal id
 
         return fileService.findById(fileId);
     }
 
     @Override
-    public FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException {
-
+    public FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
+        LOGGER.trace("addContent({},{})", id, fileDto);
         var animal = animalRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Animal does not exist.")
         );

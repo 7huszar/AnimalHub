@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -78,7 +79,7 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public ShelterDto update(ShelterDto shelterDto) throws ValidationException {
+    public ShelterDto update(ShelterDto shelterDto) throws ValidationException, NotFoundException {
         LOGGER.debug("Update Shelter with id: " + shelterDto.getId() + ", with following data:" + shelterDto);
 
         validator.validateForUpdate(shelterDto);
@@ -98,7 +99,7 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public ShelterDetailDto findById(UUID id) {
+    public ShelterDetailDto findById(UUID id) throws NotFoundException {
         LOGGER.debug("Get Shelter with id: " + id);
 
         var shelter = shelterRepository.findById(id).orElseThrow(
@@ -111,7 +112,16 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public List<ShelterDto> findByNameIgnoreCase(String name) {
+        LOGGER.debug("Find Shelters with name containing {}", name);
+
+        return shelterRepository.findByNameIgnoreCaseContaining(name).stream()
+            .map(mapper::shelterToShelterDto).toList();
+    }
+
+
+    @Override
+    public void delete(UUID id) throws NotFoundException {
         LOGGER.debug("Delete Shelter with id: " + id);
 
         var shelter = shelterRepository.findById(id).orElseThrow(
@@ -122,7 +132,7 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public FileDetailDto getProfileImage(UUID id) {
+    public FileDetailDto getProfileImage(UUID id) throws NotFoundException {
 
         var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
@@ -136,14 +146,14 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException {
+    public FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException {
 
         var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
 
         if (shelter.getProfilePicture() != null) {
-            throw new ConflictException("Profile Image already set.");
+            throw new ConflictException("Profile Image already set.", Collections.singletonList(""));
         }
 
         var createdFile = fileService.create(createFileDto);
@@ -156,7 +166,20 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) {
-        return null; // TODO implement
+    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
+
+        var shelter = shelterRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Shelter does not exist.")
+        );
+
+        // TODO remove old image
+
+        var createdFile = fileService.create(fileDto);
+        var file = fileMapper.fileDtoToFile(createdFile);
+
+        shelter.setProfilePicture(file);
+        shelterRepository.save(shelter);
+
+        return createdFile;
     }
 }

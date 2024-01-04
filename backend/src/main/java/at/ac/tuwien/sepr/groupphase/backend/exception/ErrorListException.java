@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.exception;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -10,13 +13,25 @@ import java.util.List;
 public abstract class ErrorListException extends Exception {
     private final List<String> errors;
     private final String messageSummary;
-    private final String errorListDescriptor;
+    private List<String> uiErrors = null;
+    @Accessors(fluent = true)
+    @Getter
+    private String uiErrorSummary = "";
+    private String uiErrorPrefix = null;
 
-    public ErrorListException(String errorListDescriptor, String messageSummary, List<String> errors) {
+    public ErrorListException(String messageSummary, List<String> errors, List<String> uiErrors,
+                              String uiErrorSummary, String uiErrorPrefix) {
         super(messageSummary);
-        this.errorListDescriptor = errorListDescriptor;
         this.messageSummary = messageSummary;
         this.errors = errors;
+        this.uiErrors = uiErrors;
+        this.uiErrorSummary = uiErrorSummary;
+        this.uiErrorPrefix = uiErrorPrefix;
+    }
+
+    public ErrorListException(String messageSummary, List<String> errors) {
+        this.errors = errors;
+        this.messageSummary = messageSummary;
     }
 
     /**
@@ -27,8 +42,8 @@ public abstract class ErrorListException extends Exception {
      */
     @Override
     public String getMessage() {
-        return "%s. %s: %s."
-            .formatted(messageSummary, errorListDescriptor, String.join(", ", errors));
+        return "%s.: %s."
+            .formatted(messageSummary, String.join(", ", errors));
     }
 
     public String summary() {
@@ -37,5 +52,9 @@ public abstract class ErrorListException extends Exception {
 
     public List<String> errors() {
         return Collections.unmodifiableList(errors);
+    }
+
+    public List<String> uiErrors() {
+        return uiErrors != null ? uiErrors.stream().map(e -> uiErrorPrefix + e).toList() : Collections.emptyList();
     }
 }

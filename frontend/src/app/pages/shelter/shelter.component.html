@@ -1,0 +1,59 @@
+<app-header></app-header>
+
+<div class="container" *ngIf="shelter">
+
+  <div class="row">
+    <div class="col-6">
+      <h1 class="mt-4 mb-4" style="margin-left: 1rem">{{ shelter?.name }}</h1>
+    </div>
+    <div class="col-6 d-flex justify-content-end mb-3">
+      <button class="btn btn-primary " style="padding: 0.2rem 0.5rem; margin-top: auto;" (click)="goBack()">Go back to the Animal</button>
+    </div>
+
+
+    <div class="row">
+      <div class="col" style="max-width: 20em; min-height: 10em">
+        <div class="media">
+          <app-content [mode]="Mode.SHELTER" [id]="shelter?.id"></app-content>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 1rem">
+          <div class="row align-items-end">
+            <div class="col-auto">{{ 'SHELTER_HOMEPAGE.ADDRESS' | translate }}</div>
+            <div class="col">{{ shelter?.address }}</div>
+          </div>
+
+          <div class="row align-items-end">
+            <div class="col-auto">{{ 'SHELTER_HOMEPAGE.PHONE' | translate }}</div>
+            <div class="col">{{ shelter.phoneNumber }}</div>
+          </div>
+
+          <div class="row align-items-end">
+            <div class="col-auto">{{ 'SHELTER_HOMEPAGE.EMAIL' | translate }}</div>
+            <div class="col">{{ shelter.email }}</div>
+          </div>
+
+          <!-- Paypal -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <h4>Donate to {{ shelter?.name }}</h4>
+            </div>
+            <div class="col-auto">
+              <a [href]="'https://www.paypal.com/donate/?hosted_button_id=' + shelter?.donationId" target="_blank">
+                <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate with PayPal" style="width: 150px; height: 50px;">
+              </a>
+            </div>
+          </div>
+          <!-- End of Paypal -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mt-4">
+    <app-animal-list [animals]="animals" [shelterId]="shelter.id"></app-animal-list>
+  </div>
+</div>

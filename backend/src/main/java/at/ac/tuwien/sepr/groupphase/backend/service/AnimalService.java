@@ -1,11 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public interface AnimalService {
      * @throws ValidationException if the update data given for the animal is in itself incorrect (no name, name too long …)
      * @code NotFoundException when there is no animal with the given ID
      */
-    AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException;
+    AnimalDetailDto update(AnimalDetailDto animalDto) throws ValidationException, NotFoundException;
 
 
     /**
@@ -52,7 +53,7 @@ public interface AnimalService {
      * @return the animal with ID {@code id}
      * @code NotFoundException when there is no animal with the given ID
      */
-    AnimalDetailDto findById(UUID id);
+    AnimalDetailDto findById(UUID id) throws NotFoundException;
 
 
     /**
@@ -61,23 +62,23 @@ public interface AnimalService {
      * @param id the id of the animal to be deleted.
      * @code NotFoundException thrown when the id does not point to any animal in the persistent data store.
      */
-    void delete(UUID id);
+    void delete(UUID id) throws NotFoundException;
 
 
     // TODO comment
-    FileDetailDto getProfileImage(UUID id);
+    FileDetailDto getProfileImage(UUID id) throws NotFoundException;
 
     // TODO comment
-    FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException;
+    FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException;
 
     // TODO comment
-    FileDto updateProfileImage(UUID id, CreateFileDto fileDto);
+    FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException;
 
-    List<FileDto> getContents(UUID id);
+    List<FileDto> getContents(UUID id) throws NotFoundException;
 
-    FileDetailDto getContent(UUID id, UUID fileId);
+    FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException;
 
-    FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException;
+    FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException;
 
     void deleteContent(UUID id, UUID fileId);
 }

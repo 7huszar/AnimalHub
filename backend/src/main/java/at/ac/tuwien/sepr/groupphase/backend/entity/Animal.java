@@ -40,7 +40,7 @@ public class Animal {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String name;
 
     @OneToOne(cascade = CascadeType.REMOVE)
@@ -50,7 +50,7 @@ public class Animal {
     @Column(nullable = false)
     private Species species;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String race;
 
     @Column(nullable = false, name = "birth_date")

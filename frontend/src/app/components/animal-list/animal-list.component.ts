@@ -13,6 +13,7 @@ import {AnimalService} from "../../services/animal.service";
 export class AnimalListComponent {
 
   @Input() animals: AnimalDto[] = [];
+  @Input() shelterId: string;
   displayedAnimals: AnimalDto[] = [];
   p: number;
   searchTermSpecies: String;
@@ -23,6 +24,16 @@ export class AnimalListComponent {
               private animalService: AnimalService) {
   }
 
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
+
+  animalForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "Shelter";
+  }
   ngOnInit(): void {
     this.displayAnimalCards('all');
   }
@@ -33,7 +44,7 @@ export class AnimalListComponent {
   }
 
   editAnimal(animalId: String): void {
-    if (this.authService.isAdmin() || this.authService.isMember()) {
+    if (this.isPrivileged()) {
       this.router.navigate(['/animal/edit', animalId]).then(r => console.log(r));
     } else {
       this.router.navigate(['/animal', animalId]).then(r => console.log(r));
@@ -52,6 +63,10 @@ export class AnimalListComponent {
 
   }
 
+  isPrivileged(): boolean {
+    return this.authService.isAdmin() || this.authService.isMemberOf(this.shelterId);
+  }
+
   protected readonly Mode = Mode;
 
   deleteAnimal(id: string) {
@@ -64,5 +79,9 @@ export class AnimalListComponent {
         console.error('Error deleting animal', error);
       }
     });
+  }
+
+  addAnimal() {
+    this.router.navigate(['/animal/create', this.shelterId]).then(r => console.log(r));
   }
 }

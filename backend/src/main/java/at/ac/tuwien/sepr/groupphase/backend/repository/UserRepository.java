@@ -3,6 +3,9 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +23,15 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     boolean existsByEmail(String email);
 
     List<ApplicationUser> findUsersByEmailIgnoreCaseContaining(String email);
+
+
+    @Modifying
+    @Query("update ApplicationUser u set u.role = :role where u.email = :email")
+    void updateRole(@Param(value = "email") String email, @Param(value = "role") UserRole status);
+
+    @Modifying
+    @Query("update ApplicationUser u set u.password = :password where u.email = :email")
+    void updatePassword(@Param(value = "email") String email, @Param(value = "password") String password);
 
     ApplicationUser findApplicationUserById(UUID id);
 

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 @SpringBootTest
-public class UserServiceTest {
+public class UserServiceTest extends TestBase {
 
     @Autowired
-    private UserService service;
+    UserService service;
 
+
+
+/*
+    @Test
+    public void justSendAMail() {
+        Assertions.assertDoesNotThrow(() -> service.register(new UserLoginDto("a.deak@protonmail.com", "asdfasdfasdf")));
+    }
+*/
 }

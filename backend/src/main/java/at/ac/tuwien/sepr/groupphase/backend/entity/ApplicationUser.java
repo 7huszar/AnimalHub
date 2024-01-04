@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,15 +15,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "applicationuser")
 public class ApplicationUser {
 
     @Id
@@ -30,8 +33,16 @@ public class ApplicationUser {
 
     @Column(unique = true)
     private String email;
+
     private String password;
+
     private UserRole role;
+
+    private LocalDateTime registrationStamp;
+
+    @OneToOne
+    @JoinColumn(name = "shelter_id", nullable = true)
+    private Shelter shelter;
 
     @Override
     public String toString() {
@@ -39,7 +50,8 @@ public class ApplicationUser {
             + "id=" + id
             + ", email='" + email + '\''
             + ", password='" + password + '\''
-            + ", role=" + role
+            + ", role=" + role + '\''
+            + ", shelter=" + shelter + '\''
             + '}';
     }
 }

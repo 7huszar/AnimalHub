@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,28 +21,46 @@ public class AnimalValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalShelterMapper mapper;
+    private final ShelterService shelterService;
 
     // ### HELPER METHODS
 
-    Boolean stringIsEmpty(String s) {
-        if (s != null) {
-            return s.isEmpty() || s.isBlank();
-        } else {
-            return true;
-        }
+    /**
+     * Checks if String s is null or empty.
+     *
+     * @param s string to check
+     * @return true if null or blank, false otherwise
+     */
+    private boolean stringIsEmpty(String s) {
+        return s == null || s.isBlank();
     }
 
-    Boolean isValidDateOfBirth(LocalDate date) {
+    /**
+     * Checks if date is in past or now.
+     *
+     * @param date date to check
+     * @return true if date is in past or now, false otherwise
+     */
+    private boolean isValidDateOfBirth(LocalDate date) {
         return !date.isAfter(LocalDate.now());
     }
 
     /**
-     * Validates simple attributes of Animal Entities before Creation or Updating.
+     * Validates basic attributes of Animal Entities before Creation or Updating. <br>
+     *
+     * <ul>
+     * <li>Name: Must not be empty. Length &lt;= 255.</li>
+     * <li>Species: Must not be null.</li>
+     * <li>Race: Must not be empty. Length &lt;= 255.</li>
+     * <li>Birth Date: Not in future. Age &lt;= 100 years.</li>
+     * <li>Height: Must be &gt; 0.</li>
+     * <li>Weight: Must be &gt; 0.</li>
+     * </ul>
      *
      * @param animalDto animal
-     * @throws ValidationException when at least one value cannot be used / validated
+     * @return A list of all failed validations
      */
-    void validateAnimalDetails(AnimalDetailDto animalDto) throws ValidationException {
+    private List<String> validateAnimalDetails(AnimalDetailDto animalDto) {
         LOGGER.trace("validateAnimalDetails({})", animalDto);
 
         List<String> validationErrors = new ArrayList<>();
@@ -50,23 +69,21 @@ public class AnimalValidator {
 
         if (stringIsEmpty(animalDto.getName())) {
             validationErrors.add("No Name given");
-        } else if (animalDto.getName().length() > 100) {
+        } else if (animalDto.getName().length() > 255) {
             validationErrors.add("Name is too long");
         }
 
         // # Species
 
-        if (stringIsEmpty(animalDto.getSpecies().toString())) {
+        if (animalDto.getSpecies() == null) {
             validationErrors.add("No Species selected");
-        } else if (animalDto.getSpecies().toString().length() > 100) {
-            validationErrors.add("Species name is too long");
         }
 
         // # Race
 
         if (stringIsEmpty(animalDto.getRace())) {
             validationErrors.add("No Race selected");
-        } else if (animalDto.getRace().length() > 100) {
+        } else if (animalDto.getRace().length() > 255) {
             validationErrors.add("Race name is too long");
         }
 
@@ -74,40 +91,28 @@ public class AnimalValidator {
 
         if (!isValidDateOfBirth(animalDto.getBirthDate())) {
             validationErrors.add("Birth Date must not be in the future!");
-        } else if (animalDto.getBirthDate().isBefore(LocalDate.now().minusYears(50))) {
+        } else if (animalDto.getBirthDate().isBefore(LocalDate.now().minusYears(100))) {
             validationErrors.add("Animal cannot be older than 50 years!");
         }
 
         // # Height
 
-        if (animalDto.getHeight() < 0) {
+        if (animalDto.getHeight() <= 0) {
             validationErrors.add("Height must be greater than zero");
         }
 
         // # Weight
 
-        if (animalDto.getWeight() < 0) {
+        if (animalDto.getWeight() <= 0) {
             validationErrors.add("Weight must be greater than zero");
         }
 
         // # Shelter
-
-        // TODO enable Shelter Validation!
-
-        //        if (animalDto.getShelter() != null) {
-        //            try {
-        //                shelterRepository.findById(animalDto.getShelter().getId());
-        //            } catch (NotFoundException e) {
-        //                validationErrors.add("Assigned Shelter could not be found in the database");
-        //            }
-        //        } else {
-        //            validationErrors.add("Shelter must not be null");
-        //        }
-
-        if (!validationErrors.isEmpty()) {
-            throw new ValidationException("Validation of animal details failed", validationErrors);
+        if (animalDto.getShelter() == null || animalDto.getShelter().getId() == null) {
+            validationErrors.add("Shelter must not be null");
         }
 
+        return validationErrors;
     }
 
     // ### VALIDATION METHODS
@@ -116,18 +121,22 @@ public class AnimalValidator {
      * Validates new animal for creation.
      *
      * @param animalDto animalDto
-     * @throws ValidationException when at least one value cannot be used / validated
+     * @throws ValidationException if failed to validate animal data
      */
     public void validateForCreate(CreateAnimalDto animalDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", animalDto);
-        validateAnimalDetails(mapper.createAnimalDtoToAnimalDetailDto(animalDto));
+        List<String> validationErrors = validateAnimalDetails(mapper.createAnimalDtoToAnimalDetailDto(animalDto));
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException("Failed to validate data for creating animal", validationErrors);
+        }
     }
 
     /**
-     * Validates new animal for update.
+     * Validates existing animal data for update. <br>
+     * Checks if id is null or blank and calls then validateAnimalDetails
      *
      * @param animalDto animalDto
-     * @throws ValidationException when at least one value cannot be used / validated
+     * @throws ValidationException if failed to validate animal data
      */
     public void validateForUpdate(AnimalDetailDto animalDto) throws ValidationException {
         LOGGER.trace("validateForUpdate({})", animalDto);
@@ -135,15 +144,15 @@ public class AnimalValidator {
 
         // # id
 
-        if (stringIsEmpty(animalDto.getId().toString())) {
+        if (animalDto.getId() == null || animalDto.getId().toString().isBlank()) {
             validationErrors.add("No id given");
         }
 
-        if (!validationErrors.isEmpty()) {
-            throw new ValidationException("Validation of animal for update has failed", validationErrors);
-        }
+        validationErrors.addAll(validateAnimalDetails(animalDto));
 
-        validateAnimalDetails(animalDto);
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException("Failed to validate data for creating animal", validationErrors);
+        }
     }
 
 

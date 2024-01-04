@@ -29,6 +29,10 @@ public class ShelterDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
+    private String donationId;
+
+    private String subscriptionId;
+
     private Instant createdOn;
 
     @Override
@@ -39,6 +43,8 @@ public class ShelterDto {
             + ", address='" + address + '\''
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email='" + email + '\''
+            + ", donation=" + donationId + '\''
+            + ", donation=" + donationId + '\''
             + ", createdOn=" + createdOn
             + '}';
     }

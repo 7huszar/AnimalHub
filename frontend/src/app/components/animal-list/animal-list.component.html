@@ -9,6 +9,9 @@
         <input [(ngModel)]="searchTermSpecies" (input)="onInput()" placeholder="{{'ANIMAL_LIST.SPECIES' | translate}}" class="form-control">
         <i class="bi bi-search search-icon"></i>
       </div>
+      <div>
+        <button *ngIf="isPrivileged()" (click)="addAnimal()" class="btn btn-primary">New</button>
+      </div>
     </div>
   </div>
   <div id="animal-cards" class="row">
@@ -19,17 +22,24 @@
           <h5 class="card-title">{{ animal.name }}</h5>
           <p class="card-text">{{ animal.species.charAt(0).toUpperCase() + animal.species.toLowerCase().slice(1) }}</p>
             <button class="btn btn-primary" (click)="editAnimal(animal.id)">Details</button>
-            <button class="btn btn-danger" *ngIf="authService.isMember()" (click)="deleteAnimal(animal.id)" style="position: absolute; bottom: 1rem; right: 1rem;">
-              <i class="bi bi-trash"></i>
-            </button>
+
+
+
+          <button type="button" class="custom-danger-btn"
+                  (click)="animalForDeletion(animal.name, animal.id)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirm-delete-dialog"
+                  aria-label="Delete shelter">
+            <i class="bi bi-trash"></i> Delete
+          </button>
         </div>
       </div>
     </div>
+    <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
+
   </div>
   <div class="d-flex justify-content-center pagination-container">
     <pagination-controls (pageChange)="p = $event"></pagination-controls>
   </div>
 </div>
-<div class="lang" style="position: absolute; bottom: 2rem; right: 1rem;" >
-  <app-lang-select></app-lang-select>
-</div>
+

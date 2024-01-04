@@ -1,25 +1,36 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.validator.ConflictValidator;
+import at.ac.tuwien.sepr.groupphase.backend.service.conflict.UserConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -40,8 +52,10 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
-    private final ConflictValidator conflictChecker;
+    private final SecurityProperties securityProperties;
     private final UserMapper userMapper;
+    private final UserConflict conflict;
+    private final MailService mail;
 
 
     /**
@@ -95,7 +109,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
+    public ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findByEmail(email);
         if (applicationUser != null) {
@@ -106,11 +120,15 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
+        // tmp solution
+        ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
+            && applicationUser.getRole() != UserRole.INACTIVE
             && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
         ) {
             List<String> roles = userDetails.getAuthorities()
@@ -126,30 +144,79 @@ public class CustomUserDetailService implements UserService {
     public void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
         LOGGER.debug("register user by email");
         userValidator.validateUserCredentials(userLoginDto);
-        conflictChecker.checkRegisterConflicts(userLoginDto.getEmail());
-        /*
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("animalhub.service@gmail.com");
-        message.setTo(userLoginDto.getEmail());
-        message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(userLoginDto.getEmail()));
-        emailSender.send(message);
-         */
+        conflict.conflictForRegister(userLoginDto.getEmail());
+
+        LocalDateTime regStamp = LocalDateTime.now();
 
         ApplicationUser user = ApplicationUser.builder()
             .email(userLoginDto.getEmail())
             .password(passwordEncoder.encode(userLoginDto.getPassword()))
-            .role(UserRole.USER)
+            .role(UserRole.INACTIVE)
+            .registrationStamp(regStamp)
             .build();
 
+        if (userRepository.existsByEmail(user.getEmail())) {
+            ApplicationUser old = userRepository.findByEmail(user.getEmail());
+            old.setPassword(user.getPassword());
+            old.setRegistrationStamp(user.getRegistrationStamp());
+            user = old;
+        }
         userRepository.save(user);
     }
 
     @Override
-    public void delete(UUID id) throws ConflictException {
+    public void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException {
+        LOGGER.trace("requestMail({})", mailRequestDto);
+
+        ApplicationUser user = userRepository.findByEmail(mailRequestDto.email());
+        if (user == null) {
+            throw new NotFoundException("user by email " + mailRequestDto.email() + " dosn't exist");
+        }
+        mail.sendVerificationMail(user.getEmail(), mailRequestDto.lang(), user.getRegistrationStamp());
+    }
+
+    @Transactional
+    @Override
+    public void verify(String token) throws NotAuthorizedException {
+        String email;
+        String regStamp;
+        try {
+            Claims claims = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+            email = claims.get("email", String.class);
+            regStamp = claims.get("regstamp", String.class);
+        } catch (JwtException e) {
+            throw new NotAuthorizedException(e.getMessage());
+        }
+        ApplicationUser user = userRepository.findByEmail(email);
+        if (!regStamp.equals(user.getRegistrationStamp().toString())) {
+            throw new NotAuthorizedException("verification time expired");
+        }
+        userRepository.updateRole(email, UserRole.USER);
+    }
+
+    @Override
+    public UserDetailDto getCurrentUser() throws NotFoundException {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        var user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new NotFoundException("User could not be found.");
+        }
+
+        return userMapper.applicationUserToUserDetailDto(user);
+    }
+
+    @Override
+    public void delete(UUID id) throws ConflictException, NotAuthorizedException, NotFoundException {
         LOGGER.debug("Delete Shelter with id: " + id);
 
-        conflictChecker.checkUserDeleteConflicts(id);
+        conflict.conflictForDelete(id);
         var shelter = userRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
@@ -157,7 +224,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException {
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
         LOGGER.debug("Update Shelter with id: " + userDetailDto.getId() + ", with following data:" + userDetailDto);
 
         userValidator.validateUserCredentialsForUpdate(userDetailDto);
@@ -171,7 +238,7 @@ public class CustomUserDetailService implements UserService {
 
 
     @Override
-    public UserDetailDto findById(UUID id) {
+    public UserDetailDto findById(UUID id) throws NotFoundException {
         LOGGER.debug("Get User with id: " + id);
 
         var user = userRepository.findById(id).orElseThrow(
@@ -180,4 +247,43 @@ public class CustomUserDetailService implements UserService {
 
         return userMapper.applicationUserToUserDetailDto(user);
     }
+
+    @Override
+    public void requestPasswordReset(PasswordRequestResetDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException {
+        userValidator.validatePasswordRequestResetDto(resetDto);
+        LOGGER.trace("requestPasswordReset({})", resetDto);
+
+        ApplicationUser user = userRepository.findByEmail(resetDto.email());
+
+        if (user == null) {
+            throw new NotFoundException("User by e-mail " + resetDto.email() + " does not exist");
+        }
+        if (user.getRole().equals(UserRole.INACTIVE)) {
+            throw new NotAuthorizedException("User by e-mail " + user.getEmail() + " is not active yet");
+        }
+
+        mail.sendResetPasswordMail(resetDto.email(), resetDto.lang());
+    }
+
+    @Transactional
+    @Override
+    public void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException {
+        String email;
+
+        Claims claims = Jwts.parser()
+            .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+            .build()
+            .parseSignedClaims(resetDto.token())
+            .getPayload();
+
+        email = claims.get("email", String.class);
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new NotFoundException("User by email " + email + " does not exist");
+        }
+
+        userRepository.updatePassword(email, passwordEncoder.encode(resetDto.password()));
+
+    }
+
 }

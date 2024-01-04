@@ -109,7 +109,7 @@ public class ShelterValidator {
 
         // # id
 
-        if (stringIsEmpty(shelterDto.getId().toString())) {
+        if (shelterDto.getId() == null || stringIsEmpty(shelterDto.getId().toString())) {
             validationErrors.add("No id given");
         }
 

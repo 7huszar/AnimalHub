@@ -1,0 +1,144 @@
+<app-header></app-header>
+
+<div class="container">
+  <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)" class="custom-form">
+
+    <div class="custom-row">
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalName" class="custom-label">
+            Name
+          </label>
+          <div class="custom-field">
+            <input type="text" id="animalName" name="animalName" placeholder="Animal name"
+                   class="form-control" [class]="dynamicCssClassesForInput(animalNameModel)" [(ngModel)]="animal.name"
+                   maxlength="100" #animalNameModel="ngModel" required>
+          </div>
+          <div class="invalid-feedback">
+            Name is required
+          </div>
+        </div>
+      </div>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalBirthDate" class="custom-label">
+            Date of Birth
+          </label>
+          <div class="custom-field">
+            <input type="date" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}" placeholder="yyyy-mm-dd"
+                   class="form-control" max="{{today}}" [class]="dynamicCssClassesForInput(AnimalBirthDateModel)"
+                   [(ngModel)]="animal.birthDate" #AnimalBirthDateModel="ngModel" required>
+          </div>
+          <div class="invalid-feedback">
+            Date of birth is required
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-row">
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalSpecies" class="custom-label">
+            Species
+          </label>
+          <div class="custom-field">
+            <select class="form-select" id="animalSpecies" name="animalSpecies" [(ngModel)]="animal.species" required>
+              <option value="DOG">Dog</option>
+              <option value="CAT">Cat</option>
+              <option value="BIRD">Bird</option>
+              <option value="RODENT">Rodent</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalRace" class="custom-label">
+            Race
+          </label>
+          <div class="custom-field">
+            <input type="text" id="animalRace" name="animalRace" placeholder="Race" class="form-control"
+                   [class]="dynamicCssClassesForInput(animalRaceModel)" [(ngModel)]="animal.race"
+                   maxlength="100" #animalRaceModel="ngModel" required>
+          </div>
+          <div class="invalid-feedback">
+            Race is required
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-row">
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalHeight" class="custom-label">
+            Height [m]
+          </label>
+          <div class="custom-field">
+            <input type="number" class="form-control" id="animalHeight" name="animalHeight" step="0.01"
+                   [(ngModel)]="animal.height" required>
+          </div>
+        </div>
+      </div>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalWeight" class="custom-label">
+            Weight [kg]
+          </label>
+          <div class="custom-field">
+            <input type="number" class="form-control" id="animalWeight" name="animalWeight" step="0.1"
+                   [(ngModel)]="animal.weight" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-row">
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalImage" class="custom-label">
+            Image
+          </label>
+          <div class="custom-field">
+            <input type="file" id="animalImage" name="animalImage" accept="image/png, image/jpeg, image/gif"
+                   (change)="onImageSelected($event)" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- upload image -->
+    <div class="row">
+      <div class="selected-pic" (drop)="dropped($event)" (dragenter)="enterDropZone($event)" (dragleave)="leaveDropZone($event)"
+      [style.border-style]="animalImageURL ? 'none' : 'dashed'">
+        <div class="m-1 text-center">
+        </div>
+        <div *ngIf="!animalImageURL" style="pointer-events: none;">
+          <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
+          drag and drop
+        </div>
+        <img *ngIf="animalImageURL" [src]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
+      </div>
+      <div class="custom-submit">
+        <div class="row">
+          <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+            <button type="submit" class="custom-button" [disabled]="!form.valid">
+              {{submitButtonText}}
+            </button>
+          </div>
+          <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+            <button type="button" class="btn btn-sm btn-danger"
+                    (click)="animalForDeletion(animal.name, animal.id)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirm-delete-dialog"
+                    aria-label="Delete shelter">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
+  </form>
+</div>

@@ -1,16 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.Instant;
+import java.util.UUID;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_ANIMAL_SHELTER;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_ADDRESS;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_EMAIL;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_NAME;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.TEST_SHELTER_PHONE_NUMBER;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,46 +27,33 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 //// the entire application context
 @SpringBootTest
 @ActiveProfiles("test")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class ShelterServiceTest {
+public class ShelterServiceTest extends TestBase {
 
-    private final AnimalRepository animalRepository;
-    private final ShelterRepository shelterRepository;
+    @Autowired
+    ShelterService shelterService;
 
-    private final ShelterService shelterService;
+    @Autowired
+    AnimalShelterMapper mapper;
 
-    private final AnimalShelterMapper mapper;
-
-    @BeforeEach
-    public void beforeEach() {
-        shelterRepository.deleteAll();
-        animalRepository.deleteAll();   // at this point there shouldnt be any animals in the repo (just to be sure)
-    }
 
     @Test
-    public void findByIdWithSuccess() throws ValidationException {
+    public void findByIdWithSuccess() throws ValidationException, NotFoundException {
 
-        CreateShelterDto createShelterDto = CreateShelterDto.builder()
-            .name(TEST_SHELTER_NAME)
-            .address(TEST_SHELTER_ADDRESS)
-            .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
-            .email(TEST_SHELTER_EMAIL)
-            .build();
+        Shelter testShelter = allShelterEntities.get(0);
 
-        ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
-        ShelterDetailDto foundShelter = shelterService.findById(shelterDetailDto.getId());
+        ShelterDetailDto foundShelter = shelterService.findById(testShelter.getId());
 
         assertAll(
-            () -> assertEquals(createShelterDto.getName(), foundShelter.getName()),
-            () -> assertEquals(createShelterDto.getAddress(), foundShelter.getAddress()),
-            () -> assertEquals(createShelterDto.getPhoneNumber(), foundShelter.getPhoneNumber()),
-            () -> assertEquals(createShelterDto.getEmail(), foundShelter.getEmail())
+            () -> assertEquals(testShelter.getName(), foundShelter.getName()),
+            () -> assertEquals(testShelter.getAddress(), foundShelter.getAddress()),
+            () -> assertEquals(testShelter.getPhoneNumber(), foundShelter.getPhoneNumber()),
+            () -> assertEquals(testShelter.getEmail(), foundShelter.getEmail())
         );
     }
 
     @Test
     public void findByIdUnsuccessfully() {
-        assertThrows(NotFoundException.class, () -> shelterService.findById(TEST_ANIMAL_SHELTER.getId()));
+        assertThrows(NotFoundException.class, () -> shelterService.findById(UUID.randomUUID()));
     }
 
     @Test
@@ -81,16 +61,16 @@ public class ShelterServiceTest {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
+            .donationId(TEST_SHELTER_DONATION_ID)
             .address(TEST_SHELTER_ADDRESS)
             .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
             .email(TEST_SHELTER_EMAIL)
-            .createdOn(Instant.now())
             .build();
 
         ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
 
         assertAll(
-            () -> assertEquals(1, shelterService.findAll().size()),
+            () -> assertEquals(allShelterEntities.size() + 1, shelterService.findAll().size()),
             () -> assertEquals(createShelterDto.getName(), shelterDetailDto.getName()),
             () -> assertEquals(createShelterDto.getAddress(), shelterDetailDto.getAddress()),
             () -> assertEquals(createShelterDto.getPhoneNumber(), shelterDetailDto.getPhoneNumber()),
@@ -104,99 +84,51 @@ public class ShelterServiceTest {
 
         CreateShelterDto createShelterDto = CreateShelterDto.builder()
             .name(TEST_SHELTER_NAME)
+            .donationId(TEST_SHELTER_DONATION_ID)
+            .donationId(TEST_SHELTER_DONATION_ID)
             .address("")
             .phoneNumber("")
             .email(TEST_SHELTER_EMAIL)
-            .createdOn(Instant.now())
             .build();
 
         assertThrows(ValidationException.class, () -> shelterService.create(createShelterDto));
     }
 
     @Test
-    public void deleteShelterWithSuccess() throws ValidationException {
+    public void deleteShelterWithSuccess() throws ValidationException, NotFoundException {
 
-        CreateShelterDto createShelterDto = CreateShelterDto.builder()
-            .name(TEST_SHELTER_NAME)
-            .address(TEST_SHELTER_ADDRESS)
-            .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
-            .email(TEST_SHELTER_EMAIL)
-            .createdOn(Instant.now())
-            .build();
+        UUID shelterId = allShelterEntities.get(0).getId();
 
-        ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
+        shelterService.delete(shelterId);
 
         assertAll(
-            () -> assertEquals(1, shelterService.findAll().size()),
-            () -> assertEquals(createShelterDto.getName(), shelterDetailDto.getName()),
-            () -> assertEquals(createShelterDto.getAddress(), shelterDetailDto.getAddress()),
-            () -> assertEquals(createShelterDto.getPhoneNumber(), shelterDetailDto.getPhoneNumber()),
-            () -> assertEquals(createShelterDto.getEmail(), shelterDetailDto.getEmail()),
-            () -> assertEquals(createShelterDto.getCreatedOn(), shelterDetailDto.getCreatedOn())
+            () -> assertEquals(allShelterEntities.size() - 1, shelterService.findAll().size()),
+            () -> assertThrows(NotFoundException.class, () -> shelterService.findById(shelterId))
         );
-
-        shelterService.delete(shelterDetailDto.getId());
-
-        assertEquals(0, shelterService.findAll().size());
     }
 
     @Test
-    public void deleteShelterUnsuccessfully() throws ValidationException {
-
-        CreateShelterDto createShelterDto = CreateShelterDto.builder()
-            .name(TEST_SHELTER_NAME)
-            .address(TEST_SHELTER_ADDRESS)
-            .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
-            .email(TEST_SHELTER_EMAIL)
-            .createdOn(Instant.now())
-            .build();
-
-        ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
-
-        assertAll(
-            () -> assertEquals(1, shelterService.findAll().size()),
-            () -> assertEquals(createShelterDto.getName(), shelterDetailDto.getName()),
-            () -> assertEquals(createShelterDto.getAddress(), shelterDetailDto.getAddress()),
-            () -> assertEquals(createShelterDto.getPhoneNumber(), shelterDetailDto.getPhoneNumber()),
-            () -> assertEquals(createShelterDto.getEmail(), shelterDetailDto.getEmail()),
-            () -> assertEquals(createShelterDto.getCreatedOn(), shelterDetailDto.getCreatedOn())
-        );
-
-        shelterService.delete(shelterDetailDto.getId());
-        assertEquals(0, shelterService.findAll().size());
-
-        assertThrows(NotFoundException.class, () -> shelterService.delete(shelterDetailDto.getId()));
+    public void deleteShelterUnsuccessfully() throws ValidationException, NotFoundException {
+        assertThrows(NotFoundException.class, () -> shelterService.delete(UUID.randomUUID()));
     }
 
     @Test
-    public void updateShelterUnsuccessfully() throws ValidationException {
+    public void updateShelterSuccessfully() throws ValidationException, NotFoundException {
 
-        CreateShelterDto createShelterDto = CreateShelterDto.builder()
-            .name(TEST_SHELTER_NAME)
-            .address(TEST_SHELTER_ADDRESS)
-            .phoneNumber(TEST_SHELTER_PHONE_NUMBER)
-            .email(TEST_SHELTER_EMAIL)
-            .createdOn(Instant.now())
-            .build();
-
-        ShelterDto shelterDetailDto = shelterService.create(createShelterDto);
-
-        ShelterDetailDto updateShelterDto = shelterService.findById(shelterDetailDto.getId());
+        ShelterDetailDto updateShelterDto = shelterService.findById(allShelterEntities.get(0).getId());
         updateShelterDto.setName("test");
         updateShelterDto.setAddress("testAddress");
         updateShelterDto.setEmail("testMail@tester.com");
         updateShelterDto.setPhoneNumber("12345");
-        updateShelterDto.setCreatedOn(shelterDetailDto.getCreatedOn());
 
         ShelterDto updatedShelter = shelterService.update(mapper.shelterDetailDtoToShelterDto(updateShelterDto));
 
         assertAll(
-            () -> assertEquals(1, shelterService.findAll().size()),
+            () -> assertEquals(allShelterEntities.size(), shelterService.findAll().size()),
             () -> assertEquals(updatedShelter.getName(), "test"),
             () -> assertEquals(updatedShelter.getAddress(), "testAddress"),
             () -> assertEquals(updatedShelter.getPhoneNumber(), "12345"),
-            () -> assertEquals(updatedShelter.getEmail(), "testMail@tester.com"),
-            () -> assertEquals(updatedShelter.getCreatedOn(), shelterDetailDto.getCreatedOn())
+            () -> assertEquals(updatedShelter.getEmail(), "testMail@tester.com")
         );
     }
 }

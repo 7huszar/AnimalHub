@@ -1,13 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.files.FileRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileContentStore;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.FileValidator;
@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,7 +56,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileDetailDto findById(UUID id) {
+    public FileDetailDto findById(UUID id) throws NotFoundException {
         LOGGER.debug("Get File with id: " + id);
 
         File entity = fileRepository.findById(id).orElseThrow(
@@ -68,5 +70,21 @@ public class FileServiceImpl implements FileService {
 
         // return complete FileDetailDto
         return detailDto;
+    }
+
+    @Override
+    public List<FileDetailDto> findAll() {
+        LOGGER.debug("Find all Files");
+
+        List<FileDetailDto> returnList = new ArrayList<>();
+
+
+        fileRepository.findAll().forEach((file) -> {
+            FileDetailDto dto = mapper.fileToFileDetailDto(file);
+            dto.setFile(new InputStreamResource(fileContentStore.getContent(file)));
+            returnList.add(dto);
+        });
+
+        return returnList;
     }
 }

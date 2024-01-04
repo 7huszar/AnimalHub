@@ -8,9 +8,10 @@ import java.util.List;
 @Getter
 public enum UserRole {
 
-    ADMIN(3, Values.ADMIN_VALUE),
-    MEMBER(2, Values.MEMBER_VALUE),
-    USER(1, Values.USER_VALUE);
+    ADMIN(4, Values.ADMIN_VALUE),
+    MEMBER(3, Values.MEMBER_VALUE),
+    USER(2, Values.USER_VALUE),
+    INACTIVE(1, Values.INACTIVE_ROLE);
 
     private final int priority;
     private final String value;
@@ -35,6 +36,10 @@ public enum UserRole {
             permissions.add(USER.value);
         }
 
+        if (priority >= INACTIVE.priority) {
+            permissions.add(INACTIVE.value);
+        }
+
         return permissions;
     }
 
@@ -42,5 +47,6 @@ public enum UserRole {
         public static final String ADMIN_VALUE = "ADMIN_ROLE";
         public static final String MEMBER_VALUE = "MEMBER_ROLE";
         public static final String USER_VALUE = "USER_ROLE";
+        public static final String INACTIVE_ROLE = "INACTIVE_ROLE";
     }
 }

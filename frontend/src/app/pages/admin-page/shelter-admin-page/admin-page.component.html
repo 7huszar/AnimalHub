@@ -1,0 +1,140 @@
+<app-header></app-header>
+
+<div class="container mt-3">
+  <div class="row">
+    <!-- Create Shelter Section -->
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Shelters</h2>
+        <div class="me-2">
+          <a class="btn btn-secondary" routerLink="/shelter/create" aria-label="New Shelter">
+            <i class="bi bi-plus-lg"></i>
+            New Shelter
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label for="searchShelterName" class="col-form-label">Search for Shelter</label>
+        <div class="input-group">
+          <input type="text" id="searchShelterName" name="searchShelterName"
+                 class="form-control"
+                 [(ngModel)]="shelterSearchParams.name"
+                 (ngModelChange)="shelterSearchChanged()"
+                 placeholder="Enter Shelter Name">
+          <button class="btn btn-primary" (click)="shelterSearchChanged()" aria-label="Search">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <table class="table table-hover">
+          <!-- Shelters Table -->
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="min-width text-end">Actions</th> <!-- Align the header to the end (right) -->
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let shelter of shelters" class="center-td">
+            <td>{{ shelter.name }}</td>
+            <td class="text-end"> <!-- Align the actions to the end (right) -->
+              <div class="btn-group">
+                <a class="btn btn-sm btn-warning" [routerLink]="['/shelter/edit', shelter.id]" aria-label="Edit shelter">
+                  <i class="bi bi-pencil"></i> Edit
+                </a>
+                <button type="button" class="btn btn-sm btn-danger"
+                        (click)="shelterForDeletion(shelter.name, shelter.id)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#confirm-delete-dialog"
+                        aria-label="Delete shelter">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" (deleteErrorEvent)="onDeleteError"></app-confirm-delete-dialog>
+      </div>
+    </div>
+
+    <!-- View Users Section -->
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Users</h2>
+      </div>
+
+      <div class="mt-3">
+        <div class="d-flex">
+          <div class="me-2">
+            <label for="searchUserEmail" class="col-form-label">Search for User</label>
+            <div class="input-group">
+              <input type="text" id="searchUserEmail" name="searchUserEmail"
+                     class="form-control"
+                     [(ngModel)]="userSearchParams.email"
+                     (ngModelChange)="userSearchChanged()"
+                     placeholder="Enter User Email">
+              <button class="btn btn-primary ms-2" (click)="userSearchChanged()" aria-label="Search">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="searchUserRole" class="form-label">Search for Role</label>
+            <div class="input-group">
+              <select id="searchUserRole" name="searchUserRole"
+                      class="form-select"
+                      [(ngModel)]="userSearchParams.role"
+                      (ngModelChange)="userSearchChanged()">
+                <option value="" disabled selected>Select Role</option>
+                <option value="USER">USER</option>
+                <option value="MEMBER">MEMBER</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+              <button class="btn btn-primary ms-2" (click)="userSearchChanged()" aria-label="Search">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <table class="table table-hover">
+          <!-- Users Table -->
+          <thead>
+          <tr>
+            <th>Email</th>
+            <th class="min-width text-end">Actions</th> <!-- Align the header to the end (right) -->
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users" class="center-td">
+            <td>{{ user?.email }}</td>
+            <td class="text-end"> <!-- Align the actions to the end (right) -->
+              <div class="btn-group">
+                <a class="btn btn-sm btn-warning" [routerLink]="['/users/edit', user.id]" aria-label="Edit user">
+                  <i class="bi bi-pencil"></i> Edit
+                </a>
+                <button type="button" class="btn btn-sm btn-danger"
+                        (click)="userForDeletion(user.email, user.id)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#confirm-delete-dialog"
+                        aria-label="Delete User">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" (deleteErrorEvent)="onDeleteError($event)"></app-confirm-delete-dialog>
+
+      </div>
+    </div>
+  </div>
+</div>

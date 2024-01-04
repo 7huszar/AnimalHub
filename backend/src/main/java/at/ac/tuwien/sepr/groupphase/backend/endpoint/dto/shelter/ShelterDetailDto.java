@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -31,7 +31,11 @@ public class ShelterDetailDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
-    private Set<AnimalDto> animals;
+    private String donationId;
+
+    private String subscriptionId;
+
+    private List<AnimalDto> animals;
 
     private Instant createdOn;
 
@@ -43,6 +47,8 @@ public class ShelterDetailDto {
             + ", address=" + address
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email=" + email + '\''
+            + ", donation=" + donationId + '\''
+            + ", donation=" + donationId + '\''
             + ", animals=" + animals + '\''
             + ", createdOn=" + createdOn + '\''
             + '}';

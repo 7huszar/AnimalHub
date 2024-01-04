@@ -5,16 +5,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +39,16 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
 
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("/current")
+    @Operation(summary = "Get the current logged in user", security = @SecurityRequirement(name = "apiKey"))
+    public UserDetailDto getCurrentUser() throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH + "/current");
+
+        return userService.getCurrentUser();
+    }
+
     @Secured(UserRole.Values.ADMIN_VALUE)
     @GetMapping("/search")
     @Operation(summary = "Get list of filtered users", security = @SecurityRequirement(name = "apiKey"))
@@ -50,7 +62,7 @@ public class UserEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) throws ConflictException {
+    public void delete(@PathVariable UUID id) throws ConflictException, NotAuthorizedException, NotFoundException {
         LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
         userService.delete(id);
     }
@@ -58,17 +70,17 @@ public class UserEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "Get user by id", security = @SecurityRequirement(name = "apiKey"))
-    public UserDetailDto findById(@PathVariable UUID id) {
-        LOGGER.info("GET " + BASE_PATH + "/ " + id);
+    public UserDetailDto findById(@PathVariable UUID id) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH + "/{}", id);
         return userService.findById(id);
     }
 
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("edit/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException {
-        LOGGER.info("PUT " + BASE_PATH + "/" + id);
-        LOGGER.debug("Body of request:\n{}", userDetailDto);
+    public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
+        LOGGER.info("PUT " + BASE_PATH + "/{}", id);
+        LOGGER.debug("RequestBody:{}", userDetailDto);
         userDetailDto.setId(id);
 
         return userService.update(userDetailDto);

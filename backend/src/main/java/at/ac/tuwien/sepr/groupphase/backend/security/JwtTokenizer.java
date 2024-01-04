@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -30,19 +31,36 @@ public class JwtTokenizer {
         return securityProperties.getAuthTokenPrefix() + token;
     }
 
-    /*
-    public String getActivationToken(String user) {
+
+    public String getActivationToken(String user, String language, LocalDateTime regStamp) {
+        byte[] signingKey = securityProperties.getActJwtSecret().getBytes();
+        return Jwts.builder()
+            .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
+            .setHeaderParam("typ", securityProperties.getActJwtType())
+            .setIssuer(securityProperties.getActJwtIssuer())
+            .setAudience(securityProperties.getActJwtAudience())
+            .setSubject("verification")
+            .claim("email", user)
+            .claim("language", language)
+            .claim("regstamp", regStamp.toString())
+            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getActJwtExpirationTime()))
+            .compact();
+    }
+
+    public String getPasswordToken(String user, String language) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
         String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
-            .setHeaderParam("typ", securityProperties.getJwtType())
-            .setIssuer(securityProperties.getJwtIssuer())
-            .setAudience(securityProperties.getJwtAudience())
+            .setHeaderParam("typ", securityProperties.getActJwtType())
+            .setIssuer(securityProperties.getActJwtIssuer())
+            .setAudience(securityProperties.getActJwtAudience())
             .setSubject("verification")
             .claim("email", user)
-            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
+            .claim("language", language)
+            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getActJwtExpirationTime()))
             .compact();
         return token;
+
     }
-     */
+
 }

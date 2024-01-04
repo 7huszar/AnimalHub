@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,7 +59,7 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "Get shelter by id", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDetailDto findById(@PathVariable UUID id) {
+    public ShelterDetailDto findById(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/ " + id);
         return shelterService.findById(id);
     }
@@ -76,7 +77,7 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public ShelterDto update(@PathVariable UUID id, @Valid @RequestBody ShelterDto shelterDto) throws ValidationException {
+    public ShelterDto update(@PathVariable UUID id, @Valid @RequestBody ShelterDto shelterDto) throws ValidationException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", shelterDto);
         shelterDto.setId(id);
@@ -86,7 +87,7 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.ADMIN_VALUE)
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
         shelterService.delete(id);
     }
@@ -94,7 +95,7 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/profileImg")
     @Operation(summary = "Get shelter's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<?> getProfileImage(@PathVariable UUID id) {
+    public ResponseEntity<?> getProfileImage(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/{}/files/profileImg", id);
         var fileDto = shelterService.getProfileImage(id);
 
@@ -109,7 +110,8 @@ public class ShelterEndpoint {
     @PostMapping("{id}/files/profileImg")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Sets shelter's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto setProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) throws ValidationException, ConflictException, IOException {
+    public FileDto setProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file)
+        throws ValidationException, ConflictException, IOException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/{}/files/profileImg", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 
@@ -119,7 +121,8 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}/files/profileImg")
     @Operation(summary = "Updates shelter's profile image", security = @SecurityRequirement(name = "apiKey"))
-    public FileDto updateProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file) {
+    public FileDto updateProfileImage(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("summary") String summary, @RequestParam("file") MultipartFile file)
+        throws ValidationException, IOException, NotFoundException {
         LOGGER.info("PUT " + BASE_PATH + "{}/files/profileImg", id);
         var createFileDto = new CreateFileDto(name, summary, file);
 

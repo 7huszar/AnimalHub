@@ -1,0 +1,124 @@
+<app-header></app-header>
+
+
+<div class="container">
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)" class="custom-form">
+
+  <!-- First row -->
+  <div class="custom-row">
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterName" class="custom-label">
+          Name
+        </label>
+        <div class="custom-field">
+          <input type="text" id="shelterName" name="shelterName" placeholder="Shelter name"
+          class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="shelter.name"
+          maxlength="200" #shelterNameModel="ngModel" required>
+        </div>
+        <div class="invalid-feedback">
+          Name is required
+        </div>
+      </div>
+    </div>
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterEmail" class="custom-label">
+          Email
+        </label>
+        <div class="custom-field">
+          <input type="text" id="shelterEmail" name="shelterEmail" placeholder="user@animalhub"
+                 class="form-control" [class]="dynamicCssClassesForInput(shelterEmailModel)" [(ngModel)]="shelter.email"
+                 maxlength="100" #shelterEmailModel="ngModel" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-row">
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterAddress" class="custom-label">
+          Address
+        </label>
+        <div class="custom-field">
+          <input type="text" id="shelterAddress" name="shelterAddress" placeholder="Shelter address"
+          class="form-control" [class]="dynamicCssClassesForInput(shelterAddressModel)" [(ngModel)]="shelter.address"
+          maxlength="400" #shelterAddressModel="ngModel" required>
+        </div>
+      </div>
+    </div>
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterPhoneNumber" class="custom-label">
+          Phone-Number
+        </label>
+        <div class="custom-field">
+          <input type="text" id="shelterPhoneNumber" name="shelterPhoneNumber" placeholder="06501234567"
+                 class="form-control" [class]="dynamicCssClassesForInput(shelterPhoneNumberModel)" [(ngModel)]="shelter.phoneNumber"
+                 maxlength="50" #shelterPhoneNumberModel="ngModel" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-row">
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterImage" class="custom-label">
+          Image
+        </label>
+        <div class="custom-field">
+          <input type="file" id="shelterImage" name="shelterImage" accept="image/png, image/jpeg, image/gif"
+                 (change)="onImageSelected($event)" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="custom-input">
+      <div class="custom-row-inner">
+        <label for="shelterName" class="custom-label">
+          Paypal Donation ID
+        </label>
+        <div class="custom-field">
+          <input type="text" id="shelterDonationId" name="shelterDonationId" placeholder="Shelter donation Id"
+                 class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="shelter.donationId"
+                 maxlength="30" #shelterNameModel="ngModel" >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="selected-pic" (drop)="dropped($event)" (dragenter)="enterDropZone($event)" (dragleave)="leaveDropZone($event)"
+         [style.border-style]="shelterImageURL ? 'none' : 'dashed'">
+      <div class="m-1 text-center">
+      </div>
+      <div *ngIf="!shelterImageURL" style="pointer-events: none;">
+        <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
+        drag and drop
+      </div>
+      <img *ngIf="shelterImageURL" [src]="shelterImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
+    </div>
+
+    <div class="custom-submit">
+      <div class="row">
+        <div class="col-12 col-sm-6">
+          <button type="submit" class="custom-button" [disabled]="!form.valid">
+            {{submitButtonText}}
+          </button>
+        </div>
+        <div *ngIf="!modeIsCreate" class="col-12 col-sm-6">
+          <button type="button" class="custom-danger-btn" style="width:100%"
+                  (click)="shelterForDeletion(shelter.name, shelter.id)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirm-delete-dialog"
+                  aria-label="Delete shelter">
+            <i class="bi bi-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
+</form>
+</div>

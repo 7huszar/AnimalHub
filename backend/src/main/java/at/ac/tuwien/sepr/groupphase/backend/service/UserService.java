@@ -1,11 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,14 +21,11 @@ import java.util.UUID;
 public interface UserService extends UserDetailsService {
 
     /**
-     * Find a user in the context of Spring Security based on the email address
-     * <br>
-     * For more information have a look at this tutorial:
-     * https://www.baeldung.com/spring-security-authentication-with-a-database
+     * Find a user in the context of Spring Security based on the email address.
      *
      * @param email the email address
      * @return a Spring Security user
-     * @throws UsernameNotFoundException is thrown if the specified user does not exists
+     * @throws UsernameNotFoundException is thrown if the specified user does not exist
      */
     @Override
     UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
@@ -32,9 +34,9 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the email address.
      *
      * @param email the email address
-     * @return a application user
+     * @return an application user
      */
-    ApplicationUser findApplicationUserByEmail(String email);
+    ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException;
 
     /**
      * Log in a user.
@@ -47,11 +49,17 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Registers a user and sends an e-mail to verify given e-mail.
+     * The role of the user is initially set to UserRole.INACTIVE.
      *
      * @param userLoginDto contains e-mail and password
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
+     * @throws ConflictException if user already exists
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
+
+    void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException;
+
+    UserDetailDto getCurrentUser() throws NotFoundException;
 
     /**
      * Search for users in the persistent data store matching all provided fields.
@@ -69,7 +77,16 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the user to be deleted.
      * @code NotFoundException thrown when the id does not point to any user in the persistent data store.
      */
-    void delete(UUID id) throws ConflictException;
+    void delete(UUID id) throws ConflictException, NotAuthorizedException, NotFoundException;
+
+    /**
+     * Verifies e-mail of user given by token claim.
+     * More precisely, the status of the role of the user is set from UserRole.INACTIVE to UserRole.USER.
+     *
+     * @param token Verification token
+     * @throws NotAuthorizedException if the token is invalid in any kind
+     */
+    void verify(String token) throws NotAuthorizedException;
 
 
     /**
@@ -79,7 +96,7 @@ public interface UserService extends UserDetailsService {
      * @return the user with ID {@code id}
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto findById(UUID id);
+    UserDetailDto findById(UUID id) throws NotFoundException;
 
 
     /**
@@ -89,5 +106,17 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException;
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
+
+    /**
+     * Sends an e-mail with a token valid to reset a password of an existing user. <br>
+     * Languages of user are either Englisch en or German de
+     *
+     * @param passwordRequestResetDto e-mail of user to reset password and language of mail sent
+     * @throws ValidationException if e-mail is not correct
+     * @throws NotFoundException if user does not exist
+     */
+    void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
+
+    void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException;
 }
