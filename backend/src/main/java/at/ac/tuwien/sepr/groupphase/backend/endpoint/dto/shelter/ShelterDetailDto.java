@@ -31,6 +31,10 @@ public class ShelterDetailDto {
     @NotNull(message = "Email must not be null")
     private String email;
 
+    private String donationId;
+
+    private String subscriptionId;
+
     private List<AnimalDto> animals;
 
     private Instant createdOn;
@@ -43,6 +47,8 @@ public class ShelterDetailDto {
             + ", address=" + address
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email=" + email + '\''
+            + ", donation=" + donationId + '\''
+            + ", donation=" + donationId + '\''
             + ", animals=" + animals + '\''
             + ", createdOn=" + createdOn + '\''
             + '}';

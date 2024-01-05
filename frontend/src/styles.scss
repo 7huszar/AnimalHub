@@ -128,6 +128,8 @@ $secondary:     #ff80d5;
 }
 
 .selected-pic {
+  border-style: dashed;
+  border-radius: 2%;
   @extend .col-10;
   @extend .offset-1;
   @extend .center-column;

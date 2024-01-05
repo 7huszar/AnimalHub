@@ -105,5 +105,10 @@
   "ADMIN_PAGE": {
     "INFO": "Man kann keinen anderen Admin löschen",
     "FAILED": "Löschung kaputt"
+  },
+
+  "DUMMY": {
+    "TITLE": "OH NO, SMTH WENT WRONG",
+    "BODY": "TODO DO THIS"
   }
 }

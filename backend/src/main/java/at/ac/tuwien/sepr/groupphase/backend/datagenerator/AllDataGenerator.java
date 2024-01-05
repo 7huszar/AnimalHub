@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
 import java.util.List;
 
 @Profile({"generateData", "test"})
@@ -55,6 +56,10 @@ public class AllDataGenerator {
         animalRepository.deleteAll();
         shelterRepository.deleteAll();
         fileRepository.deleteAll();
+        for (java.io.File f :
+            new java.io.File("files").listFiles()) {
+            f.delete();
+        }
     }
 
     public List<Shelter> getAllShelterEntities() {
