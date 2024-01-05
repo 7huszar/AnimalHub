@@ -52,10 +52,18 @@ $secondary:     #ff80d5;
   color: #fff;
 }
 
+.arrow {
+  color: $primary;
+}
+
+.arrow:hover,
+.arrow.hover {
+  color: $secondary;
+}
+
 .btn.btn-primary:active,
 .btn.btn-primary.active {
   background-color: #b30086;
-  border-color: #b30086;
   color: #fff;
 }
 

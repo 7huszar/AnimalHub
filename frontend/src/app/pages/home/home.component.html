@@ -29,7 +29,7 @@
 
   <div class="row">
     <div class="col-1 center-column">
-      <i class="bi bi-arrow-left-square-fill text-primary btn" (click)="leftClick()"></i>
+      <i class="arrow bi-chevron-compact-left" (click)="leftClick()"></i>
     </div>
     <div class="col center">
       <div class ="row" style="justify-content: center">
@@ -57,7 +57,7 @@
       </div>
     </div>
     <div class="col-1 center-column">
-      <i class="bi bi-arrow-right-square-fill text-primary btn" (click)="rightClick()"></i>
+      <i class="arrow bi-chevron-compact-right" (click)="rightClick()"></i>
     </div>
   </div>
   <div class="row">
@@ -69,12 +69,15 @@
       </div>
     </div>
   </div>
-  <div class="row" style="padding: 3rem">
+  <div class="row" style="padding: 3rem; padding-top: 1rem; justify-content: center">
     <div class="col-auto" *ngFor="let animal of likedAnimals">
         <app-favorites-card [name]="animal.name"
                             [id]="animal.id">
         </app-favorites-card>
     </div>
+  </div>
+  <div class="container" *ngIf="likedAnimals.length == 0" style="background-color: #64B5F6; height: auto">
+    test
   </div>
 </div>
 
