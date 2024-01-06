@@ -174,7 +174,7 @@ public class AnimalEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @DeleteMapping("{id}/files/content/{fileId}")
     @Operation(summary = "Deletes content of animal", security = @SecurityRequirement(name = "apiKey"))
-    public void deleteContent(@PathVariable UUID id, @PathVariable UUID fileId) {
+    public void deleteContent(@PathVariable UUID id, @PathVariable UUID fileId) throws NotFoundException {
         LOGGER.info("DELETE " + BASE_PATH + "/{}/files/{}", id, fileId);
 
         animalService.deleteContent(id, fileId);
