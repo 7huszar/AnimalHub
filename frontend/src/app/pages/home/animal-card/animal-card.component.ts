@@ -15,16 +15,6 @@ export class AnimalCardComponent implements OnInit{
 
   animalImageURL: any = null;
 
-  /*like() :void {
-    console.log("like");
-  }
-
-  dislike() :void {
-    console.log("dislike")
-  }
-
-   */
-
   ngOnInit(): void {
   }
 

@@ -73,6 +73,8 @@ export class HomeComponent implements OnInit {
     if (!this.likedAnimals.includes(animal)) {
       this.likedAnimals.push(animal);
     }
+    this.animalList.splice(this.animalList.indexOf(animal), 1);
+    this.loadCards();
   }
   dislike(animal: AnimalDetailDto) {
     if (this.likedAnimals.includes(animal)) {
@@ -80,6 +82,14 @@ export class HomeComponent implements OnInit {
     }
     if (!this.likedAnimals.includes(animal)) {
       this.dislikedAnimals.push(animal);
+    }
+    this.animalList.splice(this.animalList.indexOf(animal), 1);
+    this.loadCards();
+  }
+  remove(animal: AnimalDetailDto){
+    if (this.likedAnimals.includes(animal)) {
+      this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
+      this.animalList.push(animal);
     }
   }
   leftClick(): void {
