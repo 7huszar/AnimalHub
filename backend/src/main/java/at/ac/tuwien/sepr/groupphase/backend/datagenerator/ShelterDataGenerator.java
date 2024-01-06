@@ -39,7 +39,7 @@ public class ShelterDataGenerator {
                     .address(shelterAddresses[i])
                     .phoneNumber(shelterPhoneNumbers[i])
                     .email(shelterEmails[i])
-                    .profilePicture(fileRepository.getByName(shelterProfilePictureNames[i]))
+                    .profilePicture(fileRepository.findByName(shelterProfilePictureNames[i])[0])
                     .build();
                 LOGGER.debug("saving shelter {}", shelter);
                 shelterRepository.save(shelter);
