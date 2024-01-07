@@ -10,5 +10,9 @@ import java.util.UUID;
 @RepositoryRestResource(path = "files", collectionResourceRel = "files")
 public interface FileRepository extends JpaRepository<File, UUID> {
 
-    File getByName(String name);
+    File[] findByName(String name);
+
+    Boolean existsByContentId(String contentId);
+
+    void deleteByContentId(String contentId);
 }

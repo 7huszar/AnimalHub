@@ -4,4 +4,5 @@ public record UserRegisterDto(
     String email,
     String password,
     String lang
-) {}
+) {
+}

@@ -65,20 +65,76 @@ public interface AnimalService {
     void delete(UUID id) throws NotFoundException;
 
 
-    // TODO comment
+    /**
+     * get profile image for animal with given id.
+     *
+     * @param id id
+     * @return FileDetailDto (with actual image file)
+     * @throws NotFoundException when the id points to no existing animal
+     */
     FileDetailDto getProfileImage(UUID id) throws NotFoundException;
 
-    // TODO comment
+    /**
+     * set profile image for animal, works only when image is empty (first setting of image).
+     *
+     * @param id            id
+     * @param createFileDto createFileDto with MultiPartFile as InputFile
+     * @return FileDto (without actual image file)
+     * @throws ConflictException   when the image is already set
+     * @throws ValidationException when the file fails FileValidation
+     * @throws IOException         to cover exceptions when creating and saving new file
+     * @throws NotFoundException   when the id points to no existing animal
+     */
     FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException;
 
-    // TODO comment
+    /**
+     * update profile image for existing animal which already has an image set.
+     *
+     * @param id      id
+     * @param fileDto fileDto with MultiPartFile as InputFile
+     * @return FileDto (without actual image file)
+     * @throws ValidationException when the file fails FileValidation
+     * @throws IOException         to cover exceptions when creating and saving new file
+     * @throws NotFoundException   when the id points to no existing animal
+     */
     FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException;
 
+    /**
+     * Get all the content (images & videos) that has been saved for a specific animal.
+     *
+     * @param id id
+     * @return List of all Content Files in FileDto-format (without the actual image file, for performance reasons)
+     * @throws NotFoundException when the id points to no existing animal
+     */
     List<FileDto> getContents(UUID id) throws NotFoundException;
 
+    /**
+     * Get a specific file from the saved content of an animal.
+     *
+     * @param id     id
+     * @param fileId fileId, also UUID
+     * @return Specific File from all the content of a specific animal (with image file)
+     * @throws NotFoundException when the id points to no existing animal
+     */
     FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException;
 
+    /**
+     * Add a file to the content of an animal.
+     *
+     * @param id      id
+     * @param fileDto fileDto (with MultiPartFile for input file)
+     * @return fileDto containing all information about the newly created content file (without image file)
+     * @throws ValidationException when the file fails FileValidation
+     * @throws IOException         to cover exceptions when creating and saving new file
+     * @throws NotFoundException   when the id points to no existing animal
+     */
     FileDto addContent(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException;
 
-    void deleteContent(UUID id, UUID fileId);
+    /**
+     * Delete a specific content file with the given fileId.
+     *
+     * @param id     id
+     * @param fileId fileId
+     */
+    void deleteContent(UUID id, UUID fileId) throws NotFoundException;
 }

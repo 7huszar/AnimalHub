@@ -4,12 +4,9 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolationException;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -75,10 +72,10 @@ public class AnimalRepositoryTest extends TestBase {
     public void createNewEmptyAnimalUnsuccessfully() {
         Animal animal = null;
 
-            assertAll(
-                () -> assertThrows(InvalidDataAccessApiUsageException.class, () -> animalRepository.save(animal)),
-                () -> assertEquals(animalRepository.findAll().size(), allAnimalEntities.size())
-            );
+        assertAll(
+            () -> assertThrows(InvalidDataAccessApiUsageException.class, () -> animalRepository.save(animal)),
+            () -> assertEquals(animalRepository.findAll().size(), allAnimalEntities.size())
+        );
     }
 
     // function - DELETE

@@ -61,7 +61,8 @@ public class ShelterEndpoint {
     @Operation(summary = "Get shelter by id", security = @SecurityRequirement(name = "apiKey"))
     public ShelterDetailDto findById(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/ " + id);
-        return shelterService.findById(id);
+        ShelterDetailDto shelterDto = shelterService.findById(id);
+        return shelterDto;
     }
 
     @Secured(UserRole.Values.ADMIN_VALUE)

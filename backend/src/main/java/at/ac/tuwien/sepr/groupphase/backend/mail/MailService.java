@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.mail;
 
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
@@ -53,7 +52,7 @@ public class MailService {
      * Token is valid for 10 min. {@link at.ac.tuwien.sepr.groupphase.backend.config.SecurityPropertiesConfig}.
      * E-Mail is sent in own thread.
      *
-     * @param email E-mail/username of user where password is needed to be reset
+     * @param email    E-mail/username of user where password is needed to be reset
      * @param language Language used for the reset
      */
     @Async
