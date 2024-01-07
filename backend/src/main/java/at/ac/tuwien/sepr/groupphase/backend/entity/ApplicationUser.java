@@ -29,6 +29,7 @@ public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     private UUID id;
 
     @Column(unique = true)

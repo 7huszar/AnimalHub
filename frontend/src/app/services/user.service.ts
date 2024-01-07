@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {UserDetailDto, UserSearch} from "../dtos/user";
+import {SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {AnimalDetailDto, CreateAnimalDto} from "../dtos/animal";
 
 
 
@@ -72,6 +73,16 @@ export class UserService {
     }
     return this.httpClient.get<UserDetailDto[]>(this.usersBaseUri + '/search', {params})
       .pipe();
+  }
+
+  /**
+   * Persists subscription to the backend
+   *
+   * @param subscription to persist
+   */
+  createSubscription(subscription: SubscriptionDetailDto): Observable<SubscriptionDetailDto> {
+    console.log('Create subscription with subscriptionId: ' + subscription.subscriptionId);
+    return this.httpClient.post<SubscriptionDetailDto>(this.usersBaseUri, subscription);
   }
 
 }

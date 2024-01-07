@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
@@ -8,12 +9,14 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -49,6 +52,7 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
@@ -284,6 +288,16 @@ public class CustomUserDetailService implements UserService {
 
         userRepository.updatePassword(email, passwordEncoder.encode(resetDto.password()));
 
+    }
+
+    @Override
+    public SubscriptionDetailDto createSubscription(SubscriptionDetailDto subscriptionDetailDto) {
+        LOGGER.trace("Create new Animal: " + subscriptionDetailDto);
+
+        Subscription subscription = userMapper.subscriptionDetailDtoToSubscription(subscriptionDetailDto);
+
+        subscription = subscriptionRepository.save(subscription);
+        return userMapper.subscriptionToSubscriptionDetailDto(subscription);
     }
 
 }

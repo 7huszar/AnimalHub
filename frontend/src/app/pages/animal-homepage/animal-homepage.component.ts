@@ -7,6 +7,8 @@ import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
+import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
+import {UserService} from "../../services/user.service";
 
 declare var paypal;
 
@@ -16,7 +18,7 @@ declare var paypal;
   templateUrl: './animal-homepage.component.html',
   styleUrls: ['./animal-homepage.component.scss']
 })
-export class AnimalHomepageComponent implements OnInit{
+export class AnimalHomepageComponent implements OnInit {
 
   animal: AnimalDetailDto = {
     birthDate: null,
@@ -30,24 +32,33 @@ export class AnimalHomepageComponent implements OnInit{
     weight: 0,
   };
 
+  subscription: SubscriptionDetailDto = {
+    id: "",
+    subscriptionId: "",
+    tier: "",
+    user: undefined,
+    animal: undefined,
+  };
+
   // TODO: add fitting animal attributes
   protected animalAge: number;
   protected contents: FileDto[];
   protected newContent: File = null;
 
   constructor(
-      protected authService: AuthService,
+    protected authService: AuthService,
     private service: AnimalService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
-      private el: ElementRef, // Inject ElementRef for DOM manipulation
+    private el: ElementRef, // Inject ElementRef for DOM manipulation
 
   ) {
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      if(params.get("id")) {
+      if (params.get("id")) {
         this.animal.id = params.get("id");
         let animalObservable: Observable<AnimalDetailDto> = this.service.findById(this.animal.id)
         animalObservable.subscribe({
@@ -72,6 +83,8 @@ export class AnimalHomepageComponent implements OnInit{
         this.notification.error("Could Not find contents of animal");
       }
     })
+
+
     // Load the PayPal script dynamically
     const script = document.createElement('script');
     //TODO first of all dont touch it or u lose money
@@ -102,7 +115,14 @@ export class AnimalHomepageComponent implements OnInit{
       onApprove: (data, actions) => {
         alert("payment successfull")
         alert(data.subscriptionID); // You can add an optional success message for the subscriber here
+        console.log(data)
         //TODO add stuff to manage subscriptions
+        this.subscription.animal=this.animal;
+        this.subscription.subscriptionId=data.subscriptionID;
+        this.subscription.tier="1";
+
+        console.log(this.subscription)
+        this.userService.createSubscription(this.subscription)
       },
     }).render(this.el.nativeElement.querySelector('#paypal-button-container-P-2J073097VE083035WMWKWHZY'));
   }

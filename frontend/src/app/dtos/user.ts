@@ -1,4 +1,5 @@
 import {ShelterDto} from "./shelter";
+import {AnimalDetailDto, AnimalDto} from "./animal";
 
 export interface UserDetailDto {
   id: string,
@@ -15,4 +16,12 @@ export interface UserSearch {
 export interface MailRequestDto {
   email: string,
   lang: string
+}
+
+export interface SubscriptionDetailDto {
+  id: string,
+  animal?: AnimalDetailDto,
+  tier: string,
+  subscriptionId: string,
+  user?: UserDetailDto,
 }
