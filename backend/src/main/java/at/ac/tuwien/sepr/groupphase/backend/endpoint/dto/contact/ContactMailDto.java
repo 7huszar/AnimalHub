@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact;
 
+
 import java.util.UUID;
 
 public record ContactMailDto(

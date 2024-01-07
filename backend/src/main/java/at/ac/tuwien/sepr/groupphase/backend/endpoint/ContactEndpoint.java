@@ -7,13 +7,11 @@ import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
-import java.util.UUID;
 
 
 import java.lang.invoke.MethodHandles;
@@ -28,13 +26,13 @@ public class ContactEndpoint {
     private final MailService mailService;
     private final ShelterService shelterService;
 
-  public ContactEndpoint(MailService mailService, ShelterService shelterService) {
-    this.mailService = mailService;
-    this.shelterService = shelterService;
-  }
+    public ContactEndpoint(MailService mailService, ShelterService shelterService) {
+        this.mailService = mailService;
+        this.shelterService = shelterService;
+    }
 
-  @Secured(UserRole.Values.USER_VALUE)
-  @PostMapping("{id}")
+    @Secured(UserRole.Values.USER_VALUE)
+    @PostMapping("{id}")
     public void sendMail(@RequestBody ContactMailDto contactMailDto) throws NotFoundException {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n" + contactMailDto.toString());
