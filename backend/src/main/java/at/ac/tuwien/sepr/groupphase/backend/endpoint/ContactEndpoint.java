@@ -40,7 +40,7 @@ public class ContactEndpoint {
         LOGGER.debug("Body of request:\n" + contactMailDto.toString());
 
         String to = shelterService.findById(contactMailDto.to()).getEmail();
-        mailService.sendShelterContactMail("pau.joh99@gmail.com", contactMailDto.from(), contactMailDto.name(), contactMailDto.message());
+        mailService.sendShelterContactMail(to, contactMailDto.from(), contactMailDto.name(), contactMailDto.message());
     }
 }
 
