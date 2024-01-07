@@ -32,6 +32,12 @@ export class AnimalHomepageComponent implements OnInit {
     weight: 0,
   };
 
+  user: UserDetailDto = {
+    email: "",
+    id: "",
+    role: ""
+  };
+
   subscription: SubscriptionDetailDto = {
     id: "",
     subscriptionId: "",
@@ -87,6 +93,24 @@ export class AnimalHomepageComponent implements OnInit {
 
     // Load the PayPal script dynamically
     const script = document.createElement('script');
+    //getting user
+    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
+    userObservable.subscribe({
+      next: data => {
+        this.user = data;
+        this.subscription.user=this.user;
+        console.log(this.user)
+      },
+      error: error => {
+        //this schould never happen
+        console.error('Error finding user', error);
+        this.notification.error("Could Not find logged in user to save");
+      }
+    });
+
+    //TODO handle the case in which the user is already subscribed to the animal
+
+
     //TODO first of all dont touch it or u lose money
     //TODO change it for live version this is sandbox
     //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
@@ -114,13 +138,11 @@ export class AnimalHomepageComponent implements OnInit {
       },
       onApprove: (data, actions) => {
         alert("payment successfull")
-        alert(data.subscriptionID); // You can add an optional success message for the subscriber here
         console.log(data)
         //TODO add stuff to manage subscriptions
         this.subscription.animal=this.animal;
         this.subscription.subscriptionId=data.subscriptionID;
         this.subscription.tier="1";
-
         console.log(this.subscription)
         this.userService.createSubscription(this.subscription)
       },

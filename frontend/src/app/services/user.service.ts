@@ -85,4 +85,12 @@ export class UserService {
     return this.httpClient.post<SubscriptionDetailDto>(this.usersBaseUri, subscription);
   }
 
+
+  /**
+   * Loads current user from the backend
+   */
+  getCurrentUser(): Observable<UserDetailDto> {
+    return this.httpClient.get<UserDetailDto>(`${this.usersBaseUri}/current`);
+  }
+
 }
