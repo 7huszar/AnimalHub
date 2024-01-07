@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -86,5 +87,23 @@ public class FileServiceImpl implements FileService {
         });
 
         return returnList;
+    }
+
+    @Override
+    public void delete(UUID id) throws NotFoundException {
+
+        File fileEntity = fileRepository.findById(id).orElseThrow(() -> new NotFoundException("There is no file with id " + id + " in the database."));
+
+        java.io.File[] matchingFiles = Arrays.stream(new java.io.File("files").listFiles())
+            .filter(file -> file.isFile() && file.getName().contains(fileEntity.getContentId()))
+            .toArray(java.io.File[]::new);
+
+        for (java.io.File f :
+            matchingFiles) {
+            f.delete();
+        }
+
+        fileRepository.deleteById(id);
+
     }
 }

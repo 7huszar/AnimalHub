@@ -16,6 +16,8 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,19 +53,34 @@ public class AnimalDataGenerator {
 
             for (int animalIndex = 1; animalIndex <= amount; animalIndex++) {
 
+                // ADD DEMO CONTENT TO ANIMALS
+                List<at.ac.tuwien.sepr.groupphase.backend.entity.File> allAnimalContent = new ArrayList<>(Collections.emptyList());
+
+                if (!animalConfig.get("CONTENT " + animalIndex).isEmpty()) {
+                    List<String> allContentFileNames = List.of(animalConfig.get("CONTENT " + animalIndex).split(";"));
+                    for (String contentFileName :
+                        allContentFileNames) {
+                        allAnimalContent.add(fileRepository.findByName(contentFileName)[0]);
+                    }
+                }
+
+                // CREATE NEW ANIMAL ENTITY
                 Animal animal = Animal.builder()
                     .name(animalConfig.get("NAME " + animalIndex))
-                    .profilePicture(fileRepository.getByName(animalConfig.get("PROFILE_PICTURE_NAME " + animalIndex)))
+                    .profilePicture(fileRepository.findByName(animalConfig.get("PROFILE_PICTURE_NAME " + animalIndex))[0])
                     .species((Species.valueOf(animalConfig.get("SPECIES " + animalIndex))))
                     .race(animalConfig.get("RACE " + animalIndex))
                     .birthDate(LocalDate.parse(animalConfig.get("BIRTH_DATE " + animalIndex), dateFormatter))
                     .height(Double.parseDouble(animalConfig.get("HEIGHT " + animalIndex)))
                     .weight(Double.parseDouble(animalConfig.get("WEIGHT " + animalIndex)))
                     .shelter(allShelters.get(shelterIndex))
+                    .content(allAnimalContent)
                     .build();
                 LOGGER.debug("saving animal {}", animal);
+                // SAVE NEW ANIMAL ENTITY
                 animalRepository.save(animal);
 
+                // DISTRIBUTE ANIMALS TO ALL DEMO SHELTERS
                 ++shelterIndex;
                 if (shelterIndex >= allShelters.size()) {
                     shelterIndex = 0;

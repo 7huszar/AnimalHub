@@ -56,6 +56,7 @@ public class FileDataGenerator {
                     // IOException of "probeContentType" must be handled!
                     throw new IllegalArgumentException("could not access content type of '" + f.getName() + "'");
                 }
+
             }
         }
     }

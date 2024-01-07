@@ -14,6 +14,6 @@ public interface FileMapper {
 
     FileDetailDto fileToFileDetailDto(File file);
 
-    FileDto fileDetailDtoToFileDto(FileDetailDto fileDetailDto);
+    File fileDetailDtoToFile(FileDetailDto fileDetailDto);
 
 }

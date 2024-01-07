@@ -1,16 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,7 +52,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param userLoginDto contains e-mail and password
      * @throws ValidationException if e-mail or password are invalid as defined in {@link at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator}
-     * @throws ConflictException if user already exists
+     * @throws ConflictException   if user already exists
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
@@ -114,7 +113,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param passwordRequestResetDto e-mail of user to reset password and language of mail sent
      * @throws ValidationException if e-mail is not correct
-     * @throws NotFoundException if user does not exist
+     * @throws NotFoundException   if user does not exist
      */
     void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 

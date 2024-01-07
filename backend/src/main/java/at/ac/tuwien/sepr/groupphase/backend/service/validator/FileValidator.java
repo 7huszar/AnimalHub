@@ -61,30 +61,31 @@ public class FileValidator {
         // # File
         if (fileDto.getFile() == null || fileDto.getFile().isEmpty()) {
             validationErrors.add("No File given");
-        }
-        switch (Objects.requireNonNull(fileDto.getFile().getContentType())) {
-            case "image/bmp":
-                // ALLOWED -> No validation error
-                break;
-            case "image/gif":
-                // ALLOWED -> No validation error
-                break;
-            case "image/jpeg":
-                // ALLOWED -> No validation error
-                break;
-            case "image/png":
-                // ALLOWED -> No validation error
-                break;
-            case "video/mp4":
-                // ALLOWED -> No validation error
-                break;
-            case "video/mpeg":
-                // ALLOWED -> No validation error
-                break;
-            default:
-                // ALL OTHER CONTENT TYPES are NOT allowed (for now)!
-                validationErrors.add("Content type: '" + fileDto.getFile().getContentType() + "' is not allowed!");
-                break;
+        } else {
+            switch (Objects.requireNonNull(fileDto.getFile().getContentType())) {
+                case "image/bmp":
+                    // ALLOWED -> No validation error
+                    break;
+                case "image/gif":
+                    // ALLOWED -> No validation error
+                    break;
+                case "image/jpeg":
+                    // ALLOWED -> No validation error
+                    break;
+                case "image/png":
+                    // ALLOWED -> No validation error
+                    break;
+                case "video/mp4":
+                    // ALLOWED -> No validation error
+                    break;
+                case "video/mpeg":
+                    // ALLOWED -> No validation error
+                    break;
+                default:
+                    // ALL OTHER CONTENT TYPES are NOT allowed (for now)!
+                    validationErrors.add("Content type: '" + fileDto.getFile().getContentType() + "' is not allowed!");
+                    break;
+            }
         }
 
         if (!validationErrors.isEmpty()) {
