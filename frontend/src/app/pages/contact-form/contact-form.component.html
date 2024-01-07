@@ -2,18 +2,18 @@
 <div class="container">
   <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
     <div class="mb-3">
-      <label for="name" class="form-label">Name</label>
+      <label for="name" class="form-label">{{ 'CONTACT_PAGE.NAME'| translate }}</label>
       <input type="text" class="form-control" id="name" [(ngModel)]="contact.name" name="name" required>
     </div>
     <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
+      <label for="email" class="form-label">{{ 'CONTACT_PAGE.EMAIL'| translate }}</label>
       <input type="email" class="form-control" id="email" [(ngModel)]="contact.from" name="email" required>
     </div>
     <div class="mb-3">
-      <label for="message" class="form-label">Message</label>
+      <label for="message" class="form-label">{{ 'CONTACT_PAGE.MESSAGE'| translate }}</label>
       <textarea class="form-control" id="message" [(ngModel)]="contact.message" name="message" required></textarea>
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!contactForm.form.valid">Submit</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!contactForm.form.valid">{{ 'CONTACT_PAGE.SUBMIT'| translate }}</button>
   </form>
 </div>
 <app-lang-select></app-lang-select>
