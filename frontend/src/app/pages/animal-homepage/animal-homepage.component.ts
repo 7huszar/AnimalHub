@@ -72,9 +72,6 @@ export class AnimalHomepageComponent implements OnInit{
         this.notification.error("Could Not find contents of animal");
       }
     })
-  }
-
-  ngAfterViewInit(): void {
     // Load the PayPal script dynamically
     const script = document.createElement('script');
     //TODO first of all dont touch it or u lose money
@@ -99,7 +96,6 @@ export class AnimalHomepageComponent implements OnInit{
     paypal.Buttons({
       createSubscription: (data, actions) => {
         return actions.subscription.create({
-          //TODO this is subscription plan change it in database to get individual plans
           plan_id: this.animal.shelter.subscriptionId,
         });
       },
