@@ -45,7 +45,7 @@ public class MailService {
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animalhub e-mail confirmation");
-        message.setText(lang.getTranslation(language + ".mail.verifyEmail") + "http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language, regStamp));
+        message.setText(lang.getTranslation(language + ".mail.verifyEmail") + "\nhttp://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language, regStamp));
         emailSender.send(message);
     }
 
@@ -68,7 +68,7 @@ public class MailService {
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animal Hub reset password");
-        message.setText(lang.getTranslation(language + ".mail.resetPwd") + "<br>http://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
+        message.setText(lang.getTranslation(language + ".mail.resetPwd") + "\nhttp://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
     }
 
