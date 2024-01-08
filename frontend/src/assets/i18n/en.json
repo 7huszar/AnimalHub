@@ -12,7 +12,7 @@
     "PWD_SHORT": "password has to be at least 8 characters long",
     "BAD_CREDENTIALS": "Username or password incorrect",
     "LOGIN_FAILED": "Failed to login",
-    "HOW_DOES_IT_WORK": "How does it work?"
+    "HOW_DOES_IT_WORK": "How does AnimalHub work?"
   },
 
   "LANG_SELECT": {
