@@ -109,6 +109,13 @@
     "FAILED": "deletion failed"
   },
 
+  "SUBSCRIPTION_PAGE": {
+    "EMAIL": "email",
+    "SUBSCRIPTION_ID": "Abonnement Id",
+    "SUBSCRIBED_TO": "meine Abonnements"
+
+  },
+
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"
