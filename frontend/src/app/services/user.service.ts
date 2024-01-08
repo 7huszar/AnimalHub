@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, Subscription} from 'rxjs';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable, Subscription, switchMap} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
 import {AnimalDetailDto, CreateAnimalDto} from "../dtos/animal";
@@ -15,6 +15,10 @@ import {SubscriptionLog} from "rxjs/internal/testing/SubscriptionLog";
 export class UserService {
 
   private usersBaseUri: string = this.globals.backendUri + '/users';
+  private paypalApiUrl = 'https://api.sandbox.paypal.com/v1/billing/subscriptions/';
+  private paypalTokenUrl = 'https://api.sandbox.paypal.com/v1/oauth2/token';
+
+
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
@@ -107,9 +111,42 @@ export class UserService {
 
     return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions', {params})
       .pipe();
-
    // return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions')
-
   }
+
+  checkSubscriptionStatus(subscriptionId: string): Observable<any> {
+    return this.getPayPalAccessToken().pipe(
+      switchMap((accessTokenResponse) => {
+        const accessToken = accessTokenResponse.access_token;
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        });
+
+        const url = `${this.paypalApiUrl}${subscriptionId}`;
+
+        return this.httpClient.get<any>(url, { headers });
+      })
+    );
+  }
+
+  private getPayPalAccessToken(): Observable<any> {
+
+    //TODO THIS IS A SANDBOX VERSION OF THIS CALL HERE THE CLIENT ID AND SECRET WILL ALWAYS BE THE SAME FOR LIVE VERSION IMPLEMENT CODE
+
+    const clientId = 'YOUR_SANDBOX_CLIENT_ID';
+    const secret = 'YOUR_SANDBOX_SECRET';
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa(`${clientId}:${secret}`)
+    });
+
+    const body = new HttpParams()
+      .set('grant_type', 'client_credentials');
+
+    return this.httpClient.post(this.paypalTokenUrl, body.toString(), { headers });
+  }
+
 
 }

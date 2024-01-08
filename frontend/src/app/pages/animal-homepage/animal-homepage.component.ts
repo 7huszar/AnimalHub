@@ -33,6 +33,7 @@ export class AnimalHomepageComponent implements OnInit {
   };
 
   user: UserDetailDto = {
+    paypalClientId: "", paypalSecret: "",
     email: "",
     id: "",
     role: ""
@@ -110,7 +111,6 @@ export class AnimalHomepageComponent implements OnInit {
     //TODO handle the case in which the user is already subscribed to the animal
 
 
-    //TODO first of all dont touch it or u lose money
     //TODO change it for live version this is sandbox
     //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
     script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';

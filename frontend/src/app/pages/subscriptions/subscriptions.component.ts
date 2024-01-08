@@ -8,11 +8,16 @@ import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
 import {Location} from "@angular/common";
 
+declare var paypal;
+
+
 @Component({
   selector: 'app-subscriptions',
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']
 })
+
+
 
 export class SubscriptionsComponent implements OnInit {
 
@@ -29,6 +34,8 @@ export class SubscriptionsComponent implements OnInit {
   };
 
   user: UserDetailDto = {
+    paypalClientId: "",
+    paypalSecret: "",
     email: "",
     id: "",
     role: ""
@@ -54,6 +61,7 @@ export class SubscriptionsComponent implements OnInit {
     private location: Location,
     private translator: TranslateService) {
   }
+
 
 
   ngOnInit() {
@@ -99,6 +107,39 @@ export class SubscriptionsComponent implements OnInit {
     this.nameForDeletion = this.animal.name;
     this.typeForDeletion = "Subscription";
   }
+
+
+  cancelSubscription(subscriptionId: string): void {
+    if (subscriptionId) {
+      // Use the PayPal SDK to cancel the subscription
+      paypal.subscription.cancel(subscriptionId)
+        .then((response) => {
+          console.log('Subscription canceled successfully:', response);
+          // Optionally, update your local state or notify the user
+        })
+        .catch((error) => {
+          console.error('Error canceling subscription:', error);
+          // Handle the error, e.g., notify the user
+        });
+    } else {
+      console.warn('Subscription ID not available. Unable to cancel subscription.');
+      // Handle the case where subscription ID is not available
+    }
+  }
+
+  checkSubscription(subscriptionId: string): void {
+    this.userService.checkSubscriptionStatus(subscriptionId).subscribe(
+      (response) => {
+        // Check the subscription status in the response
+        console.log('Subscription Status:', response.status);
+      },
+      (error) => {
+        console.error('Error checking subscription status:', error);
+        // Handle the error
+      }
+    );
+  }
+
 
 
 }
