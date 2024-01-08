@@ -107,6 +107,17 @@
     "FAILED": "Löschung kaputt"
   },
 
+  "CONTACT_PAGE": {
+    "TITLE": "Contact",
+    "NAME": "Name",
+    "EMAIL": "E-mail",
+    "SUBJECT": "Subject",
+    "MESSAGE": "Message",
+    "SUBMIT": "Submit",
+    "SUCCESS": "Message sent",
+    "FAILED": "Failed to send message"
+  },
+
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"

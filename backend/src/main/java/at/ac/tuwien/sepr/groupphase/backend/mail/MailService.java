@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.mail;
 
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
@@ -53,7 +52,7 @@ public class MailService {
      * Token is valid for 10 min. {@link at.ac.tuwien.sepr.groupphase.backend.config.SecurityPropertiesConfig}.
      * E-Mail is sent in own thread.
      *
-     * @param email E-mail/username of user where password is needed to be reset
+     * @param email    E-mail/username of user where password is needed to be reset
      * @param language Language used for the reset
      */
     @Async
@@ -69,5 +68,24 @@ public class MailService {
         message.setSubject("Animal Hub reset password");
         message.setText("http://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
+    }
+
+    /**
+     * Asynchronously sends a contact email from a user to a shelter.
+     * The email is sent in its own thread.
+     *
+     * @param to The email address of the shelter
+     * @param from The email address of the user
+     * @param name The name of the user
+     * @param message The message from the user to the shelter
+     */
+    @Async
+    public void sendShelterContactMail(String to, String from, String name,  String message) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(from);
+        mailMessage.setTo(to);
+        mailMessage.setSubject("Animal Hub Contact from: " + name);
+        mailMessage.setText("Name: " + name + "\n" + "Message: " + message);
+        emailSender.send(mailMessage);
     }
 }
