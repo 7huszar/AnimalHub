@@ -134,5 +134,5 @@ public interface UserService extends UserDetailsService {
      *
      * @return List of all Subscriptions as UserDetailDto
      */
-    List<SubscriptionDetailDto> findAllSbscriptons();
+    List<SubscriptionDetailDto> findAllSubscriptionsByUser(UserDetailDto userDetailDto);
 }

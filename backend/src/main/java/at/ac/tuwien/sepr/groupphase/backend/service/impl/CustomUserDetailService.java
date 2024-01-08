@@ -56,7 +56,6 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
-    private final AnimalRepository animalRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
@@ -315,10 +314,10 @@ public class CustomUserDetailService implements UserService {
 
 
     @Override
-    public List<SubscriptionDetailDto> findAllSbscriptons() {
+    public List<SubscriptionDetailDto> findAllSubscriptionsByUser(UserDetailDto userDetailDto) {
         LOGGER.trace("Find all Subscriptions of User");
 
-        return subscriptionRepository.findAll().stream()
+        return subscriptionRepository.findAllByUserId(userDetailDto.getId()).stream()
             .map(userMapper::subscriptionToSubscriptionDetailDto)
             .collect(Collectors.toList());
     }

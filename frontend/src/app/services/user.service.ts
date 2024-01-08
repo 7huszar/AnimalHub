@@ -99,7 +99,7 @@ export class UserService {
   /**
    * Loads all subscriptions from the backend
    */
-  findAllSubscriptions(): Observable<SubscriptionDetailDto[]> {
+  findAllSubscriptionsByUser(subscription: UserDetailDto): Observable<SubscriptionDetailDto[]> {
     return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri);
   }
 

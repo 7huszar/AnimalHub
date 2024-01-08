@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit {
     });
 
 
-    let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptions()
+    let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
     subscriptionObservable.subscribe({
       next: data => {
         this.subscriptionList = data;
