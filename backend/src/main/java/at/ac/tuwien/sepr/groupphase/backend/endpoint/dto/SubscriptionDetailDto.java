@@ -26,7 +26,7 @@ public class SubscriptionDetailDto {
 
     private int tier;
 
-    private int subscriptionId;
+    private String subscriptionId;
 
     @Override
     public String toString() {

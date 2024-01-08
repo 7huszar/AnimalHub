@@ -9,9 +9,9 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
+import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
@@ -296,22 +296,21 @@ public class CustomUserDetailService implements UserService {
     }
 
 
-
     @Override
     public SubscriptionDetailDto createSubscription(CreateSubscriptionDto createSubscriptionDto) {
+
         LOGGER.trace("Create new Subscription: " + createSubscriptionDto);
 
         Subscription subscription = userMapper.createSubscriptionDtoToSubscription(createSubscriptionDto);
 
-        // Set the user and animal for the subscription
-        ApplicationUser user = userRepository.findByEmail(createSubscriptionDto.getUser().getEmail());
-        Animal animal = animalRepository.findByName(createSubscriptionDto.getAnimal().getName()) /* retrieve the Animal entity based on subscriptionDetailDto.getAnimal() */;
+        String id = createSubscriptionDto.getSubscriptionId();
+        subscription.setSubscriptionId(id);
+        SubscriptionKey key = new SubscriptionKey(subscription.getAnimal().getId(), subscription.getUser().getId());
+        subscription.setId(key);
 
-        subscription.setUser(user);
-        subscription.setAnimal(animal);
+        Subscription ret = subscriptionRepository.save(subscription);
 
-        subscription = subscriptionRepository.save(subscription);
-        return userMapper.subscriptionToSubscriptionDetailDto(subscription);
+        return userMapper.subscriptionToSubscriptionDetailDto(ret);
     }
 
 

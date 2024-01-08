@@ -10,6 +10,5 @@ import java.util.UUID;
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, UUID> {
 
-    Animal findByName(String name);
 
 }
