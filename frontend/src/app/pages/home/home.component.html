@@ -37,21 +37,24 @@
           <app-animal-card [name]="getCard(Position.LEFT)?.name"
                            [id]="getCard(Position.LEFT)?.id"
                            (like)="like(getCard(Position.LEFT))"
-                           (dislike)="dislike(getCard(Position.LEFT))">
+                           (dislike)="dislike(getCard(Position.LEFT))"
+                           [empty]="emptyLeft">
           </app-animal-card>
         </div>
         <div class="col-auto">
           <app-animal-card [name]="getCard(Position.MIDDLE)?.name"
                            [id]="getCard(Position.MIDDLE)?.id"
                            (like)="like(getCard(Position.MIDDLE))"
-                           (dislike)="dislike(getCard(Position.MIDDLE))">
+                           (dislike)="dislike(getCard(Position.MIDDLE))"
+                           [empty]="emptyMiddle">
           </app-animal-card>
         </div>
         <div class="col-auto">
           <app-animal-card [name]="getCard(Position.RIGHT)?.name"
                            [id]="getCard(Position.RIGHT)?.id"
                            (like)="like(getCard(Position.RIGHT))"
-                           (dislike)="dislike(getCard(Position.RIGHT))">
+                           (dislike)="dislike(getCard(Position.RIGHT))"
+                           [empty]="emptyRight">
           </app-animal-card>
         </div>
       </div>
@@ -78,7 +81,7 @@
     </div>
   </div>
   <div class="container" *ngIf="likedAnimals.length == 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
-    <p style="font-size: 2rem">Noch keine Favoriten? Like ein paar Tierchen!</p>
+    <p style="font-size: 2rem; margin: 0">Noch keine Favoriten? Like ein paar Tierchen!</p>
   </div>
 </div>
 

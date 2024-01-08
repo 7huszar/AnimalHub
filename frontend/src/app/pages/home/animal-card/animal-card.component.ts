@@ -10,6 +10,7 @@ export class AnimalCardComponent implements OnInit{
 
   @Input() name :string;
   @Input() id :number | unknown;
+  @Input() empty: boolean;
   @Output() dislike = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
 

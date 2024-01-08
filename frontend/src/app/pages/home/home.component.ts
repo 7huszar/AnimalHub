@@ -20,7 +20,9 @@ export class HomeComponent implements OnInit {
   protected likedAnimals: AnimalDetailDto[] = [];
   protected dislikedAnimals: AnimalDetailDto[] = [];
   counter = 1;
-
+  emptyLeft: boolean = false;
+  emptyMiddle: boolean = false;
+  emptyRight: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -42,7 +44,10 @@ export class HomeComponent implements OnInit {
   }
 
   loadCards() {
-    if (this.animalList && this.animalList.length > 0 && this.counter < this.animalList.length) {
+    if (this.animalList && this.animalList.length >= 0) {
+      if (this.animalList[this.counter + 1] == undefined && this.animalList[this.counter - 2] != undefined) {
+        this.counter--;
+      }
       this.right = this.animalList[this.counter - 1];
       this.middle = this.animalList[this.counter];
       this.left = this.animalList[this.counter + 1];
@@ -50,13 +55,20 @@ export class HomeComponent implements OnInit {
   }
 
   getCard(position: Position): AnimalDetailDto {
-    if (this.animalList && this.animalList.length > 0) {
+    if (this.animalList && this.animalList.length >= 0) {
+      this.emptyLeft = false;
+      this.emptyMiddle = false;
+      this.emptyRight = false;
+
       switch (position) {
         case Position.LEFT:
+          if (this.left == undefined) this.emptyLeft = true;
           return this.left;
         case Position.MIDDLE:
+          if (this.middle == undefined) this.emptyMiddle = true;
           return this.middle
         case Position.RIGHT:
+          if (this.right == undefined) this.emptyRight = true;
           return this.right;
         default:
           console.error("unknown card position", position);
@@ -90,6 +102,7 @@ export class HomeComponent implements OnInit {
     if (this.likedAnimals.includes(animal)) {
       this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
       this.animalList.push(animal);
+      this.loadCards();
     }
   }
   leftClick(): void {
