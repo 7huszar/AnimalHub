@@ -7,7 +7,7 @@ import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
-import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
+import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 
 declare var paypal;
@@ -38,8 +38,7 @@ export class AnimalHomepageComponent implements OnInit {
     role: ""
   };
 
-  subscription: SubscriptionDetailDto = {
-    id: "",
+  subscription: CreateSubscriptionDto = {
     subscriptionId: "",
     tier: "",
     user: undefined,
@@ -137,14 +136,23 @@ export class AnimalHomepageComponent implements OnInit {
         });
       },
       onApprove: (data, actions) => {
-        alert("payment successfull")
         console.log(data)
         //TODO add stuff to manage subscriptions
         this.subscription.animal=this.animal;
         this.subscription.subscriptionId=data.subscriptionID;
         this.subscription.tier="1";
-        console.log(this.subscription)
-        this.userService.createSubscription(this.subscription)
+        console.log('Subscription Payload:', this.subscription);
+
+        this.userService.createSubscription(this.subscription).subscribe(
+          response => {
+            // Handle the response
+            console.log("Subscription created successfully:", response);
+          },
+          error => {
+            // Handle the error
+            console.error("Error creating subscription:", error);
+          }
+        );
       },
     }).render(this.el.nativeElement.querySelector('#paypal-button-container-P-2J073097VE083035WMWKWHZY'));
   }

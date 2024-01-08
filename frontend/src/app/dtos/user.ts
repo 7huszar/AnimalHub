@@ -21,7 +21,15 @@ export interface MailRequestDto {
 export interface SubscriptionDetailDto {
   id: string,
   animal?: AnimalDetailDto,
+  user?: UserDetailDto,
   tier: string,
   subscriptionId: string,
-  user?: UserDetailDto,
 }
+export interface CreateSubscriptionDto {
+  animal: AnimalDetailDto,
+  user: UserDetailDto,
+  tier: string,
+  subscriptionId: string,
+}
+
+

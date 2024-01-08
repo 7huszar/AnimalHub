@@ -69,17 +69,6 @@ export class AnimalListComponent {
 
   protected readonly Mode = Mode;
 
-  deleteAnimal(id: string) {
-    this.animalService.delete(id).subscribe({
-      next: () => {
-        this.animals = this.animals.filter(animal => animal.id !== id);
-        this.displayAnimalCards('all');
-      },
-      error: error => {
-        console.error('Error deleting animal', error);
-      }
-    });
-  }
 
   addAnimal() {
     this.router.navigate(['/animal/create', this.shelterId]).then(r => console.log(r));

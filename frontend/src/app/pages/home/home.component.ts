@@ -4,6 +4,10 @@ import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
 import {TranslateService} from "@ngx-translate/core";
+import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
+import {Observable} from "rxjs";
+import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-home',
@@ -12,11 +16,12 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class HomeComponent implements OnInit {
 
-  private left :AnimalDetailDto;
-  private middle :AnimalDetailDto;
-  private right :AnimalDetailDto;
+  private left: AnimalDetailDto;
+  private middle: AnimalDetailDto;
+  private right: AnimalDetailDto;
 
   protected animalList: AnimalDetailDto[];
+  protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[];
   protected dislikedAnimals: AnimalDetailDto[];
   counter = 1;
@@ -24,19 +29,76 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private animalService :AnimalService,
-    private notifier :NotifierService,
-    private translator :TranslateService) { }
+    private animalService: AnimalService,
+    private userService: UserService,
+    private notification: ToastrService,
+    private notifier: NotifierService,
+    private translator: TranslateService) {
+  }
+
+  animal: AnimalDetailDto = {
+    birthDate: null,
+    createdOn: null,
+    height: 0,
+    id: "",
+    name: "",
+    race: "",
+    shelter: undefined,
+    species: undefined,
+    weight: 0,
+  };
+
+  user: UserDetailDto = {
+    email: "",
+    id: "",
+    role: ""
+  };
+
+  subscription: SubscriptionDetailDto = {
+    id: "",
+    subscriptionId: "",
+    tier: "",
+    user: undefined,
+    animal: undefined,
+  };
 
   ngOnInit() {
     this.animalService.findAll().subscribe({
-      next :data => {
+      next: data => {
         this.animalList = data;
         this.loadCards();
         console.log(this.animalList)
       },
-      error :error => {
+      error: error => {
         console.error("Failed to load animals", error);
+      }
+    });
+
+    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
+    userObservable.subscribe({
+      next: data => {
+        this.user = data;
+        this.subscription.user = this.user;
+        console.log(this.user)
+      },
+      error: error => {
+        //this schould never happen
+        console.error('Error finding user', error);
+        this.notification.error("Could not find logged in user");
+      }
+    });
+
+
+    let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptions()
+    subscriptionObservable.subscribe({
+      next: data => {
+        this.subscriptionList = data;
+        console.log("subscription: " + this.subscriptionList);
+      },
+      error: error => {
+        //this schould never happen
+        console.error('Error finding subscriptions', error);
+        this.notification.error("Could not find subscriptions");
       }
     });
   }
@@ -70,9 +132,11 @@ export class HomeComponent implements OnInit {
     this.likedAnimals.push(animal);
     console.log(animal);
   }
+
   dislike(animal: AnimalDetailDto) {
     this.dislikedAnimals.push(animal);
   }
+
   leftClick(): void {
     for (let i = 0; i < 3; i++) {
       if (this.counter + 2 < this.animalList.length) {
@@ -83,6 +147,7 @@ export class HomeComponent implements OnInit {
       }
     }
   }
+
   rightClick(): void {
     for (let i = 0; i < 3; i++) {
       if (this.counter - 2 >= 0) {

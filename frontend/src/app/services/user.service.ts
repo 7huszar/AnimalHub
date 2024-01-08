@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Globals} from '../global/globals';
-import {SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
 import {AnimalDetailDto, CreateAnimalDto} from "../dtos/animal";
+import {ShelterDto} from "../dtos/shelter";
+import {SubscriptionLog} from "rxjs/internal/testing/SubscriptionLog";
 
 
 
@@ -80,9 +82,10 @@ export class UserService {
    *
    * @param subscription to persist
    */
-  createSubscription(subscription: SubscriptionDetailDto): Observable<SubscriptionDetailDto> {
+  createSubscription(subscription: CreateSubscriptionDto): Observable<SubscriptionDetailDto> {
     console.log('Create subscription with subscriptionId: ' + subscription.subscriptionId);
-    return this.httpClient.post<SubscriptionDetailDto>(this.usersBaseUri, subscription);
+    console.log(subscription)
+    return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
   }
 
 
@@ -91,6 +94,13 @@ export class UserService {
    */
   getCurrentUser(): Observable<UserDetailDto> {
     return this.httpClient.get<UserDetailDto>(`${this.usersBaseUri}/current`);
+  }
+
+  /**
+   * Loads all subscriptions from the backend
+   */
+  findAllSubscriptions(): Observable<SubscriptionDetailDto[]> {
+    return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri);
   }
 
 }

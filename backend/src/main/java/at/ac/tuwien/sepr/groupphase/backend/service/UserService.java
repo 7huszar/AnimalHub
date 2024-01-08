@@ -1,8 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
@@ -125,9 +124,15 @@ public interface UserService extends UserDetailsService {
     /**
      * Create a new subscription in the persistent data storage with the given parameters.
      *
-     * @param subscriptionDetailDto attributes to create new Animal
+     * @param createSubscriptionDto attributes to create new Animal
      * @return the created animal as AnimalDetailDto
-     * @throws ValidationException if the data given for the animal is in itself incorrect (no name, name too long …)
      */
-    SubscriptionDetailDto createSubscription(SubscriptionDetailDto subscriptionDetailDto) throws ValidationException, ConflictException;
+    SubscriptionDetailDto createSubscription(CreateSubscriptionDto createSubscriptionDto);
+
+    /**
+     * Get all Subscriptions of User from database.
+     *
+     * @return List of all Subscriptions as UserDetailDto
+     */
+    List<SubscriptionDetailDto> findAllSbscriptons();
 }

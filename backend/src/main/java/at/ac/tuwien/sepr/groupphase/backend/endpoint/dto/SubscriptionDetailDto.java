@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
@@ -18,9 +20,9 @@ public class SubscriptionDetailDto {
 
     private SubscriptionKey id;
 
-    private Animal animal;
+    private AnimalDetailDto animal;
 
-    private ApplicationUser user;
+    private UserDetailDto user;
 
     private int tier;
 

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,13 +90,23 @@ public class UserEndpoint {
         return userService.update(userDetailDto);
     }
 
-    @Secured(UserRole.Values.MEMBER_VALUE)
+    @Secured(UserRole.Values.USER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new subscription in database", security = @SecurityRequirement(name = "apiKey"))
-    public SubscriptionDetailDto createSubscription(@Valid @RequestBody SubscriptionDetailDto subscriptionDetailDto) throws ValidationException, ConflictException {
-        LOGGER.info("POST " + BASE_PATH + "/ " + subscriptionDetailDto);
-        LOGGER.debug("Body of request:\n{}", subscriptionDetailDto);
-        return userService.createSubscription(subscriptionDetailDto);
+    public SubscriptionDetailDto createSubscription(@Valid @RequestBody CreateSubscriptionDto createSubscriptionDto) {
+        LOGGER.info("POST " + BASE_PATH + "/");
+        LOGGER.debug("Body of request:\n{}", createSubscriptionDto);
+        return userService.createSubscription(createSubscriptionDto);
+    }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get list of subscriptions", security = @SecurityRequirement(name = "apiKey"))
+    public List<SubscriptionDetailDto> findAll() {
+        LOGGER.info("GET " + BASE_PATH);
+
+        return userService.findAllSbscriptons();
     }
 }
