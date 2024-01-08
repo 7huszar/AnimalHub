@@ -17,6 +17,13 @@ import java.util.UUID;
 public interface FileService {
 
     /**
+     * Get all files from the database.
+     *
+     * @return all files from the database.
+     */
+    List<FileDetailDto> findAll();
+
+    /**
      * Validate and then create a new file in the persistent data storage with the given parameters.
      *
      * @param fileDto with file to store
@@ -36,10 +43,11 @@ public interface FileService {
 
 
     /**
-     * Get all files from the database.
+     * deletes file with given id.
      *
-     * @return all files from the database.
+     * @param id id
+     * @throws NotFoundException when the id points to no existing file
      */
-    List<FileDetailDto> findAll();
+    void delete(UUID id) throws NotFoundException;
 
 }

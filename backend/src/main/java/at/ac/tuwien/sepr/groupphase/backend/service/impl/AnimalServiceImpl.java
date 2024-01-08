@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -101,11 +103,20 @@ public class AnimalServiceImpl implements AnimalService {
     public void delete(UUID id) throws NotFoundException {
         LOGGER.trace("delete({})", id);
 
-        var shelter = animalRepository.findById(id).orElseThrow(
-            () -> new NotFoundException("Shelter does not exist.")
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
         );
+        String contentId = animal.getProfilePicture().getContentId();
 
-        animalRepository.delete(shelter);
+        animalRepository.delete(animal);
+        java.io.File[] matchingFiles = Arrays.stream(new java.io.File("files").listFiles())
+            .filter(file -> file.isFile() && file.getName().contains(contentId))
+            .toArray(java.io.File[]::new);
+
+        for (java.io.File f :
+            matchingFiles) {
+            f.delete();
+        }
     }
 
     @Override
@@ -149,7 +160,7 @@ public class AnimalServiceImpl implements AnimalService {
             () -> new NotFoundException("Animal does not exist.")
         );
 
-        // TODO remove old image
+        UUID oldProfilePictureId = animal.getProfilePicture().getId();
 
         var createdFile = fileService.create(fileDto);
         var file = fileMapper.fileDtoToFile(createdFile);
@@ -157,6 +168,7 @@ public class AnimalServiceImpl implements AnimalService {
         animal.setProfilePicture(file);
         animalRepository.save(animal);
 
+        fileService.delete(oldProfilePictureId);
         return createdFile;
     }
 
@@ -175,7 +187,9 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException {
         LOGGER.trace("getContent({},{})", id, fileId);
-        // TODO check animal id
+        if (!animalRepository.existsById(id)) {
+            throw new NotFoundException("Animal does not exist.");
+        }
 
         return fileService.findById(fileId);
     }
@@ -192,15 +206,26 @@ public class AnimalServiceImpl implements AnimalService {
         var createdFile = fileService.create(fileDto);
         var file = fileMapper.fileDtoToFile(createdFile);
 
-        animal.getContent().add(file);
+        if (animal.getContent() == null) {
+            animal.setContent(new ArrayList<>(Collections.singletonList(file)));
+        } else {
+            animal.getContent().add(file);
+        }
         animalRepository.save(animal);
 
         return createdFile;
     }
 
     @Override
-    public void deleteContent(UUID id, UUID fileId) {
-        // TODO implement
+    public void deleteContent(UUID id, UUID fileId) throws NotFoundException {
+        LOGGER.trace("deleteContent({},{})", id, fileId);
+        var animal = animalRepository.findById(id).orElseThrow(
+            () -> new NotFoundException("Animal does not exist.")
+        );
+
+        Hibernate.initialize(animal.getContent());
+        animal.getContent().removeIf(f -> f.getId().equals(fileId));
+        fileService.delete(fileId);
     }
 
 }

@@ -110,6 +110,16 @@
     "FAILED": "deletion failed"
   },
 
+  "CONTACT_PAGE": {
+    "TITLE": "Contact",
+    "NAME": "Name",
+    "EMAIL": "E-mail",
+    "MESSAGE": "Nachricht",
+    "SUBMIT": "Senden",
+    "SUCCESS": "Nachricht erfolgreich gesendet",
+    "FAILED": "Fehler beim senden der Nachricht"
+  },
+
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"

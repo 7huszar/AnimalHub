@@ -10,20 +10,11 @@ export class AnimalCardComponent implements OnInit{
 
   @Input() name :string;
   @Input() id :number | unknown;
+  @Input() empty: boolean;
   @Output() dislike = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
 
   animalImageURL: any = null;
-
-  /*like() :void {
-    console.log("like");
-  }
-
-  dislike() :void {
-    console.log("dislike")
-  }
-
-   */
 
   ngOnInit(): void {
   }

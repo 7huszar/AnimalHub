@@ -75,13 +75,11 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
-        <!--  START - OUR CUSTOM DEPENDENCIES -->
         <dependency>
             <groupId>com.github.paulcwarren</groupId>
             <artifactId>spring-content-fs-boot-starter</artifactId>
             <version>${spring-boot-content.version}</version>
         </dependency>
-        <!--  END - OUR CUSTOM DEPENDENCIES -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
