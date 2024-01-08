@@ -100,10 +100,10 @@ public class UserEndpoint {
     }
 
     @Secured(UserRole.Values.USER_VALUE)
-    @PostMapping("/current/show")
+    @GetMapping("/subscriptions")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get list of subscriptions", security = @SecurityRequirement(name = "apiKey"))
-    public List<SubscriptionDetailDto> findByUser(@Valid @RequestBody UserDetailDto userDetailDto) {
+    public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) {
         LOGGER.info("GET " + BASE_PATH);
 
         return userService.findAllSubscriptionsByUser(userDetailDto);

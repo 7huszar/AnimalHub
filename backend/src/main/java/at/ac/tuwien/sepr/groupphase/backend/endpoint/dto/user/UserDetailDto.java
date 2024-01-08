@@ -28,7 +28,7 @@ public class UserDetailDto {
     @Override
     public String toString() {
         return "UserDetailDto{"
-            + ", id='" + id + '\''
+            + "id='" + id + '\''
             + ", email='" + email + '\''
             + ", role='" + role + '\''
             + '}';

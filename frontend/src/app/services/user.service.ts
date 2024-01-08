@@ -84,7 +84,6 @@ export class UserService {
    */
   createSubscription(subscription: CreateSubscriptionDto): Observable<SubscriptionDetailDto> {
     console.log('Create subscription with subscriptionId: ' + subscription.subscriptionId);
-    console.log(subscription)
     return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
   }
 
@@ -100,7 +99,17 @@ export class UserService {
    * Loads all subscriptions from the backend
    */
   findAllSubscriptionsByUser(subscription: UserDetailDto): Observable<SubscriptionDetailDto[]> {
-    return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri);
+
+    let params = new HttpParams();
+    params = params.append('email', subscription.email);
+    params = params.append('id', subscription.id);
+    params = params.append('role', subscription.role);
+
+    return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions', {params})
+      .pipe();
+
+   // return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions')
+
   }
 
 }

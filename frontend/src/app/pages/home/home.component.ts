@@ -67,19 +67,35 @@ export class HomeComponent implements OnInit {
       next: data => {
         this.animalList = data;
         this.loadCards();
-        console.log(this.animalList)
       },
       error: error => {
         console.error("Failed to load animals", error);
       }
     });
 
+    //loading the currently active user
     let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
     userObservable.subscribe({
       next: data => {
         this.user = data;
         this.subscription.user = this.user;
         console.log(this.user)
+
+        //loading the subscriptions of the user
+        let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
+        subscriptionObservable.subscribe({
+          next: data => {
+            this.subscriptionList = data;
+            console.log("subscription: " + this.subscriptionList);
+          },
+          error: error => {
+            //this schould never happen
+            console.error('Error finding subscriptions', error);
+            this.notification.error("Could not find subscriptions");
+          }
+        });
+
+
       },
       error: error => {
         //this schould never happen
@@ -89,18 +105,6 @@ export class HomeComponent implements OnInit {
     });
 
 
-    let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
-    subscriptionObservable.subscribe({
-      next: data => {
-        this.subscriptionList = data;
-        console.log("subscription: " + this.subscriptionList);
-      },
-      error: error => {
-        //this schould never happen
-        console.error('Error finding subscriptions', error);
-        this.notification.error("Could not find subscriptions");
-      }
-    });
   }
 
   loadCards() {

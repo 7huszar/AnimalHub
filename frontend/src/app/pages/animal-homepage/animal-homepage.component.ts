@@ -56,7 +56,7 @@ export class AnimalHomepageComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
-    private el: ElementRef, // Inject ElementRef for DOM manipulation
+    private el: ElementRef,
 
   ) {
   }
@@ -137,7 +137,6 @@ export class AnimalHomepageComponent implements OnInit {
       },
       onApprove: (data, actions) => {
         console.log(data)
-        //TODO add stuff to manage subscriptions
         this.subscription.animal=this.animal;
         this.subscription.subscriptionId=data.subscriptionID;
         this.subscription.tier="1";
