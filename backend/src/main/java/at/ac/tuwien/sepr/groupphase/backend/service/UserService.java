@@ -118,5 +118,5 @@ public interface UserService extends UserDetailsService {
      */
     void requestPasswordReset(MailRequestDto mailRequestDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
-    void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException;
+    void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException, ValidationException;
 }

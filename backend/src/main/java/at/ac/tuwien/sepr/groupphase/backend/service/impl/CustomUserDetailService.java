@@ -275,8 +275,9 @@ public class CustomUserDetailService implements UserService {
 
     @Transactional
     @Override
-    public void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException {
+    public void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException, ValidationException {
         LOGGER.trace("resetPassword({})", resetDto.token());
+        userValidator.validatePasswordResetDto(resetDto);
 
         Claims claims = Jwts.parser()
             .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))

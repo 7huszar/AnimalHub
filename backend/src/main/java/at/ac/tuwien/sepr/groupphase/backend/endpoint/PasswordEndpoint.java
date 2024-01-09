@@ -42,14 +42,16 @@ public class PasswordEndpoint {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException {
+    public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException, ValidationException {
         LOGGER.info("PUT " + BASE_PATH + "{}", resetDto.token());
         try {
             service.resetPassword(resetDto);
         } catch (NotFoundException | JwtException e) {
             LOGGER.warn(e.getMessage());
             throw new NotAuthorizedException("Could not reset password");
+        } catch (ValidationException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
         }
-
     }
 }
