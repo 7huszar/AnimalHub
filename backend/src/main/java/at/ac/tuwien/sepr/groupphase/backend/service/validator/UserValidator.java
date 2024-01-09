@@ -90,7 +90,8 @@ public class UserValidator {
     }
 
     /**
-     * Checks password for: <br>
+     * Validates password.
+     * The criteria are:
      * - null <br>
      * - < MIN_PWD <br>
      * - > MAX_PWD <br>
