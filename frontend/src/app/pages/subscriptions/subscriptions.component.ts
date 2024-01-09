@@ -105,23 +105,8 @@ export class SubscriptionsComponent implements OnInit {
 
   subscriptionForDeletion(name: string, id: string) {
     this.idForDeletion = id;
-    this.nameForDeletion = this.animal.name;
+    this.nameForDeletion = name;
     this.typeForDeletion = "Subscription";
-  }
-
-
-
-  checkSubscription(subscriptionId: string): void {
-    this.userService.checkSubscriptionStatus(subscriptionId).subscribe(
-      (response) => {
-        // Check the subscription status in the response
-        console.log('Subscription Status:', response.status);
-      },
-      (error) => {
-        console.error('Error checking subscription status:', error);
-        // Handle the error
-      }
-    );
   }
 
 

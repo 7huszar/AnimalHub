@@ -118,21 +118,38 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
+//Used to check if subscription is active
+  public cancelSubscription2() {
+    //checking if subscription is still active
+    let deleteSubscription: Observable<any> = this.userService.checkSubscriptionStatus(this.DeleteId)
+    deleteSubscription.subscribe({
+      next: data => {
+
+        console.log(data)
+      },
+      error: error => {
+        console.error('Error checking if subscription is active', error);
+        this.notification.notifyError(error.error.message, error.error.error);
+      }
+    });
+
+  }
 
 
 
-public cancelSubscription() {
+
+  public cancelSubscription() {
   if (this.DeleteId != null) {
 
         //checking if subscription is still active
-        let isActiveSubscription: Observable<any> = this.userService.checkSubscriptionStatus(this.DeleteId)
-        isActiveSubscription.subscribe({
+        let deleteSubscription: Observable<any> = this.userService.cancelSubscription(this.DeleteId, "kein bock mehr auf abo")
+        deleteSubscription.subscribe({
           next: data => {
-            console.log('Access Token Response:', data);
-            console.log(data)
-          },
+            this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
+            this.reloadSubscriptions();
+            },
           error: error => {
-            console.error('Error checking if subscription is active', error);
+            console.error('Error canceling', error);
             this.notification.notifyError(error.error.message, error.error.error);
           }
         });

@@ -147,7 +147,7 @@ export class AnimalHomepageComponent implements OnInit {
         this.subscription.subscriptionId=data.subscriptionID;
         this.subscription.tier="1";
         console.log('Subscription Payload:', this.subscription);
-
+        console.log(data)
         this.userService.createSubscription(this.subscription).subscribe(
           response => {
             // Handle the response
