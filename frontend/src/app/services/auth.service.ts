@@ -7,6 +7,7 @@ import {jwtDecode} from 'jwt-decode';
 import {Globals} from '../global/globals';
 import {UserDetailDto} from "../dtos/user";
 import {ShelterDto} from "../dtos/shelter";
+import {Mode} from "../enums/modes";
 
 @Injectable({
   providedIn: 'root'
@@ -75,9 +76,28 @@ export class AuthService {
         return 'MEMBER';
       } else if (authInfo.includes('USER_ROLE')) {
         return 'USER';
+      } else if (authInfo.includes('INACTIVE_ROLE')) {
+        return 'INACTIVE';
       }
     }
     return 'UNDEFINED';
+  }
+
+  getModeRole(): Mode {
+    const role: string = this.getUserRole();
+    if (role === 'ADMIN') {
+      return Mode.ADMIN;
+    }
+    if (role === 'MEMBER') {
+      return Mode.MEMBER;
+    }
+    if (role === 'USER') {
+      return Mode.USER;
+    }
+    if (role === 'INACTIVE') {
+      return Mode.INACTIVE;
+    }
+    return null;
   }
 
   private setToken(authResponse: string) {
