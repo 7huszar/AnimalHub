@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
-import {Observable} from 'rxjs';
+import {Observable, switchMap} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
@@ -25,23 +25,22 @@ export class AuthService {
    *
    * @param authRequest User data
    */
-  loginUser(authRequest: AuthRequest): Observable<string> {
+  loginUser(authRequest: AuthRequest): Observable<UserDetailDto> {
     return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
       .pipe(
-        tap((authResponse: string) => this.setToken(authResponse))
+        tap((authResponse: string) => this.setToken(authResponse)),
+        switchMap(() => this.loadUser())
       );
   }
 
-  private loadUser(): void {
-    this.httpClient.get<UserDetailDto>(this.userUri).subscribe({
-      next: userDto => {
-        localStorage.setItem('authUser', JSON.stringify(userDto));
-      }, error: err => {
-        console.error('Error loading user.', err);
-      }
-    });
+  private loadUser(): Observable<UserDetailDto> {
+    return this.httpClient.get<UserDetailDto>(this.userUri)
+      .pipe(
+        tap((userDto: UserDetailDto) => {
+          localStorage.setItem('authUser', JSON.stringify(userDto));
+        })
+      );
   }
-
   /**
    * Check if a valid JWT token is saved in the localStorage
    */
@@ -102,7 +101,6 @@ export class AuthService {
 
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
-    this.loadUser();
   }
 
   private getTokenExpirationDate(token: string): Date {
