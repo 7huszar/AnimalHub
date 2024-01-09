@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
@@ -168,7 +168,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException {
+    public void requestMail(MailRequestDto mailRequestDto) throws NotFoundException {
         LOGGER.trace("requestMail({})", mailRequestDto);
 
         ApplicationUser user = userRepository.findByEmail(mailRequestDto.email());
@@ -255,7 +255,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestPasswordReset(PasswordRequestResetDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException {
+    public void requestPasswordReset(MailRequestDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         LOGGER.trace("requestPasswordReset({})", resetDto);
 
         userValidator.validatePasswordRequestResetDto(resetDto);

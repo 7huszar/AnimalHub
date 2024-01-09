@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
@@ -57,7 +57,7 @@ public interface UserService extends UserDetailsService {
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
-    void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException;
+    void requestMail(MailRequestDto mailRequestDto) throws NotFoundException;
 
     UserDetailDto getCurrentUser() throws NotFoundException;
 
@@ -112,11 +112,11 @@ public interface UserService extends UserDetailsService {
      * Sends an e-mail with a token valid to reset a password of an existing user. <br>
      * Languages of user are either Englisch en or German de
      *
-     * @param passwordRequestResetDto e-mail of user to reset password and language of mail sent
+     * @param mailRequestDto e-mail of user to reset password and language of mail sent
      * @throws ValidationException if e-mail is not correct
      * @throws NotFoundException   if user does not exist
      */
-    void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
+    void requestPasswordReset(MailRequestDto mailRequestDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
     void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException;
 }

@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -30,10 +30,10 @@ public class PasswordEndpoint {
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void requestPasswordRequest(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException {
-        LOGGER.info("GET " + BASE_PATH + "{}", passwordRequestResetDto.email());
+    public void requestPasswordRequest(MailRequestDto mailRequestDto) throws ValidationException {
+        LOGGER.info("GET " + BASE_PATH + "{}", mailRequestDto.email());
         try {
-            service.requestPasswordReset(passwordRequestResetDto);
+            service.requestPasswordReset(mailRequestDto);
         } catch (NotFoundException | NotAuthorizedException e) {
             LOGGER.warn(e.getMessage());
             // Do nothing, so malicious user can't check for existence of e-mail in system

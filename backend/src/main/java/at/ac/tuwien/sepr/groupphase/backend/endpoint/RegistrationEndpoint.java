@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.VerificationDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -42,7 +42,7 @@ public class RegistrationEndpoint {
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void requestMail(PasswordRequestResetDto mailRequest) {
+    public void requestMail(MailRequestDto mailRequest) {
         LOGGER.info("GET " + mailRequest);
         try {
             this.service.requestMail(mailRequest);

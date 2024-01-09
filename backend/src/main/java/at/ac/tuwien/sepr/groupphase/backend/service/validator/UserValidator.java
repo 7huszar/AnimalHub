@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -54,7 +54,7 @@ public class UserValidator {
     }
 
 
-    public void validatePasswordRequestResetDto(PasswordRequestResetDto resetDto) throws ValidationException {
+    public void validatePasswordRequestResetDto(MailRequestDto resetDto) throws ValidationException {
         if (isInvalidEmail(resetDto.email())) {
             throw new ValidationException("Failed validation for password reset request data", Collections.singletonList("invalid e-mail"));
         }
