@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<!-- Burger Menu -->
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-1"></div>
@@ -9,21 +9,23 @@
         Filter
       </button>
     </div>
+    <!-- Burger Menu
     <div class="col-1 text-end">
       <button class="bi bi-list text-white btn btn-primary rounded align-self-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Menu
       </button>
       <div class="dropdown-menu bg-primary" aria-labelledby="dropdownMenuButton">
-        <!-- Dropdown items go here -->
         <a class="dropdown-item" href="#">Favourites</a>
         <a class="dropdown-item" href="#">My Profile</a>
         <a class="dropdown-item" href="#">View Adopted Animals</a>
         <a class="dropdown-item" [routerLink]="['/admin']">This is an Example Use it</a>
       </div>
     </div>
+    End of burger Menu -->
   </div>
 
-<!-- End of burger Menu -->
+
+
 
 
 
@@ -80,7 +82,7 @@
         </app-favorites-card>
     </div>
   </div>
-  <div class="container" *ngIf="likedAnimals.length == 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
+  <div class="container" *ngIf="likedAnimals.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
     <p style="font-size: 2rem; margin: 0">Noch keine Favoriten? Like ein paar Tierchen!</p>
   </div>
 </div>
