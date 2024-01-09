@@ -127,6 +127,10 @@ const routes: Routes = [
       { path: 'edit/:id',
         canActivate: mapToCanActivate([AuthGuard]),
         component: UserEditComponent,
+        data: {access: Mode.USER} },
+      { path: 'subscriptions',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: SubscriptionsComponent,
         data: {access: Mode.USER} }
     ] },
 
