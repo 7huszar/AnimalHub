@@ -71,7 +71,6 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.animalService.findAll().subscribe({
       next: data => {
-        console.log("data", data);
         this.animalList = data;
         this.loadCards();
       },
@@ -86,7 +85,6 @@ export class HomeComponent implements OnInit {
       next: data => {
         this.user = data;
         this.subscription.user = this.user;
-        console.log(this.user)
 
         //loading the subscriptions of the user
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
