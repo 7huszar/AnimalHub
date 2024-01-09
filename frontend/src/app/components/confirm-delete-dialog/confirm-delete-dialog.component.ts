@@ -5,6 +5,10 @@ import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../services/notifier.service";
 import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
+import {Observable} from "rxjs";
+
+declare var paypal;
+
 
 @Component({
   selector: 'app-confirm-delete-dialog',
@@ -32,6 +36,7 @@ export class ConfirmDeleteDialogComponent {
 
   ) {
   }
+
 
 
   public deleteShelter() {
@@ -63,6 +68,10 @@ export class ConfirmDeleteDialogComponent {
 
   reloadAnimal() {
     this.router.navigate(['/shelter/' + this.DeleteId])
+  }
+
+  reloadSubscriptions() {
+    this.router.navigate(['/subscriptions'])
   }
 
   public deleteUser() {
@@ -109,15 +118,43 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-  public deleteEntity() {
-    if (this.deleteType === 'User') {
-      this.deleteUser()
-    } else if(this.deleteType === 'Shelter') {
-      this.deleteShelter()
-    }else{
-      this.deleteAnimal()
-    }
+
+
+
+public cancelSubscription() {
+  if (this.DeleteId != null) {
+
+        //checking if subscription is still active
+        let isActiveSubscription: Observable<any> = this.userService.checkSubscriptionStatus(this.DeleteId)
+        isActiveSubscription.subscribe({
+          next: data => {
+            console.log('Access Token Response:', data);
+            console.log(data)
+          },
+          error: error => {
+            console.error('Error checking if subscription is active', error);
+            this.notification.notifyError(error.error.message, error.error.error);
+          }
+        });
+
+
   }
+}
+
+
+
+
+public deleteEntity() {
+  if (this.deleteType === 'User') {
+    this.deleteUser()
+  } else if(this.deleteType === 'Shelter') {
+    this.deleteShelter()
+  }else if (this.deleteType === 'Animal'){
+    this.deleteAnimal()
+  }else if (this.deleteType === 'Subscription'){
+    this.cancelSubscription()
+  }
+}
 }
 
 

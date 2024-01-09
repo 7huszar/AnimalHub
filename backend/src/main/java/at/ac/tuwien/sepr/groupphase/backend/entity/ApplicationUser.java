@@ -41,6 +41,10 @@ public class ApplicationUser {
 
     private LocalDateTime registrationStamp;
 
+    private String paypalClientId;
+
+    private String paypalSecret;
+
     @OneToOne
     @JoinColumn(name = "shelter_id", nullable = true)
     private Shelter shelter;
@@ -53,6 +57,8 @@ public class ApplicationUser {
             + ", password='" + password + '\''
             + ", role=" + role + '\''
             + ", shelter=" + shelter + '\''
+            + ", clientId=" + paypalClientId + '\''
+            + ", secret=" + paypalSecret + '\''
             + '}';
     }
 }

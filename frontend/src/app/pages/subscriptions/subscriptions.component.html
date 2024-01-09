@@ -28,7 +28,7 @@
               <div class="btn-group">
 
                 <button type="button" class="btn btn-sm btn-danger"
-                        (click)="subscriptionForDeletion(subscription.animal.name, subscription.subscriptionId)"
+                        (click)="subscriptionForDeletion(subscriptions.animal.name, subscriptions.subscriptionId)"
                         data-bs-toggle="modal"
                         data-bs-target="#confirm-delete-dialog"
                         aria-label="Delete shelter">
@@ -40,7 +40,9 @@
           </tbody>
         </table>
       </div>
-    </div>
+        <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
+
+      </div>
   </div>
 
 

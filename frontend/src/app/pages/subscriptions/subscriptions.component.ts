@@ -72,14 +72,15 @@ export class SubscriptionsComponent implements OnInit {
       next: data => {
         this.user = data;
         this.subscription.user = this.user;
-        console.log(this.user)
+        console.log("current User: " + this.user)
+
 
         //loading the subscriptions of the user
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
         subscriptionObservable.subscribe({
           next: data => {
             this.subscriptionList = data;
-            console.log("subscription: " + this.subscriptionList);
+            console.log("Loaded subscriptions " + this.subscriptionList)
           },
           error: error => {
             //this schould never happen except if no subscriptions have been made
@@ -91,7 +92,7 @@ export class SubscriptionsComponent implements OnInit {
 
       },
       error: error => {
-        //this schould never happen be
+        //this schould never happen
         console.error('Error finding user', error);
         this.notification.error("Could not find logged in user");
       }
@@ -109,23 +110,6 @@ export class SubscriptionsComponent implements OnInit {
   }
 
 
-  cancelSubscription(subscriptionId: string): void {
-    if (subscriptionId) {
-      // Use the PayPal SDK to cancel the subscription
-      paypal.subscription.cancel(subscriptionId)
-        .then((response) => {
-          console.log('Subscription canceled successfully:', response);
-          // Optionally, update your local state or notify the user
-        })
-        .catch((error) => {
-          console.error('Error canceling subscription:', error);
-          // Handle the error, e.g., notify the user
-        });
-    } else {
-      console.warn('Subscription ID not available. Unable to cancel subscription.');
-      // Handle the case where subscription ID is not available
-    }
-  }
 
   checkSubscription(subscriptionId: string): void {
     this.userService.checkSubscriptionStatus(subscriptionId).subscribe(

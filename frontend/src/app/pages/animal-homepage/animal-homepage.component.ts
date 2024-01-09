@@ -7,7 +7,7 @@ import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
-import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
+import {CreateSubscriptionDto, UserDetailDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 
 declare var paypal;
@@ -111,8 +111,14 @@ export class AnimalHomepageComponent implements OnInit {
     //TODO handle the case in which the user is already subscribed to the animal
 
 
-    //TODO change it for live version this is sandbox
     //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
+    // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
+
+    //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
+    //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
+    //AaU7GO_lBCk5obOETEEeMJs_KbxcD26Tmf_AUrzgFgN7Rw4ApuNzAav6LxOWloItnOrLOFPMy3PSPqLP id
+    //EKQcBTWOtn7WnOAIJQBzQLkJdhYvWOJKWd_AgG1tE8ONLbIZVAKsdCxusu64qUgUvvKfl8eHQRwdgwAp secret
+
     script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
     script.onload = () => {
       // PayPal script is loaded, render the button

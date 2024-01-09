@@ -1,12 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, Subscription, switchMap} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
-import {AnimalDetailDto, CreateAnimalDto} from "../dtos/animal";
-import {ShelterDto} from "../dtos/shelter";
-import {SubscriptionLog} from "rxjs/internal/testing/SubscriptionLog";
-
 
 
 @Injectable({
@@ -18,9 +14,20 @@ export class UserService {
   private paypalApiUrl = 'https://api.sandbox.paypal.com/v1/billing/subscriptions/';
   private paypalTokenUrl = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 
+   private id: string = "AaU7GO_lBCk5obOETEEeMJs_KbxcD26Tmf_AUrzgFgN7Rw4ApuNzAav6LxOWloItnOrLOFPMy3PSPqLP";
+   private secret: string = "EKQcBTWOtn7WnOAIJQBzQLkJdhYvWOJKWd_AgG1tE8ONLbIZVAKsdCxusu64qUgUvvKfl8eHQRwdgwAp";
+   private noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError: HttpClient;
+
+   //private id: string = "AQIxpNWdDXGB9l9l_d885Jxf5bLFQF4xG_5IRYEtF6nkQls6q4rSivsvH1hpgWdJWEo94XbHOkqyQqHD";
+   //private secret: string = "EDEGnfRd7X1ccyWxK_vl-aKBgHgsWDKol0Ab_S30avCmMx5VDzGbwxU689225xiNx8nbnFts9IC1_VD8";
 
 
-  constructor(private httpClient: HttpClient, private globals: Globals) {
+
+  constructor(
+    private httpClient: HttpClient,
+    private globals: Globals,
+    handler: HttpBackend) {
+    this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError = new HttpClient(handler);
   }
 
   /**
@@ -111,41 +118,39 @@ export class UserService {
 
     return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions', {params})
       .pipe();
-   // return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions')
   }
 
   checkSubscriptionStatus(subscriptionId: string): Observable<any> {
     return this.getPayPalAccessToken().pipe(
       switchMap((accessTokenResponse) => {
+
         const accessToken = accessTokenResponse.access_token;
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         });
-
+      console.log(accessToken)
         const url = `${this.paypalApiUrl}${subscriptionId}`;
 
-        return this.httpClient.get<any>(url, { headers });
+        return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.get<any>(url, { headers });
       })
     );
   }
 
-  private getPayPalAccessToken(): Observable<any> {
+  getPayPalAccessToken(): Observable<any> {
 
     //TODO THIS IS A SANDBOX VERSION OF THIS CALL HERE THE CLIENT ID AND SECRET WILL ALWAYS BE THE SAME FOR LIVE VERSION IMPLEMENT CODE
 
-    const clientId = 'YOUR_SANDBOX_CLIENT_ID';
-    const secret = 'YOUR_SANDBOX_SECRET';
+    const clientId = this.id;
+    const secret = this.secret;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + btoa(`${clientId}:${secret}`)
     });
 
-    const body = new HttpParams()
-      .set('grant_type', 'client_credentials');
-
-    return this.httpClient.post(this.paypalTokenUrl, body.toString(), { headers });
+    const body = new HttpParams().set('grant_type', 'client_credentials');
+    return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.post(this.paypalTokenUrl, body,{headers});
   }
 
 
