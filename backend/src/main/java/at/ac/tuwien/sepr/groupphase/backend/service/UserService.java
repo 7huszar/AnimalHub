@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -83,9 +84,9 @@ public interface UserService extends UserDetailsService {
      * More precisely, the status of the role of the user is set from UserRole.INACTIVE to UserRole.USER.
      *
      * @param token Verification token
-     * @throws NotAuthorizedException if the token is invalid in any kind
+     * @throws NotFoundException if the token is invalid in any kind
      */
-    void verify(String token) throws NotAuthorizedException;
+    void verify(String token) throws NotFoundException, JwtException;
 
 
     /**

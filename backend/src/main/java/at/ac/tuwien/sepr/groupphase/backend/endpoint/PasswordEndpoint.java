@@ -21,19 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.invoke.MethodHandles;
 
 @RestController
-@RequestMapping(value = "/api/v1/password")
+@RequestMapping(value = PasswordEndpoint.BASE_PATH)
 @RequiredArgsConstructor
 public class PasswordEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService service;
+    static final String BASE_PATH = "/api/v1/password";
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void requestPasswordRequest(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException {
-        LOGGER.debug("reset password for {}", passwordRequestResetDto);
+        LOGGER.info("GET " + BASE_PATH + "{}", passwordRequestResetDto.email());
         try {
             service.requestPasswordReset(passwordRequestResetDto);
         } catch (NotFoundException | NotAuthorizedException e) {
+            LOGGER.warn(e.getMessage());
             // Do nothing, so malicious user can't check for existence of e-mail in system
         }
     }
@@ -41,9 +43,11 @@ public class PasswordEndpoint {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException {
+        LOGGER.info("PUT " + BASE_PATH + "{}", resetDto.token());
         try {
             service.resetPassword(resetDto);
         } catch (NotFoundException | JwtException e) {
+            LOGGER.warn(e.getMessage());
             throw new NotAuthorizedException("Could not reset password");
         }
 
