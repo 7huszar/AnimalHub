@@ -14,14 +14,13 @@ export class AuthGuard  {
   canActivate(route: ActivatedRouteSnapshot): boolean {
 
     const access: Mode = route.data.access;
-    console.log(access);
+
     if (access == null) {
       return true;
     }
     if (access <= this.authService.getModeRole()) {
       return true;
     } else {
-      // TODO better place than login
       this.router.navigate(['/']);
       return false;
     }
