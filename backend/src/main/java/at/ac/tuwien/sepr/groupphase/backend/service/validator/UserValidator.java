@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -16,6 +17,9 @@ import java.util.regex.Pattern;
 @Component
 @RequiredArgsConstructor
 public class UserValidator {
+    private static final int MAX_PWD = 255;
+    private static final int MIN_PWD = 8;
+
     public void validateUserCredentials(UserLoginDto userLoginDto) throws ValidationException {
         List<String> validationErrors = new ArrayList<>();
         if (userLoginDto == null) {
@@ -28,16 +32,13 @@ public class UserValidator {
             validationErrors.add("invalid e-mail");
         }
 
-        if (userLoginDto.getPassword() == null || userLoginDto.getPassword().isEmpty()) {
-            validationErrors.add("no password given");
-        } else if (userLoginDto.getPassword().length() < 8) {
-            validationErrors.add("password too short " + userLoginDto.getPassword().length() + ", should be 8");
+        if (!validatePassword(userLoginDto.getPassword()).isEmpty()) {
+            validationErrors.add(validatePassword(userLoginDto.getPassword()));
         }
         if (!validationErrors.isEmpty()) {
             throw new ValidationException("Failed to validate registration data", validationErrors);
         }
     }
-
 
     public void validateUserCredentialsForUpdate(UserDetailDto user) throws ValidationException {
         List<String> validationErrors = new ArrayList<>();
@@ -54,9 +55,26 @@ public class UserValidator {
     }
 
 
-    public void validatePasswordRequestResetDto(PasswordRequestResetDto resetDto) throws ValidationException {
+    /**
+     * Checks if e-mail is valid according to isInvalidEmail(String email).
+     *
+     * @throws ValidationException if validation failed
+     */
+    public void validatePasswordRequestResetDto(MailRequestDto resetDto) throws ValidationException {
         if (isInvalidEmail(resetDto.email())) {
             throw new ValidationException("Failed validation for password reset request data", Collections.singletonList("invalid e-mail"));
+        }
+    }
+
+    /**
+     * Validates new password according to this.validatePassword(String password).
+     *
+     * @throws ValidationException if validation failed
+     */
+    public void validatePasswordResetDto(PasswordResetDto resetDto) throws ValidationException {
+        if (!validatePassword(resetDto.password()).isEmpty()) {
+            throw new ValidationException("Failed to validate password for password reset",
+                Collections.singletonList(validatePassword(resetDto.password())));
         }
     }
 
@@ -69,5 +87,27 @@ public class UserValidator {
 
     private boolean isInvalidEmail(String email) {
         return email == null || !Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$").matcher(email).matches();
+    }
+
+    /**
+     * Validates password.
+     * The criteria are:
+     * - null <br>
+     * - < MIN_PWD <br>
+     * - > MAX_PWD <br>
+     *
+     * @return String representing failed validation or empty string if validation succeeded
+     */
+    private String validatePassword(String password) {
+        if (password == null) {
+            return "no password given";
+        }
+        if (password.length() < MIN_PWD) {
+            return "password has to be at least " + MIN_PWD + " char long; this length: " + password.length();
+        }
+        if (password.length() > MAX_PWD) {
+            return "password max size " + MAX_PWD + "; this length: " + password.length();
+        }
+        return "";
     }
 }

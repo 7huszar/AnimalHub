@@ -11,7 +11,8 @@
     "PWD_MISSING": "Bitte Passwort angeben",
     "PWD_SHORT": "Das Passwort muss mindestens 8 Zeichen lang sein",
     "BAD_CREDENTIALS": "Benutzername oder Passwort falsch",
-    "LOGIN_FAILED": "Anmeldung fehlgeschlagen"
+    "LOGIN_FAILED": "Anmeldung fehlgeschlagen",
+    "HOW_DOES_IT_WORK": "Wie funktioniert AnimalHub?"
   },
 
   "LANG_SELECT": {
@@ -114,6 +115,16 @@
     "SUBSCRIPTION_ID": "Abonnement Id",
     "SUBSCRIBED_TO": "meine Abonnements"
 
+  },
+
+  "CONTACT_PAGE": {
+    "TITLE": "Contact",
+    "NAME": "Name",
+    "EMAIL": "E-mail",
+    "MESSAGE": "Nachricht",
+    "SUBMIT": "Senden",
+    "SUCCESS": "Nachricht erfolgreich gesendet",
+    "FAILED": "Fehler beim senden der Nachricht"
   },
 
   "DUMMY": {

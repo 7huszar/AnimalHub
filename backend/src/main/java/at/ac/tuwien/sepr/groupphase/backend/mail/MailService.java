@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.mail;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.LanguageConfig;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class MailService {
     private final JavaMailSender emailSender;
     private final JwtTokenizer jwtTokenizer;
     private final MailTimeout timeoutCollector;
+    private final LanguageConfig lang;
 
     /**
      * Send a verification link to specified e-mail.
@@ -43,7 +45,8 @@ public class MailService {
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language, regStamp));
+        message.setText(lang.getTranslation(language + ".mail.verifyEmail") + "\nhttp://localhost:4200/#/register/confirm/"
+            + jwtTokenizer.getActivationToken(email, language, regStamp));
         emailSender.send(message);
     }
 
@@ -66,7 +69,38 @@ public class MailService {
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animal Hub reset password");
-        message.setText("http://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
+        message.setText(lang.getTranslation(language + ".mail.resetPwd") + "\nhttp://localhost:4200/#/password/reset/"
+            + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
+    }
+
+    /**
+     * Asynchronously sends a contact email from a user to a shelter.
+     * The email is sent in its own thread.
+     *
+     * @param to The email address of the shelter
+     * @param from The email address of the user
+     * @param name The name of the user
+     * @param message The message from the user to the shelter
+     */
+    @Async
+    public void sendShelterContactMail(String to, String from, String name,  String message) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(from);
+        mailMessage.setTo(to);
+        mailMessage.setSubject("Animal Hub Contact from: " + name);
+        mailMessage.setText("Name: " + name + "\n" + "Message: " + message);
+        emailSender.send(mailMessage);
+    }
+
+    /**
+     * Sends a SimpleMaileMessage defined by caller.
+     * Mail is send in own thread.
+     *
+     * @param mail SimpleMailMessage to send
+     */
+    @Async
+    public void sendSimpleMail(SimpleMailMessage mail) {
+        emailSender.send(mail);
     }
 }

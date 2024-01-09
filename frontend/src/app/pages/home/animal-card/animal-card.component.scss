@@ -6,7 +6,8 @@
 }
 
 .card {
-  border-bottom: 6px solid var(--bs-primary);
+  border: 6px solid black;
+  /* border-bottom: 6px solid var(--bs-primary);*/
 }
 .mask {
   position: absolute;
@@ -24,5 +25,5 @@
   overflow: hidden;
   width: 30em;
   height: 20em;
-  object-fit: cover;
+  object-fit: contain;
 }
