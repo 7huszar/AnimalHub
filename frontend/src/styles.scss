@@ -1,5 +1,5 @@
 $primary:       #64B5F6;
-$secondary:     #ff80d5;
+$secondary:     #f08fb4;
 @use "sass:map";
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
@@ -63,7 +63,8 @@ $secondary:     #ff80d5;
 
 .btn.btn-primary:active,
 .btn.btn-primary.active {
-  background-color: #b30086;
+ // background-color: #b30086;
+  background-color: #f16ea1;
   color: #fff;
 }
 
