@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -21,31 +21,37 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.invoke.MethodHandles;
 
 @RestController
-@RequestMapping(value = "/api/v1/password")
+@RequestMapping(value = PasswordEndpoint.BASE_PATH)
 @RequiredArgsConstructor
 public class PasswordEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService service;
+    static final String BASE_PATH = "/api/v1/password";
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void requestPasswordRequest(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException {
-        LOGGER.debug("reset password for {}", passwordRequestResetDto);
+    public void requestPasswordRequest(MailRequestDto mailRequestDto) throws ValidationException {
+        LOGGER.info("GET " + BASE_PATH + "{}", mailRequestDto.email());
         try {
-            service.requestPasswordReset(passwordRequestResetDto);
+            service.requestPasswordReset(mailRequestDto);
         } catch (NotFoundException | NotAuthorizedException e) {
+            LOGGER.warn(e.getMessage());
             // Do nothing, so malicious user can't check for existence of e-mail in system
         }
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException {
+    public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException, ValidationException {
+        LOGGER.info("PUT " + BASE_PATH + "{}", resetDto.token());
         try {
             service.resetPassword(resetDto);
         } catch (NotFoundException | JwtException e) {
+            LOGGER.warn(e.getMessage());
             throw new NotAuthorizedException("Could not reset password");
+        } catch (ValidationException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
         }
-
     }
 }

@@ -1,6 +1,7 @@
 export enum Mode {
   CREATE,
   EDIT,
+  INACTIVE,
   USER,
   MEMBER,
   ADMIN,

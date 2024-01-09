@@ -1,19 +1,24 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
+import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -27,6 +32,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -37,11 +44,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +58,7 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator;
@@ -56,6 +66,7 @@ public class CustomUserDetailService implements UserService {
     private final UserMapper userMapper;
     private final UserConflict conflict;
     private final MailService mail;
+
 
 
     /**
@@ -67,6 +78,7 @@ public class CustomUserDetailService implements UserService {
      */
     @Override
     public List<UserDetailDto> search(UserSearchDto searchParameters) {
+        LOGGER.trace("search({})", searchParameters);
 
         List<ApplicationUser> users = new ArrayList<>();
 
@@ -96,7 +108,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOGGER.debug("Load all user by email");
+        LOGGER.trace("loadUserByUsername({})", email);
         try {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
@@ -110,7 +122,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException {
-        LOGGER.debug("Find application user by email");
+        LOGGER.trace("findApplicationUserByEmail({})", email);
         ApplicationUser applicationUser = userRepository.findByEmail(email);
         if (applicationUser != null) {
             return applicationUser;
@@ -120,6 +132,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        LOGGER.trace("login({})", userLoginDto.getEmail());
         // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
         // tmp solution
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
@@ -142,7 +155,8 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException {
-        LOGGER.debug("register user by email");
+        LOGGER.trace("register({})", userLoginDto.getEmail());
+
         userValidator.validateUserCredentials(userLoginDto);
         conflict.conflictForRegister(userLoginDto.getEmail());
 
@@ -165,7 +179,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException {
+    public void requestMail(MailRequestDto mailRequestDto) throws NotFoundException {
         LOGGER.trace("requestMail({})", mailRequestDto);
 
         ApplicationUser user = userRepository.findByEmail(mailRequestDto.email());
@@ -177,30 +191,33 @@ public class CustomUserDetailService implements UserService {
 
     @Transactional
     @Override
-    public void verify(String token) throws NotAuthorizedException {
-        String email;
-        String regStamp;
-        try {
-            Claims claims = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    public void verify(String token) throws NotFoundException, JwtException {
+        LOGGER.trace("verify({})", token);
 
-            email = claims.get("email", String.class);
-            regStamp = claims.get("regstamp", String.class);
-        } catch (JwtException e) {
-            throw new NotAuthorizedException(e.getMessage());
-        }
+        Claims claims = Jwts.parser()
+            .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+
+        String email = claims.get("email", String.class);
+        String regStamp = claims.get("regstamp", String.class);
+        String lang = claims.get("language", String.class);
+
         ApplicationUser user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("user by e-mail " + email + " ");
+        }
         if (!regStamp.equals(user.getRegistrationStamp().toString())) {
-            throw new NotAuthorizedException("verification time expired");
+            // let's handle the timestamp as a key (which it isn't)
+            throw new NotFoundException("verification time expired");
         }
         userRepository.updateRole(email, UserRole.USER);
     }
 
     @Override
     public UserDetailDto getCurrentUser() throws NotFoundException {
+        LOGGER.trace("getCurrentUser()");
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         var user = userRepository.findByEmail(email);
@@ -214,7 +231,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void delete(UUID id) throws ConflictException, NotAuthorizedException, NotFoundException {
-        LOGGER.debug("Delete Shelter with id: " + id);
+        LOGGER.debug("delete({})", id);
 
         conflict.conflictForDelete(id);
         var shelter = userRepository.findById(id).orElseThrow(
@@ -225,7 +242,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
-        LOGGER.debug("Update Shelter with id: " + userDetailDto.getId() + ", with following data:" + userDetailDto);
+        LOGGER.debug("update({})", userDetailDto);
 
         userValidator.validateUserCredentialsForUpdate(userDetailDto);
         ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
@@ -239,19 +256,20 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetailDto findById(UUID id) throws NotFoundException {
-        LOGGER.debug("Get User with id: " + id);
+        LOGGER.trace("findById({})", id);
 
         var user = userRepository.findById(id).orElseThrow(
-            () -> new NotFoundException("Shelter does not exist.")
+            () -> new NotFoundException("Shelter by id " + id + " does not exist.")
         );
 
         return userMapper.applicationUserToUserDetailDto(user);
     }
 
     @Override
-    public void requestPasswordReset(PasswordRequestResetDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException {
-        userValidator.validatePasswordRequestResetDto(resetDto);
+    public void requestPasswordReset(MailRequestDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         LOGGER.trace("requestPasswordReset({})", resetDto);
+
+        userValidator.validatePasswordRequestResetDto(resetDto);
 
         ApplicationUser user = userRepository.findByEmail(resetDto.email());
 
@@ -267,8 +285,9 @@ public class CustomUserDetailService implements UserService {
 
     @Transactional
     @Override
-    public void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException {
-        String email;
+    public void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException, ValidationException {
+        LOGGER.trace("resetPassword({})", resetDto.token());
+        userValidator.validatePasswordResetDto(resetDto);
 
         Claims claims = Jwts.parser()
             .verifyWith(Keys.hmacShaKeyFor(securityProperties.getJwtSecret().getBytes()))
@@ -276,7 +295,7 @@ public class CustomUserDetailService implements UserService {
             .parseSignedClaims(resetDto.token())
             .getPayload();
 
-        email = claims.get("email", String.class);
+        String email = claims.get("email", String.class);
 
         if (!userRepository.existsByEmail(email)) {
             throw new NotFoundException("User by email " + email + " does not exist");
@@ -284,6 +303,34 @@ public class CustomUserDetailService implements UserService {
 
         userRepository.updatePassword(email, passwordEncoder.encode(resetDto.password()));
 
+    }
+
+
+    @Override
+    public SubscriptionDetailDto createSubscription(CreateSubscriptionDto createSubscriptionDto) {
+
+        LOGGER.trace("Create new Subscription: " + createSubscriptionDto);
+
+        Subscription subscription = userMapper.createSubscriptionDtoToSubscription(createSubscriptionDto);
+
+        String id = createSubscriptionDto.getSubscriptionId();
+        subscription.setSubscriptionId(id);
+        SubscriptionKey key = new SubscriptionKey(subscription.getAnimal().getId(), subscription.getUser().getId());
+        subscription.setId(key);
+
+        Subscription ret = subscriptionRepository.save(subscription);
+
+        return userMapper.subscriptionToSubscriptionDetailDto(ret);
+    }
+
+
+    @Override
+    public List<SubscriptionDetailDto> findAllSubscriptionsByUser(UserDetailDto userDetailDto) {
+        LOGGER.trace("Find all Subscriptions of User");
+
+        return subscriptionRepository.findAllByUserId(userDetailDto.getId()).stream()
+            .map(userMapper::subscriptionToSubscriptionDetailDto)
+            .collect(Collectors.toList());
     }
 
 }

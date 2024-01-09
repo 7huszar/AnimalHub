@@ -38,6 +38,7 @@ public class Animal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "animal_id")
     private UUID id;
 
     @Column(nullable = false, length = 255)

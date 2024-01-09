@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -20,6 +22,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,5 +87,25 @@ public class UserEndpoint {
         userDetailDto.setId(id);
 
         return userService.update(userDetailDto);
+    }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/current")
+    @Operation(summary = "Create new subscription in database", security = @SecurityRequirement(name = "apiKey"))
+    public SubscriptionDetailDto createSubscription(@Valid @RequestBody CreateSubscriptionDto createSubscriptionDto) {
+        LOGGER.info("POST " + BASE_PATH + "/");
+        LOGGER.debug("Body of request:\n{}", createSubscriptionDto);
+        return userService.createSubscription(createSubscriptionDto);
+    }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("/subscriptions")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get list of subscriptions", security = @SecurityRequirement(name = "apiKey"))
+    public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) {
+        LOGGER.info("GET " + BASE_PATH);
+
+        return userService.findAllSubscriptionsByUser(userDetailDto);
     }
 }

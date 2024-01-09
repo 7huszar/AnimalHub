@@ -29,6 +29,7 @@ public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     private UUID id;
 
     @Column(unique = true)
@@ -39,6 +40,10 @@ public class ApplicationUser {
     private UserRole role;
 
     private LocalDateTime registrationStamp;
+
+    private String paypalClientId;
+
+    private String paypalSecret;
 
     @OneToOne
     @JoinColumn(name = "shelter_id", nullable = true)
@@ -52,6 +57,8 @@ public class ApplicationUser {
             + ", password='" + password + '\''
             + ", role=" + role + '\''
             + ", shelter=" + shelter + '\''
+            + ", clientId=" + paypalClientId + '\''
+            + ", secret=" + paypalSecret + '\''
             + '}';
     }
 }

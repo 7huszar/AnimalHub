@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordRequestResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
@@ -10,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -56,7 +59,7 @@ public interface UserService extends UserDetailsService {
      */
     void register(UserLoginDto userLoginDto) throws ValidationException, ConflictException;
 
-    void requestMail(PasswordRequestResetDto mailRequestDto) throws NotFoundException;
+    void requestMail(MailRequestDto mailRequestDto) throws NotFoundException;
 
     UserDetailDto getCurrentUser() throws NotFoundException;
 
@@ -83,9 +86,9 @@ public interface UserService extends UserDetailsService {
      * More precisely, the status of the role of the user is set from UserRole.INACTIVE to UserRole.USER.
      *
      * @param token Verification token
-     * @throws NotAuthorizedException if the token is invalid in any kind
+     * @throws NotFoundException if the token is invalid in any kind
      */
-    void verify(String token) throws NotAuthorizedException;
+    void verify(String token) throws NotFoundException, JwtException;
 
 
     /**
@@ -109,13 +112,28 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Sends an e-mail with a token valid to reset a password of an existing user. <br>
-     * Languages of user are either Englisch en or German de
+     * Languages of user are either English en or German de
      *
-     * @param passwordRequestResetDto e-mail of user to reset password and language of mail sent
+     * @param resetDto e-mail of user to reset password and language of mail sent
      * @throws ValidationException if e-mail is not correct
      * @throws NotFoundException   if user does not exist
      */
-    void requestPasswordReset(PasswordRequestResetDto passwordRequestResetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
+    void requestPasswordReset(MailRequestDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
-    void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException;
+    /**
+     * Create a new subscription in the persistent data storage with the given parameters.
+     *
+     * @param createSubscriptionDto attributes to create new Animal
+     * @return the created animal as AnimalDetailDto
+     */
+    SubscriptionDetailDto createSubscription(CreateSubscriptionDto createSubscriptionDto);
+
+    /**
+     * Get all Subscriptions of User from database.
+     *
+     * @return List of all Subscriptions as UserDetailDto
+     */
+    List<SubscriptionDetailDto> findAllSubscriptionsByUser(UserDetailDto userDetailDto);
+
+    void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException, ValidationException;
 }

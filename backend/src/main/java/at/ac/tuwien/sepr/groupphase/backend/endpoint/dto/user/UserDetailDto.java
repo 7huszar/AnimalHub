@@ -25,12 +25,18 @@ public class UserDetailDto {
 
     private ShelterDto shelter;
 
+    private String paypalClientId;
+
+    private String paypalSecret;
+
     @Override
     public String toString() {
         return "UserDetailDto{"
-            + ", id='" + id + '\''
+            + "id='" + id + '\''
             + ", email='" + email + '\''
             + ", role='" + role + '\''
+            + ", secret='" + paypalSecret + '\''
+            + ", ClientId='" + paypalClientId + '\''
             + '}';
     }
 }

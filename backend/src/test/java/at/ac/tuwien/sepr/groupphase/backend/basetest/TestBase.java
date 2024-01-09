@@ -2,8 +2,10 @@ package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.AllDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,8 @@ public abstract class TestBase {
     protected List<Shelter> allShelterEntities;
     protected List<Animal> allAnimalEntities;
     protected List<File> allFileEntities;
+    protected List<Subscription> allSubscriptionEntities;
+    protected List<ApplicationUser> allUserEntities;
 
     @Autowired
     protected AllDataGenerator dataGenerator;
@@ -65,6 +69,8 @@ public abstract class TestBase {
     @AfterEach
     public void tearDownDb() throws SQLException {
         dataGenerator.clearData();
+        allSubscriptionEntities = Collections.emptyList();
+        allUserEntities = Collections.emptyList();
         allShelterEntities = Collections.emptyList();
         allAnimalEntities = Collections.emptyList();
         allFileEntities = Collections.emptyList();

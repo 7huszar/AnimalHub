@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
-import {Observable} from 'rxjs';
+import {Observable, switchMap} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
 import {Globals} from '../global/globals';
 import {UserDetailDto} from "../dtos/user";
 import {ShelterDto} from "../dtos/shelter";
+import {Mode} from "../enums/modes";
 
 @Injectable({
   providedIn: 'root'
@@ -24,23 +25,22 @@ export class AuthService {
    *
    * @param authRequest User data
    */
-  loginUser(authRequest: AuthRequest): Observable<string> {
+  loginUser(authRequest: AuthRequest): Observable<UserDetailDto> {
     return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
       .pipe(
-        tap((authResponse: string) => this.setToken(authResponse))
+        tap((authResponse: string) => this.setToken(authResponse)),
+        switchMap(() => this.loadUser())
       );
   }
 
-  private loadUser(): void {
-    this.httpClient.get<UserDetailDto>(this.userUri).subscribe({
-      next: userDto => {
-        localStorage.setItem('authUser', JSON.stringify(userDto));
-      }, error: err => {
-        console.error('Error loading user.', err);
-      }
-    });
+  private loadUser(): Observable<UserDetailDto> {
+    return this.httpClient.get<UserDetailDto>(this.userUri)
+      .pipe(
+        tap((userDto: UserDetailDto) => {
+          localStorage.setItem('authUser', JSON.stringify(userDto));
+        })
+      );
   }
-
   /**
    * Check if a valid JWT token is saved in the localStorage
    */
@@ -75,14 +75,32 @@ export class AuthService {
         return 'MEMBER';
       } else if (authInfo.includes('USER_ROLE')) {
         return 'USER';
+      } else if (authInfo.includes('INACTIVE_ROLE')) {
+        return 'INACTIVE';
       }
     }
     return 'UNDEFINED';
   }
 
+  getModeRole(): Mode {
+    const role: string = this.getUserRole();
+    if (role === 'ADMIN') {
+      return Mode.ADMIN;
+    }
+    if (role === 'MEMBER') {
+      return Mode.MEMBER;
+    }
+    if (role === 'USER') {
+      return Mode.USER;
+    }
+    if (role === 'INACTIVE') {
+      return Mode.INACTIVE;
+    }
+    return null;
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
-    this.loadUser();
   }
 
   private getTokenExpirationDate(token: string): Date {
