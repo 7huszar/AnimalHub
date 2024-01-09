@@ -21,12 +21,12 @@ export class HomeComponent implements OnInit {
   private middle: AnimalDetailDto;
   private right: AnimalDetailDto;
 
-  protected animalList: AnimalDetailDto[];
+  protected animalList: AnimalDetailDto[] = [];
   protected subscriptionList: SubscriptionDetailDto[];
-  protected likedAnimals: AnimalDetailDto[];
-  protected dislikedAnimals: AnimalDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
   protected dislikedAnimals: AnimalDetailDto[] = [];
+
+
   counter = 1;
   emptyLeft: boolean = false;
   emptyMiddle: boolean = false;
@@ -71,6 +71,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.animalService.findAll().subscribe({
       next: data => {
+        console.log("data", data);
         this.animalList = data;
         this.loadCards();
       },
