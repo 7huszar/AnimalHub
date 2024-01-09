@@ -92,4 +92,15 @@ public class MailService {
         mailMessage.setText("Name: " + name + "\n" + "Message: " + message);
         emailSender.send(mailMessage);
     }
+
+    /**
+     * Sends a SimpleMaileMessage defined by caller.
+     * Mail is send in own thread.
+     *
+     * @param mail SimpleMailMessage to send
+     */
+    @Async
+    public void sendSimpleMail(SimpleMailMessage mail) {
+        emailSender.send(mail);
+    }
 }
