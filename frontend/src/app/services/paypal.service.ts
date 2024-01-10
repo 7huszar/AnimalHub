@@ -31,16 +31,7 @@ export class PaypalService {
   }
 
 
-  /**
-   * Persists subscription to the backend
-   *
-   * @param subscription to persist
-   */
-  createSubscription(subscription: CreateSubscriptionDto): Observable<SubscriptionDetailDto> {
-    console.log('Create subscription with subscriptionId: ' + subscription.subscriptionId);
-    return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
-  }
-
+//Frontend Logic for canceling subscription works but no longer used because unsafe keep it just in case pls
   cancelSubscription(subscriptionId: string, cancelReason: string): Observable<any> {
     return this.checkSubscriptionStatus(subscriptionId).pipe(
       switchMap(({ accessToken, subscriptionStatus }) => {
@@ -65,7 +56,7 @@ export class PaypalService {
     );
   }
 
-
+  //DO NOT DELETE THIS NOT IMPLEMENTED IN THE BACKEND YET USE THIS IN FUTURE TO CHECK IF YOU SCHOULD SHOW THE CONTENT OR BLURR IT ILL HANDLE CANCELLING SUBSCRIPTIONS
   checkSubscriptionStatus(subscriptionId: string): Observable<any> {
     return this.getPayPalAccessToken().pipe(
       switchMap((accessTokenResponse) => {
@@ -84,7 +75,7 @@ export class PaypalService {
     );
   }
 
-
+  //Implemented in backend but still dont delete just in case
   getPayPalAccessToken(): Observable<any> {
 
 
@@ -99,6 +90,19 @@ export class PaypalService {
     const body = new HttpParams().set('grant_type', 'client_credentials');
     return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.post(this.paypalTokenUrl, body,{headers});
   }
+
+
+  /**
+   * Cancel an existing subscription and delete it from the system.
+   *
+   * @param id of the subscription to be canceled and deleted
+   */
+  cancelSubscriptions(id: string): Observable<any> {
+    console.log(id);
+    return this.httpClient.delete<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`);
+  }
+
+
 
 
 }

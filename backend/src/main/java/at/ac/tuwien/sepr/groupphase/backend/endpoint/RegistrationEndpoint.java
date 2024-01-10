@@ -36,14 +36,17 @@ public class RegistrationEndpoint {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody UserLoginDto userLoginDto) throws ValidationException, ConflictException {
-        LOGGER.info("POST " + userLoginDto.getEmail());
+        LOGGER.info("POST " + BASE_PATH);
+        LOGGER.debug("register({})", userLoginDto);
+
         service.register(userLoginDto);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void requestMail(MailRequestDto mailRequest) {
-        LOGGER.info("GET " + mailRequest);
+        LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("requestMail({})", mailRequest);
         try {
             this.service.requestMail(mailRequest);
         } catch (NotFoundException e) {
@@ -56,7 +59,8 @@ public class RegistrationEndpoint {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void verify(@RequestBody VerificationDto verificationDto) throws NotAuthorizedException {
-        LOGGER.info("PUT " + verificationDto);
+        LOGGER.info("PUT " + BASE_PATH);
+        LOGGER.debug("verify({})", verificationDto);
         try {
             service.verify(verificationDto.getToken());
         } catch (JwtException | NotFoundException e) {
