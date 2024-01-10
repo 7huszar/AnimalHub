@@ -112,28 +112,26 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Sends an e-mail with a token valid to reset a password of an existing user. <br>
-     * Languages of user are either English en or German de
+     * Languages of user are either Englisch en or German de
      *
-     * @param resetDto e-mail of user to reset password and language of mail sent
+     * @param mailRequestDto e-mail of user to reset password and language of mail sent
      * @throws ValidationException if e-mail is not correct
      * @throws NotFoundException   if user does not exist
      */
-    void requestPasswordReset(MailRequestDto resetDto) throws ValidationException, NotFoundException, NotAuthorizedException;
+    void requestPasswordReset(MailRequestDto mailRequestDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
-    /**
-     * Create a new subscription in the persistent data storage with the given parameters.
-     *
-     * @param createSubscriptionDto attributes to create new Animal
-     * @return the created animal as AnimalDetailDto
-     */
+    void resetPassword(PasswordResetDto resetDto) throws NotAuthorizedException, NotFoundException, ValidationException;
+
+    List<SubscriptionDetailDto> findAllSubscriptionsByUser(UserDetailDto userDetailDto);
+
     SubscriptionDetailDto createSubscription(CreateSubscriptionDto createSubscriptionDto);
 
     /**
-     * Get all Subscriptions of User from database.
+     * Delete the subscription with the given id from the persistent data store.
      *
-     * @return List of all Subscriptions as UserDetailDto
+     * @param id the id of the subscription to be deleted.
      */
-    List<SubscriptionDetailDto> findAllSubscriptionsByUser(UserDetailDto userDetailDto);
+    void deleteSubscription(String id) throws NotFoundException;
 
-    void resetPassword(PasswordResetDto resetDto) throws JwtException, NotFoundException, ValidationException;
+
 }

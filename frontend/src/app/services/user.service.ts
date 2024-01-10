@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable, Subscription, switchMap} from 'rxjs';
+import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
 
@@ -14,12 +14,12 @@ export class UserService {
   private paypalApiUrl = 'https://api.sandbox.paypal.com/v1/billing/subscriptions/';
   private paypalTokenUrl = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 
-   private id: string = "AaU7GO_lBCk5obOETEEeMJs_KbxcD26Tmf_AUrzgFgN7Rw4ApuNzAav6LxOWloItnOrLOFPMy3PSPqLP";
-   private secret: string = "EKQcBTWOtn7WnOAIJQBzQLkJdhYvWOJKWd_AgG1tE8ONLbIZVAKsdCxusu64qUgUvvKfl8eHQRwdgwAp";
+   private SellerId: string = "AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv";
+   private Sellersecret: string = "EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO";
    private noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError: HttpClient;
 
-   //private id: string = "AQIxpNWdDXGB9l9l_d885Jxf5bLFQF4xG_5IRYEtF6nkQls6q4rSivsvH1hpgWdJWEo94XbHOkqyQqHD";
-   //private secret: string = "EDEGnfRd7X1ccyWxK_vl-aKBgHgsWDKol0Ab_S30avCmMx5VDzGbwxU689225xiNx8nbnFts9IC1_VD8";
+   //private BuyerId: string = "AQIxpNWdDXGB9l9l_d885Jxf5bLFQF4xG_5IRYEtF6nkQls6q4rSivsvH1hpgWdJWEo94XbHOkqyQqHD";
+   //private Buyersecret: string = "EDEGnfRd7X1ccyWxK_vl-aKBgHgsWDKol0Ab_S30avCmMx5VDzGbwxU689225xiNx8nbnFts9IC1_VD8";
 
 
 
@@ -43,7 +43,7 @@ export class UserService {
    * @param id of user to load
    */
   findById(id: string): Observable<UserDetailDto> {
-    console.log('Load user with id: ' + id);
+    console.log('Load user with SellerId: ' + id);
     return this.httpClient.get<UserDetailDto>(this.usersBaseUri + '/' + id);
   }
 
@@ -70,7 +70,7 @@ export class UserService {
   /**
    * Delete an existing user in the system.
    *
-   * @param id the id of the user to be deleted
+   * @param id the SellerId of the user to be deleted
    */
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(this.usersBaseUri + '/' + id);
@@ -98,6 +98,17 @@ export class UserService {
     return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
   }
 
+  /**
+   * Delete an existing subscription in the system.
+   *
+   * @param id the SellerId of the subscription to be deleted
+   */
+  deleteSubscription(id: string): Observable<void> {
+    console.log(id)
+
+    return this.httpClient.delete<void>(`${this.usersBaseUri}/current/` + id);
+  }
+
 
   /**
    * Loads current user from the backend
@@ -120,38 +131,7 @@ export class UserService {
       .pipe();
   }
 
-  checkSubscriptionStatus(subscriptionId: string): Observable<any> {
-    return this.getPayPalAccessToken().pipe(
-      switchMap((accessTokenResponse) => {
 
-        const accessToken = accessTokenResponse.access_token;
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        });
-      console.log(accessToken)
-        const url = `${this.paypalApiUrl}${subscriptionId}`;
-
-        return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.get<any>(url, { headers });
-      })
-    );
-  }
-
-  getPayPalAccessToken(): Observable<any> {
-
-    //TODO THIS IS A SANDBOX VERSION OF THIS CALL HERE THE CLIENT ID AND SECRET WILL ALWAYS BE THE SAME FOR LIVE VERSION IMPLEMENT CODE
-
-    const clientId = this.id;
-    const secret = this.secret;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + btoa(`${clientId}:${secret}`)
-    });
-
-    const body = new HttpParams().set('grant_type', 'client_credentials');
-    return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.post(this.paypalTokenUrl, body,{headers});
-  }
 
 
 }
