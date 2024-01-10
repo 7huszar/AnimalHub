@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -36,12 +37,14 @@ public class UserDataGenerator {
                 .email("admin@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.ADMIN)
+                .registrationStamp(LocalDateTime.now())
                 .build();
 
             final var member1 = ApplicationUser.builder()
                 .email("member1@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.MEMBER)
+                .registrationStamp(LocalDateTime.now())
                 .shelter(allShelters.get(0))
                 .build();
 
@@ -49,6 +52,7 @@ public class UserDataGenerator {
                 .email("member2@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.MEMBER)
+                .registrationStamp(LocalDateTime.now())
                 .shelter(allShelters.get(1))
                 .build();
 
@@ -56,6 +60,7 @@ public class UserDataGenerator {
                 .email("member3@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.MEMBER)
+                .registrationStamp(LocalDateTime.now())
                 .shelter(allShelters.get(2))
                 .build();
 
@@ -63,6 +68,7 @@ public class UserDataGenerator {
                 .email("user@animalhub")
                 .password(passwordEncoder.encode("password"))
                 .role(UserRole.USER)
+                .registrationStamp(LocalDateTime.now())
                 .build();
 
             LOGGER.debug("saving user {}", admin);

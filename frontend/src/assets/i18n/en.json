@@ -8,8 +8,10 @@
     "REGISTER": "register",
     "USER_NAME_MISSING": "e-mail required",
     "MAIL_INVALID": "username should be a valid e-mail address",
+    "MAIL_LONG": "the length of the e-mail address must not exceed 254",
     "PWD_MISSING": "password required",
     "PWD_SHORT": "password has to be at least 8 characters long",
+    "PWD_LONG": "the length of the password must not exceed 255",
     "BAD_CREDENTIALS": "Username or password incorrect",
     "LOGIN_FAILED": "Failed to login",
     "HOW_DOES_IT_WORK": "How does AnimalHub work?"
@@ -116,7 +118,8 @@
     "MESSAGE": "Message",
     "SUBMIT": "Submit",
     "SUCCESS": "Message sent",
-    "FAILED": "Failed to send message"
+    "FAILED": "Failed to send message",
+    "CONTACT": "Contact"
   },
 
   "DUMMY": {

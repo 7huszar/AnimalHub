@@ -43,9 +43,14 @@ public class UserLoginDto {
 
     @Override
     public String toString() {
-        return "UserLoginDto{"
-            + "email='" + email + '\''
-            + ", password='" + password + '\''
-            + '}';
+        StringBuilder sb = new StringBuilder("UserRegisterDto{email=" + email + ", password=");
+        if (password == null || password.isEmpty()) {
+            sb.append(password);
+        } else {
+            sb.append("*");
+        }
+        sb.append("}");
+        return sb.toString();
+
     }
 }
