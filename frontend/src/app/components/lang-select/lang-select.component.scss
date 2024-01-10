@@ -1,12 +1,11 @@
 .custom-dropDownItem:hover {
   background-color: var(--bs-secondary);
-  color: white;
+  color: black;
   cursor: pointer;
 }
 
 .custom-dropDownItem {
   border-color: var(--bs-primary);
-  color: var(--bs-primary);
   width: 100%;
 }
 
@@ -17,7 +16,7 @@
 .dropdown-menu {
   --bs-dropdown-min-width: 0;
   color: var(--bs-primary);
-  border: 0;
+  border-color: black;
 }
 
 .btn {
