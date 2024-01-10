@@ -452,7 +452,50 @@ public class CustomUserDetailService implements UserService {
     }
 
 
+    @Override
+    public String parseCheckSubscriptionResponse(ResponseEntity<String> response) throws NotFoundException {
+        LOGGER.debug("Parsing response");
+
+        // Extract the status from the response body
+        String responseBody = response.getBody();
+
+        if (responseBody != null && !responseBody.isEmpty()) {
+            try {
+                JsonFactory factory = new JsonFactory();
+                JsonParser parser = factory.createParser(responseBody);
+
+                // Traverse the JSON structure
+                while (parser.nextToken() != null) {
+                    if (JsonToken.FIELD_NAME.equals(parser.getCurrentToken()) && "status".equals(parser.getText())) {
+                        // Move to the value of the "status" field
+                        parser.nextToken();
+                        String status = parser.getText();
+                        LOGGER.info("Received subscription status from PayPal API: {}", status);
+
+                        // Check if the subscription is active
+                        if ("ACTIVE".equalsIgnoreCase(status)) {
+                            LOGGER.info("Subscription is active");
+                            // Additional logic or processing for an active subscription
+                        } else {
+                            LOGGER.info("Subscription is not active. Status: {}", status);
+
+                        }
+
+                        return status;
+                    }
+                }
+
+                // If the loop completes without finding "status"
+                throw new NotFoundException("No 'status' found in the response");
+            } catch (Exception e) {
+                LOGGER.error("Error parsing JSON response: {}", e.getMessage());
+                throw new NotFoundException("Error parsing JSON response");
+            }
+        } else {
+            LOGGER.error("Empty or null response body");
+            throw new NotFoundException("Subscription status not found in the response or response body is empty");
+        }
+
+    }
 }
-
-
 

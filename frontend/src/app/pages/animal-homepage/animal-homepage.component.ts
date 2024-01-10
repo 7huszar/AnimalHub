@@ -7,7 +7,7 @@ import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
-import {CreateSubscriptionDto, UserDetailDto} from "../../dtos/user";
+import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {Species} from "../../dtos/species";
 
@@ -123,6 +123,7 @@ export class AnimalHomepageComponent implements OnInit {
     })
 
 
+
     // Load the PayPal script dynamically
     const script = document.createElement('script');
     //getting user
@@ -131,7 +132,6 @@ export class AnimalHomepageComponent implements OnInit {
       next: data => {
         this.user = data;
         this.subscription.user=this.user;
-        console.log(this.user)
       },
       error: error => {
         //this schould never happen
@@ -148,8 +148,6 @@ export class AnimalHomepageComponent implements OnInit {
 
     //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
     //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
-    //AaU7GO_lBCk5obOETEEeMJs_KbxcD26Tmf_AUrzgFgN7Rw4ApuNzAav6LxOWloItnOrLOFPMy3PSPqLP id
-    //EKQcBTWOtn7WnOAIJQBzQLkJdhYvWOJKWd_AgG1tE8ONLbIZVAKsdCxusu64qUgUvvKfl8eHQRwdgwAp secret
 
     script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
     script.onload = () => {

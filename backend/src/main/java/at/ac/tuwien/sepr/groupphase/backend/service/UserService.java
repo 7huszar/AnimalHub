@@ -146,5 +146,7 @@ public interface UserService extends UserDetailsService {
 
     HttpEntity<Void> checkIfSubscriptionIsActive(String accessToken, String subscriptionId) throws NotFoundException;
 
+    String parseCheckSubscriptionResponse(ResponseEntity<String> response) throws NotFoundException;
+
 
 }

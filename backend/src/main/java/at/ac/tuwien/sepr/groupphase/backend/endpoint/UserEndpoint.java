@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -36,6 +37,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -207,24 +209,21 @@ public class UserEndpoint {
                 HttpEntity<Void> checkEntity = userService.checkIfSubscriptionIsActive(accessToken, id);
 
                 //Actually checking
-                ResponseEntity<String> checkResponse = restTemplate.exchange(apiUrl, HttpMethod.GET, checkEntity, String.class);
+                ResponseEntity<String> checkResponse = restTemplate.exchange(checkUrl, HttpMethod.GET, checkEntity, String.class);
+                //extracting the active or inactive part
+                String isActive = userService.parseCheckSubscriptionResponse(checkResponse);
 
 
-                // Assuming 'response' is the ResponseEntity<String> you received
-                ResponseEntity<String> isActive = checkResponse;
-
-                // Check if the response status code is 200 OK
-                if (isActive.getStatusCode() == HttpStatus.OK) {
-                    // Subscription is active
-                    System.out.println("Subscription is active");
+                if (Objects.equals(isActive, "ACTIVE")) {
+                    LOGGER.info("Subscription is active");
                     return "is active";
-                } else if (isActive.getStatusCode() == HttpStatus.NOT_FOUND) {
-                    // Subscription is not found or inactive
-                    userService.deleteSubscription(id);
-                    return "Subscription is not found or inactive. Status code: " + isActive.getStatusCode();
+                } else if (Objects.equals(isActive, "INACTIVE")) {
+                    LOGGER.info("Subscription is active");
+                    this.userService.deleteSubscription(id);
+                    return "is inactive";
                 } else {
                     // Handle other status codes accordingly
-                    System.out.println("Unexpected status code: " + isActive.getStatusCode());
+                    System.out.println("Unexpected status code: ");
                     return null;
                 }
 
