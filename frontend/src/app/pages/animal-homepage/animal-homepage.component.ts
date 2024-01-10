@@ -7,6 +7,8 @@ import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
+import {CreateSubscriptionDto, UserDetailDto} from "../../dtos/user";
+import {UserService} from "../../services/user.service";
 
 declare var paypal;
 
@@ -16,7 +18,7 @@ declare var paypal;
   templateUrl: './animal-homepage.component.html',
   styleUrls: ['./animal-homepage.component.scss']
 })
-export class AnimalHomepageComponent implements OnInit{
+export class AnimalHomepageComponent implements OnInit {
 
   animal: AnimalDetailDto = {
     birthDate: null,
@@ -30,24 +32,39 @@ export class AnimalHomepageComponent implements OnInit{
     weight: 0,
   };
 
+  user: UserDetailDto = {
+    paypalClientId: "", paypalSecret: "",
+    email: "",
+    id: "",
+    role: ""
+  };
+
+  subscription: CreateSubscriptionDto = {
+    subscriptionId: "",
+    tier: "",
+    user: undefined,
+    animal: undefined,
+  };
+
   // TODO: add fitting animal attributes
   protected animalAge: number;
   protected contents: FileDto[];
   protected newContent: File = null;
 
   constructor(
-      protected authService: AuthService,
+    protected authService: AuthService,
     private service: AnimalService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
-      private el: ElementRef, // Inject ElementRef for DOM manipulation
+    private el: ElementRef,
 
   ) {
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      if(params.get("id")) {
+      if (params.get("id")) {
         this.animal.id = params.get("id");
         let animalObservable: Observable<AnimalDetailDto> = this.service.findById(this.animal.id)
         animalObservable.subscribe({
@@ -72,11 +89,36 @@ export class AnimalHomepageComponent implements OnInit{
         this.notification.error("Could Not find contents of animal");
       }
     })
+
+
     // Load the PayPal script dynamically
     const script = document.createElement('script');
-    //TODO first of all dont touch it or u lose money
-    //TODO change it for live version this is sandbox
+    //getting user
+    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
+    userObservable.subscribe({
+      next: data => {
+        this.user = data;
+        this.subscription.user=this.user;
+        console.log(this.user)
+      },
+      error: error => {
+        //this schould never happen
+        console.error('Error finding user', error);
+        this.notification.error("Could Not find logged in user to save");
+      }
+    });
+
+    //TODO handle the case in which the user is already subscribed to the animal
+
+
     //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
+    // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
+
+    //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
+    //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
+    //AaU7GO_lBCk5obOETEEeMJs_KbxcD26Tmf_AUrzgFgN7Rw4ApuNzAav6LxOWloItnOrLOFPMy3PSPqLP id
+    //EKQcBTWOtn7WnOAIJQBzQLkJdhYvWOJKWd_AgG1tE8ONLbIZVAKsdCxusu64qUgUvvKfl8eHQRwdgwAp secret
+
     script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
     script.onload = () => {
       // PayPal script is loaded, render the button
@@ -100,9 +142,22 @@ export class AnimalHomepageComponent implements OnInit{
         });
       },
       onApprove: (data, actions) => {
-        alert("payment successfull")
-        alert(data.subscriptionID); // You can add an optional success message for the subscriber here
-        //TODO add stuff to manage subscriptions
+        console.log(data)
+        this.subscription.animal=this.animal;
+        this.subscription.subscriptionId=data.subscriptionID;
+        this.subscription.tier="1";
+        console.log('Subscription Payload:', this.subscription);
+        console.log(data)
+        this.userService.createSubscription(this.subscription).subscribe(
+          response => {
+            // Handle the response
+            console.log("Subscription created successfully:", response);
+          },
+          error => {
+            // Handle the error
+            console.error("Error creating subscription:", error);
+          }
+        );
       },
     }).render(this.el.nativeElement.querySelector('#paypal-button-container-P-2J073097VE083035WMWKWHZY'));
   }

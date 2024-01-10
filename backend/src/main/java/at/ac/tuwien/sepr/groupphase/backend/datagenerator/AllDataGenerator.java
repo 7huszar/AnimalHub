@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
 import java.util.List;
 
 @Profile({"generateData", "test"})
@@ -41,6 +41,8 @@ public class AllDataGenerator {
     private AnimalDataGenerator animalDataGenerator;
     @Autowired
     private UserDataGenerator userDataGenerator;
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     @PostConstruct
     public void generateData() {
@@ -53,6 +55,7 @@ public class AllDataGenerator {
 
     public void clearData() {
         LOGGER.debug("deleting data... (Users -> Animals -> Shelter -> Files)");
+        subscriptionRepository.deleteAll();
         userRepository.deleteAll();
         animalRepository.deleteAll();
         shelterRepository.deleteAll();

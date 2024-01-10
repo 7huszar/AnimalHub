@@ -5,6 +5,10 @@ import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../services/notifier.service";
 import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
+import {Observable} from "rxjs";
+import {PaypalService} from "../../services/paypal.service";
+
+
 
 @Component({
   selector: 'app-confirm-delete-dialog',
@@ -26,13 +30,13 @@ export class ConfirmDeleteDialogComponent {
   constructor(
     private shelterService: ShelterService,
     private animalService: AnimalService,
+    private paypalService: PaypalService,
     private notification :NotifierService,
     private userService: UserService,
     private router: Router,
 
   ) {
   }
-
 
   public deleteShelter() {
     if (this.DeleteId != null) {
@@ -53,7 +57,6 @@ export class ConfirmDeleteDialogComponent {
   }
 
 
-//TODO This is not good ? window.location sollte in der einzelphase nicht benutzt werden bitte alternative finden
   reloadAdmin() {
     this.router.navigateByUrl('/admin', { skipLocationChange: true }).then(() => {
       window.location.reload();
@@ -63,6 +66,12 @@ export class ConfirmDeleteDialogComponent {
 
   reloadAnimal() {
     this.router.navigate(['/shelter/' + this.DeleteId])
+  }
+
+  reloadSubscriptions() {
+    this.router.navigateByUrl('/users/subscriptions', { skipLocationChange: true }).then(() => {
+      window.location.reload();
+    });
   }
 
   public deleteUser() {
@@ -109,15 +118,58 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-  public deleteEntity() {
-    if (this.deleteType === 'User') {
-      this.deleteUser()
-    } else if(this.deleteType === 'Shelter') {
-      this.deleteShelter()
-    }else{
-      this.deleteAnimal()
-    }
+
+  public cancelSubscription() {
+  if (this.DeleteId != null) {
+
+
+
+    //canceling subscription
+       let deleteSubscription: Observable<any> = this.paypalService.cancelSubscription(this.DeleteId, "kein bock mehr auf abo")
+        deleteSubscription.subscribe({
+          next: data => {
+
+
+            //deleting subscription from database
+            let deleteData: Observable<any> = this.userService.deleteSubscription(this.DeleteId)
+            deleteData.subscribe({
+              next: data => {
+                this.userService.deleteSubscription(this.DeleteId);
+                this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
+                this.reloadSubscriptions();
+              },
+              error: error => {
+                console.error('Error canceling', error);
+                this.notification.notifyError(error.error.message, error.error.error);
+                return;
+              }
+            });
+
+
+
+            this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
+            this.reloadSubscriptions();
+            },
+          error: error => {
+            console.error('Error canceling', error);
+            this.notification.notifyError(error.error.message, error.error.error);
+          }
+        });
   }
+}
+
+
+public deleteEntity() {
+  if (this.deleteType === 'User') {
+    this.deleteUser()
+  } else if(this.deleteType === 'Shelter') {
+    this.deleteShelter()
+  }else if (this.deleteType === 'Animal'){
+    this.deleteAnimal()
+  }else if (this.deleteType === 'Subscription'){
+    this.cancelSubscription()
+  }
+}
 }
 
 
