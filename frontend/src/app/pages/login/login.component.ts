@@ -28,8 +28,8 @@ export class LoginComponent {
     private notification: NotifierService
    ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]]
     });
     this.loginForm.valueChanges.subscribe(() => {
       if (this.failedLogin) {
@@ -49,6 +49,7 @@ export class LoginComponent {
    */
   loginUser() {
     this.submitted = true;
+    console.log("what:", this.loginForm.controls.password.errors)
     if (this.loginForm.valid) {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);

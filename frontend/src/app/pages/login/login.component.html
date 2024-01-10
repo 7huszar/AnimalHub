@@ -28,8 +28,12 @@
                 <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.required">
                   {{'LOGIN.USER_NAME_MISSING' | translate}}
                 </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email">
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email
+                    && !loginForm.controls.username.errors.maxlength">
                   {{'LOGIN.MAIL_INVALID' | translate}}
+                </small>
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.maxlength">
+                  {{'LOGIN.MAIL_LONG' | translate}}
                 </small>
               </div>
             </div>
@@ -44,6 +48,10 @@
                 </small>
                 <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.minlength">
                   {{'LOGIN.PWD_SHORT' | translate}}
+                </small>
+                {{loginForm.controls.password.errors.maxLength}}
+                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.maxlength">
+                  {{'LOGIN.PWD_LONG' | translate}}
                 </small>
               </div>
             </div>

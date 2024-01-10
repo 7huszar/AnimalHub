@@ -30,8 +30,8 @@ export class RegisterComponent {
               private notifier: NotifierService,
               private translator: TranslateService) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
+      password: ['', [Validators.required, Validators.minLength(8)], Validators.maxLength(255)],
       password_repeat: ['', [Validators.required]]
     });
   }
