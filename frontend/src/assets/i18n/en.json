@@ -78,7 +78,8 @@
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
     "ADOPT": "Adopt ",
-    "SHELTER": "Tierheim"
+    "SHELTER": "Tierheim",
+    "NOCONTENT": " does not have any content yet."
   },
 
   "SHELTER_HOMEPAGE": {

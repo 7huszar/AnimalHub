@@ -80,7 +80,8 @@
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
     "ADOPT": "Adoptiere ",
-    "SHELTER": "Tierheim "
+    "SHELTER": "Tierheim ",
+    "NOCONTENT": " hat noch keine Medien."
   },
 
   "SHELTER_HOMEPAGE": {

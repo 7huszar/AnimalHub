@@ -76,7 +76,7 @@
     <div class="col-auto" *ngFor="let animal of likedAnimals">
       <app-favorites-card [name]="animal.name"
                           [id]="animal.id"
-                          (remove)="remove(animal)">*ngIf="likedAnimals.length > 0"
+                          (remove)="remove(animal)">
       </app-favorites-card>
     </div>
   </div>

@@ -106,7 +106,7 @@ export class CreateEditComponent implements OnInit {
         next: animalDto => {
           console.log('animal created', animalDto);
           if (this.animalImage !== null) {
-            const createFileDto: CreateFileDto = {file: this.animalImage, name: this.animalImage.name, summary: ''};
+            const createFileDto: CreateFileDto = {file: this.animalImage, name: this.animalImage.name, summary: "TODO make summary"};
             this.animalService.setProfileImage(animalDto.id, createFileDto).subscribe({
               next: fileDto => {
                 console.log('animal profile image set', fileDto);
