@@ -126,5 +126,12 @@ public interface UserService extends UserDetailsService {
 
     SubscriptionDetailDto createSubscription(CreateSubscriptionDto createSubscriptionDto);
 
+    /**
+     * Delete the subscription with the given id from the persistent data store.
+     *
+     * @param id the id of the subscription to be deleted.
+     */
+    void deleteSubscription(String id) throws NotFoundException;
+
 
 }

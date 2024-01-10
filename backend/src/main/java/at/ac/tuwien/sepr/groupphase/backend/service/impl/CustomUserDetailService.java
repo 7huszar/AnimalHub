@@ -329,4 +329,18 @@ public class CustomUserDetailService implements UserService {
             .collect(Collectors.toList());
     }
 
+
+    @Override
+    public void deleteSubscription(String id) throws NotFoundException {
+        LOGGER.debug("delete({})", id);
+
+        Subscription subscription = subscriptionRepository.findBySubscriptionId(id);
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        if (subscription == null) {
+            throw new NotFoundException("Subscription could not be found");
+        }
+
+        subscriptionRepository.delete(subscription);
+    }
+
 }

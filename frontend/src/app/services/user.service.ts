@@ -98,6 +98,17 @@ export class UserService {
     return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
   }
 
+  /**
+   * Delete an existing subscription in the system.
+   *
+   * @param id the SellerId of the subscription to be deleted
+   */
+  deleteSubscription(id: string): Observable<void> {
+    console.log(id)
+
+    return this.httpClient.delete<void>(`${this.usersBaseUri}/current/` + id);
+  }
+
 
   /**
    * Loads current user from the backend
@@ -121,65 +132,6 @@ export class UserService {
   }
 
 
-  cancelSubscription(subscriptionId: string, cancelReason: string): Observable<any> {
-    return this.checkSubscriptionStatus(subscriptionId).pipe(
-      switchMap(({ accessToken, subscriptionStatus }) => {
-        if (subscriptionStatus.status === 'ACTIVE') {
-          const url = `${this.paypalApiUrl}${subscriptionId}/cancel`;
-          console.log("subscriptionID " + subscriptionId);
-          console.log("access token " + accessToken);
-
-          const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-          });
-
-          const body = { reason: cancelReason };
-
-          return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.post(url, body, { headers });
-        } else {
-          // Subscription is not active, handle the logic accordingly
-          console.log("error couldn't cancel subscription");
-        }
-      })
-    );
-  }
-
-
-  checkSubscriptionStatus(subscriptionId: string): Observable<any> {
-    return this.getPayPalAccessToken().pipe(
-      switchMap((accessTokenResponse) => {
-        const accessToken = accessTokenResponse.access_token;
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        });
-        console.log("access Token " + accessToken);
-        const url = `${this.paypalApiUrl}${subscriptionId}`;
-
-        return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.get<any>(url, { headers }).pipe(
-          map(subscriptionStatus => ({ accessToken, subscriptionStatus }))
-        );
-      })
-    );
-  }
-
-
-  getPayPalAccessToken(): Observable<any> {
-
-    //TODO THIS IS A SANDBOX VERSION OF THIS CALL HERE THE CLIENT ID AND SECRET WILL ALWAYS BE THE SAME FOR LIVE VERSION IMPLEMENT CODE
-
-    const clientId = this.SellerId;
-    const secret = this.Sellersecret;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + btoa(`${clientId}:${secret}`)
-    });
-
-    const body = new HttpParams().set('grant_type', 'client_credentials');
-    return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.post(this.paypalTokenUrl, body,{headers});
-  }
 
 
 }

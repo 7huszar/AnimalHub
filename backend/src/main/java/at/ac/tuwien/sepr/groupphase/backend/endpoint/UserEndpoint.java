@@ -108,4 +108,13 @@ public class UserEndpoint {
 
         return userService.findAllSubscriptionsByUser(userDetailDto);
     }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @DeleteMapping("/current/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSubscription(@PathVariable String id) throws NotFoundException {
+        LOGGER.info("DELETE Subscription " + BASE_PATH);
+        userService.deleteSubscription(id);
+    }
+
 }
