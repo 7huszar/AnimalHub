@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -53,7 +55,7 @@ public class AnimalServiceTest extends TestBase {
     // function - FIND ALL
     // POSITIVE TEST(S)
     @Test
-    public void findAllSuccessfully() throws ValidationException, ConflictException {
+    public void findAllSuccessfully() {
         List<AnimalDetailDto> result = animalService.findAll();
 
         assertAll(
@@ -64,7 +66,7 @@ public class AnimalServiceTest extends TestBase {
     // function - CREATE
     // POSITIVE TEST(S)
     @Test
-    public void createNewAnimalWithSuccess() throws ValidationException, ConflictException, NotFoundException {
+    public void createNewAnimalWithSuccess() {
 
         CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
             .name(TEST_ANIMAL_NAME)
@@ -76,17 +78,21 @@ public class AnimalServiceTest extends TestBase {
             .shelter(mapper.shelterToShelterDto(allShelterEntities.get(0)))
             .build();
 
-        AnimalDetailDto returnAnimalDto = animalService.create(createAnimalDto);
+        assertDoesNotThrow(() -> {
+            // might throw ValidationException, ConflictException
+            AnimalDetailDto returnAnimalDto = animalService.create(createAnimalDto);
 
-        assertAll(
-            () -> assertEquals(createAnimalDto.getName(), returnAnimalDto.getName()),
-            () -> assertEquals(createAnimalDto.getSpecies(), returnAnimalDto.getSpecies()),
-            () -> assertEquals(createAnimalDto.getRace(), returnAnimalDto.getRace()),
-            () -> assertEquals(createAnimalDto.getBirthDate(), returnAnimalDto.getBirthDate()),
-            () -> assertEquals(createAnimalDto.getHeight(), returnAnimalDto.getHeight()),
-            () -> assertEquals(createAnimalDto.getWeight(), returnAnimalDto.getWeight()),
-            () -> assertEquals(createAnimalDto.getShelter().getId(), returnAnimalDto.getShelter().getId())
-        );
+            assertAll(
+                () -> assertEquals(createAnimalDto.getName(), returnAnimalDto.getName()),
+                () -> assertEquals(createAnimalDto.getSpecies(), returnAnimalDto.getSpecies()),
+                () -> assertEquals(createAnimalDto.getRace(), returnAnimalDto.getRace()),
+                () -> assertEquals(createAnimalDto.getBirthDate(), returnAnimalDto.getBirthDate()),
+                () -> assertEquals(createAnimalDto.getHeight(), returnAnimalDto.getHeight()),
+                () -> assertEquals(createAnimalDto.getWeight(), returnAnimalDto.getWeight()),
+                () -> assertEquals(createAnimalDto.getShelter().getId(), returnAnimalDto.getShelter().getId())
+            );
+
+        });
     }
 
     // NEGATIVE TEST(S)
@@ -115,7 +121,7 @@ public class AnimalServiceTest extends TestBase {
     }
 
     @Test
-    public void createNewAnimalUnsuccessfullyInvalidNameAndWeight() throws ValidationException {
+    public void createNewAnimalUnsuccessfullyInvalidNameAndWeight() {
 
         CreateAnimalDto animalDto = CreateAnimalDto.builder()
             .name("")
@@ -133,7 +139,7 @@ public class AnimalServiceTest extends TestBase {
     // function - UPDATE
     // POSITIVE TEST(S)
     @Test
-    public void updateAnimalSuccessfully() throws ValidationException, NotFoundException {
+    public void updateAnimalSuccessfully() {
         AnimalDetailDto updateValues = AnimalDetailDto.builder()
             .id(allAnimalEntities.get(0).getId())
             .name("neuer Name")
@@ -145,22 +151,26 @@ public class AnimalServiceTest extends TestBase {
             .shelter(mapper.shelterToShelterDto(allAnimalEntities.get(0).getShelter()))
             .build();
 
-        AnimalDetailDto updatedAnimal = animalService.update(updateValues);
+        assertDoesNotThrow(() -> {
+            // might throw ValidationException, NotFoundException
+            AnimalDetailDto updatedAnimal = animalService.update(updateValues);
 
-        assertAll(
-            () -> assertEquals(updatedAnimal.getName(), updateValues.getName()),
-            () -> assertEquals(updatedAnimal.getSpecies(), updateValues.getSpecies()),
-            () -> assertEquals(updatedAnimal.getRace(), updateValues.getRace()),
-            () -> assertEquals(updatedAnimal.getBirthDate(), updateValues.getBirthDate()),
-            () -> assertEquals(updatedAnimal.getHeight(), updateValues.getHeight()),
-            () -> assertEquals(updatedAnimal.getWeight(), updateValues.getWeight()),
-            () -> assertEquals(updatedAnimal.getShelter().getId(), updateValues.getShelter().getId())
-        );
+            assertAll(
+                () -> assertEquals(updatedAnimal.getName(), updateValues.getName()),
+                () -> assertEquals(updatedAnimal.getSpecies(), updateValues.getSpecies()),
+                () -> assertEquals(updatedAnimal.getRace(), updateValues.getRace()),
+                () -> assertEquals(updatedAnimal.getBirthDate(), updateValues.getBirthDate()),
+                () -> assertEquals(updatedAnimal.getHeight(), updateValues.getHeight()),
+                () -> assertEquals(updatedAnimal.getWeight(), updateValues.getWeight()),
+                () -> assertEquals(updatedAnimal.getShelter().getId(), updateValues.getShelter().getId())
+            );
+
+        });
     }
 
     // NEGATIVE TEST(S)
     @Test
-    public void updateAnimalWithNonExistingIdThrowsNotFoundException() throws ValidationException, NotFoundException {
+    public void updateAnimalWithNonExistingIdThrowsNotFoundException() {
         AnimalDetailDto updateValues = AnimalDetailDto.builder()
             // RANDOM ID
             .id(UUID.randomUUID())
@@ -179,7 +189,7 @@ public class AnimalServiceTest extends TestBase {
     }
 
     @Test
-    public void updateAnimalWithEmptyNameThrowsValidationException() throws ValidationException, NotFoundException {
+    public void updateAnimalWithEmptyNameThrowsValidationException() {
         AnimalDetailDto updateValues = AnimalDetailDto.builder()
             .id(allAnimalEntities.get(0).getId())
             // EMPTY NAME
@@ -200,37 +210,41 @@ public class AnimalServiceTest extends TestBase {
     // function - FINDBYID
 
     @Test
-    public void findByIdSuccessfully() throws NotFoundException {
+    public void findByIdSuccessfully() {
         AnimalDetailDto expectedAnimal = mapper.animalToAnimalDetailDto(allAnimalEntities.get(1));
 
-        AnimalDetailDto foundAnimal = animalService.findById(expectedAnimal.getId());
+        assertDoesNotThrow(() -> {
+            // might throw NotFoundException
+            AnimalDetailDto foundAnimal = animalService.findById(expectedAnimal.getId());
 
-        assertAll(
-            () -> assertEquals(expectedAnimal.getName(), foundAnimal.getName()),
-            () -> assertEquals(expectedAnimal.getSpecies(), foundAnimal.getSpecies()),
-            () -> assertEquals(expectedAnimal.getRace(), foundAnimal.getRace()),
-            () -> assertEquals(expectedAnimal.getBirthDate(), foundAnimal.getBirthDate()),
-            () -> assertEquals(expectedAnimal.getHeight(), foundAnimal.getHeight()),
-            () -> assertEquals(expectedAnimal.getWeight(), foundAnimal.getWeight()),
-            () -> assertEquals(expectedAnimal.getShelter().getId(), foundAnimal.getShelter().getId())
-        );
+            assertAll(
+                () -> assertEquals(expectedAnimal.getName(), foundAnimal.getName()),
+                () -> assertEquals(expectedAnimal.getSpecies(), foundAnimal.getSpecies()),
+                () -> assertEquals(expectedAnimal.getRace(), foundAnimal.getRace()),
+                () -> assertEquals(expectedAnimal.getBirthDate(), foundAnimal.getBirthDate()),
+                () -> assertEquals(expectedAnimal.getHeight(), foundAnimal.getHeight()),
+                () -> assertEquals(expectedAnimal.getWeight(), foundAnimal.getWeight()),
+                () -> assertEquals(expectedAnimal.getShelter().getId(), foundAnimal.getShelter().getId())
+            );
 
+        });
     }
 
     // NEGATIVE TEST(S)
     @Test
-    public void findByNonExistingIdThrowsNotFoundException() throws NotFoundException {
+    public void findByNonExistingIdThrowsNotFoundException() {
         assertThrows(NotFoundException.class, () -> animalService.findById(UUID.randomUUID()));
     }
 
     // function - DELETE
     // POSITIVE TEST(S)
     @Test
-    public void deleteAnimalSuccessfully() throws ValidationException, ConflictException, NotFoundException {
+    public void deleteAnimalSuccessfully() {
 
         UUID animalId = allAnimalEntities.get(0).getId();
 
-        animalService.delete(animalId);
+        // might throw NotFoundException
+        assertDoesNotThrow(() -> animalService.delete(animalId));
 
         assertAll(
             () -> assertEquals(allAnimalEntities.size() - 1, animalService.findAll().size()),
@@ -247,51 +261,61 @@ public class AnimalServiceTest extends TestBase {
     // function - getProfileImage
     // POSITIVE TEST(S)
     @Test
-    public void getProfileImageSuccessfully() throws NotFoundException {
+    public void getProfileImageSuccessfully() {
         File originalProfilePicture = allAnimalEntities.get(0).getProfilePicture();
 
-        FileDetailDto returnProfilePicture = animalService.getProfileImage(allAnimalEntities.get(0).getId());
+        assertDoesNotThrow(() -> {
+            // might throw NotFoundException
+            FileDetailDto returnProfilePicture = animalService.getProfileImage(allAnimalEntities.get(0).getId());
 
-        assertAll(
-            () -> assertNotNull(returnProfilePicture),
-            () -> assertEquals(originalProfilePicture.getContentLength(), returnProfilePicture.getContentLength())
-        );
+            assertAll(
+                () -> assertNotNull(returnProfilePicture),
+                () -> assertEquals(originalProfilePicture.getContentLength(), returnProfilePicture.getContentLength())
+            );
+        });
     }
 
     // NEGATIVE TEST(S)
     @Test
-    public void getProfileImageWithNonExistingIdThrowsNotFound() throws NotFoundException {
+    public void getProfileImageWithNonExistingIdThrowsNotFound() {
         assertThrows(NotFoundException.class, () -> animalService.getProfileImage(UUID.randomUUID()));
     }
 
     // function - setProfileImage
     // POSITIVE TEST(S)
     @Test
-    public void setProfileImageSuccessfully() throws NotFoundException, IOException, ConflictException, ValidationException {
-        CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
-            .name(TEST_ANIMAL_NAME)
-            .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
-            .birthDate(TEST_ANIMAL_BIRTH_DATE)
-            .height(TEST_ANIMAL_HEIGHT)
-            .weight(TEST_ANIMAL_WEIGHT)
-            .shelter(mapper.shelterToShelterDto(allShelterEntities.get(0)))
-            .build();
-        UUID id = animalService.create(createAnimalDto).getId();
-        CreateFileDto createFileDto = CreateFileDto.builder()
-            .name(TEST_FILE_NAME)
-            .summary(TEST_FILE_SUMMARY)
-            .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
-            .build();
+    public void setProfileImageSuccessfully() {
 
-        FileDto returnFile = animalService.setProfileImage(id, createFileDto);
+        assertDoesNotThrow(() -> {
+            CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
+                .name(TEST_ANIMAL_NAME)
+                .species(TEST_ANIMAL_SPECIES)
+                .race(TEST_ANIMAL_RACE)
+                .birthDate(TEST_ANIMAL_BIRTH_DATE)
+                .height(TEST_ANIMAL_HEIGHT)
+                .weight(TEST_ANIMAL_WEIGHT)
+                .shelter(mapper.shelterToShelterDto(allShelterEntities.get(0)))
+                .build();
+            // might throw ValidationException
+            UUID id = animalService.create(createAnimalDto).getId();
+            CreateFileDto createFileDto = CreateFileDto.builder()
+                .name(TEST_FILE_NAME)
+                .summary(TEST_FILE_SUMMARY)
+                // might throw IOException
+                .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
+                .build();
 
-        assertAll(
-            () -> assertNotNull(returnFile),
-            () -> assertEquals(returnFile.getName(), createFileDto.getName()),
-            () -> assertEquals(returnFile.getSummary(), createFileDto.getSummary()),
-            () -> assertEquals(returnFile.getContentMimeType(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())))
-        );
+            // might throw ValidationException, ConflictException, NotFoundException
+            FileDto returnFile = animalService.setProfileImage(id, createFileDto);
+
+            assertAll(
+                () -> assertNotNull(returnFile),
+                () -> assertEquals(returnFile.getName(), createFileDto.getName()),
+                () -> assertEquals(returnFile.getSummary(), createFileDto.getSummary()),
+                () -> assertEquals(returnFile.getContentMimeType(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())))
+            );
+
+        });
     }
 
     // NEGATIVE TEST(S)
@@ -308,45 +332,54 @@ public class AnimalServiceTest extends TestBase {
     }
 
     @Test
-    public void setProfileImageWithEmptyImageThrowsValidationException() throws ValidationException, ConflictException {
-        CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
-            .name(TEST_ANIMAL_NAME)
-            .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
-            .birthDate(TEST_ANIMAL_BIRTH_DATE)
-            .height(TEST_ANIMAL_HEIGHT)
-            .weight(TEST_ANIMAL_WEIGHT)
-            .shelter(mapper.shelterToShelterDto(allShelterEntities.get(0)))
-            .build();
-        UUID id = animalService.create(createAnimalDto).getId();
-        CreateFileDto createFileDto = CreateFileDto.builder()
-            .name(TEST_FILE_NAME)
-            .summary(TEST_FILE_SUMMARY)
-            // NO FILE INPUT
-            .build();
+    public void setProfileImageWithEmptyImageThrowsValidationException() {
+        assertDoesNotThrow(() -> {
+            CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
+                .name(TEST_ANIMAL_NAME)
+                .species(TEST_ANIMAL_SPECIES)
+                .race(TEST_ANIMAL_RACE)
+                .birthDate(TEST_ANIMAL_BIRTH_DATE)
+                .height(TEST_ANIMAL_HEIGHT)
+                .weight(TEST_ANIMAL_WEIGHT)
+                .shelter(mapper.shelterToShelterDto(allShelterEntities.get(0)))
+                .build();
 
-        assertThrows(ValidationException.class, () -> animalService.setProfileImage(id, createFileDto));
+            // might throw ValidationException, ConflictException
+            UUID id = animalService.create(createAnimalDto).getId();
+            CreateFileDto createFileDto = CreateFileDto.builder()
+                .name(TEST_FILE_NAME)
+                .summary(TEST_FILE_SUMMARY)
+                // NO FILE INPUT
+                .build();
+
+            assertThrows(ValidationException.class, () -> animalService.setProfileImage(id, createFileDto));
+        });
     }
 
     // function - UPDATEPROFILEIMAGE
     // POSITIVE TEST(S)
     @Test
-    public void updateProfileImageSuccessfully() throws IOException, ValidationException, NotFoundException {
+    public void updateProfileImageSuccessfully() {
         UUID id = allAnimalEntities.get(0).getId();
-        CreateFileDto createFileDto = CreateFileDto.builder()
-            .name(TEST_FILE_NAME)
-            .summary(TEST_FILE_SUMMARY)
-            .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
-            .build();
 
-        FileDto returnFile = animalService.updateProfileImage(id, createFileDto);
+        assertDoesNotThrow(() -> {
+            CreateFileDto createFileDto = CreateFileDto.builder()
+                .name(TEST_FILE_NAME)
+                .summary(TEST_FILE_SUMMARY)
+                // might throw IOException
+                .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
+                .build();
 
-        assertAll(
-            () -> assertNotNull(returnFile),
-            () -> assertEquals(returnFile.getName(), createFileDto.getName()),
-            () -> assertEquals(returnFile.getSummary(), createFileDto.getSummary()),
-            () -> assertEquals(returnFile.getContentMimeType(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())))
-        );
+            // might throw ValidationException, NotFoundException, IOException
+            FileDto returnFile = animalService.updateProfileImage(id, createFileDto);
+
+            assertAll(
+                () -> assertNotNull(returnFile),
+                () -> assertEquals(returnFile.getName(), createFileDto.getName()),
+                () -> assertEquals(returnFile.getSummary(), createFileDto.getSummary()),
+                () -> assertEquals(returnFile.getContentMimeType(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())))
+            );
+        });
     }
 
     // NEGATIVE TEST(S)
@@ -364,31 +397,39 @@ public class AnimalServiceTest extends TestBase {
     // POSITIVE TEST(S)
     @Test
     @Transactional
-    public void getContentsSuccessfully() throws NotFoundException {
-        List<FileDto> returnContentFiles = animalService.getContents(allAnimalEntities.get(0).getId());
+    public void getContentsSuccessfully() {
 
-        assertAll(
-            () -> assertEquals(returnContentFiles.size(), allAnimalEntities.get(0).getContent().size())
-        );
+        assertDoesNotThrow(() -> {
+            // might throw NotFoundException
+            List<FileDto> returnContentFiles = animalService.getContents(allAnimalEntities.get(0).getId());
+
+            assertAll(
+                () -> assertEquals(returnContentFiles.size(), allAnimalEntities.get(0).getContent().size())
+            );
+        });
     }
 
     // function - GETCONTENT
     // POSITIVE TEST(S)
     @Test
     @Transactional
-    public void getContentSuccessfully() throws NotFoundException {
+    public void getContentSuccessfully() {
         Animal animal = allAnimalEntities.get(0);
         File givenContentFile = animal.getContent().get(0);
-        FileDetailDto returnContentFile = animalService.getContent(animal.getId(), animal.getContent().get(0).getId());
 
-        assertAll(
-            () -> assertNotNull(returnContentFile),
-            () -> assertEquals(returnContentFile.getName(), givenContentFile.getName()),
-            () -> assertEquals(returnContentFile.getSummary(), givenContentFile.getSummary()),
-            () -> assertEquals(returnContentFile.getContentLength(), givenContentFile.getContentLength()),
-            () -> assertEquals(returnContentFile.getCreatedOn(), givenContentFile.getCreatedOn()),
-            () -> assertEquals(returnContentFile.getContentMimeType(), givenContentFile.getContentMimeType())
-        );
+        assertDoesNotThrow(() -> {
+            // might throw NotFoundException
+            FileDetailDto returnContentFile = animalService.getContent(animal.getId(), animal.getContent().get(0).getId());
+
+            assertAll(
+                () -> assertNotNull(returnContentFile),
+                () -> assertEquals(returnContentFile.getName(), givenContentFile.getName()),
+                () -> assertEquals(returnContentFile.getSummary(), givenContentFile.getSummary()),
+                () -> assertEquals(returnContentFile.getContentLength(), givenContentFile.getContentLength()),
+                () -> assertEquals(returnContentFile.getCreatedOn(), givenContentFile.getCreatedOn()),
+                () -> assertEquals(returnContentFile.getContentMimeType(), givenContentFile.getContentMimeType())
+            );
+        });
     }
 
     // NEGATIVE TEST(S)
@@ -400,25 +441,29 @@ public class AnimalServiceTest extends TestBase {
     // function - ADDCONTENT
     // POSITIVE TEST(S)
     @Test
-    public void addContentSuccessfully() throws ValidationException, NotFoundException, IOException {
-        CreateFileDto createFileDto = CreateFileDto.builder()
-            .name(TEST_FILE_NAME)
-            .summary(TEST_FILE_SUMMARY)
-            .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
-            .build();
-        FileDto returnContentFile = animalService.addContent(allAnimalEntities.get(1).getId(), createFileDto);
+    public void addContentSuccessfully() {
+        assertDoesNotThrow(() -> {
+            CreateFileDto createFileDto = CreateFileDto.builder()
+                .name(TEST_FILE_NAME)
+                .summary(TEST_FILE_SUMMARY)
+                .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
+                .build();
 
-        assertAll(
-            () -> assertNotNull(returnContentFile),
-            () -> assertEquals(returnContentFile.getName(), TEST_FILE_NAME),
-            () -> assertEquals(returnContentFile.getSummary(), TEST_FILE_SUMMARY),
-            () -> assertEquals(returnContentFile.getContentMimeType(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())))
-        );
+            // might throw NotFoundException, ValidationException
+            FileDto returnContentFile = animalService.addContent(allAnimalEntities.get(1).getId(), createFileDto);
+
+            assertAll(
+                () -> assertNotNull(returnContentFile),
+                () -> assertEquals(returnContentFile.getName(), TEST_FILE_NAME),
+                () -> assertEquals(returnContentFile.getSummary(), TEST_FILE_SUMMARY),
+                () -> assertEquals(returnContentFile.getContentMimeType(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())))
+            );
+        });
     }
 
     // NEGATIVE TEST(S)
     @Test
-    public void addContentWithoutActualImageFileThrowsValidationException() throws ValidationException, NotFoundException, IOException {
+    public void addContentWithoutActualImageFileThrowsValidationException() {
         CreateFileDto createFileDto = CreateFileDto.builder()
             .name(TEST_FILE_NAME)
             .summary(TEST_FILE_SUMMARY)
@@ -432,13 +477,13 @@ public class AnimalServiceTest extends TestBase {
     // POSITIVE TEST(S)
     @Test
     @Transactional
-    public void deleteContentSuccessfully() throws NotFoundException {
+    public void deleteContentSuccessfully() {
         Animal animal = allAnimalEntities.get(0);
         int initialContentListSize = animal.getContent().size();
         UUID fileIdToDelete = animal.getContent().get(0).getId();
-        animalService.deleteContent(animal.getId(), fileIdToDelete);
 
         assertAll(
+            () -> assertDoesNotThrow(() -> animalService.deleteContent(animal.getId(), fileIdToDelete)),
             () -> assertEquals(animalService.getContents(animal.getId()).size(), initialContentListSize - 1),
             () -> assertThrows(NotFoundException.class, () -> animalService.getContent(animal.getId(), fileIdToDelete))
         );
