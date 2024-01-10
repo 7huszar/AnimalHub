@@ -1,5 +1,18 @@
 <app-header></app-header>
 <div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="mt-4 mb-4">{{ shelter?.name }}</h1>
+    </div>
+
+
+    <div class="row">
+      <div class="col" style="max-width: 20em; min-height: 10em">
+        <div class="media">
+          <app-content [mode]="Mode.SHELTER" [id]="shelter?.id"></app-content>
+        </div>
+      </div>
+    </div>
   <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
     <div class="mb-3">
       <label for="name" class="form-label">{{ 'CONTACT_PAGE.NAME'| translate }}</label>
