@@ -1,0 +1,38 @@
+.custom-dropDownItem:hover {
+  background-color: var(--bs-secondary);
+  color: white;
+  cursor: pointer;
+}
+
+.custom-dropDownItem {
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
+  width: 100%;
+}
+
+.custom-dropDownItem:active {
+  background-color: #f16ea1;
+}
+
+.dropdown-menu {
+  --bs-dropdown-min-width: 0;
+  color: var(--bs-primary);
+  border: 0;
+}
+
+.btn {
+  background-color: var(--bs-primary);
+  color: white;
+  border-radius: 20px;
+}
+
+.btn:hover {
+  background-color: var(--bs-secondary);
+  color: white;
+}
+
+.btn:active,
+.btn:focus {
+  background-color: #f16ea1;
+  color: white;
+}

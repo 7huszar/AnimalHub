@@ -30,5 +30,4 @@ export class LangSelectComponent{
     }
     return "undefined";
   }
-
 }
