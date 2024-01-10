@@ -169,7 +169,7 @@ export class AnimalHomepageComponent implements OnInit {
   }
 
   public onUpload(): void {
-    const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: ""};
+    const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: "TODO make summary"};
     this.service.addContent(this.animal.id, createFileDto).subscribe({
       next: fileDto => {
         console.log(fileDto);
