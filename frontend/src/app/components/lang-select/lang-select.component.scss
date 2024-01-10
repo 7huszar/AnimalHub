@@ -22,17 +22,16 @@
 
 .btn {
   background-color: var(--bs-primary);
-  color: white;
-  border-radius: 20px;
+  color: black;
 }
 
 .btn:hover {
   background-color: var(--bs-secondary);
-  color: white;
+  color: black;
 }
 
 .btn:active,
 .btn:focus {
   background-color: #f16ea1;
-  color: white;
+  color: black;
 }

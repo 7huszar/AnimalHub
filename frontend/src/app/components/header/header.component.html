@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="navbar-brand">
       <a routerLink="/home">
-        <img  src="/assets/img/logo.png" alt="{{'LOGO' | translate}}">
+        <img src="/assets/img/logo.png" alt="{{'LOGO' | translate}}">
       </a>
     </div>
 
@@ -24,10 +24,22 @@
        -->
     </ul>
 
-      <button *ngIf="authService.isLoggedIn()" (click)="logout()" routerLink="" class="btn btn-outline-dark">{{'HEADER.LOGOUT' | translate}}</button>
-      <button *ngIf="authService.isAdmin()" class="btn btn-outline-dark" routerLink="/admin">{{'HEADER.ADMIN_PAGE' | translate}}</button>
-      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}"> {{'HEADER.MEMBER_PAGE' | translate}}</button>
+      <button *ngIf="authService.isLoggedIn()" (click)="logout()" routerLink="" class="btn btn-outline-dark">
+        <i class="bi bi-box-arrow-left text-black me-1"></i>
+        {{'HEADER.LOGOUT' | translate}}
+      </button>
+      <button *ngIf="authService.isAdmin()" class="btn btn-outline-dark" routerLink="/admin">
+        <i class="bi bi-tools text-black me-1"></i>
+        {{'HEADER.ADMIN_PAGE' | translate}}
+      </button>
+      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
+        <i class="bi bi-tools text-black me-1"></i>
+        {{'HEADER.MEMBER_PAGE' | translate}}
+      </button>
 
+    </div>
+    <div class="lang-select">
+      <app-lang-select></app-lang-select>
     </div>
 </div>
 </nav>
