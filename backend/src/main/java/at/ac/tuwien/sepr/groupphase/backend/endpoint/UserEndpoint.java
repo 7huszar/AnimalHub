@@ -11,14 +11,21 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +35,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +50,7 @@ public class UserEndpoint {
     static final String BASE_PATH = "/api/v1/users";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
+    private RestTemplate restTemplate;
 
 
     @Secured(UserRole.Values.USER_VALUE)
@@ -125,5 +135,57 @@ public class UserEndpoint {
 
         userService.deleteSubscription(id);
     }
+
+    //TODO make this delete instead so there is no return value
+    @Secured(UserRole.Values.USER_VALUE)
+    @DeleteMapping("/paypal/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void cancelSubscription(@PathVariable String id) throws NotFoundException {
+        LOGGER.info("POST " + BASE_PATH + "/send-post-request");
+        LOGGER.debug("Request Body:\n{}", id);
+
+        restTemplate = new RestTemplate();
+        //setting up request for the getPaypal token call
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken();
+
+        String cancelUrl = "https://api.sandbox.paypal.com/v1/billing/subscriptions/" + id + "/cancel\n";
+        //url for retrieving the token
+        String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
+
+
+        try {
+
+            // Make the POST request
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+            LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + response);
+
+            String accessToken = userService.parseTokenResponse(response);
+            LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + accessToken);
+
+            try {
+                //creating the cancel request
+                HttpEntity<String> cancelEntity = userService.cancelSubscription(accessToken, id);
+                LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + cancelEntity);
+                //Actually cancelling
+                ResponseEntity<String> cancelled = restTemplate.postForEntity(cancelUrl, cancelEntity, String.class);
+                LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + cancelled);
+
+                userService.deleteSubscription(id);
+
+
+            } catch (Exception e) {
+                LOGGER.error("Error making external POST request", e);
+                // Handle the exception or return an appropriate response
+            }
+
+
+        } catch (Exception e) {
+            LOGGER.error("Error making external POST request", e);
+            // Handle the exception or return an appropriate response
+        }
+
+    }
+
 
 }

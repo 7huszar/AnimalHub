@@ -45,7 +45,8 @@ const routes: Routes = [
   {
     path: 'users', children: [
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: UserEditComponent},
-      {path: 'subscriptions', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent}
+      {path: 'subscriptions', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent},
+      {path: 'paypal', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent}
 
     ]
   },
