@@ -144,7 +144,7 @@ export class AnimalHomepageComponent implements OnInit{
   }
 
   protected canUpload(): boolean {
-    return this.authService.isAdmin() || (this.animal.shelter !== null && this.authService.isMemberOf(this.animal.shelter.id));
+    return this.authService.isAdmin() || (this.animal.shelter && this.authService.isMemberOf(this.animal.shelter.id));
   }
 
   protected readonly Mode = Mode;
