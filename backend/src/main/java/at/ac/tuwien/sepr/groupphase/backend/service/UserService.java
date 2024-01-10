@@ -12,10 +12,14 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.UUID;
@@ -132,6 +136,13 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the subscription to be deleted.
      */
     void deleteSubscription(String id) throws NotFoundException;
+
+    HttpEntity<MultiValueMap<String, String>> getPaypalAccessToken() throws NotFoundException;
+
+
+    String parseTokenResponse(ResponseEntity<String> response) throws NotFoundException, JsonProcessingException;
+
+    HttpEntity<String> cancelSubscription(String accessToken, String id) throws NotFoundException;
 
 
 }

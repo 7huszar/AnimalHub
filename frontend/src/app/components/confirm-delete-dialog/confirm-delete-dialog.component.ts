@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
 import {Observable} from "rxjs";
 import {PaypalService} from "../../services/paypal.service";
+import {SubscriptionDetailDto} from "../../dtos/user";
 
 
 
@@ -120,41 +121,20 @@ export class ConfirmDeleteDialogComponent {
 
 
   public cancelSubscription() {
+
   if (this.DeleteId != null) {
 
-
-
-    //canceling subscription
-       let deleteSubscription: Observable<any> = this.paypalService.cancelSubscription(this.DeleteId, "kein bock mehr auf abo")
-        deleteSubscription.subscribe({
-          next: data => {
-
-
-            //deleting subscription from database
-            let deleteData: Observable<any> = this.userService.deleteSubscription(this.DeleteId)
-            deleteData.subscribe({
-              next: data => {
-                this.userService.deleteSubscription(this.DeleteId);
-                this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
-                this.reloadSubscriptions();
-              },
-              error: error => {
-                console.error('Error canceling', error);
-                this.notification.notifyError(error.error.message, error.error.error);
-                return;
-              }
-            });
-
-
-
-            this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
-            this.reloadSubscriptions();
-            },
-          error: error => {
-            console.error('Error canceling', error);
-            this.notification.notifyError(error.error.message, error.error.error);
-          }
-        });
+    let test: Observable<void> = this.paypalService.cancelSubscriptions(this.DeleteId)
+    test.subscribe({
+      next: data => {
+        this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
+        this.reloadSubscriptions();
+      },
+      error: error => {
+        //this schould never happen except if no subscriptions have been made
+        console.error('Error posting endpoint', error);
+      }
+    });
   }
 }
 
