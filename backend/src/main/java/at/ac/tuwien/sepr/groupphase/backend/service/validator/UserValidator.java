@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class UserValidator {
     private static final int MAX_PWD = 255;
     private static final int MIN_PWD = 8;
+    private static final int MAX_EMAIL = 254;
 
     public void validateUserCredentials(UserLoginDto userLoginDto) throws ValidationException {
         List<String> validationErrors = new ArrayList<>();
@@ -29,7 +30,7 @@ public class UserValidator {
         if (userLoginDto.getEmail() == null || userLoginDto.getEmail().isBlank()) {
             validationErrors.add("no e-mail given");
         } else if (isInvalidEmail(userLoginDto.getEmail())) {
-            validationErrors.add("invalid e-mail");
+            validationErrors.add("invalid e-mail according to RFC");
         }
 
         if (!validatePassword(userLoginDto.getPassword()).isEmpty()) {
@@ -79,14 +80,15 @@ public class UserValidator {
     }
 
     /**
-     * Checks if an email has a valid RFC format.
+     * Checks if an email has a valid RFC format. (max length is then 254)
      *
      * @param email address to validate
      * @return true if valid, false if not
      */
 
     private boolean isInvalidEmail(String email) {
-        return email == null || !Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$").matcher(email).matches();
+        return email == null || !Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$").matcher(email).matches()
+            || email.length() > MAX_EMAIL;
     }
 
     /**

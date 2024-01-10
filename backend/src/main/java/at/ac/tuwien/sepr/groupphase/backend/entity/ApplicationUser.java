@@ -32,17 +32,22 @@ public class ApplicationUser {
     @Column(name = "user_id")
     private UUID id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 254)
     private String email;
 
+    @Column(length = 255, nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private UserRole role;
 
+    @Column(nullable = false)
     private LocalDateTime registrationStamp;
 
+    @Column(length = 255, nullable = true)
     private String paypalClientId;
 
+    @Column(length = 255, nullable = true)
     private String paypalSecret;
 
     @OneToOne
