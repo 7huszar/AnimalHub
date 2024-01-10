@@ -58,7 +58,7 @@
   },
 
   "HEADER": {
-    "LOGOUT": "ausloggen",
+    "LOGOUT": "Ausloggen",
     "ADMIN_PAGE": "Adminansicht",
     "MEMBER_PAGE": "Member Profil"
   },
@@ -80,7 +80,18 @@
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
     "ADOPT": "Adoptiere ",
-    "SHELTER": "Tierheim "
+    "SHELTER": "Tierheim: ",
+    "NOCONTENT": " hat noch keine Medien.",
+    "YEARS": " Jahre",
+    "MONTHS": " Monate",
+    "DAYS": " Tage",
+    "YEAR": " Jahr",
+    "MONTH": " Monat",
+    "DAY": " Tag",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier"
   },
 
   "SHELTER_HOMEPAGE": {

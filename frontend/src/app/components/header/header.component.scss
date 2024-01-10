@@ -12,3 +12,16 @@ img {
   display: block;
   width: 100%;
 }
+.btn {
+  margin-left: 1em;
+}
+.btn:hover {
+  background-color: var(--bs-secondary);
+  color: black;
+}
+
+.btn:active,
+.btn:focus {
+  background-color: #f16ea1;
+  color: black;
+}

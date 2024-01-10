@@ -7,8 +7,8 @@
       <div class="headings">
         <div style="display: block; overflow: auto">
           <h1 style="float: left">{{ animal?.name }}</h1>
-          <button style="float: right;" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">
-            {{ "View " + animal?.shelter?.name }}
+          <button style="float: right; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">
+            {{animal?.shelter?.name }}
           </button>
         </div>
         <div style="display: block">
@@ -33,7 +33,10 @@
       <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
-          <div class="col">{{ animal.species }}</div>
+          <div class="col" *ngIf="isCat">{{'ANIMAL_HOMEPAGE.CAT' | translate}}</div>
+          <div class="col" *ngIf="isDog">{{'ANIMAL_HOMEPAGE.DOG' | translate}}</div>
+          <div class="col" *ngIf="isBird">{{'ANIMAL_HOMEPAGE.BIRD' | translate}}</div>
+          <div class="col" *ngIf="isRodent">{{'ANIMAL_HOMEPAGE.RODENT' | translate}}</div>
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
@@ -45,7 +48,13 @@
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
-          <div class="col">{{ animalAge }}</div>
+          <div class="col" *ngIf="years">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEARS' | translate}}</div>
+          <div class="col" *ngIf="months">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTHS' | translate}}</div>
+          <div class="col" *ngIf="days">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAYS' | translate}}</div>
+          <div class="col" *ngIf="year">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEAR' | translate}}</div>
+          <div class="col" *ngIf="month">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTH' | translate}}</div>
+          <div class="col" *ngIf="day">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAY' | translate}}</div>
+
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
@@ -81,14 +90,38 @@
         <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
       </div>
     </div>
-    <div class="content">
+    <!--<div class="content">
       <div *ngFor="let content of contents" class="item">
         <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="rounded-4"></app-content>
       </div>
-    </div>
-  </div>
+      <div class="container" *ngIf="contents?.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
+        <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
+      </div>
+    </div>-->
 
-  <div class="lang-select">
-    <app-lang-select></app-lang-select>
+    <div class="content">
+      <div *ngFor="let content of contents" class="item">
+        <div class="card position-relative" style="border-width: thick; border-color: hotpink; margin-bottom: 1rem">
+          <div class="overflow-hidden">
+            <div class="bg-image">
+              <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="object-fit-cover"></app-content>
+              <div
+                class="mask"
+                style="
+      background: linear-gradient(
+        180deg,
+        hsla(9, 100%, 64%, 0) 75%,
+        hsla(0, 100%, 100%, 1) 100%
+      );
+    "
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container" *ngIf="contents?.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
+        <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
+      </div>
+    </div>
   </div>
 </div>
