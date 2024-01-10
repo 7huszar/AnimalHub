@@ -24,7 +24,7 @@
        -->
     </ul>
 
-      <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="btn btn-outline-dark">{{'HEADER.LOGOUT' | translate}}</button>
+      <button *ngIf="authService.isLoggedIn()" (click)="logout()" routerLink="" class="btn btn-outline-dark">{{'HEADER.LOGOUT' | translate}}</button>
       <button *ngIf="authService.isAdmin()" class="btn btn-outline-dark" routerLink="/admin">{{'HEADER.ADMIN_PAGE' | translate}}</button>
       <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}"> {{'HEADER.MEMBER_PAGE' | translate}}</button>
 
