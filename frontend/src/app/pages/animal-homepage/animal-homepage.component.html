@@ -7,8 +7,8 @@
       <div class="headings">
         <div style="display: block; overflow: auto">
           <h1 style="float: left">{{ animal?.name }}</h1>
-          <button style="float: right;" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">
-            {{ "View " + animal?.shelter?.name }}
+          <button style="float: right; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">
+            {{animal?.shelter?.name }}
           </button>
         </div>
         <div style="display: block">
@@ -123,11 +123,5 @@
         <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
       </div>
     </div>
-  </div>
-
-
-
-  <div class="lang-select">
-    <app-lang-select></app-lang-select>
   </div>
 </div>
