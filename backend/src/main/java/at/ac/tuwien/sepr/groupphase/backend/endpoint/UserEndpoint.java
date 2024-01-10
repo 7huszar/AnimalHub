@@ -48,6 +48,7 @@ public class UserEndpoint {
     @Operation(summary = "Get the current logged in user", security = @SecurityRequirement(name = "apiKey"))
     public UserDetailDto getCurrentUser() throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/current");
+        LOGGER.debug("getCurrentUser()");
 
         return userService.getCurrentUser();
     }
@@ -56,8 +57,8 @@ public class UserEndpoint {
     @GetMapping("/search")
     @Operation(summary = "Get list of filtered users", security = @SecurityRequirement(name = "apiKey"))
     public List<UserDetailDto> searchUsers(UserSearchDto searchParameters) {
-        LOGGER.info("GET " + BASE_PATH);
-        LOGGER.debug("request parameters: {}", searchParameters);
+        LOGGER.info("GET " + BASE_PATH + "/search");
+        LOGGER.debug("searchUser({})", searchParameters);
 
         return userService.search(searchParameters);
     }
@@ -66,7 +67,9 @@ public class UserEndpoint {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) throws ConflictException, NotAuthorizedException, NotFoundException {
-        LOGGER.info("DELETE " + BASE_PATH + "/{}", id);
+        LOGGER.info("DELETE " + BASE_PATH + "/" + id);
+        LOGGER.debug("delete({})", id);
+
         userService.delete(id);
     }
 
@@ -74,7 +77,9 @@ public class UserEndpoint {
     @GetMapping("{id}")
     @Operation(summary = "Get user by id", security = @SecurityRequirement(name = "apiKey"))
     public UserDetailDto findById(@PathVariable UUID id) throws NotFoundException {
-        LOGGER.info("GET " + BASE_PATH + "/{}", id);
+        LOGGER.info("GET " + BASE_PATH + "/" + id);
+        LOGGER.debug("findById({})", id);
+
         return userService.findById(id);
     }
 
@@ -82,10 +87,10 @@ public class UserEndpoint {
     @PutMapping("edit/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
     public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
-        LOGGER.info("PUT " + BASE_PATH + "/{}", id);
-        LOGGER.debug("RequestBody:{}", userDetailDto);
-        userDetailDto.setId(id);
+        LOGGER.info("PUT " + BASE_PATH + "/edit/" + id);
+        LOGGER.debug("update({},{})", id, userDetailDto);
 
+        userDetailDto.setId(id);
         return userService.update(userDetailDto);
     }
 
@@ -94,8 +99,9 @@ public class UserEndpoint {
     @PostMapping("/current")
     @Operation(summary = "Create new subscription in database", security = @SecurityRequirement(name = "apiKey"))
     public SubscriptionDetailDto createSubscription(@Valid @RequestBody CreateSubscriptionDto createSubscriptionDto) {
-        LOGGER.info("POST " + BASE_PATH + "/");
-        LOGGER.debug("Body of request:\n{}", createSubscriptionDto);
+        LOGGER.info("POST " + BASE_PATH + "/current");
+        LOGGER.debug("createSubscription({})", createSubscriptionDto);
+
         return userService.createSubscription(createSubscriptionDto);
     }
 
@@ -105,6 +111,7 @@ public class UserEndpoint {
     @Operation(summary = "Get list of subscriptions", security = @SecurityRequirement(name = "apiKey"))
     public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) {
         LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("findByUser({})", userDetailDto);
 
         return userService.findAllSubscriptionsByUser(userDetailDto);
     }
@@ -113,7 +120,9 @@ public class UserEndpoint {
     @DeleteMapping("/current/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSubscription(@PathVariable String id) throws NotFoundException {
-        LOGGER.info("DELETE Subscription " + BASE_PATH);
+        LOGGER.info("DELETE Subscription " + BASE_PATH + "/current/" + id);
+        LOGGER.debug("delete({})", id);
+
         userService.deleteSubscription(id);
     }
 

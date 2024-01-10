@@ -31,13 +31,24 @@ public class UserDetailDto {
 
     @Override
     public String toString() {
-        return "UserDetailDto{"
+        StringBuilder sb = new StringBuilder("UserDetailDto{"
             + "id='" + id + '\''
             + ", email='" + email + '\''
             + ", role='" + role + '\''
-            + ", secret='" + paypalSecret + '\''
-            + ", ClientId='" + paypalClientId + '\''
-            + '}';
+            + ", secret='");
+        if (paypalSecret == null || paypalSecret.isEmpty()) {
+            sb.append(paypalSecret);
+        } else {
+            sb.append('*');
+        }
+        sb.append("', clientId='");
+        if (paypalClientId == null || paypalClientId.isEmpty()) {
+            sb.append(paypalClientId);
+        } else {
+            sb.append('*');
+        }
+        sb.append("'}");
+        return sb.toString();
     }
 }
 

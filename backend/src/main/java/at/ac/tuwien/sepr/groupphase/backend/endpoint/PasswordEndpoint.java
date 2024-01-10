@@ -31,7 +31,8 @@ public class PasswordEndpoint {
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void requestPasswordRequest(MailRequestDto mailRequestDto) throws ValidationException {
-        LOGGER.info("GET " + BASE_PATH + "{}", mailRequestDto.email());
+        LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("requestPasswordRequest({})", mailRequestDto);
         try {
             service.requestPasswordReset(mailRequestDto);
         } catch (NotFoundException | NotAuthorizedException e) {
@@ -43,7 +44,8 @@ public class PasswordEndpoint {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void resetPassword(@RequestBody PasswordResetDto resetDto) throws NotAuthorizedException, ValidationException {
-        LOGGER.info("PUT " + BASE_PATH + "{}", resetDto.token());
+        LOGGER.info("PUT " + BASE_PATH);
+        LOGGER.debug("resetPassword({})", resetDto);
         try {
             service.resetPassword(resetDto);
         } catch (NotFoundException | JwtException e) {

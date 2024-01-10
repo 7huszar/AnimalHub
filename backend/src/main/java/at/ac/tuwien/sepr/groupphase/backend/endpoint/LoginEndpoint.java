@@ -32,7 +32,8 @@ public class LoginEndpoint {
     @ResponseStatus(HttpStatus.OK)
     public String login(@RequestBody UserLoginDto userLoginDto) throws NotAuthorizedException {
         String token;
-        LOGGER.debug("LOGIN {}", userLoginDto.getEmail());
+        LOGGER.info("POST " + BASE_PATH);
+        LOGGER.debug("login({})", userLoginDto);
         try {
             token = userService.login(userLoginDto);
         } catch (UsernameNotFoundException | BadCredentialsException e) {
