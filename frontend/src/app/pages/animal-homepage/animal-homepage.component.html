@@ -33,7 +33,10 @@
       <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
-          <div class="col">{{ animal.species }}</div>
+          <div class="col" *ngIf="isCat">{{'ANIMAL_HOMEPAGE.CAT' | translate}}</div>
+          <div class="col" *ngIf="isDog">{{'ANIMAL_HOMEPAGE.DOG' | translate}}</div>
+          <div class="col" *ngIf="isBird">{{'ANIMAL_HOMEPAGE.BIRD' | translate}}</div>
+          <div class="col" *ngIf="isRodent">{{'ANIMAL_HOMEPAGE.RODENT' | translate}}</div>
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
@@ -45,7 +48,13 @@
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
-          <div class="col">{{ animalAge }}</div>
+          <div class="col" *ngIf="years">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEARS' | translate}}</div>
+          <div class="col" *ngIf="months">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTHS' | translate}}</div>
+          <div class="col" *ngIf="days">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAYS' | translate}}</div>
+          <div class="col" *ngIf="year">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEAR' | translate}}</div>
+          <div class="col" *ngIf="month">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTH' | translate}}</div>
+          <div class="col" *ngIf="day">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAY' | translate}}</div>
+
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>

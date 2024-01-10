@@ -80,8 +80,18 @@
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
     "ADOPT": "Adoptiere ",
-    "SHELTER": "Tierheim ",
-    "NOCONTENT": " hat noch keine Medien."
+    "SHELTER": "Tierheim: ",
+    "NOCONTENT": " hat noch keine Medien.",
+    "YEARS": " Jahre",
+    "MONTHS": " Monate",
+    "DAYS": " Tage",
+    "YEAR": " Jahr",
+    "MONTH": " Monat",
+    "DAY": " Tag",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier"
   },
 
   "SHELTER_HOMEPAGE": {

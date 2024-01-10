@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
@@ -9,6 +9,7 @@ import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
 import {CreateSubscriptionDto, UserDetailDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
+import {Species} from "../../dtos/species";
 
 declare var paypal;
 
@@ -51,6 +52,18 @@ export class AnimalHomepageComponent implements OnInit {
   protected contents: FileDto[];
   protected newContent: File = null;
 
+  protected years: boolean;
+  protected months: boolean;
+  protected days: boolean;
+  protected year: boolean;
+  protected month: boolean;
+  protected day: boolean;
+
+  protected isDog: boolean;
+  protected isCat: boolean;
+  protected isBird: boolean;
+  protected isRodent: boolean;
+
   constructor(
     protected authService: AuthService,
     private service: AnimalService,
@@ -72,6 +85,25 @@ export class AnimalHomepageComponent implements OnInit {
             this.animal = data;
             console.log(this.animal.shelter.subscriptionId)
             this.calculateAge(this.animal.birthDate)
+
+            switch (this.animal.species) {
+              case this.animal.species = Species.cat: {
+                this.isCat = true;
+                break;
+              }
+              case this.animal.species = Species.dog: {
+                this.isDog = true;
+                break;
+              }
+              case this.animal.species = Species.bird: {
+                this.isBird = true;
+                break;
+              }
+              case this.animal.species = Species.rodent: {
+                this.isRodent = true;
+                break;
+              }
+            }
           },
           error: error => {
             console.error('Error finding animal', error);
@@ -186,14 +218,33 @@ export class AnimalHomepageComponent implements OnInit {
     const today = new Date();
     const birthdateDate = new Date(birthdate);
 
-    let age = today.getFullYear() - birthdateDate.getFullYear();
-
-    // Check if the birthday has occurred this year
-    const todayMonth = today.getMonth();
-    const birthdateMonth = birthdateDate.getMonth();
-
-    if (todayMonth < birthdateMonth || (todayMonth === birthdateMonth && today.getDate() < birthdateDate.getDate())) {
-      age--;
+    // Convert the milliseconds to years
+    let timeDifference = (today.getTime() - birthdateDate.getTime()) / (24 * 60 * 60 * 1000);
+    let age = timeDifference;
+    console.log("AGE " + timeDifference);
+    if (timeDifference > 365.25) {
+      age = Math.floor(timeDifference/365.25);
+      if (age > 1) {
+        this.years = true;
+      } else {
+        this.year = true;
+      }
+    }
+    if (timeDifference < 365.25 && timeDifference > 30) {
+      age = Math.floor(timeDifference/(30));
+      if (age > 1) {
+        this.months = true;
+      } else {
+        this.month = true;
+      }
+    }
+    if (30 > timeDifference) {
+      age = Math.floor(timeDifference);
+      if (age > 1) {
+        this.days = true;
+      } else {
+        this.day = true;
+      }
     }
     this.animalAge = age;
   }
