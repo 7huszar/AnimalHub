@@ -7,7 +7,6 @@ import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
 import {Observable} from "rxjs";
 import {PaypalService} from "../../services/paypal.service";
-import {SubscriptionDetailDto} from "../../dtos/user";
 
 
 
