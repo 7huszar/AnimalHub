@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.mail;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.ContactValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ public class MailService {
     private final JavaMailSender emailSender;
     private final JwtTokenizer jwtTokenizer;
     private final MailTimeout timeoutCollector;
+    private final ContactValidator contactValidator;
 
     /**
      * Send a verification link to specified e-mail.
@@ -74,18 +78,20 @@ public class MailService {
      * Asynchronously sends a contact email from a user to a shelter.
      * The email is sent in its own thread.
      *
-     * @param to The email address of the shelter
-     * @param from The email address of the user
-     * @param name The name of the user
+     * @param to      The email address of the shelter
+     * @param from    The email address of the user
+     * @param name    The name of the user
      * @param message The message from the user to the shelter
      */
     @Async
-    public void sendShelterContactMail(String to, String from, String name,  String message) {
+    public void sendShelterContactMail(ContactMailDto contactMailDto) throws ValidationException {
+        contactValidator.validateContactMailDto(contactMailDto);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(from);
-        mailMessage.setTo(to);
-        mailMessage.setSubject("Animal Hub Contact from: " + name);
-        mailMessage.setText("Name: " + name + "\n" + "Message: " + message);
+        mailMessage.setFrom(contactMailDto.from());
+        mailMessage.setTo(contactMailDto.to());
+        mailMessage.setSubject("Animal Hub Contact from: " + contactMailDto.name());
+        mailMessage.setText("Name: " + contactMailDto.name() + "\n" + "Message: " + contactMailDto.message());
         emailSender.send(mailMessage);
+
     }
 }

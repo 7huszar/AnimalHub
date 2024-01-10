@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import org.slf4j.Logger;
@@ -32,13 +33,12 @@ public class ContactEndpoint {
     }
 
     @Secured(UserRole.Values.USER_VALUE)
-    @PostMapping("{id}")
-    public void sendMail(@RequestBody ContactMailDto contactMailDto) throws NotFoundException {
+    @PostMapping()
+    public void sendMail(@RequestBody ContactMailDto contactMailDto) throws ValidationException {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n" + contactMailDto.toString());
 
-        String to = shelterService.findById(contactMailDto.to()).getEmail();
-        mailService.sendShelterContactMail(to, contactMailDto.from(), contactMailDto.name(), contactMailDto.message());
+        mailService.sendShelterContactMail(contactMailDto);
     }
 }
 
