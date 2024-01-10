@@ -124,7 +124,8 @@
     "MESSAGE": "Nachricht",
     "SUBMIT": "Senden",
     "SUCCESS": "Nachricht erfolgreich gesendet",
-    "FAILED": "Fehler beim senden der Nachricht"
+    "FAILED": "Fehler beim senden der Nachricht",
+    "CONTACT": "Kontaktiere"
   },
 
   "DUMMY": {

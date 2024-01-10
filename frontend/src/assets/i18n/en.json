@@ -116,7 +116,8 @@
     "MESSAGE": "Message",
     "SUBMIT": "Submit",
     "SUCCESS": "Message sent",
-    "FAILED": "Failed to send message"
+    "FAILED": "Failed to send message",
+    "CONTACT": "Contact"
   },
 
   "DUMMY": {
