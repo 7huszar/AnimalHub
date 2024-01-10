@@ -356,10 +356,11 @@ public class CustomUserDetailService implements UserService {
     @Override
     public HttpEntity<MultiValueMap<String, String>> getPaypalAccessToken() throws NotFoundException {
         LOGGER.debug("get Token");
+        UserDetailDto currentUser = getCurrentUser();
 
-        //TODO currently hardcoded; will change to retrieve id and secret from the database
-        String clientId = "AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv";
-        String secret = "EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO";
+        String clientId = currentUser.getPaypalClientId();
+        String secret = currentUser.getPaypalSecret();
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + secret);
 
         String credentials = clientId + ":" + secret;
         String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
@@ -451,7 +452,6 @@ public class CustomUserDetailService implements UserService {
 
         return requestEntity;
     }
-
 
 
 }
