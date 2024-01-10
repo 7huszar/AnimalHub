@@ -144,5 +144,7 @@ public interface UserService extends UserDetailsService {
 
     HttpEntity<String> cancelSubscription(String accessToken, String id) throws NotFoundException;
 
+    HttpEntity<Void> checkIfSubscriptionIsActive(String accessToken, String subscriptionId) throws NotFoundException;
+
 
 }

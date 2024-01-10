@@ -51,11 +51,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -436,6 +436,22 @@ public class CustomUserDetailService implements UserService {
 
         return requestEntity;
     }
+
+
+    @Override
+    public HttpEntity<Void> checkIfSubscriptionIsActive(String accessToken, String subscriptionId) throws NotFoundException {
+        LOGGER.debug("Checking if subscription is active");
+
+        //creating headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        // Creating Request entity with headers
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        return requestEntity;
+    }
+
 
 
 }

@@ -11,8 +11,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -20,9 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.MultiValueMap;
@@ -158,18 +155,13 @@ public class UserEndpoint {
             // Make the POST request
             ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
 
-            LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + response);
-
             String accessToken = userService.parseTokenResponse(response);
-            LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + accessToken);
 
             try {
                 //creating the cancel request
                 HttpEntity<String> cancelEntity = userService.cancelSubscription(accessToken, id);
-                LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + cancelEntity);
                 //Actually cancelling
                 ResponseEntity<String> cancelled = restTemplate.postForEntity(cancelUrl, cancelEntity, String.class);
-                LOGGER.debug("Request Entity:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + cancelled);
 
                 userService.deleteSubscription(id);
 
@@ -185,6 +177,70 @@ public class UserEndpoint {
             // Handle the exception or return an appropriate response
         }
 
+    }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("/paypal/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String checkIfSubscriptionActive(@PathVariable String id) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("Request Body:\n{}", id);
+
+        restTemplate = new RestTemplate();
+        //setting up request for the getPaypal token call
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken();
+
+
+        //url for retrieving the token
+        String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
+        String checkUrl = "https://api.sandbox.paypal.com/v1/billing/subscriptions/" + id;
+
+
+        try {
+
+            // Make the POST request
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+            String accessToken = userService.parseTokenResponse(response);
+
+            try {
+                //creating the checking request
+                HttpEntity<Void> checkEntity = userService.checkIfSubscriptionIsActive(accessToken, id);
+
+                //Actually checking
+                ResponseEntity<String> checkResponse = restTemplate.exchange(apiUrl, HttpMethod.GET, checkEntity, String.class);
+
+
+                // Assuming 'response' is the ResponseEntity<String> you received
+                ResponseEntity<String> isActive = checkResponse;
+
+                // Check if the response status code is 200 OK
+                if (isActive.getStatusCode() == HttpStatus.OK) {
+                    // Subscription is active
+                    System.out.println("Subscription is active");
+                    return "is active";
+                } else if (isActive.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    // Subscription is not found or inactive
+                    userService.deleteSubscription(id);
+                    return "Subscription is not found or inactive. Status code: " + isActive.getStatusCode();
+                } else {
+                    // Handle other status codes accordingly
+                    System.out.println("Unexpected status code: " + isActive.getStatusCode());
+                    return null;
+                }
+
+
+            } catch (Exception e) {
+                LOGGER.error("Error making external POST request", e);
+                return null;
+                // Handle the exception or return an appropriate response
+            }
+
+
+        } catch (Exception e) {
+            LOGGER.error("Error making external POST request", e);
+            return null;
+        }
     }
 
 

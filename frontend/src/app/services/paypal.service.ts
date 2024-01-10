@@ -103,6 +103,12 @@ export class PaypalService {
   }
 
 
+  checkSubscription(id: string): Observable<any> {
+    console.log(id);
+    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`);
+  }
+
+
 
 
 }
