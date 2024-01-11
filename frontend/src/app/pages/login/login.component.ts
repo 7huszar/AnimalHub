@@ -21,6 +21,8 @@ export class LoginComponent {
   isEmailInvalid: boolean = false;
   isPwdInvalid: boolean = false;
 
+  pwdField: string = 'password';
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private authService: AuthService,
@@ -113,6 +115,14 @@ export class LoginComponent {
 
   invalidPwd() :string {
     return this.isPwdInvalid ? 'is-invalid' : '';
+  }
+
+  togglePwd() :void {
+    if (this.pwdField === 'password') {
+      this.pwdField = 'text';
+    } else {
+      this.pwdField = 'password';
+    }
   }
 
 }

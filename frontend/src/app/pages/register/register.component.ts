@@ -25,6 +25,8 @@ export class RegisterComponent {
   mailRequestTimout: number = 60_000;
   mailRequest: MailRequestDto = {email: '', lang: ''};
 
+  pwdField: string = 'password';
+
   constructor(private formBuilder: UntypedFormBuilder,
               private service: RegisterService,
               private notifier: NotifierService,
@@ -103,6 +105,14 @@ export class RegisterComponent {
       this.resent = false;
     }, this.mailRequestTimout);
     this.circleLoader.startCountdown();
+  }
+
+  togglePwd() :void {
+    if (this.pwdField === 'password') {
+      this.pwdField = 'text';
+    } else {
+      this.pwdField = 'password';
+    }
   }
 
 }
