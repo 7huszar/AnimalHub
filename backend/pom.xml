@@ -207,7 +207,8 @@
                         </ports>
                         <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                         <jvmFlags>
-                            <jvmFlag>-Dspring.profiles.active=qa,generateData</jvmFlag>
+                            <jvmFlag>-Dspring.profiles.active=qa</jvmFlag>
+                            <jvmFlag>-Dspring-boot.run.profiles=generateData</jvmFlag>
                             <jvmFlag>-Xmx128m</jvmFlag>
                         </jvmFlags>
                     </container>
