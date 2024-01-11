@@ -25,11 +25,9 @@ public class ContactEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final MailService mailService;
-    private final ShelterService shelterService;
 
-    public ContactEndpoint(MailService mailService, ShelterService shelterService) {
+    public ContactEndpoint(MailService mailService) {
         this.mailService = mailService;
-        this.shelterService = shelterService;
     }
 
     @Secured(UserRole.Values.USER_VALUE)
@@ -38,7 +36,12 @@ public class ContactEndpoint {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n" + contactMailDto.toString());
 
-        mailService.sendShelterContactMail(contactMailDto);
+        try {
+            mailService.sendShelterContactMail(contactMailDto);
+        } catch (ValidationException e) {
+            LOGGER.warn(e.getMessage());
+            throw new ValidationException(e.getMessage(), e.errors());
+        }
     }
 }
 
