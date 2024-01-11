@@ -6,6 +6,7 @@ import {NotifierService} from "../../services/notifier.service";
 import {HttpStatusCode} from "@angular/common/http";
 import {MailRequestDto} from "../../dtos/user";
 import {CircleLoadComponent} from "../../components/circle-load/circle-load.component";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-login',
@@ -25,11 +26,12 @@ export class RegisterComponent {
   mailRequest: MailRequestDto = {email: '', lang: ''};
 
   constructor(private formBuilder: UntypedFormBuilder,
-              private service :RegisterService,
-              private notifier :NotifierService,) {
+              private service: RegisterService,
+              private notifier: NotifierService,
+              private translator: TranslateService) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
+      password: ['', [Validators.required, Validators.minLength(8)], Validators.maxLength(255)],
       password_repeat: ['', [Validators.required]]
     });
   }
@@ -43,8 +45,9 @@ export class RegisterComponent {
      this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
        next :data => {
         console.log("successfully registered", data);
+        console.log(this.translator.currentLang);
         this.mailRequest.email = this.loginForm.controls.username.value;
-        this.mailRequest.lang = 'en';
+        this.mailRequest.lang = this.translator.currentLang;
         this.success = true;
         this.request()
        },

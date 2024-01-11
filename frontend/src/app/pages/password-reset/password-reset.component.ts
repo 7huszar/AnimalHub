@@ -3,6 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {PasswordService} from "../../services/password.service";
 import {NotifierService} from "../../services/notifier.service";
 import {CircleLoadComponent} from "../../components/circle-load/circle-load.component";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-password-reset',
@@ -20,17 +21,18 @@ export class PasswordResetComponent {
   waitingTime: number = 60_000;
 
   constructor(private formBuilder: UntypedFormBuilder,
-              private service :PasswordService,
-              private notification :NotifierService,) {
+              private service: PasswordService,
+              private notification: NotifierService,
+              private translator: TranslateService) {
     this.emailForm = this.formBuilder.group({
-        email: ['', [Validators.required, Validators.email]]
+        email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]]
     });
   }
 
   requestPasswordReset() :void {
     this.submitted = true;
     if (this.emailForm.valid) {
-      this.service.requestPasswordReset(this.emailForm.controls.email.value, 'en').subscribe({
+      this.service.requestPasswordReset(this.emailForm.controls.email.value, this.translator.currentLang).subscribe({
         next :next => {
           this.sent = true;
           this.timeout = true;

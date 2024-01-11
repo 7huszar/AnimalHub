@@ -28,8 +28,12 @@
                 <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.required">
                   {{'REGISTER.MAIL_MISSING' | translate}}
                 </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email">
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email
+                    && !loginForm.controls.username.errors.maxlength">
                   {{'REGISTER.MAIL_MISSING' | translate}}
+                </small>
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.maxlength">
+                  {{'LOGIN.MAIL_LONG' | translate}}
                 </small>
               </div>
             </div>
@@ -44,6 +48,9 @@
                 </small>
                 <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.minlength">
                   {{'REGISTER.PWD_SHORT' | translate}}
+                </small>
+                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.maxlength">
+                  {{'LOGIN.PWD_LONG' | translate}}
                 </small>
               </div>
             </div>
@@ -64,7 +71,7 @@
               </div>
             </div>
 
-            <button type="button" (click)="register()" class="btn btn-primary mb-2">
+            <button type="submit" (click)="register()" class="btn btn-primary mb-2">
               {{'REGISTER.REGISTER_BUTTON' | translate}}
             </button>
           </form>

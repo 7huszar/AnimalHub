@@ -1,20 +1,34 @@
 <app-header></app-header>
 <div class="container">
-  <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
-    <div class="mb-3">
-      <label for="name" class="form-label">{{ 'CONTACT_PAGE.NAME'| translate }}</label>
-      <input type="text" class="form-control" id="name" [(ngModel)]="contact.name" name="name" required>
+  <div class="row" style="height: 100%">
+    <div class="col-6">
+      <h1 class="mt-4 mb-4">{{ 'CONTACT_PAGE.CONTACT'| translate }} "{{ shelter?.name }}"</h1>
     </div>
-    <div class="mb-3">
-      <label for="email" class="form-label">{{ 'CONTACT_PAGE.EMAIL'| translate }}</label>
-      <input type="email" class="form-control" id="email" [(ngModel)]="contact.from" name="email" required>
+    <div class="row">
+      <div class="col" style="max-width: 25em">
+        <div class="media">
+          <app-content [mode]="Mode.SHELTER" [id]="shelter?.id"></app-content>
+        </div>
+      </div>
+      <div class="col">
+        <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" style="height: 100%">
+          <div class="mb-3">
+            <label for="name" class="form-label">{{ 'CONTACT_PAGE.NAME'| translate }}</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="contact.name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">{{ 'CONTACT_PAGE.EMAIL'| translate }}</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="contact.from" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">{{ 'CONTACT_PAGE.MESSAGE'| translate }}</label>
+            <textarea class="form-control" id="message" [(ngModel)]="contact.message" name="message" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!contactForm.form.valid">{{ 'CONTACT_PAGE.SUBMIT'| translate }}</button>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="message" class="form-label">{{ 'CONTACT_PAGE.MESSAGE'| translate }}</label>
-      <textarea class="form-control" id="message" [(ngModel)]="contact.message" name="message" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!contactForm.form.valid">{{ 'CONTACT_PAGE.SUBMIT'| translate }}</button>
-  </form>
-</div>
+  </div>
 <app-lang-select></app-lang-select>
 <app-footer></app-footer>
+</div>

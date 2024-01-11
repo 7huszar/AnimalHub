@@ -4,6 +4,8 @@ import {PasswordService} from "../../../services/password.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../../services/notifier.service";
+import {jwtDecode} from "jwt-decode";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-password-verify',
@@ -12,15 +14,16 @@ import {NotifierService} from "../../../services/notifier.service";
 })
 export class PasswordVerifyComponent implements OnInit{
 
-  passwordForm :UntypedFormGroup;
-  private token :String;
-  submitted :boolean = false;
+  passwordForm: UntypedFormGroup;
+  private token: string;
+  submitted: boolean = false;
 
   constructor(formBuilder :UntypedFormBuilder,
-              private service :PasswordService,
-              private route :ActivatedRoute,
-              private router :Router,
-              private notification :NotifierService) {
+              private service: PasswordService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private notification: NotifierService,
+              private translator: TranslateService) {
     this.passwordForm = formBuilder.group({
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordRepeat: ['', [Validators.required]]
@@ -49,14 +52,22 @@ export class PasswordVerifyComponent implements OnInit{
 
   ngOnInit() {
     this.token = this.route.snapshot.paramMap.get('token');
+    const decoded: any = jwtDecode(this.token);
+    if (!('language' in decoded)) {
+      this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
+    }
+    const lang = decoded.language;
+    if (!this.translator.getLangs().includes(lang)) {
+      this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
+    }
+    this.translator.use(lang);
   }
 
-  validation() :string {
+  validation(): string {
     return this.passwordForm.valid && this.pwdMatch() ? 'is-valid' : 'is-invalid';
   }
 
-  pwdMatch() :boolean {
+  pwdMatch(): boolean {
     return this.passwordForm.controls.password.value === this.passwordForm.controls.passwordRepeat.value;
   }
-
 }

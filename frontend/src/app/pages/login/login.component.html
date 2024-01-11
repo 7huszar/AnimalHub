@@ -28,8 +28,12 @@
                 <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.required">
                   {{'LOGIN.USER_NAME_MISSING' | translate}}
                 </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email">
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email
+                    && !loginForm.controls.username.errors.maxlength">
                   {{'LOGIN.MAIL_INVALID' | translate}}
+                </small>
+                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.maxlength">
+                  {{'LOGIN.MAIL_LONG' | translate}}
                 </small>
               </div>
             </div>
@@ -45,6 +49,10 @@
                 <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.minlength">
                   {{'LOGIN.PWD_SHORT' | translate}}
                 </small>
+                {{loginForm.controls.password.errors.maxLength}}
+                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.maxlength">
+                  {{'LOGIN.PWD_LONG' | translate}}
+                </small>
               </div>
             </div>
 
@@ -56,7 +64,7 @@
 
             <div class="form-group mb-2"></div>
 
-            <button type="button" (click)="loginUser()" class="btn btn-primary mb-2 form-control-lg">
+            <button type="submit" (click)="loginUser()" class="btn btn-primary mb-2 form-control-lg">
               {{'LOGIN.LOGIN_BUTTON' | translate}}
             </button>
           </form>
@@ -73,6 +81,28 @@
       <a class="link-opacity-100" routerLink="/register">{{'LOGIN.REGISTER' | translate}}</a>
     </div>
   </div>
+  <div class="row">
+      <div class="col">
+          <a class="link-opacity-100" data-bs-toggle="modal" data-bs-target="#myModal">{{'LOGIN.HOW_DOES_IT_WORK' | translate}}</a>
+      </div>
+  </div>
+</div>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{'LOGIN.HOW_DOES_IT_WORK' | translate}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="overflow-auto" style="object-fit: cover; max-height: 50em">
+                    <img class="start-pic" src="/assets/img/HowDoesItWork.png" alt="img">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <div class="position-absolute end-0 bottom-0 mb-4 me-4">
 <app-lang-select></app-lang-select>

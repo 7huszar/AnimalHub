@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.mail;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.LanguageConfig;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -28,6 +29,7 @@ public class MailService {
     private final JwtTokenizer jwtTokenizer;
     private final MailTimeout timeoutCollector;
     private final ContactValidator contactValidator;
+    private final LanguageConfig lang;
 
     /**
      * Send a verification link to specified e-mail.
@@ -47,7 +49,8 @@ public class MailService {
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animalhub e-mail confirmation");
-        message.setText("http://localhost:4200/#/register/confirm/" + jwtTokenizer.getActivationToken(email, language, regStamp));
+        message.setText(lang.getTranslation(language + ".mail.verifyEmail") + "\nhttp://localhost:4200/#/register/confirm/"
+            + jwtTokenizer.getActivationToken(email, language, regStamp));
         emailSender.send(message);
     }
 
@@ -70,7 +73,8 @@ public class MailService {
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
         message.setSubject("Animal Hub reset password");
-        message.setText("http://localhost:4200/#/password/reset/" + jwtTokenizer.getPasswordToken(email, language));
+        message.setText(lang.getTranslation(language + ".mail.resetPwd") + "\nhttp://localhost:4200/#/password/reset/"
+            + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
     }
 
@@ -92,6 +96,5 @@ public class MailService {
         mailMessage.setSubject("Animal Hub Contact from: " + contactMailDto.name());
         mailMessage.setText("Name: " + contactMailDto.name() + "\n" + "Message: " + contactMailDto.message());
         emailSender.send(mailMessage);
-
     }
 }
