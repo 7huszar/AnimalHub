@@ -51,7 +51,6 @@ export class LoginComponent {
    */
   loginUser() {
     this.submitted = true;
-    console.log("what:", this.loginForm.controls.password.errors)
     if (this.loginForm.valid) {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);

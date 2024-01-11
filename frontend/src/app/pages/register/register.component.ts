@@ -33,7 +33,7 @@ export class RegisterComponent {
               private translator: TranslateService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
-      password: ['', [Validators.required, Validators.minLength(8)], Validators.maxLength(255)],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
       password_repeat: ['', [Validators.required]]
     });
   }
@@ -47,7 +47,6 @@ export class RegisterComponent {
      this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
        next :data => {
         console.log("successfully registered", data);
-        console.log(this.translator.currentLang);
         this.mailRequest.email = this.loginForm.controls.username.value;
         this.mailRequest.lang = this.translator.currentLang;
         this.success = true;
