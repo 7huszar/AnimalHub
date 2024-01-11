@@ -96,14 +96,10 @@ const routes: Routes = [
     ] },
 
   { path: 'users', children: [
-      { path: 'edit/:id',
-        canActivate: mapToCanActivate([AuthGuard]),
-        component: UserEditComponent,
-        data: {access: Mode.USER} },
-      { path: 'subscriptions',
-        canActivate: mapToCanActivate([AuthGuard]),
-        component: SubscriptionsComponent,
-        data: {access: Mode.USER} }
+      { path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: UserEditComponent, data: {access: Mode.USER} },
+      { path: 'subscriptions', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent, data: {access: Mode.USER} },
+      {path: 'paypal', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent, data: {access: Mode.USER} },
+      {path: 'shelter/:id', canActivate: mapToCanActivate([AuthGuard]), component: MemberEditShelterComponent, data: {access: Mode.USER}},
     ] },
 
   {path: '*', redirectTo: ''}
