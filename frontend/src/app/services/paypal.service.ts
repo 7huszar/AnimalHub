@@ -3,6 +3,7 @@ import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/
 import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {ShelterDetailDto} from "../dtos/shelter";
 
 
 @Injectable({
@@ -96,16 +97,24 @@ export class PaypalService {
    * Cancel an existing subscription and delete it from the system.
    *
    * @param id of the subscription to be canceled and deleted
+   * @param shelterId
    */
-  cancelSubscriptions(id: string): Observable<any> {
-    console.log(id);
-    return this.httpClient.delete<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`);
+  cancelSubscriptions(id: string, shelterId: string): Observable<any> {
+    console.log("ShelterId" + shelterId);
+    const body = { shelterId: shelterId }; // Create an object with the shelterId property
+    return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { body });
   }
 
 
-  checkIfSubscriptionIsActive(id: string): Observable<any> {
+
+  checkIfSubscriptionIsActive(id: string, shelterDto: ShelterDetailDto): Observable<any> {
     console.log(id);
-    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`);
+    // Convert the shelterDto to query parameters
+    const params = new HttpParams()
+      .set('param', shelterDto.id)
+
+
+    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { params });
   }
 
   isSubscribed(animalId: string): Observable<SubscriptionDetailDto> {

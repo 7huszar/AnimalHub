@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -18,6 +19,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -56,6 +58,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -65,6 +68,7 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final ShelterRepository shelterRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
@@ -353,12 +357,23 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public HttpEntity<MultiValueMap<String, String>> getPaypalAccessToken() throws NotFoundException {
+    public HttpEntity<MultiValueMap<String, String>> getPaypalAccessToken(UUID shelterId) throws NotFoundException {
         LOGGER.debug("get Token");
-        UserDetailDto currentUser = getCurrentUser();
 
-        String clientId = currentUser.getPaypalClientId();
-        String secret = currentUser.getPaypalSecret();
+
+        Optional<Shelter> shelter = shelterRepository.findById(shelterId);
+        Shelter foundShelter = null;
+
+        if (shelter.isPresent()) {
+            foundShelter = shelter.get();
+            // Use shelter here
+        } else {
+            throw new NotFoundException("Could not find the Paypal ID");
+        }
+
+
+        String clientId = foundShelter.getPaypalClientId();
+        String secret = foundShelter.getPaypalSecret();
 
         String credentials = clientId + ":" + secret;
         String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
@@ -502,7 +517,6 @@ public class CustomUserDetailService implements UserService {
     @Override
     public SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId) {
         LOGGER.trace("Check if user is subscribed");
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n userid" + userId + "animalId" + animalId);
         SubscriptionKey key = new SubscriptionKey(animalId, userId);
         return userMapper.subscriptionToSubscriptionDetailDto(subscriptionRepository.findByKey(key));
     }

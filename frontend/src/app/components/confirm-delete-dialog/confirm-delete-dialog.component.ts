@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
 import {Observable} from "rxjs";
 import {PaypalService} from "../../services/paypal.service";
+import {ShelterDetailDto} from "../../dtos/shelter";
 
 
 
@@ -23,6 +24,7 @@ export class ConfirmDeleteDialogComponent {
   @Input() deleteWhat: string | undefined = '';
   @Input() deleteType: string | undefined = '';
   @Input() DeleteId: string | undefined = '';
+  @Input() cancelShelter: string | undefined;
 
 
   @HostBinding('class') cssClass = 'modal-fade';
@@ -121,7 +123,7 @@ export class ConfirmDeleteDialogComponent {
   //This is just for testing purposes use it
   public checkSubscription(){
 
-    let test: Observable<void> = this.paypalService.checkIfSubscriptionIsActive(this.DeleteId)
+    let test: Observable<void> = this.paypalService.checkIfSubscriptionIsActive(this.DeleteId, null)
     test.subscribe({
       next: data => {
         this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
@@ -139,8 +141,7 @@ export class ConfirmDeleteDialogComponent {
   public cancelSubscription() {
 
   if (this.DeleteId != null) {
-
-    let test: Observable<void> = this.paypalService.cancelSubscriptions(this.DeleteId)
+    let test: Observable<void> = this.paypalService.cancelSubscriptions(this.DeleteId, this.cancelShelter)
     test.subscribe({
       next: data => {
         this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
