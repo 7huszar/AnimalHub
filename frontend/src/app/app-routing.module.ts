@@ -17,6 +17,7 @@ import {PasswordResetComponent} from "./pages/password-reset/password-reset.comp
 import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/password-verify.component";
 import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.component";
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
+import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
 
 
 const routes: Routes = [
@@ -46,7 +47,8 @@ const routes: Routes = [
     path: 'users', children: [
       {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: UserEditComponent},
       {path: 'subscriptions', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent},
-      {path: 'paypal', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent}
+      {path: 'paypal', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent},
+      {path: 'shelter/:id', canActivate: mapToCanActivate([AuthGuard]), component: MemberEditShelterComponent}
 
     ]
   },

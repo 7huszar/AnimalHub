@@ -7,7 +7,6 @@ import {UserDetailDto} from "../../dtos/user";
 import {CreateFileDto} from "../../dtos/file";
 import {NgForm, NgModel} from "@angular/forms";
 import {UserService} from "../../services/user.service";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-member.edit.shelter',
