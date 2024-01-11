@@ -9,6 +9,7 @@ import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {ShelterDetailDto} from "../../dtos/shelter";
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
   protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
   protected dislikedAnimals: AnimalDetailDto[] = [];
+  protected shelterId: string;
 
 
   counter = 1;
@@ -54,10 +56,12 @@ export class HomeComponent implements OnInit {
   };
 
   user: UserDetailDto = {
-    paypalClientId: "", paypalSecret: "",
+    paypalClientId: "",
+    paypalSecret: "",
     email: "",
     id: "",
-    role: ""
+    role: "",
+    shelter: undefined,
   };
 
   subscription: SubscriptionDetailDto = {
@@ -85,7 +89,7 @@ export class HomeComponent implements OnInit {
       next: data => {
         this.user = data;
         this.subscription.user = this.user;
-
+        this.shelterId = this.user.shelter.id;
         //loading the subscriptions of the user
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
         subscriptionObservable.subscribe({
