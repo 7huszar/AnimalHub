@@ -82,10 +82,12 @@ public class MailService {
      * Asynchronously sends a contact email from a user to a shelter.
      * The email is sent in its own thread.
      *
-     * @param to      The email address of the shelter
-     * @param from    The email address of the user
-     * @param name    The name of the user
-     * @param message The message from the user to the shelter
+     * @param contactMailDto The data transfer object containing the contact mail information. It includes:
+     *                       - from: The email address of the user
+     *                       - to: The email address of the shelter
+     *                       - name: The name of the user
+     *                       - message: The message from the user to the shelter
+     * @throws ValidationException If the contactMailDto does not pass the validation checks
      */
     @Async
     public void sendShelterContactMail(ContactMailDto contactMailDto) throws ValidationException {
