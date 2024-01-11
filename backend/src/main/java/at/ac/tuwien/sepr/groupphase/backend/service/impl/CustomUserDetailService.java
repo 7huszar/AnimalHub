@@ -322,7 +322,7 @@ public class CustomUserDetailService implements UserService {
         String id = createSubscriptionDto.getSubscriptionId();
         subscription.setSubscriptionId(id);
         SubscriptionKey key = new SubscriptionKey(subscription.getAnimal().getId(), subscription.getUser().getId());
-        subscription.setId(key);
+        subscription.setKey(key);
 
         Subscription ret = subscriptionRepository.save(subscription);
 
@@ -496,6 +496,15 @@ public class CustomUserDetailService implements UserService {
             throw new NotFoundException("Subscription status not found in the response or response body is empty");
         }
 
+    }
+
+
+    @Override
+    public SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId) {
+        LOGGER.trace("Check if user is subscribed");
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n userid" + userId + "animalId" + animalId);
+        SubscriptionKey key = new SubscriptionKey(animalId, userId);
+        return userMapper.subscriptionToSubscriptionDetailDto(subscriptionRepository.findByKey(key));
     }
 }
 

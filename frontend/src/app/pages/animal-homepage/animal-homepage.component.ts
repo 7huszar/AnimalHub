@@ -10,6 +10,7 @@ import {AuthService} from "../../services/auth.service";
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {Species} from "../../dtos/species";
+import {PaypalService} from "../../services/paypal.service";
 
 declare var paypal;
 
@@ -67,6 +68,7 @@ export class AnimalHomepageComponent implements OnInit {
   constructor(
     protected authService: AuthService,
     private service: AnimalService,
+    private paypalService: PaypalService,
     private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
@@ -104,6 +106,22 @@ export class AnimalHomepageComponent implements OnInit {
                 break;
               }
             }
+
+            let userObservable: Observable<UserDetailDto> = this.paypalService.isSubscribed(this.animal.id)
+            userObservable.subscribe({
+              next: data => {
+                console.log(data)
+                this.notification.success("User is Subscribed")
+              },
+              error: error => {
+                //this schould never happen
+                console.error('User is not Subscribed', error);
+
+              }
+            });
+
+
+
           },
           error: error => {
             console.error('Error finding animal', error);

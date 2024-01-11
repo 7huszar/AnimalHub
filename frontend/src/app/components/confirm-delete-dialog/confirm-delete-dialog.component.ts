@@ -121,7 +121,7 @@ export class ConfirmDeleteDialogComponent {
   //This is just for testing purposes use it
   public checkSubscription(){
 
-    let test: Observable<void> = this.paypalService.checkSubscription(this.DeleteId)
+    let test: Observable<void> = this.paypalService.checkIfSubscriptionIsActive(this.DeleteId)
     test.subscribe({
       next: data => {
         this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);

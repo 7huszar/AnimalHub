@@ -103,12 +103,15 @@ export class PaypalService {
   }
 
 
-  checkSubscription(id: string): Observable<any> {
+  checkIfSubscriptionIsActive(id: string): Observable<any> {
     console.log(id);
     return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`);
   }
 
-
+  isSubscribed(animalId: string): Observable<any> {
+    console.log(animalId);
+    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/subscriptions/${animalId}`);
+  }
 
 
 }

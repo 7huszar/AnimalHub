@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
@@ -239,6 +240,21 @@ public class UserEndpoint {
             LOGGER.error("Error making external POST request", e);
             return null;
         }
+    }
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("/subscriptions/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Check if current User is subscribed", security = @SecurityRequirement(name = "apiKey"))
+    public SubscriptionDetailDto isSubscribed(@PathVariable UUID id) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("animalId({})", id);
+
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
+
+        UserDetailDto user = userService.getCurrentUser();
+
+        return userService.isSubscribed(id, user.getId());
     }
 
 

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Subs
     List<Subscription> findAllByUserId(UUID userId);
 
     Subscription findBySubscriptionId(String subscriptionId);
+
+    Subscription findByKey(SubscriptionKey id);
 }
