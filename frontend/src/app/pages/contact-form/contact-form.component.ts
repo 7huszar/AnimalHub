@@ -7,6 +7,7 @@ import {Mode} from "../../enums/modes";
 import {Observable} from "rxjs";
 import {ShelterDto} from "../../dtos/shelter";
 import {ShelterService} from "../../services/shelter.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-contact-form',
@@ -30,12 +31,15 @@ export class ContactFormComponent implements OnInit {
     createdOn: undefined,
     email: undefined
   };
+  bannerError: string | null = null;
   constructor(
     private contactService: ContactService,
     private service: ShelterService,
     private route: ActivatedRoute,
+    private notification: ToastrService
   ) {
   }
+
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -47,7 +51,12 @@ export class ContactFormComponent implements OnInit {
             this.shelter = data;
           },
           error: error => {
-            console.error('Error finding animal', error);
+            console.error('Error finding shelter', error);
+            this.bannerError = 'Could not fetch Shelter ' + error.message;
+            this.notification.error(
+              error.message.message,
+              'Could Not fetch Shelter'
+            )
           }
         });
       }
@@ -68,6 +77,11 @@ export class ContactFormComponent implements OnInit {
             },
             error: error => {
               console.error('Error sending mail', error);
+              this.bannerError = 'Could not send mail ' + error.message;
+              this.notification.error(
+                error.message.message,
+                'Could Not Send Mail'
+              )
             }
           });
         }
