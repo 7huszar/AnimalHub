@@ -1,17 +1,21 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,6 +56,7 @@ public class UserEndpoint {
     static final String BASE_PATH = "/api/v1/users";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
+    private final AnimalService animalService;
     private RestTemplate restTemplate;
 
 
@@ -160,8 +165,9 @@ public class UserEndpoint {
         UUID shelterIdUuid = UUID.fromString(shelterIdString);
         System.out.println("Parsed UUID: " + shelterIdUuid);
 
-        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("ACTIVE")) {
+        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("is active")) {
             LOGGER.error("The Subscription you tried to cancel was not active");
+            throw new NotFoundException("The subscription you tried to cancel Was not active");
         }
 
         restTemplate = new RestTemplate();
@@ -271,7 +277,14 @@ public class UserEndpoint {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("animalId({})", id);
 
+
         UserDetailDto user = userService.getCurrentUser();
+        SubscriptionDetailDto subscription = userService.isSubscribed(id, user.getId());
+
+        if (!checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId()).equals("is active")) {
+            LOGGER.error("The Subscription you tried to load was not active");
+            throw new NotFoundException("The Subscription you tried to load was not active");
+        }
 
         return userService.isSubscribed(id, user.getId());
     }
