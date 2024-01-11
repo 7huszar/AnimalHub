@@ -95,12 +95,14 @@
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Address:",
     "PHONE": "Phone:",
-    "EMAIL": "E-mail:"
+    "EMAIL": "E-mail:",
+    "CONTACT": "Contact"
   },
 
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Species"
+    "SPECIES": "Species",
+    "DELETE": "Delete"
   },
 
   "PWD": {

@@ -97,12 +97,14 @@
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
-    "EMAIL": "E-mail:"
+    "EMAIL": "E-mail:",
+    "CONTACT" : "Kontaktiere"
   },
 
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Tierart"
+    "SPECIES": "Tierart",
+    "DELETE": "Löschen"
   },
 
   "PWD": {
