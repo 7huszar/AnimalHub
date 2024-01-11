@@ -64,6 +64,9 @@ export class AnimalHomepageComponent implements OnInit {
   protected isCat: boolean;
   protected isBird: boolean;
   protected isRodent: boolean;
+  protected isSubscribed: boolean;
+
+
 
   constructor(
     protected authService: AuthService,
@@ -107,16 +110,56 @@ export class AnimalHomepageComponent implements OnInit {
               }
             }
 
-            let userObservable: Observable<UserDetailDto> = this.paypalService.isSubscribed(this.animal.id)
-            userObservable.subscribe({
+            let isSubscribedObservable: Observable<SubscriptionDetailDto> = this.paypalService.isSubscribed(this.animal.id)
+            isSubscribedObservable.subscribe({
               next: data => {
-                console.log(data)
-                this.notification.success("User is Subscribed")
-              },
-              error: error => {
-                //this schould never happen
-                console.error('User is not Subscribed', error);
+                console.log("User is subscribed to Animal")
+                console.log(data);
+                if (data!=null){
+                  //this is the case that the user is already subscribed
+                  this.isSubscribed=true;
 
+                }else{
+                  //if user is not subscribed load the paypal button
+
+                  // Load the PayPal script dynamically
+                  const script = document.createElement('script');
+                  //getting user
+                  let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
+                  userObservable.subscribe({
+                    next: data => {
+                      this.user = data;
+                      this.subscription.user=this.user;
+                    },
+                    error: error => {
+                      //this schould never happen
+                      console.error('Error finding user', error);
+                      this.notification.error("Could Not find logged in user to save");
+                    }
+                  });
+
+                  //TODO handle the case in which the user is already subscribed to the animal
+
+
+                  //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
+                  // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
+
+                  //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
+                  //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
+
+                  script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
+                  script.onload = () => {
+                    // PayPal script is loaded, render the button
+                    this.renderPayPalButton();
+                  };
+                  document.head.appendChild(script);
+
+                }
+              },
+
+              error: error => {
+                console.error('Subscription could not be loaded', error);
+                this.notification.error("Could Not verify subscription Status");
               }
             });
 
@@ -142,37 +185,7 @@ export class AnimalHomepageComponent implements OnInit {
 
 
 
-    // Load the PayPal script dynamically
-    const script = document.createElement('script');
-    //getting user
-    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
-    userObservable.subscribe({
-      next: data => {
-        this.user = data;
-        this.subscription.user=this.user;
-      },
-      error: error => {
-        //this schould never happen
-        console.error('Error finding user', error);
-        this.notification.error("Could Not find logged in user to save");
-      }
-    });
 
-    //TODO handle the case in which the user is already subscribed to the animal
-
-
-    //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
-    // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
-
-    //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
-    //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
-
-    script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
-    script.onload = () => {
-      // PayPal script is loaded, render the button
-      this.renderPayPalButton();
-    };
-    document.head.appendChild(script);
   }
 
   private renderPayPalButton(): void {

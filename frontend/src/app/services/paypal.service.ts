@@ -108,7 +108,7 @@ export class PaypalService {
     return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`);
   }
 
-  isSubscribed(animalId: string): Observable<any> {
+  isSubscribed(animalId: string): Observable<SubscriptionDetailDto> {
     console.log(animalId);
     return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/subscriptions/${animalId}`);
   }

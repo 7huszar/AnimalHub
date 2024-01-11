@@ -22,10 +22,16 @@
       <div class="media">
         <app-content [mode]="Mode.ANIMAL" [id]="animal.id"></app-content>
       </div>
-      <!-- Paypal button -->
 
-        <h4>Subscribe to {{ animal?.name }} </h4>
-        <div id="paypal-button-container-P-2J073097VE083035WMWKWHZY" style="max-width: 150px;"></div>
+      <!-- Paypal button -->
+      <div class="col">
+        <h4>{{ isSubscribed ? 'You are already Subscribed to' : 'Subscribe to' }} {{ animal?.name }}</h4>
+        <div *ngIf="!isSubscribed" id="paypal-button-container-P-2J073097VE083035WMWKWHZY" style="max-width: 150px;"></div>
+      </div>
+
+
+
+
 
       <!-- end of paypal -->
     </div>
@@ -90,14 +96,6 @@
         <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
       </div>
     </div>
-    <!--<div class="content">
-      <div *ngFor="let content of contents" class="item">
-        <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="rounded-4"></app-content>
-      </div>
-      <div class="container" *ngIf="contents?.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
-        <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
-      </div>
-    </div>-->
 
     <div class="content">
       <div *ngFor="let content of contents" class="item">
