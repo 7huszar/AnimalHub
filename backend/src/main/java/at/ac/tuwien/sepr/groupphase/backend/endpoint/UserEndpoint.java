@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
@@ -12,11 +13,13 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -125,6 +128,7 @@ public class UserEndpoint {
         return userService.findAllSubscriptionsByUser(userDetailDto);
     }
 
+    //Deleting subscription from database
     @Secured(UserRole.Values.USER_VALUE)
     @DeleteMapping("/current/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -135,17 +139,36 @@ public class UserEndpoint {
         userService.deleteSubscription(id);
     }
 
-    //TODO make this delete instead so there is no return value
+    //Canceling subscription from paypal
     @Secured(UserRole.Values.USER_VALUE)
-    @DeleteMapping("/paypal/{id}")
+    @PostMapping("/paypal/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void cancelSubscription(@PathVariable String id) throws NotFoundException {
+    public void cancelSubscription(@PathVariable String id, @RequestBody String shelterId) throws NotFoundException, JsonProcessingException {
         LOGGER.info("POST " + BASE_PATH + "/send-post-request");
         LOGGER.debug("Request Body:\n{}", id);
 
+        LOGGER.debug("Request Body:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nshelterid" + shelterId + " kekekekekeeekek " + id);
+
+        // Create an ObjectMapper
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Parse the JSON string
+        JsonNode jsonNode = objectMapper.readTree(shelterId);
+
+        // Extract shelterId
+        String shelterIdString = jsonNode.path("body").path("shelterId").asText();
+        LOGGER.debug("Extracted shelterId: " + shelterIdString);
+
+        UUID shelterIdUuid = UUID.fromString(shelterIdString);
+        System.out.println("Parsed UUID: " + shelterIdUuid);
+
+        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("ACTIVE")) {
+            LOGGER.error("The Subscription you tried to cancel was not active");
+        }
+
         restTemplate = new RestTemplate();
         //setting up request for the getPaypal token call
-        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken();
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(shelterIdUuid);
 
         String cancelUrl = "https://api.sandbox.paypal.com/v1/billing/subscriptions/" + id + "/cancel\n";
         //url for retrieving the token
@@ -184,13 +207,13 @@ public class UserEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("/paypal/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String checkIfSubscriptionActive(@PathVariable String id) throws NotFoundException {
+    public String checkIfSubscriptionActive(@PathVariable String id, @RequestBody UUID shelterId) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("Request Body:\n{}", id);
 
         restTemplate = new RestTemplate();
         //setting up request for the getPaypal token call
-        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken();
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(shelterId);
 
 
         //url for retrieving the token
@@ -249,8 +272,6 @@ public class UserEndpoint {
     public SubscriptionDetailDto isSubscribed(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("animalId({})", id);
-
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
 
         UserDetailDto user = userService.getCurrentUser();
 

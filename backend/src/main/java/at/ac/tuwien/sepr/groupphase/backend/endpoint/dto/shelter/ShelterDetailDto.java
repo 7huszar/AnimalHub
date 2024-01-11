@@ -39,6 +39,10 @@ public class ShelterDetailDto {
 
     private Instant createdOn;
 
+    private String paypalClientId;
+
+    private String paypalSecret;
+
     @Override
     public String toString() {
         return "ShelterDetailDto{"

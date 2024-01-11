@@ -44,6 +44,8 @@ public class ShelterDataGenerator {
                     .subscriptionId(subscriptionId)
                     .address(shelterAddresses[i])
                     .phoneNumber(shelterPhoneNumbers[i])
+                    .paypalClientId("AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv")
+                    .paypalSecret("EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO")
                     .email(shelterEmails[i])
                     .profilePicture(fileRepository.findByName(shelterProfilePictureNames[i])[0])
                     .build();
