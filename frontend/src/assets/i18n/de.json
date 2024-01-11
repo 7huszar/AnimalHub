@@ -98,7 +98,8 @@
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
     "EMAIL": "E-mail:",
-    "CONTACT" : "Kontaktiere"
+    "CONTACT" : "Kontaktiere",
+    "DONATE": "Spende an "
   },
 
   "ANIMAL_LIST": {

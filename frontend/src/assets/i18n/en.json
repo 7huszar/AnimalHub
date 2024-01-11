@@ -96,7 +96,8 @@
     "ADDRESS": "Address:",
     "PHONE": "Phone:",
     "EMAIL": "E-mail:",
-    "CONTACT": "Contact"
+    "CONTACT": "Contact",
+    "DONATE": "Donate to ",
   },
 
   "ANIMAL_LIST": {

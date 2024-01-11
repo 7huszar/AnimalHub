@@ -37,7 +37,7 @@
           <!-- Paypal -->
           <div class="row mt-4">
             <div class="col-12">
-              <h4>Donate to {{ shelter?.name }}</h4>
+              <h4>{{ 'SHELTER_HOMEPAGE.DONATE' }} {{ shelter?.name }}</h4>
             </div>
             <div class="col-auto">
               <a [href]="'https://www.paypal.com/donate/?hosted_button_id=' + shelter?.donationId" target="_blank">
