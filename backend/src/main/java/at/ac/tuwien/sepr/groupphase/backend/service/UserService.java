@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
@@ -12,10 +14,14 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.UUID;
@@ -132,6 +138,18 @@ public interface UserService extends UserDetailsService {
      * @param id the id of the subscription to be deleted.
      */
     void deleteSubscription(String id) throws NotFoundException;
+
+    HttpEntity<MultiValueMap<String, String>> getPaypalAccessToken(UUID shelterId) throws NotFoundException;
+
+    String parseTokenResponse(ResponseEntity<String> response) throws NotFoundException, JsonProcessingException;
+
+    HttpEntity<String> cancelSubscription(String accessToken, String id) throws NotFoundException;
+
+    HttpEntity<Void> checkIfSubscriptionIsActive(String accessToken, String subscriptionId) throws NotFoundException;
+
+    String parseCheckSubscriptionResponse(ResponseEntity<String> response) throws NotFoundException;
+
+    SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId);
 
 
 }

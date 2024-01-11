@@ -17,38 +17,10 @@ import {PasswordResetComponent} from "./pages/password-reset/password-reset.comp
 import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/password-verify.component";
 import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.component";
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
+import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
 
 
 const routes: Routes = [
-  {path: '', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'register/confirm/:token', component: RegisterConfirmComponent},
-  {path: 'home', canActivate: mapToCanActivate([AuthGuard]), component: HomeComponent},
-  {path: 'home/member-profile', canActivate: mapToCanActivate([AuthGuard]), component: MemberProfileComponent},
-  {path: 'admin', canActivate: mapToCanActivate([AuthGuard]), component: AdminPageComponent},
-  {path: 'password/request-reset', component: PasswordResetComponent},
-  {path: 'password/reset/:token', component: PasswordVerifyComponent},
-  {
-    path: 'animal', children: [
-      {path: 'create/:shelterId', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.CREATE}},
-      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: CreateEditComponent, data: {mode: Mode.EDIT}},
-      {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: AnimalHomepageComponent}
-    ]
-  },
-  {
-    path: 'shelter', children: [
-      {path: 'create', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.CREATE}},
-      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterCreateEditComponent, data: {mode: Mode.EDIT}},
-      {path: ':id', canActivate: mapToCanActivate([AuthGuard]), component: ShelterComponent}
-    ]
-  },
-  {
-    path: 'users', children: [
-      {path: 'edit/:id', canActivate: mapToCanActivate([AuthGuard]), component: UserEditComponent},
-      {path: 'subscriptions', canActivate: mapToCanActivate([AuthGuard]), component: SubscriptionsComponent}
-
-    ]
-  },
   { path: '',
     component: LoginComponent },
 
@@ -128,10 +100,21 @@ const routes: Routes = [
         canActivate: mapToCanActivate([AuthGuard]),
         component: UserEditComponent,
         data: {access: Mode.USER} },
+
       { path: 'subscriptions',
         canActivate: mapToCanActivate([AuthGuard]),
         component: SubscriptionsComponent,
-        data: {access: Mode.USER} }
+        data: {access: Mode.USER} },
+
+      { path: 'paypal',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: SubscriptionsComponent,
+        data: {access: Mode.USER} },
+
+      { path: 'shelter/:id',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: MemberEditShelterComponent,
+        data: {access: Mode.USER}},
     ] },
 
   {path: '*', redirectTo: ''}

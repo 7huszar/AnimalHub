@@ -78,7 +78,18 @@
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
     "ADOPT": "Adopt ",
-    "SHELTER": "Tierheim"
+    "SHELTER": "Shelter: ",
+    "NOCONTENT": " does not have any content yet.",
+    "YEARS": " years",
+    "MONTHS": " months",
+    "DAYS": " days",
+    "YEAR": " year",
+    "MONTH": " month",
+    "DAY": " day",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent"
   },
 
   "SHELTER_HOMEPAGE": {

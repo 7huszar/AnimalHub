@@ -38,6 +38,7 @@ import { CircleLoadComponent } from './components/circle-load/circle-load.compon
 import { SubscriptionsComponent } from './pages/subscriptions/subscriptions.component';
 import { FavoritesCardComponent } from './components/home/favorites-card/favorites-card.component';
 import { ContactFormComponent } from './pages/contact-form/contact-form.component';
+import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -70,6 +71,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CircleLoadComponent,
     ContactFormComponent,
     SubscriptionsComponent,
+    MemberEditShelterComponent
+
   ],
   imports: [
     BrowserModule,

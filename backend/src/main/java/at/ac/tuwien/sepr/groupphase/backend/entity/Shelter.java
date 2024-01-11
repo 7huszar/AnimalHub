@@ -44,12 +44,6 @@ public class Shelter {
     @Column(nullable = false, length = 400)
     private String address;
 
-    @Column(nullable = true, length = 400)
-    private String donationId;
-
-    @Column(nullable = true, length = 400)
-    private String subscriptionId;
-
     @Column(nullable = false, length = 50)
     private String phoneNumber;
 
@@ -66,6 +60,21 @@ public class Shelter {
     @Column(name = "created_on")
     @CreationTimestamp
     private Instant createdOn;
+
+    @Column(length = 255, nullable = true)
+    private String paypalClientId;
+
+    @Column(length = 255, nullable = true)
+    private String paypalSecret;
+
+
+    @Column(nullable = true, length = 400)
+    private String donationId;
+
+    @Column(nullable = true, length = 400)
+    private String subscriptionId;
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -95,6 +104,8 @@ public class Shelter {
             + ", email=" + email
             + ", animals=" + animals
             + ", createdOn=" + createdOn
+            + ", clientId=" + paypalClientId + '\''
+            + ", secret=" + paypalSecret + '\''
             + '}';
     }
 }

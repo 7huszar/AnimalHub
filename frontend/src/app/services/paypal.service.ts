@@ -3,6 +3,7 @@ import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/
 import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {ShelterDetailDto} from "../dtos/shelter";
 
 
 @Injectable({
@@ -31,16 +32,7 @@ export class PaypalService {
   }
 
 
-  /**
-   * Persists subscription to the backend
-   *
-   * @param subscription to persist
-   */
-  createSubscription(subscription: CreateSubscriptionDto): Observable<SubscriptionDetailDto> {
-    console.log('Create subscription with subscriptionId: ' + subscription.subscriptionId);
-    return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
-  }
-
+//Frontend Logic for canceling subscription works but no longer used because unsafe keep it just in case pls
   cancelSubscription(subscriptionId: string, cancelReason: string): Observable<any> {
     return this.checkSubscriptionStatus(subscriptionId).pipe(
       switchMap(({ accessToken, subscriptionStatus }) => {
@@ -65,7 +57,7 @@ export class PaypalService {
     );
   }
 
-
+  //DO NOT DELETE THIS NOT IMPLEMENTED IN THE BACKEND YET USE THIS IN FUTURE TO CHECK IF YOU SCHOULD SHOW THE CONTENT OR BLURR IT ILL HANDLE CANCELLING SUBSCRIPTIONS
   checkSubscriptionStatus(subscriptionId: string): Observable<any> {
     return this.getPayPalAccessToken().pipe(
       switchMap((accessTokenResponse) => {
@@ -84,7 +76,7 @@ export class PaypalService {
     );
   }
 
-
+  //Implemented in backend but still dont delete just in case
   getPayPalAccessToken(): Observable<any> {
 
 
@@ -98,6 +90,36 @@ export class PaypalService {
 
     const body = new HttpParams().set('grant_type', 'client_credentials');
     return this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError.post(this.paypalTokenUrl, body,{headers});
+  }
+
+
+  /**
+   * Cancel an existing subscription and delete it from the system.
+   *
+   * @param id of the subscription to be canceled and deleted
+   * @param shelterId
+   */
+  cancelSubscriptions(id: string, shelterId: string): Observable<any> {
+    console.log("ShelterId" + shelterId);
+    const body = { shelterId: shelterId }; // Create an object with the shelterId property
+    return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { body });
+  }
+
+
+
+  checkIfSubscriptionIsActive(id: string, shelterDto: ShelterDetailDto): Observable<any> {
+    console.log(id);
+    // Convert the shelterDto to query parameters
+    const params = new HttpParams()
+      .set('param', shelterDto.id)
+
+
+    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { params });
+  }
+
+  isSubscribed(animalId: string): Observable<SubscriptionDetailDto> {
+    console.log(animalId);
+    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/subscriptions/${animalId}`);
   }
 
 

@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<!-- Burger Menu -->
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-1"></div>
@@ -9,6 +9,7 @@
         Filter
       </button>
     </div>
+    <!-- Burger Menu -->
     <div class="col-1 text-end">
       <button class="bi bi-list text-white btn btn-primary rounded align-self-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Menu
@@ -16,15 +17,14 @@
       <div class="dropdown-menu bg-primary" aria-labelledby="dropdownMenuButton">
         <!-- Dropdown items go here -->
         <a class="dropdown-item" href="#">Favourites</a>
-        <a class="dropdown-item" href="#">My Profile</a>
+        <a class="dropdown-item" *ngIf="authService.isMember()" [routerLink]="['/users/shelter/' + shelterId]" > Edit Shelter
+        </a>
         <a class="dropdown-item" [routerLink]="['/users/subscriptions']">My Subscriptions</a>
         <a class="dropdown-item" [routerLink]="['/admin']">This is an Example Use it</a>
       </div>
     </div>
+<!-- End of burger Menu -->
   </div>
-
-  <!-- End of burger Menu -->
-
 
 
   <div class="row">
@@ -76,7 +76,7 @@
     <div class="col-auto" *ngFor="let animal of likedAnimals">
       <app-favorites-card [name]="animal.name"
                           [id]="animal.id"
-                          (remove)="remove(animal)">*ngIf="likedAnimals.length > 0"
+                          (remove)="remove(animal)">
       </app-favorites-card>
     </div>
   </div>

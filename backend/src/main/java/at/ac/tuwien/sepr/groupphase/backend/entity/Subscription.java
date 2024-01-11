@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Subscription {
 
     @EmbeddedId
-    private SubscriptionKey id;
+    private SubscriptionKey key;
 
     @ManyToOne
     @MapsId("animalId")

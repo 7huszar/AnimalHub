@@ -67,7 +67,7 @@ public class UserRepositoryTest extends TestBase {
         Subscription subscription = Subscription.builder()
             .user(user)
             .animal(animal)
-            .id(key)
+            .key(key)
             .tier(1)
             .build();
 

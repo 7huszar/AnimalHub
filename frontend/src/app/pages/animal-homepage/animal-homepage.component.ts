@@ -1,14 +1,16 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import {CreateFileDto, FileDto} from "../../dtos/file";
 import {AuthService} from "../../services/auth.service";
-import {CreateSubscriptionDto, UserDetailDto} from "../../dtos/user";
+import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
+import {Species} from "../../dtos/species";
+import {PaypalService} from "../../services/paypal.service";
 
 declare var paypal;
 
@@ -51,9 +53,25 @@ export class AnimalHomepageComponent implements OnInit {
   protected contents: FileDto[];
   protected newContent: File = null;
 
+  protected years: boolean;
+  protected months: boolean;
+  protected days: boolean;
+  protected year: boolean;
+  protected month: boolean;
+  protected day: boolean;
+
+  protected isDog: boolean;
+  protected isCat: boolean;
+  protected isBird: boolean;
+  protected isRodent: boolean;
+  protected isSubscribed: boolean;
+
+
+
   constructor(
     protected authService: AuthService,
     private service: AnimalService,
+    private paypalService: PaypalService,
     private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
@@ -72,6 +90,81 @@ export class AnimalHomepageComponent implements OnInit {
             this.animal = data;
             console.log(this.animal.shelter.subscriptionId)
             this.calculateAge(this.animal.birthDate)
+
+            switch (this.animal.species) {
+              case this.animal.species = Species.cat: {
+                this.isCat = true;
+                break;
+              }
+              case this.animal.species = Species.dog: {
+                this.isDog = true;
+                break;
+              }
+              case this.animal.species = Species.bird: {
+                this.isBird = true;
+                break;
+              }
+              case this.animal.species = Species.rodent: {
+                this.isRodent = true;
+                break;
+              }
+            }
+
+            let isSubscribedObservable: Observable<SubscriptionDetailDto> = this.paypalService.isSubscribed(this.animal.id)
+            isSubscribedObservable.subscribe({
+              next: data => {
+                console.log("User is subscribed to Animal")
+                console.log(data);
+                if (data!=null){
+                  //this is the case that the user is already subscribed
+                  this.isSubscribed=true;
+
+                }else{
+                  //if user is not subscribed load the paypal button
+
+                  // Load the PayPal script dynamically
+                  const script = document.createElement('script');
+                  //getting user
+                  let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
+                  userObservable.subscribe({
+                    next: data => {
+                      this.user = data;
+                      this.subscription.user=this.user;
+                    },
+                    error: error => {
+                      //this schould never happen
+                      console.error('Error finding user', error);
+                      this.notification.error("Could Not find logged in user to save");
+                    }
+                  });
+
+                  //TODO handle the case in which the user is already subscribed to the animal
+
+
+                  //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
+                  // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
+
+                  //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
+                  //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
+
+                  script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
+                  script.onload = () => {
+                    // PayPal script is loaded, render the button
+                    this.renderPayPalButton();
+                  };
+                  document.head.appendChild(script);
+
+                }
+              },
+
+              error: error => {
+                console.error('Subscription could not be loaded', error);
+                this.notification.error("Could Not verify subscription Status");
+              }
+            });
+
+
+
           },
           error: error => {
             console.error('Error finding animal', error);
@@ -91,40 +184,8 @@ export class AnimalHomepageComponent implements OnInit {
     })
 
 
-    // Load the PayPal script dynamically
-    const script = document.createElement('script');
-    //getting user
-    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
-    userObservable.subscribe({
-      next: data => {
-        this.user = data;
-        this.subscription.user=this.user;
-        console.log(this.user)
-      },
-      error: error => {
-        //this schould never happen
-        console.error('Error finding user', error);
-        this.notification.error("Could Not find logged in user to save");
-      }
-    });
-
-    //TODO handle the case in which the user is already subscribed to the animal
 
 
-    //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
-    // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
-
-    //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
-    //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
-    //AaU7GO_lBCk5obOETEEeMJs_KbxcD26Tmf_AUrzgFgN7Rw4ApuNzAav6LxOWloItnOrLOFPMy3PSPqLP id
-    //EKQcBTWOtn7WnOAIJQBzQLkJdhYvWOJKWd_AgG1tE8ONLbIZVAKsdCxusu64qUgUvvKfl8eHQRwdgwAp secret
-
-    script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
-    script.onload = () => {
-      // PayPal script is loaded, render the button
-      this.renderPayPalButton();
-    };
-    document.head.appendChild(script);
   }
 
   private renderPayPalButton(): void {
@@ -186,14 +247,33 @@ export class AnimalHomepageComponent implements OnInit {
     const today = new Date();
     const birthdateDate = new Date(birthdate);
 
-    let age = today.getFullYear() - birthdateDate.getFullYear();
-
-    // Check if the birthday has occurred this year
-    const todayMonth = today.getMonth();
-    const birthdateMonth = birthdateDate.getMonth();
-
-    if (todayMonth < birthdateMonth || (todayMonth === birthdateMonth && today.getDate() < birthdateDate.getDate())) {
-      age--;
+    // Convert the milliseconds to years
+    let timeDifference = (today.getTime() - birthdateDate.getTime()) / (24 * 60 * 60 * 1000);
+    let age = timeDifference;
+    console.log("AGE " + timeDifference);
+    if (timeDifference > 365.25) {
+      age = Math.floor(timeDifference/365.25);
+      if (age > 1) {
+        this.years = true;
+      } else {
+        this.year = true;
+      }
+    }
+    if (timeDifference < 365.25 && timeDifference > 30) {
+      age = Math.floor(timeDifference/(30));
+      if (age > 1) {
+        this.months = true;
+      } else {
+        this.month = true;
+      }
+    }
+    if (30 > timeDifference) {
+      age = Math.floor(timeDifference);
+      if (age > 1) {
+        this.days = true;
+      } else {
+        this.day = true;
+      }
     }
     this.animalAge = age;
   }

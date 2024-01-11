@@ -25,13 +25,15 @@ export class RegisterComponent {
   mailRequestTimout: number = 60_000;
   mailRequest: MailRequestDto = {email: '', lang: ''};
 
+  pwdField: string = 'password';
+
   constructor(private formBuilder: UntypedFormBuilder,
               private service: RegisterService,
               private notifier: NotifierService,
               private translator: TranslateService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
-      password: ['', [Validators.required, Validators.minLength(8)], Validators.maxLength(255)],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
       password_repeat: ['', [Validators.required]]
     });
   }
@@ -45,7 +47,6 @@ export class RegisterComponent {
      this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
        next :data => {
         console.log("successfully registered", data);
-        console.log(this.translator.currentLang);
         this.mailRequest.email = this.loginForm.controls.username.value;
         this.mailRequest.lang = this.translator.currentLang;
         this.success = true;
@@ -103,6 +104,14 @@ export class RegisterComponent {
       this.resent = false;
     }, this.mailRequestTimout);
     this.circleLoader.startCountdown();
+  }
+
+  togglePwd() :void {
+    if (this.pwdField === 'password') {
+      this.pwdField = 'text';
+    } else {
+      this.pwdField = 'password';
+    }
   }
 
 }

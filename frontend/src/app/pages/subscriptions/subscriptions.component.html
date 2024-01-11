@@ -28,7 +28,7 @@
               <div class="btn-group">
 
                 <button type="button" class="btn btn-sm btn-danger"
-                        (click)="subscriptionForDeletion(subscriptions.animal.name, subscriptions.subscriptionId)"
+                        (click)="subscriptionForDeletion(subscriptions.animal.name, subscriptions.subscriptionId, subscriptions.animal.shelter.id)"
                         data-bs-toggle="modal"
                         data-bs-target="#confirm-delete-dialog"
                         aria-label="Cancel Subscription">
@@ -40,7 +40,7 @@
           </tbody>
         </table>
       </div>
-        <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
+        <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" [cancelShelter]="cancelShelter"></app-confirm-delete-dialog>
 
       </div>
   </div>

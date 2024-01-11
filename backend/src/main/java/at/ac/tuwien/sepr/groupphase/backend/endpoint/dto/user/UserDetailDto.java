@@ -25,9 +25,7 @@ public class UserDetailDto {
 
     private ShelterDto shelter;
 
-    private String paypalClientId;
 
-    private String paypalSecret;
 
     @Override
     public String toString() {
@@ -36,17 +34,6 @@ public class UserDetailDto {
             + ", email='" + email + '\''
             + ", role='" + role + '\''
             + ", secret='");
-        if (paypalSecret == null || paypalSecret.isEmpty()) {
-            sb.append(paypalSecret);
-        } else {
-            sb.append('*');
-        }
-        sb.append("', clientId='");
-        if (paypalClientId == null || paypalClientId.isEmpty()) {
-            sb.append(paypalClientId);
-        } else {
-            sb.append('*');
-        }
         sb.append("'}");
         return sb.toString();
     }

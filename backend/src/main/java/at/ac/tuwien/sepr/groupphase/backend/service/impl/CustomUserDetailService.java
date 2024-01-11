@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateSubscriptionDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubscriptionDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
@@ -18,12 +19,16 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.UserConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.UserValidator;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -32,6 +37,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -41,11 +50,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -55,6 +68,7 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final ShelterRepository shelterRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
@@ -312,7 +326,7 @@ public class CustomUserDetailService implements UserService {
         String id = createSubscriptionDto.getSubscriptionId();
         subscription.setSubscriptionId(id);
         SubscriptionKey key = new SubscriptionKey(subscription.getAnimal().getId(), subscription.getUser().getId());
-        subscription.setId(key);
+        subscription.setKey(key);
 
         Subscription ret = subscriptionRepository.save(subscription);
 
@@ -335,7 +349,6 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("delete({})", id);
 
         Subscription subscription = subscriptionRepository.findBySubscriptionId(id);
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         if (subscription == null) {
             throw new NotFoundException("Subscription could not be found");
         }
@@ -343,4 +356,169 @@ public class CustomUserDetailService implements UserService {
         subscriptionRepository.delete(subscription);
     }
 
+    @Override
+    public HttpEntity<MultiValueMap<String, String>> getPaypalAccessToken(UUID shelterId) throws NotFoundException {
+        LOGGER.debug("get Token");
+
+
+        Optional<Shelter> shelter = shelterRepository.findById(shelterId);
+        Shelter foundShelter = null;
+
+        if (shelter.isPresent()) {
+            foundShelter = shelter.get();
+            // Use shelter here
+        } else {
+            throw new NotFoundException("Could not find the Paypal ID");
+        }
+
+
+        String clientId = foundShelter.getPaypalClientId();
+        String secret = foundShelter.getPaypalSecret();
+
+        String credentials = clientId + ":" + secret;
+        String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+
+        // Setting header for getPaypalAccessTokenRequest
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.add("Authorization", "Basic " + base64Credentials);
+
+        // Setting body
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "client_credentials");
+
+        // Creating Request entity
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+
+        LOGGER.debug("Request Entity:\n" + requestEntity);
+
+        return requestEntity;
+    }
+
+
+    @Override
+    public String parseTokenResponse(ResponseEntity<String> response) throws NotFoundException {
+        LOGGER.debug("Parsing response");
+
+        // Extract the access token from the response body
+        String responseBody = response.getBody();
+
+        if (responseBody != null && !responseBody.isEmpty()) {
+            try {
+                JsonFactory factory = new JsonFactory();
+                JsonParser parser = factory.createParser(responseBody);
+
+                // Traverse the JSON structure
+                while (parser.nextToken() != null) {
+                    if (JsonToken.FIELD_NAME.equals(parser.getCurrentToken()) && "access_token".equals(parser.getText())) {
+                        // Move to the value of the "access_token" field
+                        parser.nextToken();
+                        String accessToken = parser.getText();
+                        LOGGER.info("Received access token from Paypal API: {}", accessToken);
+                        return accessToken;
+                    }
+                }
+
+                // If the loop completes without finding "access_token"
+                throw new NotFoundException("No 'access_token' found in the response");
+            } catch (Exception e) {
+                LOGGER.error("Error parsing JSON response: {}", e.getMessage());
+                throw new NotFoundException("Error parsing JSON response");
+            }
+        } else {
+            LOGGER.error("Empty or null response body");
+            throw new NotFoundException("Access token not found in the response or response body is empty");
+        }
+    }
+
+
+    @Override
+    public HttpEntity<String> cancelSubscription(String accessToken, String subscriptionId) throws NotFoundException {
+        LOGGER.debug("Canceling subscription");
+
+        // Setting headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Accept", "application/json");
+
+        // Setting JSON body
+        String jsonBody = "{\"reason\": \"cancelled subscription\"}";
+
+        // Creating Request entity
+        HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
+
+        return requestEntity;
+    }
+
+
+    @Override
+    public HttpEntity<Void> checkIfSubscriptionIsActive(String accessToken, String subscriptionId) throws NotFoundException {
+        LOGGER.debug("Checking if subscription is active");
+
+        //creating headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        // Creating Request entity with headers
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        return requestEntity;
+    }
+
+
+    @Override
+    public String parseCheckSubscriptionResponse(ResponseEntity<String> response) throws NotFoundException {
+        LOGGER.debug("Parsing response");
+
+        // Extract the status from the response body
+        String responseBody = response.getBody();
+
+        if (responseBody != null && !responseBody.isEmpty()) {
+            try {
+                JsonFactory factory = new JsonFactory();
+                JsonParser parser = factory.createParser(responseBody);
+
+                // Traverse the JSON structure
+                while (parser.nextToken() != null) {
+                    if (JsonToken.FIELD_NAME.equals(parser.getCurrentToken()) && "status".equals(parser.getText())) {
+                        // Move to the value of the "status" field
+                        parser.nextToken();
+                        String status = parser.getText();
+                        LOGGER.info("Received subscription status from PayPal API: {}", status);
+
+                        // Check if the subscription is active
+                        if ("ACTIVE".equalsIgnoreCase(status)) {
+                            LOGGER.info("Subscription is active");
+                            // Additional logic or processing for an active subscription
+                        } else {
+                            LOGGER.info("Subscription is not active. Status: {}", status);
+
+                        }
+
+                        return status;
+                    }
+                }
+
+                // If the loop completes without finding "status"
+                throw new NotFoundException("No 'status' found in the response");
+            } catch (Exception e) {
+                LOGGER.error("Error parsing JSON response: {}", e.getMessage());
+                throw new NotFoundException("Error parsing JSON response");
+            }
+        } else {
+            LOGGER.error("Empty or null response body");
+            throw new NotFoundException("Subscription status not found in the response or response body is empty");
+        }
+
+    }
+
+
+    @Override
+    public SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId) {
+        LOGGER.trace("Check if user is subscribed");
+        SubscriptionKey key = new SubscriptionKey(animalId, userId);
+        return userMapper.subscriptionToSubscriptionDetailDto(subscriptionRepository.findByKey(key));
+    }
 }
+

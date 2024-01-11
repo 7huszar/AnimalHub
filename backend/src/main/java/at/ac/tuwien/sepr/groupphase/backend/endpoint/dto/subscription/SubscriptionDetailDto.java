@@ -1,7 +1,10 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,23 +16,26 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateSubscriptionDto {
+public class SubscriptionDetailDto {
+
+    private SubscriptionKey id;
 
     private AnimalDetailDto animal;
 
     private UserDetailDto user;
 
-    private String tier;
+    private int tier;
 
     private String subscriptionId;
 
     @Override
     public String toString() {
-        return "CreateSubscriptionDto{"
-            + "animal='" + animal + '\''
-            + ", user=" + user
-            + ", tier='" + tier + '\''
+        return "SubscriptionDetailDto{"
+            + "id=" + id
             + ", subscriptionId='" + subscriptionId + '\''
+            + ", tier=" + tier
+            + ", animal='" + animal + '\''
+            + ", user=" + user
             + '}';
     }
 }

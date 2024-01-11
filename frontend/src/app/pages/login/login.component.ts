@@ -21,6 +21,8 @@ export class LoginComponent {
   isEmailInvalid: boolean = false;
   isPwdInvalid: boolean = false;
 
+  pwdField: string = 'password';
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private authService: AuthService,
@@ -49,7 +51,6 @@ export class LoginComponent {
    */
   loginUser() {
     this.submitted = true;
-    console.log("what:", this.loginForm.controls.password.errors)
     if (this.loginForm.valid) {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
@@ -113,6 +114,14 @@ export class LoginComponent {
 
   invalidPwd() :string {
     return this.isPwdInvalid ? 'is-invalid' : '';
+  }
+
+  togglePwd() :void {
+    if (this.pwdField === 'password') {
+      this.pwdField = 'text';
+    } else {
+      this.pwdField = 'password';
+    }
   }
 
 }

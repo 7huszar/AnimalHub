@@ -49,6 +49,7 @@ export class SubscriptionsComponent implements OnInit {
   }
 
   typeForDeletion: string = '';
+  cancelShelter: string = '';
   idForDeletion: string = '';
   nameForDeletion: string = '';
   protected subscriptionList: SubscriptionDetailDto[];
@@ -103,10 +104,11 @@ export class SubscriptionsComponent implements OnInit {
     this.location.back();
   }
 
-  subscriptionForDeletion(name: string, id: string) {
+  subscriptionForDeletion(name: string, id: string, shelterId: string ) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
     this.typeForDeletion = "Subscription";
+    this.cancelShelter = shelterId;
   }
 
 

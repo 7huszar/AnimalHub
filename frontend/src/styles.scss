@@ -68,6 +68,49 @@ $secondary:     #f08fb4;
   color: #fff;
 }
 
+.pwd-eye-close {
+  font-size: 30px;
+  color: $danger;
+}
+
+.pwd-eye-close:hover {
+  cursor: pointer;
+  color: $secondary;
+}
+.pwd-eye-close:active {
+  cursor: pointer;
+  color: #f16ea1;
+}
+
+
+.pwd-eye-open {
+  font-size: 30px;
+  color: $primary;
+}
+
+.pwd-eye-open:hover {
+  cursor: pointer;
+  color: $secondary;
+}
+
+.pwd-eye-open:active {
+  cursor: pointer;
+  color: #f16ea1;
+}
+
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.input-icon-wrapper .bi {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
 @media screen and (max-width: map-get($grid-breakpoints, "md")) {
   .custom-head {
     width: 100%;

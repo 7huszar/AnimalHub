@@ -98,16 +98,6 @@ export class UserService {
     return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/current`,subscription);
   }
 
-  /**
-   * Delete an existing subscription in the system.
-   *
-   * @param id the SellerId of the subscription to be deleted
-   */
-  deleteSubscription(id: string): Observable<void> {
-    console.log(id)
-
-    return this.httpClient.delete<void>(`${this.usersBaseUri}/current/` + id);
-  }
 
 
   /**
