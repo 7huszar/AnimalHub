@@ -281,9 +281,13 @@ public class UserEndpoint {
         UserDetailDto user = userService.getCurrentUser();
         SubscriptionDetailDto subscription = userService.isSubscribed(id, user.getId());
 
+        if (subscription == null) {
+            return null;
+        }
+
         if (!checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId()).equals("is active")) {
+
             LOGGER.error("The Subscription you tried to load was not active");
-            throw new NotFoundException("The Subscription you tried to load was not active");
         }
 
         return userService.isSubscribed(id, user.getId());

@@ -117,7 +117,7 @@ export class AnimalHomepageComponent implements OnInit {
                 if (data!=null){
                   //this is the case that the user is already subscribed
                   this.isSubscribed=true;
-
+                  //TODO blurr animal content in this case
                 }else{
                   //if user is not subscribed load the paypal button
 
