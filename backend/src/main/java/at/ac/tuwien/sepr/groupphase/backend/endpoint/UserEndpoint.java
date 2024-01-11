@@ -147,8 +147,6 @@ public class UserEndpoint {
         LOGGER.info("POST " + BASE_PATH + "/send-post-request");
         LOGGER.debug("Request Body:\n{}", id);
 
-        LOGGER.debug("Request Body:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nshelterid" + shelterId + " kekekekekeeekek " + id);
-
         // Create an ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
 

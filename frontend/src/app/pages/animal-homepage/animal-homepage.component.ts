@@ -114,7 +114,6 @@ export class AnimalHomepageComponent implements OnInit {
             isSubscribedObservable.subscribe({
               next: data => {
                 console.log("User is subscribed to Animal")
-                console.log(data);
                 if (data!=null){
                   //this is the case that the user is already subscribed
                   this.isSubscribed=true;

@@ -100,7 +100,6 @@ export class PaypalService {
    * @param shelterId
    */
   cancelSubscriptions(id: string, shelterId: string): Observable<any> {
-    console.log("ShelterId" + shelterId);
     const body = { shelterId: shelterId }; // Create an object with the shelterId property
     return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { body });
   }
@@ -108,7 +107,6 @@ export class PaypalService {
 
 
   checkIfSubscriptionIsActive(id: string, shelterDto: ShelterDetailDto): Observable<any> {
-    console.log(id);
     // Convert the shelterDto to query parameters
     const params = new HttpParams()
       .set('param', shelterDto.id)
@@ -118,7 +116,6 @@ export class PaypalService {
   }
 
   isSubscribed(animalId: string): Observable<SubscriptionDetailDto> {
-    console.log(animalId);
     return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/subscriptions/${animalId}`);
   }
 
