@@ -36,12 +36,7 @@ public class ContactEndpoint {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n" + contactMailDto.toString());
 
-        try {
-            mailService.sendShelterContactMail(contactMailDto);
-        } catch (ValidationException e) {
-            LOGGER.warn(e.getMessage());
-            throw new ValidationException(e.getMessage(), e.errors());
-        }
+        mailService.sendShelterContactMail(contactMailDto);
     }
 }
 
