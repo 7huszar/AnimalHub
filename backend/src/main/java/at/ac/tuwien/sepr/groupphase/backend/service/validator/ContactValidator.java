@@ -27,13 +27,13 @@ public class ContactValidator {
         }
         return EMAIL_PATTERN.matcher(email).matches();
     }
+
     private boolean isStringEmpty(String s) {
         return s != null && !s.isBlank();
     }
 
     public void validateContactMailDto(ContactMailDto contactMailDto) throws ValidationException {
         LOGGER.trace("validateContactMailDto({})", contactMailDto);
-
         List<String> validationErrors = new ArrayList<>();
         if (isStringEmpty(contactMailDto.from())) {
             validationErrors.add("No email address given");
