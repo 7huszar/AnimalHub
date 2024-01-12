@@ -297,8 +297,8 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Check if current User is subscribed", security = @SecurityRequirement(name = "apiKey"))
     public String createSubscriptionPlan(@PathVariable UUID id) throws NotFoundException, JsonProcessingException, ValidationException {
-
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
+        LOGGER.info("Post " + BASE_PATH);
+        LOGGER.debug("shelter({})", id);
 
 
         restTemplate = new RestTemplate();
@@ -320,7 +320,7 @@ public class UserEndpoint {
             //parsing so just the access Token is being returned
             String accessToken = userService.parseTokenResponse(response);
 
-            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Access Token done");
+            LOGGER.debug("Retrieved Access Token" + accessToken);
 
 
             try {
@@ -367,8 +367,8 @@ public class UserEndpoint {
             ShelterDto shelterDto = shelterMapper.shelterDetailDtoToShelterDto(shelterService.findById(id));
             shelterDto.setSubscriptionId(subscriptionPlanId);
 
-            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + shelterDto);
-
+            LOGGER.debug("ShelterDto that is being updated" + shelterDto);
+            LOGGER.info("Updating Sheltern with subscription Plan");
             shelterService.update(shelterDto);
 
             return ("Subscription Plan ID: " + subscriptionPlanId);
@@ -380,6 +380,5 @@ public class UserEndpoint {
         }
 
     }
-
 
 }

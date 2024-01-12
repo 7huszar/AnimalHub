@@ -552,7 +552,7 @@ public class CustomUserDetailService implements UserService {
 
         // Create the HTTP entity with headers and body
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + String.valueOf(requestEntity));
+        LOGGER.debug("created Request" + String.valueOf(requestEntity));
 
         return requestEntity;
     }
