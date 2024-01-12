@@ -73,7 +73,7 @@ export class RegisterComponent {
    * returns bootstrap is-valid class if form was once submitted
    */
   validForm() :string {
-    return this.submitted ? 'is-valid' : '';
+    return this.submitted ? 'border-success' : '';
   }
 
 
@@ -81,7 +81,7 @@ export class RegisterComponent {
    * returns bootstrap is-invalid class if form was once submitted
    */
   invalidForm() :string {
-    return this.submitted ? 'is-invalid' : '';
+    return this.submitted ? 'border-danger' : '';
   }
 
   /**
