@@ -1,15 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
@@ -56,7 +51,6 @@ public class UserEndpoint {
     static final String BASE_PATH = "/api/v1/users";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
-    private final AnimalService animalService;
     private RestTemplate restTemplate;
 
 
@@ -291,6 +285,71 @@ public class UserEndpoint {
         }
 
         return userService.isSubscribed(id, user.getId());
+    }
+
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @PostMapping("/subscriptions/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Check if current User is subscribed", security = @SecurityRequirement(name = "apiKey"))
+    public String createSubscriptionPlan(@PathVariable UUID id) throws NotFoundException {
+
+        restTemplate = new RestTemplate();
+
+        String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
+        String creatingUrl = "https://api-m.sandbox.paypal.com/v1/billing/plans";
+
+        ResponseEntity<String> responseEntity;
+        // Obtain the PayPal access token
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncreating subscription" + id);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
+
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nrequestEntity " + requestEntity);
+
+
+        try {
+
+            // Make the POST request to get access token
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n accessToken" + response);
+
+            //parsing so just the access Token is being returned
+            String accessToken = userService.parseTokenResponse(response);
+
+            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Access Token done");
+
+
+            try {
+                HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken);
+
+                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Created Subscription plan" + createSubscriptionPlan);
+
+                // Make the HTTP POST request to create the subscription plan
+                responseEntity = restTemplate.exchange(
+                    creatingUrl,
+                    HttpMethod.POST,
+                    createSubscriptionPlan,
+                    String.class
+                );
+
+
+            } catch (Exception e) {
+                LOGGER.error("Error making external POST request", e);
+                return "error creating plan";
+                // Handle the exception or return an appropriate response
+            }
+
+
+        } catch (Exception e) {
+            LOGGER.error("Are u sure you provided the correct credentials", e);
+            // Handle the exception or return an appropriate response
+            return "Incorrect credentials";
+        }
+
+
+        // Return the response body
+        return responseEntity.getBody();
     }
 
 

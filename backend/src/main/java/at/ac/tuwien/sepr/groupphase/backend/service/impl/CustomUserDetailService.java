@@ -520,5 +520,43 @@ public class CustomUserDetailService implements UserService {
         SubscriptionKey key = new SubscriptionKey(animalId, userId);
         return userMapper.subscriptionToSubscriptionDetailDto(subscriptionRepository.findByKey(key));
     }
+
+
+    @Override
+    public HttpEntity<String> createSubscriptionPlan(String accessToken) {
+        LOGGER.trace("Creating a new Subscription Plan");
+
+
+        // Prepare the request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        String requestBody = "{ "
+            + "\"product_id\": \"PROD-0WX22620KG452370H\", "
+            + "\"name\": \"Created Automatically\", "
+            + "\"description\": \"This is a test\", "
+            + "\"billing_cycles\": [ "
+            + "{ "
+            + "\"frequency\": { \"interval_unit\": \"MONTH\", \"interval_count\": 1 }, "
+            + "\"tenure_type\": \"REGULAR\", "
+            + "\"sequence\": 1, "
+            + "\"total_cycles\": 12, "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"9.99\", \"currency_code\": \"USD\" } } "
+            + "} "
+            + "], "
+            + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "
+            + "\"setup_fee\": { \"value\": \"0.00\", \"currency_code\": \"USD\" } } "
+            + "}";
+
+
+        // Create the HTTP entity with headers and body
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + String.valueOf(requestEntity));
+
+        return requestEntity;
+    }
+
+
 }
 

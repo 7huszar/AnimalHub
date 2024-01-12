@@ -111,13 +111,18 @@ export class PaypalService {
     const params = new HttpParams()
       .set('param', shelterDto.id)
 
-
     return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { params });
   }
 
   isSubscribed(animalId: string): Observable<SubscriptionDetailDto> {
     return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/subscriptions/${animalId}`);
   }
+
+  createSubscription(id: string): Observable<any> {
+
+    return this.httpClient.post<string>(`${this.usersBaseUri}/subscriptions/${id}`, {});
+  }
+
 
 
 }

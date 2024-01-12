@@ -7,8 +7,8 @@ import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
 import {Location} from "@angular/common";
+import {PaypalService} from "../../services/paypal.service";
 
-declare var paypal;
 
 
 @Component({
@@ -58,6 +58,7 @@ export class SubscriptionsComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private userService: UserService,
+    private paypalService: PaypalService,
     private notification: ToastrService,
     private location: Location,
     private translator: TranslateService) {
