@@ -1,16 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,6 +53,8 @@ public class UserEndpoint {
     static final String BASE_PATH = "/api/v1/users";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
+    private final ShelterService shelterService;
+    private final AnimalShelterMapper shelterMapper;
     private RestTemplate restTemplate;
 
 
@@ -292,7 +296,10 @@ public class UserEndpoint {
     @PostMapping("/subscriptions/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Check if current User is subscribed", security = @SecurityRequirement(name = "apiKey"))
-    public String createSubscriptionPlan(@PathVariable UUID id) throws NotFoundException {
+    public String createSubscriptionPlan(@PathVariable UUID id) throws NotFoundException, JsonProcessingException, ValidationException {
+
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
+
 
         restTemplate = new RestTemplate();
 
@@ -301,10 +308,7 @@ public class UserEndpoint {
 
         ResponseEntity<String> responseEntity;
         // Obtain the PayPal access token
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncreating subscription" + id);
         HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
-
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nrequestEntity " + requestEntity);
 
 
         try {
@@ -312,7 +316,6 @@ public class UserEndpoint {
             // Make the POST request to get access token
             ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
 
-            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n accessToken" + response);
 
             //parsing so just the access Token is being returned
             String accessToken = userService.parseTokenResponse(response);
@@ -323,7 +326,6 @@ public class UserEndpoint {
             try {
                 HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken);
 
-                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Created Subscription plan" + createSubscriptionPlan);
 
                 // Make the HTTP POST request to create the subscription plan
                 responseEntity = restTemplate.exchange(
@@ -347,9 +349,36 @@ public class UserEndpoint {
             return "Incorrect credentials";
         }
 
+        // Check if the request was successful (HTTP status code 2xx)
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
-        // Return the response body
-        return responseEntity.getBody();
+            //Extracting SubscriptionPLanId
+            String responseBody = responseEntity.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+            // Extract the subscription plan ID (adjust the path according to the actual structure of the response)
+            String subscriptionPlanId = jsonNode.path("id").asText();
+
+            // Now you can use the subscriptionPlanId or handle it as needed
+            LOGGER.debug("successfully created plan");
+
+            //TODO this update is not quite working
+            ShelterDto shelterDto = shelterMapper.shelterDetailDtoToShelterDto(shelterService.findById(id));
+            shelterDto.setSubscriptionId(subscriptionPlanId);
+
+            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + shelterDto);
+
+            shelterService.update(shelterDto);
+
+            return ("Subscription Plan ID: " + subscriptionPlanId);
+        } else {
+
+            LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
+            //TODO make all of these returns proper error messsages
+            return "Could not create Subscription Plan please try again Later";
+        }
+
     }
 
 

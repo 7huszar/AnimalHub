@@ -164,6 +164,7 @@ export class ConfirmDeleteDialogComponent {
       let test: Observable<void> = this.paypalService.createSubscription(this.cancelShelter)
       test.subscribe({
         next: data => {
+          console.log(data)
           this.notification.notifySuccess(`SubscriptionPlan to successfully created.`);
           this.reloadSubscriptions();
         },
@@ -185,7 +186,7 @@ public deleteEntity() {
   }else if (this.deleteType === 'Animal'){
     this.deleteAnimal()
   }else if (this.deleteType === 'Subscription'){
-    this.cancelSubscription()
+    this.createSubscriptionPlan()
   }
 }
 }
