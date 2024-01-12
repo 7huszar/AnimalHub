@@ -3,7 +3,7 @@ image: registry.reset.inso-w.at/pub/docker/mvn-non-root-17
 variables:
   GIT_STRATEGY: "clone"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2"
-  SPRING_PROFILES_ACTIVE:"generateData"
+  SPRING_PROFILES_ACTIVE: "generateData"
 
 cache:
   paths:
