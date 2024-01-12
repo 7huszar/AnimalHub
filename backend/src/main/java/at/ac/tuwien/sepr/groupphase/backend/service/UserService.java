@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -150,6 +148,8 @@ public interface UserService extends UserDetailsService {
     String parseCheckSubscriptionResponse(ResponseEntity<String> response) throws NotFoundException;
 
     SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId);
+
+    HttpEntity<String> createSubscriptionPlan(String accessToken);
 
 
 }

@@ -24,9 +24,9 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = PasswordEndpoint.BASE_PATH)
 @RequiredArgsConstructor
 public class PasswordEndpoint {
+    static final String BASE_PATH = "/api/v1/password";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService service;
-    static final String BASE_PATH = "/api/v1/password";
 
     @GetMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)

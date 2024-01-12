@@ -56,7 +56,7 @@ export class PasswordResetComponent {
   }
 
   validation() :string {
-    return this.isValid() ? 'is-valid' : 'is-invalid';
+    return this.isValid() ? 'border-success' : 'border-danger';
   }
 
   isValid() :boolean {

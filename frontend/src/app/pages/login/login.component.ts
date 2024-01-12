@@ -101,19 +101,19 @@ export class LoginComponent {
   }
 
   validForm() :string {
-    return this.submitted ? 'is-valid' : '';
+    return this.submitted ? 'border-success' : '';
   }
 
   invalidForm() :string {
-    return this.submitted ? 'is-invalid' : '';
+    return this.submitted ? 'border-danger' : '';
   }
 
   invalidEmail() :string {
-    return this.isEmailInvalid ? 'is-invalid' : '';
+    return this.isEmailInvalid ? 'border-danger' : '';
   }
 
   invalidPwd() :string {
-    return this.isPwdInvalid ? 'is-invalid' : '';
+    return this.isPwdInvalid ? 'border-danger' : '';
   }
 
   togglePwd() :void {

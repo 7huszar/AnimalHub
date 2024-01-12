@@ -21,17 +21,6 @@ import java.util.UUID;
  */
 public interface ShelterService {
 
-
-    /**
-     * Search for shelters in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in user.
-     *
-     * @param searchParameters the search parameters to use in filtering.
-     * @return the shelters where the given fields match.
-     */
-    List<ShelterListDto> search(ShelterSearchDto searchParameters);
-
-
     /**
      * Get all Shelters from database.
      *
@@ -59,6 +48,16 @@ public interface ShelterService {
      */
     ShelterDto update(ShelterDto shelterDto) throws ValidationException, NotFoundException;
 
+
+    /**
+     * Search for shelters in the persistent data store matching all provided fields.
+     * The name is considered a match, if the search string is a substring of the field in user.
+     *
+     * @param searchParameters the search parameters to use in filtering.
+     * @return the shelters where the given fields match.
+     */
+    List<ShelterListDto> search(ShelterSearchDto searchParameters);
+
     /**
      * Get the shelter with given ID from the database.
      *
@@ -68,9 +67,6 @@ public interface ShelterService {
      */
     ShelterDetailDto findById(UUID id) throws NotFoundException;
 
-    // TODO doku
-    List<ShelterDto> findByNameIgnoreCase(String name);
-
     /**
      * Delete the shelter with the given id from the persistent data store.
      *
@@ -79,12 +75,37 @@ public interface ShelterService {
      */
     void delete(UUID id) throws NotFoundException;
 
-    // TODO comment
+    /**
+     * Get the profile image of the shelter with given id.
+     *
+     * @param id id
+     * @return FileDetailDto of profile image (contains actual image file)
+     * @throws NotFoundException when the id points to no existing shelter
+     */
     FileDetailDto getProfileImage(UUID id) throws NotFoundException;
 
-    // TODO comment
+    /**
+     * Set the profile image when first creating the shelter.
+     *
+     * @param id            id
+     * @param createFileDto createFileDto
+     * @return FileDto of profile image (does NOT contain actual image file)
+     * @throws ConflictException   when there is already a profile image set (then you should use update)
+     * @throws ValidationException when there is a validation error with the given createFileDto (empty image file, etc.)
+     * @throws IOException         when there is a problem with processing the file itself
+     * @throws NotFoundException   when the id points to no existing shelter
+     */
     FileDto setProfileImage(UUID id, CreateFileDto createFileDto) throws ConflictException, ValidationException, IOException, NotFoundException;
 
-    // TODO comment
-    FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException;
+    /**
+     * Similar to setProfileImage but only used after creation when user wants to change the existing profile image.
+     *
+     * @param id            id
+     * @param createFileDto createFileDto
+     * @return FileDto of profile image (does NOT contain actual image file)
+     * @throws ValidationException when there is a validation error with the given createFileDto (empty image file, etc.)
+     * @throws IOException         when there is a problem with processing the file itself
+     * @throws NotFoundException   when the id points to no existing shelter
+     */
+    FileDto updateProfileImage(UUID id, CreateFileDto createFileDto) throws ValidationException, IOException, NotFoundException;
 }

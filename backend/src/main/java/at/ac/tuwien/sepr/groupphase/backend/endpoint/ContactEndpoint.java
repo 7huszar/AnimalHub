@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
-import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
-
 
 import java.lang.invoke.MethodHandles;
 
@@ -25,11 +22,9 @@ public class ContactEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final MailService mailService;
-    private final ShelterService shelterService;
 
-    public ContactEndpoint(MailService mailService, ShelterService shelterService) {
+    public ContactEndpoint(MailService mailService) {
         this.mailService = mailService;
-        this.shelterService = shelterService;
     }
 
     @Secured(UserRole.Values.USER_VALUE)

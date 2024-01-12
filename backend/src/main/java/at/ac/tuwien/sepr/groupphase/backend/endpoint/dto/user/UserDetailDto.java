@@ -26,16 +26,14 @@ public class UserDetailDto {
     private ShelterDto shelter;
 
 
-
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("UserDetailDto{"
+        String sb = "UserDetailDto{"
             + "id='" + id + '\''
             + ", email='" + email + '\''
             + ", role='" + role + '\''
-            + ", secret='");
-        sb.append("'}");
-        return sb.toString();
+            + ", secret='" + "'}";
+        return sb;
     }
 }
 

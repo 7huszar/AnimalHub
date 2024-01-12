@@ -89,13 +89,12 @@ export class HomeComponent implements OnInit {
       next: data => {
         this.user = data;
         this.subscription.user = this.user;
-        this.shelterId = this.user.shelter.id;
+        this.shelterId = this.user.shelter?.id;
         //loading the subscriptions of the user
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
         subscriptionObservable.subscribe({
           next: data => {
             this.subscriptionList = data;
-            console.log("subscription: " + this.subscriptionList);
           },
           error: error => {
             //this schould never happen

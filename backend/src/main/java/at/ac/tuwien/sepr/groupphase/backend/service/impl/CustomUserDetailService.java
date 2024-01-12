@@ -55,7 +55,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -88,32 +87,8 @@ public class CustomUserDetailService implements UserService {
      */
     @Override
     public List<UserDetailDto> search(UserSearchDto searchParameters) {
-        LOGGER.trace("search({})", searchParameters);
 
-        List<ApplicationUser> users = new ArrayList<>();
-
-        if (searchParameters.email() == null || searchParameters.email().isEmpty()) {
-            if (searchParameters.role() == null) {
-                users = userRepository.findAll();
-            } else {
-                users = userRepository.findApplicationUsersByRole(searchParameters.role());
-            }
-
-        } else {
-
-            var foundUsers = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
-            if (searchParameters.role() == null) {
-                users = foundUsers;
-            } else {
-                for (ApplicationUser foundUser : foundUsers) {
-                    if (userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()) != null) {
-                        users.add(userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()));
-                    }
-                }
-            }
-        }
-        return users.stream()
-            .map(userMapper::applicationUserToUserDetailDto).toList();
+        return userRepository.findApplicationUserByEmailContainsIgnoreCaseAndRoleIs(searchParameters.email(), searchParameters.role()).stream().map(userMapper::applicationUserToUserDetailDto).toList();
     }
 
     @Override
@@ -520,5 +495,43 @@ public class CustomUserDetailService implements UserService {
         SubscriptionKey key = new SubscriptionKey(animalId, userId);
         return userMapper.subscriptionToSubscriptionDetailDto(subscriptionRepository.findByKey(key));
     }
+
+
+    @Override
+    public HttpEntity<String> createSubscriptionPlan(String accessToken) {
+        LOGGER.trace("Creating a new Subscription Plan");
+
+
+        // Prepare the request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        String requestBody = "{ "
+            + "\"product_id\": \"PROD-0WX22620KG452370H\", "
+            + "\"name\": \"Created Automatically\", "
+            + "\"description\": \"This is a test\", "
+            + "\"billing_cycles\": [ "
+            + "{ "
+            + "\"frequency\": { \"interval_unit\": \"MONTH\", \"interval_count\": 1 }, "
+            + "\"tenure_type\": \"REGULAR\", "
+            + "\"sequence\": 1, "
+            + "\"total_cycles\": 12, "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"9.99\", \"currency_code\": \"USD\" } } "
+            + "} "
+            + "], "
+            + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "
+            + "\"setup_fee\": { \"value\": \"0.00\", \"currency_code\": \"USD\" } } "
+            + "}";
+
+
+        // Create the HTTP entity with headers and body
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+        LOGGER.debug("created Request" + requestEntity);
+
+        return requestEntity;
+    }
+
+
 }
 

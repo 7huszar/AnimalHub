@@ -1,17 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,6 +53,8 @@ public class UserEndpoint {
     static final String BASE_PATH = "/api/v1/users";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
+    private final ShelterService shelterService;
+    private final AnimalShelterMapper shelterMapper;
     private RestTemplate restTemplate;
 
 
@@ -147,8 +150,6 @@ public class UserEndpoint {
         LOGGER.info("POST " + BASE_PATH + "/send-post-request");
         LOGGER.debug("Request Body:\n{}", id);
 
-        LOGGER.debug("Request Body:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nshelterid" + shelterId + " kekekekekeeekek " + id);
-
         // Create an ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -162,8 +163,9 @@ public class UserEndpoint {
         UUID shelterIdUuid = UUID.fromString(shelterIdString);
         System.out.println("Parsed UUID: " + shelterIdUuid);
 
-        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("ACTIVE")) {
+        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("is active")) {
             LOGGER.error("The Subscription you tried to cancel was not active");
+            throw new NotFoundException("The subscription you tried to cancel Was not active");
         }
 
         restTemplate = new RestTemplate();
@@ -273,10 +275,109 @@ public class UserEndpoint {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("animalId({})", id);
 
+
         UserDetailDto user = userService.getCurrentUser();
+        SubscriptionDetailDto subscription = userService.isSubscribed(id, user.getId());
+
+        if (subscription == null) {
+            return null;
+        }
+
+        if (!checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId()).equals("is active")) {
+
+            LOGGER.error("The Subscription you tried to load was not active");
+        }
 
         return userService.isSubscribed(id, user.getId());
     }
 
+
+    @Secured(UserRole.Values.USER_VALUE)
+    @PostMapping("/subscriptions/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Check if current User is subscribed", security = @SecurityRequirement(name = "apiKey"))
+    public String createSubscriptionPlan(@PathVariable UUID id) throws NotFoundException, JsonProcessingException, ValidationException {
+        LOGGER.info("Post " + BASE_PATH);
+        LOGGER.debug("shelter({})", id);
+
+
+        restTemplate = new RestTemplate();
+
+        String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
+        String creatingUrl = "https://api-m.sandbox.paypal.com/v1/billing/plans";
+
+        ResponseEntity<String> responseEntity;
+        // Obtain the PayPal access token
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
+
+
+        try {
+
+            // Make the POST request to get access token
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+
+            //parsing so just the access Token is being returned
+            String accessToken = userService.parseTokenResponse(response);
+
+            LOGGER.debug("Retrieved Access Token" + accessToken);
+
+
+            try {
+                HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken);
+
+
+                // Make the HTTP POST request to create the subscription plan
+                responseEntity = restTemplate.exchange(
+                    creatingUrl,
+                    HttpMethod.POST,
+                    createSubscriptionPlan,
+                    String.class
+                );
+
+
+            } catch (Exception e) {
+                LOGGER.error("Error making external POST request", e);
+                return "error creating plan";
+                // Handle the exception or return an appropriate response
+            }
+
+
+        } catch (Exception e) {
+            LOGGER.error("Are u sure you provided the correct credentials", e);
+            // Handle the exception or return an appropriate response
+            return "Incorrect credentials";
+        }
+
+        // Check if the request was successful (HTTP status code 2xx)
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+
+            //Extracting SubscriptionPLanId
+            String responseBody = responseEntity.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+            // Extract the subscription plan ID (adjust the path according to the actual structure of the response)
+            String subscriptionPlanId = jsonNode.path("id").asText();
+
+            // Now you can use the subscriptionPlanId or handle it as needed
+            LOGGER.debug("successfully created plan");
+
+            ShelterDto shelterDto = shelterMapper.shelterDetailDtoToShelterDto(shelterService.findById(id));
+            shelterDto.setSubscriptionId(subscriptionPlanId);
+
+            LOGGER.debug("ShelterDto that is being updated" + shelterDto);
+            LOGGER.info("Updating Sheltern with subscription Plan");
+            shelterService.update(shelterDto);
+
+            return ("Subscription Plan ID: " + subscriptionPlanId);
+        } else {
+
+            LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
+            //TODO make all of these returns proper error messsages
+            return "Could not create Subscription Plan please try again Later";
+        }
+
+    }
 
 }

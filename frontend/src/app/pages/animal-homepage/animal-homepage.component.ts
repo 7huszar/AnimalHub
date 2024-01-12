@@ -114,15 +114,14 @@ export class AnimalHomepageComponent implements OnInit {
             isSubscribedObservable.subscribe({
               next: data => {
                 console.log("User is subscribed to Animal")
-                console.log(data);
                 if (data!=null){
                   //this is the case that the user is already subscribed
                   this.isSubscribed=true;
-
+                  //TODO blurr animal content in this case
                 }else{
                   //if user is not subscribed load the paypal button
 
-                  // Load the PayPal script dynamically
+                  // Load the PayPal script
                   const script = document.createElement('script');
                   //getting user
                   let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
@@ -147,6 +146,8 @@ export class AnimalHomepageComponent implements OnInit {
                   //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
                   //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
 
+
+                  //TODO change this for live version if there is multiple receivers the client id determines who receives the money (i think not sure)
                   script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
                   script.onload = () => {
                     // PayPal script is loaded, render the button
@@ -196,6 +197,7 @@ export class AnimalHomepageComponent implements OnInit {
     }
 
     // Render the PayPal button
+    //this loads the button and the subscription plan when the button is clicked
     paypal.Buttons({
       createSubscription: (data, actions) => {
         return actions.subscription.create({

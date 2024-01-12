@@ -25,7 +25,6 @@ public class ShelterDataGenerator {
     private final String subscriptionId = "P-3SG76502UP218412UMWKYVRY";
 
 
-
     private final String[] shelterProfilePictureNames = {"shelter demo 1", "shelter demo 2", "shelter demo 3"};
 
     private final ShelterRepository shelterRepository;

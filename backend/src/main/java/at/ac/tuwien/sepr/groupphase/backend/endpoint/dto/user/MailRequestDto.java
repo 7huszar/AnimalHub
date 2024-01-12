@@ -5,7 +5,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user;
  * The purpose of the mail is depending on the context.
  *
  * @param email where to send the mail
- * @param lang language of the mail
+ * @param lang  language of the mail
  */
 public record MailRequestDto(
     String email,

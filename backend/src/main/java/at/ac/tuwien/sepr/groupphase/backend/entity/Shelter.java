@@ -75,7 +75,6 @@ public class Shelter {
     private String subscriptionId;
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
