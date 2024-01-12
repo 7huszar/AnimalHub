@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,8 @@ public abstract class TestBase {
     protected String BASE_URI = "/api/v1";
     // ### ANIMAL TestData
     protected String TEST_ANIMAL_NAME = "Herbert";
+
+    protected Gender TEST_ANIMAL_GENDER = Gender.MALE;
 
     // ### BASIC TestData
     protected Species TEST_ANIMAL_SPECIES = Species.CAT;

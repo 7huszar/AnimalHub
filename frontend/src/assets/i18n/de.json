@@ -72,6 +72,7 @@
 
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
+    "GENDER": "Geschlecht",
     "RACE": "Rasse:",
     "BIRTHDATE": "Geburtsdatum:",
     "AGE": "Alter:",
@@ -91,8 +92,31 @@
     "CAT": "Katze",
     "DOG": "Hund",
     "BIRD": "Vogel",
-    "RODENT": "Nagetier"
+    "RODENT": "Nagetier",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich"
   },
+
+ "ANIMAL_CREATE_EDIT_PAGE": {
+   "NAME": "Name",
+   "SPECIES": "Tierart",
+   "GENDER": "Geschlecht",
+   "RACE": "Rasse",
+   "BIRTHDATE": "Geburtsdatum",
+   "AGE": "Alter",
+   "HEIGHT": "Größe",
+   "WEIGHT": "Gewicht",
+   "CAT": "Katze",
+   "DOG": "Hund",
+   "BIRD": "Vogel",
+   "RODENT": "Nagetier",
+   "FEMALE": "Weiblich",
+   "MALE": "Männlich",
+   "IMAGE": "Profilbild",
+   "SUBMIT_CREATE": "Speichern",
+   "SUBMIT_EDIT": "Überschreiben",
+   "DRAG_AND_DROP": "Drag & Drop"
+ },
 
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",

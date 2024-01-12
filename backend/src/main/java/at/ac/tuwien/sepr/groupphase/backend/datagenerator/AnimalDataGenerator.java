@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
@@ -67,6 +68,7 @@ public class AnimalDataGenerator {
                 // CREATE NEW ANIMAL ENTITY
                 Animal animal = Animal.builder()
                     .name(animalConfig.get("NAME " + animalIndex))
+                    .gender((Gender.valueOf(animalConfig.get("GENDER " + animalIndex))))
                     .profilePicture(fileRepository.findByName(animalConfig.get("PROFILE_PICTURE_NAME " + animalIndex))[0])
                     .species((Species.valueOf(animalConfig.get("SPECIES " + animalIndex))))
                     .race(animalConfig.get("RACE " + animalIndex))

@@ -20,6 +20,7 @@ export class CreateEditComponent implements OnInit {
   animal: AnimalDetailDto = {
     id: null,
     name: null,
+    gender: null,
     species: null,
     race: null,
     birthDate: null,
@@ -48,19 +49,6 @@ export class CreateEditComponent implements OnInit {
     private notification: NotifierService
   ) {
   }
-
-  /* TODO maybe?
-  public get heading(): string {
-    switch (this.mode) {
-      case Mode.CREATE:
-        return 'Create New Animal';
-      case Mode.EDIT:
-        return 'Edit Animal';
-      default:
-        return '?';
-    }
-  }
-   */
 
   animalForDeletion(name: string, id: string) {
     this.idForDeletion = id;

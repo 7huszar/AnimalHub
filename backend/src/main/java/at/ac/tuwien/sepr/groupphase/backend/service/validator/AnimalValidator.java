@@ -73,6 +73,12 @@ public class AnimalValidator {
             validationErrors.add("Name is too long");
         }
 
+        // # Gender
+
+        if (animalDto.getGender() == null) {
+            validationErrors.add("No Gender selected");
+        }
+
         // # Species
 
         if (animalDto.getSpecies() == null) {

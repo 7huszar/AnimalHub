@@ -46,6 +46,7 @@ public class AnimalRepositoryTest extends TestBase {
     public void createNewAnimalSuccessfully() {
         Animal animal = Animal.builder()
             .name(TEST_ANIMAL_NAME)
+            .gender(TEST_ANIMAL_GENDER)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
@@ -103,6 +104,7 @@ public class AnimalRepositoryTest extends TestBase {
         Animal nonExistingAnimal = Animal.builder()
             .id(UUID.randomUUID())
             .name(TEST_ANIMAL_NAME)
+            .gender(TEST_ANIMAL_GENDER)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)

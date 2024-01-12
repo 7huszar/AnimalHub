@@ -11,6 +11,7 @@ import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../..
 import {UserService} from "../../services/user.service";
 import {Species} from "../../dtos/species";
 import {PaypalService} from "../../services/paypal.service";
+import {Gender} from "../../dtos/gender";
 
 declare var paypal;
 
@@ -23,11 +24,11 @@ declare var paypal;
 export class AnimalHomepageComponent implements OnInit {
 
   animal: AnimalDetailDto = {
-    birthDate: null,
-    createdOn: null,
+    birthDate: new Date(),
     height: 0,
     id: "",
     name: "",
+    gender:null,
     race: "",
     shelter: undefined,
     species: undefined,
@@ -285,4 +286,5 @@ export class AnimalHomepageComponent implements OnInit {
   }
 
   protected readonly Mode = Mode;
+  protected readonly Gender = Gender;
 }

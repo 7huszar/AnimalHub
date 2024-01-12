@@ -41,12 +41,13 @@
           <div class="col" *ngIf="isRodent">{{'ANIMAL_HOMEPAGE.RODENT' | translate}}</div>
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.GENDER' | translate}}</div>
+          <div class="col" *ngIf="animal.gender===Gender.male">{{'ANIMAL_HOMEPAGE.MALE' | translate}}</div>
+          <div class="col" *ngIf="animal.gender===Gender.female">{{'ANIMAL_HOMEPAGE.FEMALE' | translate}}</div>
+      </div>
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
           <div class="col">{{ animal.race }}</div>
-        </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.BIRTHDATE' | translate}}</div>
-          <div class="col">{{ animal.birthDate }}</div>
         </div>
         <div class="row align-items-end" style="height: auto; min-height: fit-content">
           <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
