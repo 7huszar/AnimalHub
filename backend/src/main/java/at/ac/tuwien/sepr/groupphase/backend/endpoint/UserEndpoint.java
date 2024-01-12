@@ -363,7 +363,6 @@ public class UserEndpoint {
             // Now you can use the subscriptionPlanId or handle it as needed
             LOGGER.debug("successfully created plan");
 
-            //TODO this update is not quite working
             ShelterDto shelterDto = shelterMapper.shelterDetailDtoToShelterDto(shelterService.findById(id));
             shelterDto.setSubscriptionId(subscriptionPlanId);
 
