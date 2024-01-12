@@ -94,6 +94,10 @@ threadpool:
   corePoolSize: 2
   maxPoolSize: 16
   queueCapacity: 128
+
+timeouts:
+  login: 60
+  email: 60
 ---
 spring:
   config:

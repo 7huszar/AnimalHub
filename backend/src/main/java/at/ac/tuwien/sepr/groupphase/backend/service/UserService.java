@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,7 +54,7 @@ public interface UserService extends UserDetailsService {
      * @return the JWT, if successful
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
-    String login(UserLoginDto userLoginDto);
+    String login(UserLoginDto userLoginDto, HttpServletRequest request) throws NotFoundException;
 
     /**
      * Registers a user and sends an e-mail to verify given e-mail.

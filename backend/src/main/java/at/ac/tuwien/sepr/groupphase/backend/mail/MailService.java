@@ -27,7 +27,7 @@ public class MailService {
 
     private final JavaMailSender emailSender;
     private final JwtTokenizer jwtTokenizer;
-    private final MailTimeout timeoutCollector;
+    private final TimeoutService timeoutCollector;
     private final ContactValidator contactValidator;
     private final LanguageConfig lang;
 
@@ -44,7 +44,7 @@ public class MailService {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEmail(email);
+        timeoutCollector.addEntity(new StampedEmail(email));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
@@ -68,7 +68,7 @@ public class MailService {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEmail(email);
+        timeoutCollector.addEntity(new StampedEmail(email));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);

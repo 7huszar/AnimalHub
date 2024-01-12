@@ -18,7 +18,9 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.BlockedIp;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.mail.TimeoutService;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -33,6 +35,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -77,6 +80,7 @@ public class CustomUserDetailService implements UserService {
     private final UserMapper userMapper;
     private final UserConflict conflict;
     private final MailService mail;
+    private final TimeoutService timeoutService;
 
 
     /**
@@ -141,12 +145,21 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto) {
-        LOGGER.trace("login({})", userLoginDto.getEmail());
+    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException {
+        LOGGER.trace("login({}, {})", userLoginDto, request);
+        if (timeoutService.hasTimeout(request.getRemoteAddr())) {
+            throw new BadCredentialsException("blocked, brother");
+        }
         // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
         // tmp solution
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
-        UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+        UserDetails userDetails;
+        try {
+            userDetails = loadUserByUsername(userLoginDto.getEmail());
+        } catch (UsernameNotFoundException e) {
+            timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
+            throw new NotFoundException("user by e-mail " + userLoginDto.getEmail() + " not found");
+        }
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
@@ -160,6 +173,7 @@ public class CustomUserDetailService implements UserService {
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
+        timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
     }
 
