@@ -48,14 +48,6 @@ public class AllDataGenerator {
 
     @PostConstruct
     @Transactional
-    public void initialGenerateData() {
-        LOGGER.debug("initial data generation... (Files -> Shelters -> Animals -> Users)");
-        clearData();
-        generateData();
-    }
-
-
-    @Transactional
     public void generateData() {
         LOGGER.debug("generating data... (Files -> Shelters -> Animals -> Users)");
         fileDataGenerator.generateFiles();
