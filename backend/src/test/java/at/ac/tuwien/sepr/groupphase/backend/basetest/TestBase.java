@@ -64,6 +64,7 @@ public abstract class TestBase {
         allShelterEntities = dataGenerator.getAllShelterEntities();
         allAnimalEntities = dataGenerator.getAllAnimalEntities();
         allFileEntities = dataGenerator.getAllFileEntities();
+        allUserEntities = dataGenerator.getAllApplicationUserEntities();
     }
 
     @AfterEach

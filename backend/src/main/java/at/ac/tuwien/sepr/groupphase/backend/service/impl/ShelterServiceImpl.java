@@ -45,16 +45,11 @@ public class ShelterServiceImpl implements ShelterService {
     private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
 
-    /**
-     * Search for users in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in user.
-     *
-     * @param searchParameters the search parameters to use in filtering.
-     * @return the users where the given fields match.
-     */
     @Override
     public List<ShelterListDto> search(ShelterSearchDto searchParameters) {
-        var shelters = shelterRepository.findByNameIgnoreCaseContaining(searchParameters.name());
+        var shelters =
+            shelterRepository.findByNameContainsIgnoreCaseAndAddressContainsIgnoreCaseAndPhoneNumberContainsIgnoreCaseAndEmailContainsIgnoreCase(searchParameters.name(), searchParameters.address(), searchParameters.phoneNumber(),
+                searchParameters.email());
 
         return shelters.stream()
             .map(mapper::shelterToShelterListDto).toList();
@@ -111,14 +106,6 @@ public class ShelterServiceImpl implements ShelterService {
         return mapper.shelterToShelterDetailDto(shelter);
     }
 
-    @Override
-    public List<ShelterDto> findByNameIgnoreCase(String name) {
-        LOGGER.debug("Find Shelters with name containing {}", name);
-
-        return shelterRepository.findByNameIgnoreCaseContaining(name).stream()
-            .map(mapper::shelterToShelterDto).toList();
-    }
-
 
     @Override
     public void delete(UUID id) throws NotFoundException {
@@ -166,19 +153,21 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
+    public FileDto updateProfileImage(UUID id, CreateFileDto createFileDto) throws ValidationException, IOException, NotFoundException {
 
         var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
 
-        // TODO remove old image
+        UUID oldProfilePictureId = shelter.getProfilePicture().getId();
 
-        var createdFile = fileService.create(fileDto);
+        var createdFile = fileService.create(createFileDto);
         var file = fileMapper.fileDtoToFile(createdFile);
 
         shelter.setProfilePicture(file);
         shelterRepository.save(shelter);
+
+        fileService.delete(oldProfilePictureId);
 
         return createdFile;
     }

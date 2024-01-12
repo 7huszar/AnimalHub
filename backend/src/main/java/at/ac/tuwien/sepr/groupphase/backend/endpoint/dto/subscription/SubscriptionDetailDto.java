@@ -2,8 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

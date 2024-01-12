@@ -55,7 +55,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -88,32 +87,8 @@ public class CustomUserDetailService implements UserService {
      */
     @Override
     public List<UserDetailDto> search(UserSearchDto searchParameters) {
-        LOGGER.trace("search({})", searchParameters);
 
-        List<ApplicationUser> users = new ArrayList<>();
-
-        if (searchParameters.email() == null || searchParameters.email().isEmpty()) {
-            if (searchParameters.role() == null) {
-                users = userRepository.findAll();
-            } else {
-                users = userRepository.findApplicationUsersByRole(searchParameters.role());
-            }
-
-        } else {
-
-            var foundUsers = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
-            if (searchParameters.role() == null) {
-                users = foundUsers;
-            } else {
-                for (ApplicationUser foundUser : foundUsers) {
-                    if (userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()) != null) {
-                        users.add(userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()));
-                    }
-                }
-            }
-        }
-        return users.stream()
-            .map(userMapper::applicationUserToUserDetailDto).toList();
+        return userRepository.findApplicationUserByEmailContainsIgnoreCaseAndRoleIs(searchParameters.email(), searchParameters.role()).stream().map(userMapper::applicationUserToUserDetailDto).toList();
     }
 
     @Override
@@ -552,7 +527,7 @@ public class CustomUserDetailService implements UserService {
 
         // Create the HTTP entity with headers and body
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
-        LOGGER.debug("created Request" + String.valueOf(requestEntity));
+        LOGGER.debug("created Request" + requestEntity);
 
         return requestEntity;
     }

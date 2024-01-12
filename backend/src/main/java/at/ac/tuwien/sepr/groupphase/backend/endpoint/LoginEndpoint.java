@@ -22,10 +22,9 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = LoginEndpoint.BASE_PATH)
 @RequiredArgsConstructor
 public class LoginEndpoint {
+    static final String BASE_PATH = "/api/v1/authentication";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
-
-    static final String BASE_PATH = "/api/v1/authentication";
 
     @PermitAll
     @PostMapping
