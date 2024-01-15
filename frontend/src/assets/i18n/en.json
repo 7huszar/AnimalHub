@@ -56,9 +56,9 @@
   },
 
   "HEADER": {
-    "LOGOUT": "logout",
-    "ADMIN_PAGE": "admin page",
-    "MEMBER_PAGE": "member page"
+    "LOGOUT": "Log out",
+    "ADMIN_PAGE": "Admin View",
+    "MEMBER_PAGE": "Your Shelter"
   },
 
   "NOTIFIER": {
@@ -70,6 +70,7 @@
 
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Species:",
+    "GENDER": "Gender:",
     "RACE": "Race:",
     "BIRTHDATE": "Date of birth:",
     "AGE": "Age:",
@@ -78,7 +79,7 @@
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
     "ADOPT": "Adopt ",
-    "SHELTER": "Shelter: ",
+    "SHELTER": "Currently lives at:",
     "NOCONTENT": " does not have any content yet.",
     "YEARS": " years",
     "MONTHS": " months",
@@ -89,21 +90,50 @@
     "CAT": "Cat",
     "DOG": "Dog",
     "BIRD": "Bird",
-    "RODENT": "Rodent"
+    "RODENT": "Rodent",
+    "MALE": "Male",
+    "FEMALE": "Female"
+  },
+
+  "ANIMAL_CREATE_EDIT_PAGE": {
+    "NAME": "Name",
+    "SPECIES": "Species",
+    "GENDER": "Gender",
+    "RACE": "Race",
+    "BIRTHDATE": "Date of birth",
+    "AGE": "Age",
+    "HEIGHT": "Height",
+    "WEIGHT": "Weight",
+    "SHELTER": "Shelter",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "IMAGE": "Profile Picture",
+    "SUBMIT_CREATE": "Create",
+    "SUBMIT_EDIT": "Update",
+    "DRAG_AND_DROP": "Drag & Drop",
+    "ENGLISH_DESCRIPTION": "Description (english)",
+    "GERMAN_DESCRIPTION": "Description (german)"
   },
 
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Address:",
-    "PHONE": "Phone:",
-    "EMAIL": "E-mail:",
-    "CONTACT": "Contact",
-    "DONATE": "Donate to "
+    "PHONE": "Phone Number:",
+    "EMAIL": "E-Mail:",
+    "BACK_BUTTON": "BACK"
   },
 
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Species",
-    "DELETE": "Delete"
+    "ADD_ANIMAL": "Add new Animal",
+    "ALL_SPECIES": "All Species",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent"
   },
 
   "PWD": {

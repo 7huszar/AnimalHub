@@ -10,6 +10,22 @@ body {
   max-height: 30em;
 }
 
+
+.animal-title {
+  color: mix(#fff, #e91e63, 85%);
+  font-size: calc(3em);
+  font-weight: 900;
+  text-shadow: -0.0075em 0.0075em 0 mix(#fff, #e91e63, 94%),
+  0.005em 0.005em 0 mix(#fff, #e91e63, 60%),
+  0.01em 0.01em 0 mix(#fff, #e91e63, 62%),
+  0.015em 0.015em mix(#fff, #e91e63, 64%),
+  0.02em 0.02em 0 mix(#fff, #e91e63, 66%),
+  0.025em 0.025em 0 mix(#fff, #e91e63, 68%),
+  0.03em 0.03em 0 mix(#fff, #e91e63, 70%),
+  0.035em 0.035em 0 mix(#fff, #e91e63, 72%);
+}
+
+
 .content {
   padding-left: 3rem;
   padding-right: 3rem;
@@ -19,6 +35,8 @@ body {
   flex-wrap: wrap;
   gap: 2em;
 }
+
+
 
 .item {
   max-width: 20em;
@@ -31,6 +49,7 @@ body {
   left: 0;
   padding-top: 1em;
 }
+
 button {
   color: black;
 }
@@ -45,10 +64,12 @@ h1 {
   font-weight: bold;
   font-size: 3em;
 }
+
 h2 {
   font-weight: bold;
   font-size: 2em;
 }
+
 .col-auto {
   font-size: 1.5em;
   font-weight: bold;

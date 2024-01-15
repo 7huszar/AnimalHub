@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,6 +44,15 @@ public class Animal {
 
     @Column(nullable = false, length = 255)
     private String name;
+
+    @Column(nullable = false)
+    private Gender gender;
+
+    @Column(nullable = true, length = 500)
+    private String englishDescription;
+
+    @Column(nullable = true, length = 500)
+    private String germanDescription;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     private File profilePicture;

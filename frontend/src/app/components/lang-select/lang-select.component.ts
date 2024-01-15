@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
+import {Globals} from "../../global/globals";
 
 @Component({
   selector: 'app-lang-select',
@@ -9,11 +10,11 @@ import {TranslateService} from "@ngx-translate/core";
 export class LangSelectComponent{
 
   private langMap : Map<string, string> = new Map<string, string>([
-    ["en", "English"],
-    ["de", "Deutsch"]
+    ["en", "EN"],
+    ["de", "DE"]
   ]);
 
-  constructor(private translateService : TranslateService) {
+  constructor(private translateService : TranslateService, private globals: Globals) {
   }
 
   getLangs() : string[] {
@@ -22,6 +23,8 @@ export class LangSelectComponent{
 
   setLang(lang : string) : void {
     this.translateService.use(lang);
+    console.log("language: " + lang);
+    this.globals.currentLanguage = lang;
   }
 
   formattedLang(lang : string) : string {

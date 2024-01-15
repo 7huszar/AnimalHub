@@ -1,15 +1,11 @@
 <app-header></app-header>
 
-<div class="container" *ngIf="shelter">
+<div class="container" *ngIf="shelter" style="min-width: 95%;">
 
   <div class="row">
     <div class="col-6">
-      <h1 class="mt-4 mb-4" style="margin-left: 1rem">{{ shelter?.name }}</h1>
+      <h2 class="mt-4 mb-4" style="margin-left: 1rem">{{ shelter?.name }}</h2>
     </div>
-    <div class="col-6 d-flex justify-content-end mb-3">
-      <button class="btn btn-primary " style="padding: 0.2rem 0.5rem; margin-top: auto;" routerLink="/shelter/contact/{{ shelter?.id }}">{{ 'SHELTER_HOMEPAGE.CONTACT' | translate}} {{ shelter?.name}}</button>
-    </div>
-
     <div class="row">
       <div class="col" style="max-width: 20em; min-height: 10em">
         <div class="media">
@@ -37,7 +33,7 @@
           <!-- Paypal -->
           <div class="row mt-4">
             <div class="col-12">
-              <h4>{{ 'SHELTER_HOMEPAGE.DONATE' }} {{ shelter?.name }}</h4>
+              <h4>Donate to {{ shelter?.name }}</h4>
             </div>
             <div class="col-auto">
               <a [href]="'https://www.paypal.com/donate/?hosted_button_id=' + shelter?.donationId" target="_blank">
@@ -46,7 +42,6 @@
             </div>
           </div>
           <!-- End of Paypal -->
-
         </div>
       </div>
     </div>
