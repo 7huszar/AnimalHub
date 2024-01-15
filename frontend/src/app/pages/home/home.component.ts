@@ -49,6 +49,7 @@ export class HomeComponent implements OnInit {
     height: 0,
     id: "",
     name: "",
+    gender: undefined,
     race: "",
     shelter: undefined,
     species: undefined,

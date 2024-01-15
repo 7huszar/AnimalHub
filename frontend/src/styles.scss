@@ -202,8 +202,14 @@ $secondary:     #f08fb4;
   @extend .btn;
   @extend .btn-danger;
   @extend .float-end;
-
 }
+
+.custom-warning-btn {
+  @extend .btn;
+  @extend .btn-warning;
+  @extend .float-end;
+}
+
 
 .custom-submit {
   @extend .p-0;

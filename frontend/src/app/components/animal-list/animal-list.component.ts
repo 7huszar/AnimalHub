@@ -16,8 +16,8 @@ export class AnimalListComponent {
   @Input() shelterId: string;
   displayedAnimals: AnimalDto[] = [];
   p: number;
-  searchTermSpecies: String;
-  searchTermName: String;
+  searchTermSpecies: String = '';
+  searchTermName: String = '';
 
   constructor(private router: Router,
               public authService: AuthService,
@@ -44,26 +44,20 @@ export class AnimalListComponent {
   }
 
   editAnimal(animalId: String): void {
-    if (this.isPrivileged()) {
-      this.router.navigate(['/animal/edit', animalId]).then(r => console.log(r));
+    if (this.isUserAllowed()) {
+      this.router.navigate(['/animal/edit', animalId]);
     } else {
-      this.router.navigate(['/animal', animalId]).then(r => console.log(r));
+      this.router.navigate(['/animal', animalId]);
     }
   }
+
 
   onInput(): void {
-    if (this.searchTermName) {
-      this.displayedAnimals = this.animals
-        .filter(animal => animal.name.toLowerCase().includes(this.searchTermName.toLowerCase()))
-    }
-    if (this.searchTermSpecies) {
-      this.displayedAnimals = this.animals
-        .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
-    }
-
+    this.displayedAnimals = this.animals
+      .filter(animal => animal.name.toLowerCase().includes(this.searchTermName.toLowerCase()) && animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
   }
 
-  isPrivileged(): boolean {
+  isUserAllowed(): boolean {
     return this.authService.isAdmin() || this.authService.isMemberOf(this.shelterId);
   }
 

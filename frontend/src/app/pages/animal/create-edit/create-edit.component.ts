@@ -7,6 +7,7 @@ import {IdOnlyShelter} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
 import {NotifierService} from "../../../services/notifier.service";
+import {Globals} from "../../../global/globals";
 
 @Component({
   selector: 'app-create-edit',
@@ -20,6 +21,7 @@ export class CreateEditComponent implements OnInit {
   animal: AnimalDetailDto = {
     id: null,
     name: null,
+    gender: null,
     species: null,
     race: null,
     birthDate: null,
@@ -42,25 +44,13 @@ export class CreateEditComponent implements OnInit {
 
 
   constructor(
+    protected globals: Globals,
     private animalService: AnimalService,
     private router: Router,
     private route: ActivatedRoute,
     private notification: NotifierService
   ) {
   }
-
-  /* TODO maybe?
-  public get heading(): string {
-    switch (this.mode) {
-      case Mode.CREATE:
-        return 'Create New Animal';
-      case Mode.EDIT:
-        return 'Edit Animal';
-      default:
-        return '?';
-    }
-  }
-   */
 
   animalForDeletion(name: string, id: string) {
     this.idForDeletion = id;

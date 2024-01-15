@@ -27,6 +27,7 @@ export class SubscriptionsComponent implements OnInit {
     height: 0,
     id: "",
     name: "",
+    gender: null,
     race: "",
     shelter: undefined,
     species: undefined,
