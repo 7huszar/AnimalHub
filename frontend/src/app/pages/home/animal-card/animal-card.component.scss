@@ -27,3 +27,21 @@
   height: 20em;
   object-fit: contain;
 }
+
+.like_icon {
+  color: var(--bs-primary);
+  cursor: pointer;
+}
+
+.like_icon:hover {
+  color: var(--bs-secondary);
+}
+
+.dislike_icon {
+  color: var(--bs-danger);
+  cursor: pointer;
+}
+
+.dislike_icon:hover {
+  color: var(--bs-secondary);
+}

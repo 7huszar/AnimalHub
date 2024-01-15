@@ -9,7 +9,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 export class PasswordComponent {
   submitted: boolean = false;
   failed: boolean = false;
-  @Input() higherCause: boolean = false;
+  @Input() higherCause: boolean = true;
 
   @Input() pwdField: string = 'password';
   @Input() eye: boolean = true;
