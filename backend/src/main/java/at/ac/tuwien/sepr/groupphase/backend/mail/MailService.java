@@ -40,11 +40,11 @@ public class MailService {
      */
     @Async
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
-        if (timeoutCollector.hasTimeout(email)) {
+        if (timeoutCollector.hasTimeout(email + "vm")) {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEntity(new StampedEmail(email));
+        timeoutCollector.addEntity(new StampedEmail(email + "vm"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
@@ -64,11 +64,11 @@ public class MailService {
      */
     @Async
     public void sendResetPasswordMail(String email, String language) {
-        if (timeoutCollector.hasTimeout(email)) {
+        if (timeoutCollector.hasTimeout(email + "pwd")) {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEntity(new StampedEmail(email));
+        timeoutCollector.addEntity(new StampedEmail(email + "pdw"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("animalhub.service@gmail.com");
         message.setTo(email);
