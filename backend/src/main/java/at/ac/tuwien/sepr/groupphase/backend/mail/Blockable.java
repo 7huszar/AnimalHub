@@ -11,4 +11,6 @@ public interface Blockable extends Delayed {
     boolean hasTimeout();
 
     String getKey();
+
+    long remainingTimout();
 }

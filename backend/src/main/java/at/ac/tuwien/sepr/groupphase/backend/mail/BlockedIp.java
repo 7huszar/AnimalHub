@@ -68,4 +68,8 @@ public class BlockedIp implements Blockable {
         return "StampedEmail{email=" + ip + ", stamp=" + timestamp.toString() + "}";
     }
 
+    @Override
+    public long remainingTimout() {
+        return this.getDelay(TimeUnit.MICROSECONDS);
+    }
 }

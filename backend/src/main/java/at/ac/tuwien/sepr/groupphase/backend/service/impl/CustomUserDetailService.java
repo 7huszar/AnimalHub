@@ -17,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.BlockedIp;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
@@ -145,13 +146,11 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException {
+    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, TimoutException {
         LOGGER.trace("login({}, {})", userLoginDto, request);
         if (timeoutService.hasTimeout(request.getRemoteAddr())) {
-            throw new BadCredentialsException("blocked, brother");
+            throw new TimoutException("user by ip " + request.getRemoteAddr() + "has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
         }
-        // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
-        // tmp solution
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails;
         try {

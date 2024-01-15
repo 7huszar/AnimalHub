@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class LoginEndpoint {
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public String login(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) throws NotAuthorizedException {
+    public String login(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) throws NotAuthorizedException, TimoutException {
         String token;
         request.getRemoteAddr();
         LOGGER.info("POST " + BASE_PATH);
@@ -42,6 +43,9 @@ public class LoginEndpoint {
         } catch (NotFoundException | BadCredentialsException e) {
             LOGGER.warn(e.getMessage());
             throw new NotAuthorizedException("Failed to login user");
+        } catch (TimoutException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
         }
         return token;
     }

@@ -31,6 +31,12 @@ public class TimeoutService {
         return false;
     }
 
+    public long remainingTimout(String blocked) {
+        if (this.blocked.containsKey(blocked)) {
+            return this.blocked.get(blocked).remainingTimout();
+        } else return 0;
+    }
+
     @PostConstruct
     public void startCleaner() {
         cleaner.cleanBlockedMails(queue, blocked);

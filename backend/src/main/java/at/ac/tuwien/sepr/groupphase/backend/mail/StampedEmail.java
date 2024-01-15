@@ -67,4 +67,9 @@ public class StampedEmail implements Blockable {
     public String toString() {
         return "StampedEmail{email=" + email + ", stamp=" + timestamp.toString() + "}";
     }
+
+    Override
+    public long remainingTimout() {
+        return this.getDelay(TimeUnit.MICROSECONDS);
+    }
 }
