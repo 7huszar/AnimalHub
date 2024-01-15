@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {PasswordService} from "../../../services/password.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -6,34 +6,32 @@ import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../../services/notifier.service";
 import {jwtDecode} from "jwt-decode";
 import {TranslateService} from "@ngx-translate/core";
+import {PasswordComponent} from "../../../components/password/password.component";
 
 @Component({
   selector: 'app-password-verify',
   templateUrl: './password-verify.component.html',
   styleUrls: ['./password-verify.component.scss']
 })
-export class PasswordVerifyComponent implements OnInit{
+export class PasswordVerifyComponent implements OnInit {
 
-  passwordForm: UntypedFormGroup;
+  @ViewChild('pwd') pwd: PasswordComponent;
+
   private token: string;
   submitted: boolean = false;
 
-  constructor(formBuilder :UntypedFormBuilder,
-              private service: PasswordService,
+  constructor(private service: PasswordService,
               private route: ActivatedRoute,
               private router: Router,
               private notification: NotifierService,
               private translator: TranslateService) {
-    this.passwordForm = formBuilder.group({
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      passwordRepeat: ['', [Validators.required]]
-    });
   }
 
   reset() :void {
     this.submitted = true;
-    if (this.passwordForm.valid && this.pwdMatch()) {
-      this.service.resetPassword({password: this.passwordForm.controls.password.value, token: this.token}).subscribe({
+    this.pwd.submit();
+    if (this.pwd.valid()) {
+      this.service.resetPassword({password: this.pwd.value(), token: this.token}).subscribe({
         next :next => {
           this.notification.notifySuccess('PWD.RESET.SUCCESS');
           this.router.navigate(['/']);
@@ -61,13 +59,5 @@ export class PasswordVerifyComponent implements OnInit{
       this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
     }
     this.translator.use(lang);
-  }
-
-  validation(): string {
-    return this.passwordForm.valid && this.pwdMatch() ? 'is-valid' : 'is-invalid';
-  }
-
-  pwdMatch(): boolean {
-    return this.passwordForm.controls.password.value === this.passwordForm.controls.passwordRepeat.value;
   }
 }
