@@ -10,6 +10,8 @@ import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 import {ShelterDetailDto} from "../../dtos/shelter";
+import {PreferencesService} from "../../services/preferences.service";
+import {PreferenceDto} from "../../dtos/preference";
 
 @Component({
   selector: 'app-home',
@@ -23,6 +25,7 @@ export class HomeComponent implements OnInit {
   private right: AnimalDetailDto;
 
   protected animalList: AnimalDetailDto[] = [];
+  protected preferenceList: PreferenceDto[] = [];
   protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
   protected dislikedAnimals: AnimalDetailDto[] = [];
@@ -40,7 +43,8 @@ export class HomeComponent implements OnInit {
     private userService: UserService,
     private notification: ToastrService,
     private notifier: NotifierService,
-    private translator: TranslateService) {
+    private translator: TranslateService,
+    private preferencesService: PreferencesService) {
   }
 
   animal: AnimalDetailDto = {
@@ -70,6 +74,12 @@ export class HomeComponent implements OnInit {
     tier: "",
     user: undefined,
     animal: undefined,
+  };
+
+  preference: PreferenceDto = {
+    userId: "",
+    animalId: "",
+    preference: undefined
   };
 
   ngOnInit() {
@@ -102,8 +112,6 @@ export class HomeComponent implements OnInit {
             this.notification.error("Could not find subscriptions");
           }
         });
-
-
       },
       error: error => {
         //this schould never happen
@@ -111,6 +119,12 @@ export class HomeComponent implements OnInit {
         this.notification.error("Could not find logged in user");
       }
     });
+
+    this.preferencesService.loadPreferencesByUserId(this.user.id).subscribe({
+      next: data => {
+        this.preferenceList = data;
+      }
+    })
 
 
   }
@@ -159,6 +173,7 @@ export class HomeComponent implements OnInit {
     }
     this.animalList.splice(this.animalList.indexOf(animal), 1);
     this.loadCards();
+
   }
 
   dislike(animal: AnimalDetailDto) {
