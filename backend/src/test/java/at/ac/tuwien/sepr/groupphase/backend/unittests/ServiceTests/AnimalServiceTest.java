@@ -73,6 +73,8 @@ public class AnimalServiceTest extends TestBase {
         CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
             .name(TEST_ANIMAL_NAME)
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
@@ -88,6 +90,8 @@ public class AnimalServiceTest extends TestBase {
             assertAll(
                 () -> assertEquals(createAnimalDto.getName(), returnAnimalDto.getName()),
                 () -> assertEquals(createAnimalDto.getGender(), returnAnimalDto.getGender()),
+                () -> assertEquals(createAnimalDto.getEnglishDescription(), returnAnimalDto.getEnglishDescription()),
+                () -> assertEquals(createAnimalDto.getGermanDescription(), returnAnimalDto.getGermanDescription()),
                 () -> assertEquals(createAnimalDto.getSpecies(), returnAnimalDto.getSpecies()),
                 () -> assertEquals(createAnimalDto.getRace(), returnAnimalDto.getRace()),
                 () -> assertEquals(createAnimalDto.getBirthDate(), returnAnimalDto.getBirthDate()),
@@ -114,6 +118,8 @@ public class AnimalServiceTest extends TestBase {
         CreateAnimalDto animal = CreateAnimalDto.builder()
             .name(TEST_ANIMAL_NAME)
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
@@ -131,6 +137,8 @@ public class AnimalServiceTest extends TestBase {
         CreateAnimalDto animalDto = CreateAnimalDto.builder()
             .name("")
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
@@ -150,6 +158,8 @@ public class AnimalServiceTest extends TestBase {
             .id(allAnimalEntities.get(0).getId())
             .name("neuer Name")
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .birthDate(LocalDate.of(2000, 01, 01))
             .species(Species.CAT)
             .race("updated race")
@@ -165,6 +175,8 @@ public class AnimalServiceTest extends TestBase {
             assertAll(
                 () -> assertEquals(updatedAnimal.getName(), updateValues.getName()),
                 () -> assertEquals(updatedAnimal.getGender(), updateValues.getGender()),
+                () -> assertEquals(updatedAnimal.getEnglishDescription(), updateValues.getEnglishDescription()),
+                () -> assertEquals(updatedAnimal.getGermanDescription(), updateValues.getGermanDescription()),
                 () -> assertEquals(updatedAnimal.getSpecies(), updateValues.getSpecies()),
                 () -> assertEquals(updatedAnimal.getRace(), updateValues.getRace()),
                 () -> assertEquals(updatedAnimal.getBirthDate(), updateValues.getBirthDate()),
@@ -185,6 +197,8 @@ public class AnimalServiceTest extends TestBase {
             // RANDOM ID
             .name("neuer Name")
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .birthDate(LocalDate.of(2000, 01, 01))
             .species(Species.CAT)
             .race("updated race")
@@ -205,6 +219,8 @@ public class AnimalServiceTest extends TestBase {
             .name("")
             // EMPTY NAME
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .birthDate(LocalDate.of(2000, 01, 01))
             .species(Species.CAT)
             .race("updated race")
@@ -230,6 +246,8 @@ public class AnimalServiceTest extends TestBase {
             assertAll(
                 () -> assertEquals(expectedAnimal.getName(), foundAnimal.getName()),
                 () -> assertEquals(expectedAnimal.getGender(), foundAnimal.getGender()),
+                () -> assertEquals(expectedAnimal.getEnglishDescription(), foundAnimal.getEnglishDescription()),
+                () -> assertEquals(expectedAnimal.getGermanDescription(), foundAnimal.getGermanDescription()),
                 () -> assertEquals(expectedAnimal.getSpecies(), foundAnimal.getSpecies()),
                 () -> assertEquals(expectedAnimal.getRace(), foundAnimal.getRace()),
                 () -> assertEquals(expectedAnimal.getBirthDate(), foundAnimal.getBirthDate()),
@@ -301,6 +319,8 @@ public class AnimalServiceTest extends TestBase {
             CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
                 .name(TEST_ANIMAL_NAME)
                 .gender(TEST_ANIMAL_GENDER)
+                .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+                .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
                 .species(TEST_ANIMAL_SPECIES)
                 .race(TEST_ANIMAL_RACE)
                 .birthDate(TEST_ANIMAL_BIRTH_DATE)
@@ -349,6 +369,8 @@ public class AnimalServiceTest extends TestBase {
             CreateAnimalDto createAnimalDto = CreateAnimalDto.builder()
                 .name(TEST_ANIMAL_NAME)
                 .gender(TEST_ANIMAL_GENDER)
+                .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+                .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
                 .species(TEST_ANIMAL_SPECIES)
                 .race(TEST_ANIMAL_RACE)
                 .birthDate(TEST_ANIMAL_BIRTH_DATE)

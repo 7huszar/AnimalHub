@@ -48,6 +48,12 @@ public class Animal {
     @Column(nullable = false)
     private Gender gender;
 
+    @Column(nullable = true, length = 500)
+    private String englishDescription;
+
+    @Column(nullable = true, length = 500)
+    private String germanDescription;
+
     @OneToOne(cascade = CascadeType.REMOVE)
     private File profilePicture;
 

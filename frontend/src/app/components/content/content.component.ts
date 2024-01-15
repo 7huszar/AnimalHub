@@ -87,4 +87,6 @@ export class ContentComponent implements OnChanges{
   protected isVideo(): boolean {
     return this.type===Type.VIDEO;
   }
+
+  protected readonly Mode = Mode;
 }

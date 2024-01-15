@@ -25,6 +25,10 @@ public class CreateAnimalDto {
     @NotNull(message = "Gender must not be null")
     private Gender gender;
 
+    private String germanDescription;
+
+    private String englishDescription;
+
     @NotNull(message = "Species must not be null")
     private Species species;
 

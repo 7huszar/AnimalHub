@@ -1,7 +1,29 @@
 <app-header></app-header>
 
-<div class="container">
+<div class="container" style="min-width: 95%">
   <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)" class="custom-form">
+
+    <div class="row justify-content-end mb-3" style="min-height: 2em">
+      <div class="col-auto">
+        <div class="btn-group" style="min-width: 15%">
+          <button *ngIf="!modeIsCreate" type="button" class="custom-danger-btn"
+                  (click)="animalForDeletion(animal.name, animal.id)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirm-delete-dialog"
+                  aria-label="Delete shelter">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+          <button type="submit" class="custom-warning-btn" [disabled]="!form.valid">
+            <i class="bi bi-floppy-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
 
     <div class="custom-row">
       <div class="custom-input">
@@ -33,6 +55,35 @@
         </div>
       </div>
     </div>
+
+    <div class="custom-row">
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalEnglishDescription" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.ENGLISH_DESCRIPTION' | translate}}
+          </label>
+          <div class="custom-field">
+              <textarea rows="3" cols="160" id="animalEnglishDescription" name="animalEnglishDescription"
+                        class="form-control" [class]="dynamicCssClassesForInput(animalEnglishDescriptionModel)"
+                        [(ngModel)]="animal.englishDescription"
+                        maxlength="500" #animalEnglishDescriptionModel="ngModel"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalGermanDescription" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.GERMAN_DESCRIPTION' | translate}}
+          </label>
+          <div class="custom-field">
+              <textarea rows="3" cols="160" id="animalGermanDescription" name="animalGermanDescription"
+                        class="form-control" [class]="dynamicCssClassesForInput(animalGermanDescriptionModel)"
+                        [(ngModel)]="animal.germanDescription"
+                        maxlength="500" #animalGermanDescriptionModel="ngModel"></textarea>
+          </div>
+        </div>
+      </div>
+         </div>
 
 
     <div class="custom-row">
@@ -94,24 +145,15 @@
     </div>
 
     <div class="custom-row">
-      <div class="custom-input">
-        <div class="custom-row-inner">
-          <label for="animalImage" class="custom-label">
-            {{'ANIMAL_CREATE_EDIT_PAGE.IMAGE' | translate}}
-          </label>
-          <div class="custom-field">
-            <input type="file" id="animalImage" name="animalImage" accept="image/png, image/jpeg, image/gif"
-                   (change)="onImageSelected($event)" class="form-control">
-          </div>
-        </div>
-      </div>
+
       <div class="custom-input">
         <div class="custom-row-inner">
           <label for="animalBirthDate" class="custom-label">
             {{'ANIMAL_CREATE_EDIT_PAGE.BIRTHDATE' | translate}}
           </label>
           <div class="custom-field">
-            <input type="date" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}" placeholder="yyyy-mm-dd"
+            <input type="date" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}"
+                   placeholder="yyyy-mm-dd"
                    class="form-control" max="{{today}}" [class]="dynamicCssClassesForInput(AnimalBirthDateModel)"
                    [(ngModel)]="animal.birthDate" #AnimalBirthDateModel="ngModel" required>
           </div>
@@ -120,39 +162,38 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- upload image -->
-    <div class="row">
-      <div class="selected-pic" (drop)="dropped($event)" (dragenter)="enterDropZone($event)" (dragleave)="leaveDropZone($event)"
-      [style.border-style]="animalImageURL ? 'none' : 'dashed'">
-        <div class="m-1 text-center">
-        </div>
-        <div *ngIf="!animalImageURL" style="pointer-events: none;">
-          <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
-          {{'ANIMAL_CREATE_EDIT_PAGE.DRAG_AND_DROP' | translate}}
-        </div>
-        <img *ngIf="animalImageURL" [src]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
-      </div>
-      <div class="custom-submit">
-        <div class="row">
-          <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
-            <button *ngIf="modeIsCreate" type="submit" class="custom-button" [disabled]="!form.valid">
-              {{modeIsCreate? ('ANIMAL_CREATE_EDIT_PAGE.SUBMIT_CREATE' | translate):('ANIMAL_CREATE_EDIT_PAGE.SUBMIT_EDIT' | translate)}}
-            </button>
-          </div>
-          <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
-            <button *ngIf="!modeIsCreate" type="button" class="btn btn-sm btn-danger"
-                    (click)="animalForDeletion(animal.name, animal.id)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#confirm-delete-dialog"
-                    aria-label="Delete shelter">
-              <i class="bi bi-trash"></i> Delete
-            </button>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalImage" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.IMAGE' | translate}}
+          </label>
+          <div class="custom-field">
+            <div class="custom-input">
+              <label for="animalImage" class="custom-button">Select Image</label>
+              <input type="file" style="visibility: hidden" id="animalImage" name="animalImage"
+                     accept="image/png, image/jpeg, image/gif, image/bmp"
+                     (change)="onImageSelected($event)" class="form-control">
+            </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
+
+      <!-- upload image -->
+      <div class="row justify-content-end">
+        <div class="selected-pic" style="align-self: flex-end" (drop)="dropped($event)" (dragenter)="enterDropZone($event)"
+             (dragleave)="leaveDropZone($event)"
+             [style.border-style]="animalImageURL ? 'none' : 'dashed'">
+          <div *ngIf="!animalImageURL" style="pointer-events: none;">
+            <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
+            {{'ANIMAL_CREATE_EDIT_PAGE.DRAG_AND_DROP' | translate}}
+          </div>
+          <img *ngIf="animalImageURL" [src]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
+        </div>
+
+      </div>
+      <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion"
+                                 [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
   </form>
 </div>

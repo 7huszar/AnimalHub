@@ -7,6 +7,7 @@ import {IdOnlyShelter} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
 import {NotifierService} from "../../../services/notifier.service";
+import {Globals} from "../../../global/globals";
 
 @Component({
   selector: 'app-create-edit',
@@ -43,6 +44,7 @@ export class CreateEditComponent implements OnInit {
 
 
   constructor(
+    protected globals: Globals,
     private animalService: AnimalService,
     private router: Router,
     private route: ActivatedRoute,

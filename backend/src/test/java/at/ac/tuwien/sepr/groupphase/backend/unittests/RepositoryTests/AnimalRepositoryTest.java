@@ -47,6 +47,8 @@ public class AnimalRepositoryTest extends TestBase {
         Animal animal = Animal.builder()
             .name(TEST_ANIMAL_NAME)
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
@@ -60,6 +62,9 @@ public class AnimalRepositoryTest extends TestBase {
         assertAll(
             () -> assertEquals(allAnimalEntities.size() + 1, animalRepository.findAll().size()),
             () -> assertEquals(animal.getName(), returnAnimal.getName()),
+            () -> assertEquals(animal.getGender(), returnAnimal.getGender()),
+            () -> assertEquals(animal.getEnglishDescription(), returnAnimal.getEnglishDescription()),
+            () -> assertEquals(animal.getGermanDescription(), returnAnimal.getGermanDescription()),
             () -> assertEquals(animal.getSpecies(), returnAnimal.getSpecies()),
             () -> assertEquals(animal.getRace(), returnAnimal.getRace()),
             () -> assertEquals(animal.getBirthDate(), returnAnimal.getBirthDate()),
@@ -105,6 +110,8 @@ public class AnimalRepositoryTest extends TestBase {
             .id(UUID.randomUUID())
             .name(TEST_ANIMAL_NAME)
             .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
             .race(TEST_ANIMAL_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)

@@ -1,4 +1,4 @@
-<img *ngIf="content!==undefined&&isImage()" [src]="content" alt="image" width="100%" height="100%" [class]="setClass"/>
+<img id="image" *ngIf="content!==undefined&&isImage()" [style.border-radius.em]="(this.mode === Mode.SHELTER || this.mode === Mode.ANIMAL) ? 1 : 0" [src]="content" alt="image" width="100%" height="100%" [class]="setClass"/>
 
 <video controls *ngIf="content!==undefined&&isVideo()" width="100%" height="100%" [class]="setClass">
     <source [src]="content"/>

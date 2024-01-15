@@ -25,10 +25,6 @@ export class ShelterComponent implements OnInit {
 ) {
   }
 
-  goBack(): void {
-    this.location.back();
-  }
-
   ngOnInit(): void {
       this.route.params.subscribe(params => {
 

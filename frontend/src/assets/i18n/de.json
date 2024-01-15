@@ -59,8 +59,8 @@
 
   "HEADER": {
     "LOGOUT": "Ausloggen",
-    "ADMIN_PAGE": "Adminansicht",
-    "MEMBER_PAGE": "Member Profil"
+    "ADMIN_PAGE": "Admin-Ansicht",
+    "MEMBER_PAGE": "Dein Tierheim"
   },
 
   "NOTIFIER": {
@@ -81,7 +81,7 @@
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
     "ADOPT": "Adoptiere ",
-    "SHELTER": "Tierheim: ",
+    "SHELTER": "wohnt aktuell im Tierheim: ",
     "NOCONTENT": " hat noch keine Medien.",
     "YEARS": " Jahre",
     "MONTHS": " Monate",
@@ -114,19 +114,26 @@
    "MALE": "Männlich",
    "IMAGE": "Profilbild",
    "SUBMIT_CREATE": "Speichern",
-   "SUBMIT_EDIT": "Überschreiben",
-   "DRAG_AND_DROP": "Drag & Drop"
+   "SUBMIT_EDIT": "Abspeichern",
+   "DRAG_AND_DROP": "Drag & Drop",
+   "ENGLISH_DESCRIPTION": "Beschreibung (englisch)",
+   "GERMAN_DESCRIPTION": "Beschreibung (deutsch)"
  },
 
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
-    "EMAIL": "E-mail:"
+    "EMAIL": "E-Mail:"
   },
 
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Tierart"
+    "ADD_ANIMAL": "Neues Tier hinzufügen",
+    "ALL_SPECIES": "Alle Tierarten",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier"
   },
 
   "PWD": {
