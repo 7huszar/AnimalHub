@@ -69,12 +69,13 @@
 
             <div class="form-group mb-2"></div>
 
-            <button type="submit" (click)="loginUser()" class="btn btn-primary mb-2 form-control-lg">
+            <button type="submit" [disabled]="delayed" (click)="loginUser()" class="btn btn-primary mb-2 form-control-lg">
               {{'LOGIN.LOGIN_BUTTON' | translate}}
             </button>
+            <app-circle-load [time]="60" [radius]="60"></app-circle-load>
           </form>
         </div>
-      </div>
+      </div> removed invalid/valid icon in input fields
     </div>
 
   </div>

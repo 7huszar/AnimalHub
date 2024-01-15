@@ -2,11 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.ErrorListExceptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.SingleExceptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.TimeoutExceptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ErrorListException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.SingleException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /**
@@ -99,6 +102,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
+    @ExceptionHandler(value = {TimeoutException.class})
+    protected ResponseEntity<Object> handleTimoutException(TimoutException e, WebRequest request) {
+        TimeoutExceptionDto dto = (TimeoutExceptionDto) new TimeoutExceptionDto()
+            .setTimeout(e.getTimeout())
+            .setUiError("TE0")
+            .setMessage("Action hast timeout for user");
+        return handleExceptionInternal(e, dto, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
     // TODO handle IOException.
 
     /**
