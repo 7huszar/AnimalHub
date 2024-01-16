@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {ESLint} from "eslint";
 import {Globals} from '../global/globals';
 import {Observable} from "rxjs";
 import {PreferenceDto} from "../dtos/preference";

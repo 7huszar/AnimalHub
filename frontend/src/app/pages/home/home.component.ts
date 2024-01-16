@@ -124,6 +124,7 @@ export class HomeComponent implements OnInit {
     this.preferencesService.loadPreferencesByUserId(this.user.id).subscribe({
       next: data => {
         this.preferenceList = data;
+        //TODO finish
       }
     })
 
@@ -174,7 +175,7 @@ export class HomeComponent implements OnInit {
     }
     this.animalList.splice(this.animalList.indexOf(animal), 1);
     this.loadCards();
-
+    //TODO call preferenceservice
   }
 
   dislike(animal: AnimalDetailDto) {
@@ -186,6 +187,7 @@ export class HomeComponent implements OnInit {
     }
     this.animalList.splice(this.animalList.indexOf(animal), 1);
     this.loadCards();
+    //TODO call preferenceservice
   }
   remove(animal: AnimalDetailDto){
     if (this.likedAnimals.includes(animal)) {
@@ -193,6 +195,7 @@ export class HomeComponent implements OnInit {
       this.animalList.push(animal);
       this.loadCards();
     }
+    //TODO call preferenceservice
   }
 
   leftClick(): void {
