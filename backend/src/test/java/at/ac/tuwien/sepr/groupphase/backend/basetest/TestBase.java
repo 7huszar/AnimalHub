@@ -44,7 +44,8 @@ public abstract class TestBase {
     protected String TEST_ANIMAL_ENGLISH_DESCRIPTION="This is a test description in English.";
     protected String TEST_ANIMAL_GERMAN_DESCRIPTION="Das ist eine Testbeschreibung auf Deutsch.";
     protected Species TEST_ANIMAL_SPECIES = Species.CAT;
-    protected String TEST_ANIMAL_RACE = "Angoran";
+    protected String TEST_ANIMAL_ENGLISH_RACE = "Aegean";
+    protected String TEST_ANIMAL_GERMAN_RACE = "Ägäisch";
     protected LocalDate TEST_ANIMAL_BIRTH_DATE =
         LocalDate.of(2019, 11, 13);
     protected double TEST_ANIMAL_HEIGHT = 0.3;

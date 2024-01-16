@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { debounceTime, Subject } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { ShelterService } from '../../../services/shelter.service';
-import { UserService } from '../../../services/user.service';
-import { ShelterListDto, ShelterSearch } from '../../../dtos/shelter';
-import { UserDetailDto, UserSearch } from '../../../dtos/user';
+import {Component, OnInit} from '@angular/core';
+import {debounceTime, Subject} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
+import {ShelterService} from '../../../services/shelter.service';
+import {UserService} from '../../../services/user.service';
+import {ShelterListDto, ShelterSearch} from '../../../dtos/shelter';
+import {UserDetailDto, UserSearch} from '../../../dtos/user';
+import {Mode} from "../../../enums/modes";
 
 @Component({
   selector: 'app-admin-page',
@@ -13,7 +14,7 @@ import { UserDetailDto, UserSearch } from '../../../dtos/user';
 })
 export class AdminPageComponent implements OnInit {
 
-  typeForDeletion: string = '';
+  modeForDeletion: Mode;
   idForDeletion: string = '';
   nameForDeletion: string = '';
 

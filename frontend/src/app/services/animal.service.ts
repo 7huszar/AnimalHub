@@ -121,8 +121,11 @@ export class AnimalService {
     if (searchParams.species) {
       params = params.append('species', searchParams.species);
     }
-    if (searchParams.race) {
-      params = params.append('race', searchParams.race);
+    if (searchParams.englishRace) {
+      params = params.append('englishRace', searchParams.englishRace);
+    }
+    if (searchParams.germanRace) {
+      params = params.append('germanRace', searchParams.germanRace);
     }
     if (searchParams.height) {
       params = params.append('height', searchParams.height);

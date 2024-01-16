@@ -70,6 +70,16 @@
 
   "LOGO" : "Logo mit der Aufschrift AnimalHub",
 
+  "CONFIRM_DELETE_DIALOG": {
+    "TITLE": "Löschvorgang",
+    "QUESTION_PART_1_SHELTER": "Willst du wirklich das Tierheim ",
+    "QUESTION_PART_1_ANIMAL": "Willst du wirklich das Tier ",
+    "QUESTION_PART_1_USER": "Willst du wirklich den Nutzer ",
+    "QUESTION_PART_2": " löschen?",
+    "NO": "Nein, STOP!",
+    "YES": "Ja, ENDGÜLTIG löschen."
+  },
+
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
     "GENDER": "Geschlecht",
@@ -101,7 +111,8 @@
    "NAME": "Name",
    "SPECIES": "Tierart",
    "GENDER": "Geschlecht",
-   "RACE": "Rasse",
+   "ENGLISH_RACE": "Rasse (englisch)",
+   "GERMAN_RACE": "Rasse (deutsch)",
    "BIRTHDATE": "Geburtsdatum",
    "AGE": "Alter",
    "HEIGHT": "Größe",
@@ -120,10 +131,15 @@
    "GERMAN_DESCRIPTION": "Beschreibung (deutsch)"
  },
 
+  "ANIMAL_CARD": {
+    "NO_MORE_ANIMALS": "Keine weiteren Tiere verfügbar!"
+  },
+
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
-    "EMAIL": "E-Mail:"
+    "EMAIL": "E-Mail:",
+    "DONATE_VIA_PAYPAL": "Spende via Paypal"
   },
 
   "ANIMAL_LIST": {

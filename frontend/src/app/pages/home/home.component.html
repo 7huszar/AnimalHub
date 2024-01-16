@@ -16,11 +16,9 @@
       </button>
       <div class="dropdown-menu bg-primary" aria-labelledby="dropdownMenuButton">
         <!-- Dropdown items go here -->
-        <a class="dropdown-item" href="#">Favourites</a>
         <a class="dropdown-item" *ngIf="authService.isMember()" [routerLink]="['/users/shelter/' + shelterId]" > Edit Shelter
         </a>
         <a class="dropdown-item" [routerLink]="['/users/subscriptions']">My Subscriptions</a>
-        <a class="dropdown-item" [routerLink]="['/admin']">This is an Example Use it</a>
       </div>
     </div>
 <!-- End of burger Menu -->

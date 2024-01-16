@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -95,16 +96,22 @@ public class Shelter {
 
     @Override
     public String toString() {
+        Hibernate.initialize(this.animals);
+        Hibernate.initialize(this.user);
         return "Shelter{"
             + "id=" + id
             + ", name='" + name + '\''
-            + ", address=" + address
+            + ", profilePicture=" + profilePicture
+            + ", address='" + address + '\''
             + ", phoneNumber='" + phoneNumber + '\''
-            + ", email=" + email
+            + ", email='" + email + '\''
             + ", animals=" + animals
+            + ", user=" + user
             + ", createdOn=" + createdOn
-            + ", clientId=" + paypalClientId + '\''
-            + ", secret=" + paypalSecret + '\''
+            + ", paypalClientId='" + paypalClientId + '\''
+            + ", paypalSecret='" + paypalSecret + '\''
+            + ", donationId='" + donationId + '\''
+            + ", subscriptionId='" + subscriptionId + '\''
             + '}';
     }
 }

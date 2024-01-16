@@ -16,7 +16,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +75,8 @@ public class AnimalServiceTest extends TestBase {
             .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)
@@ -93,7 +93,8 @@ public class AnimalServiceTest extends TestBase {
                 () -> assertEquals(createAnimalDto.getEnglishDescription(), returnAnimalDto.getEnglishDescription()),
                 () -> assertEquals(createAnimalDto.getGermanDescription(), returnAnimalDto.getGermanDescription()),
                 () -> assertEquals(createAnimalDto.getSpecies(), returnAnimalDto.getSpecies()),
-                () -> assertEquals(createAnimalDto.getRace(), returnAnimalDto.getRace()),
+                () -> assertEquals(createAnimalDto.getEnglishRace(), returnAnimalDto.getEnglishRace()),
+                () -> assertEquals(createAnimalDto.getGermanRace(), returnAnimalDto.getGermanRace()),
                 () -> assertEquals(createAnimalDto.getBirthDate(), returnAnimalDto.getBirthDate()),
                 () -> assertEquals(createAnimalDto.getHeight(), returnAnimalDto.getHeight()),
                 () -> assertEquals(createAnimalDto.getWeight(), returnAnimalDto.getWeight()),
@@ -121,7 +122,8 @@ public class AnimalServiceTest extends TestBase {
             .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)
@@ -140,7 +142,8 @@ public class AnimalServiceTest extends TestBase {
             .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(0)
             .weight(TEST_ANIMAL_WEIGHT)
@@ -162,7 +165,8 @@ public class AnimalServiceTest extends TestBase {
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .birthDate(LocalDate.of(2000, 01, 01))
             .species(Species.CAT)
-            .race("updated race")
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .height(1)
             .weight(2)
             .shelter(mapper.shelterToShelterDto(allAnimalEntities.get(0).getShelter()))
@@ -178,7 +182,8 @@ public class AnimalServiceTest extends TestBase {
                 () -> assertEquals(updatedAnimal.getEnglishDescription(), updateValues.getEnglishDescription()),
                 () -> assertEquals(updatedAnimal.getGermanDescription(), updateValues.getGermanDescription()),
                 () -> assertEquals(updatedAnimal.getSpecies(), updateValues.getSpecies()),
-                () -> assertEquals(updatedAnimal.getRace(), updateValues.getRace()),
+                () -> assertEquals(updatedAnimal.getEnglishRace(), updateValues.getEnglishRace()),
+                () -> assertEquals(updatedAnimal.getGermanRace(), updateValues.getGermanRace()),
                 () -> assertEquals(updatedAnimal.getBirthDate(), updateValues.getBirthDate()),
                 () -> assertEquals(updatedAnimal.getHeight(), updateValues.getHeight()),
                 () -> assertEquals(updatedAnimal.getWeight(), updateValues.getWeight()),
@@ -201,7 +206,8 @@ public class AnimalServiceTest extends TestBase {
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .birthDate(LocalDate.of(2000, 01, 01))
             .species(Species.CAT)
-            .race("updated race")
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .height(1)
             .weight(2)
             .shelter(mapper.shelterToShelterDto(allAnimalEntities.get(0).getShelter()))
@@ -223,7 +229,8 @@ public class AnimalServiceTest extends TestBase {
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .birthDate(LocalDate.of(2000, 01, 01))
             .species(Species.CAT)
-            .race("updated race")
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .height(1)
             .weight(2)
             .shelter(mapper.shelterToShelterDto(allAnimalEntities.get(0).getShelter()))
@@ -249,7 +256,8 @@ public class AnimalServiceTest extends TestBase {
                 () -> assertEquals(expectedAnimal.getEnglishDescription(), foundAnimal.getEnglishDescription()),
                 () -> assertEquals(expectedAnimal.getGermanDescription(), foundAnimal.getGermanDescription()),
                 () -> assertEquals(expectedAnimal.getSpecies(), foundAnimal.getSpecies()),
-                () -> assertEquals(expectedAnimal.getRace(), foundAnimal.getRace()),
+                () -> assertEquals(expectedAnimal.getEnglishRace(), foundAnimal.getEnglishRace()),
+                () -> assertEquals(expectedAnimal.getGermanRace(), foundAnimal.getGermanRace()),
                 () -> assertEquals(expectedAnimal.getBirthDate(), foundAnimal.getBirthDate()),
                 () -> assertEquals(expectedAnimal.getHeight(), foundAnimal.getHeight()),
                 () -> assertEquals(expectedAnimal.getWeight(), foundAnimal.getWeight()),
@@ -322,7 +330,8 @@ public class AnimalServiceTest extends TestBase {
                 .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
                 .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
                 .species(TEST_ANIMAL_SPECIES)
-                .race(TEST_ANIMAL_RACE)
+                .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+                .germanRace(TEST_ANIMAL_GERMAN_RACE)
                 .birthDate(TEST_ANIMAL_BIRTH_DATE)
                 .height(TEST_ANIMAL_HEIGHT)
                 .weight(TEST_ANIMAL_WEIGHT)
@@ -372,7 +381,8 @@ public class AnimalServiceTest extends TestBase {
                 .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
                 .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
                 .species(TEST_ANIMAL_SPECIES)
-                .race(TEST_ANIMAL_RACE)
+                .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+                .germanRace(TEST_ANIMAL_GERMAN_RACE)
                 .birthDate(TEST_ANIMAL_BIRTH_DATE)
                 .height(TEST_ANIMAL_HEIGHT)
                 .weight(TEST_ANIMAL_WEIGHT)
