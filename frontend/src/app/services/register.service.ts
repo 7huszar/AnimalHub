@@ -14,7 +14,7 @@ import {tap} from "rxjs/operators";
 export class RegisterService {
 
   private http :HttpClient;
-  private authBaseUri: string = this.globals.backendUri + '/register';
+  private authBaseUri: string = this.globals.backendUri + '/email-field';
 
 
   constructor(handler :HttpBackend,

@@ -18,63 +18,11 @@
         </div>
 
         <div>
-          <form class="form" [formGroup]="loginForm" (ngSubmit)="register()">
+          <form class="form" (ngSubmit)="register()">
 
-            <div class="form-group mb-4">
-              <input type="text" name="username" formControlName="username" class="form-control form-control-lg"
-                     [ngClass]="loginForm.controls.username.valid ? validForm() : invalidForm()" id="inputUsername"
-                     aria-describedby="usernameHelp" placeholder="{{'REGISTER.USERNAME_PLACEHOLDER' | translate}}">
-              <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.required">
-                  {{'REGISTER.MAIL_MISSING' | translate}}
-                </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.email
-                    && !loginForm.controls.username.errors.maxlength">
-                  {{'REGISTER.MAIL_MISSING' | translate}}
-                </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.username.errors.maxlength">
-                  {{'LOGIN.MAIL_LONG' | translate}}
-                </small>
-              </div>
-            </div>
+            <app-email-field #emailField ></app-email-field>
 
-            <div class="form-group mb-4">
-              <div class="input-icon-wrapper">
-                <input [type]="pwdField" name="password" formControlName="password" class="form-control form-control-lg"
-                       [ngClass]="loginForm.controls.password.valid ? validForm() : invalidForm()" id="password"
-                       placeholder="{{'REGISTER.PWD_PLACEHOLDER' | translate}}">
-                <i class="bi bi-eye pwd-eye-close" (click)="togglePwd()" *ngIf="pwdField === 'text'"></i>
-                <i class="bi bi-eye-slash pwd-eye-open" (click)="togglePwd()" *ngIf="pwdField === 'password'"></i>
-              </div>
-
-              <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
-                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.required">
-                  {{'REGISTER.PWD_MISSING' | translate}}
-                </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.minlength">
-                  {{'REGISTER.PWD_SHORT' | translate}}
-                </small>
-                <small class="form-text text-danger" *ngIf="loginForm.controls.password.errors.maxlength">
-                  {{'LOGIN.PWD_LONG' | translate}}
-                </small>
-              </div>
-            </div>
-
-            <div class="form-group mb-4">
-              <input [type]="pwdField" name="password_repeat" formControlName="password_repeat" class="form-control form-control-lg"
-                     [ngClass]="loginForm.controls.password_repeat.valid && pwdMatch() ? validForm() : invalidForm()" id="password_repeat"
-                     placeholder="{{'REGISTER.PWD_PLACEHOLDER_REPEAT' | translate}}">
-              <div *ngIf="submitted && loginForm.controls.password_repeat.errors" class="error">
-                <small class="form-text text-danger" *ngIf="loginForm.controls.password_repeat.errors.required">
-                  {{'REGISTER.PWD_REPEAT_MISSING' | translate}}
-                </small>
-              </div>
-              <div *ngIf="submitted && loginForm.controls.password_repeat.valid && !pwdMatch()" class="error">
-                <small class="form-text text-danger">
-                  {{'REGISTER.PWD_MISS_MATCH' | translate}}
-                </small>
-              </div>
-            </div>
+            <app-password-repeat #pwd ></app-password-repeat>
 
             <button type="submit" (click)="register()" class="btn btn-primary mb-2">
               {{'REGISTER.REGISTER_BUTTON' | translate}}

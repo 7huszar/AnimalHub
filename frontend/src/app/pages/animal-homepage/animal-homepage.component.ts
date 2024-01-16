@@ -11,6 +11,8 @@ import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../..
 import {UserService} from "../../services/user.service";
 import {Species} from "../../dtos/species";
 import {PaypalService} from "../../services/paypal.service";
+import {Gender} from "../../dtos/gender";
+import {Globals} from "../../global/globals";
 
 declare var paypal;
 
@@ -23,11 +25,11 @@ declare var paypal;
 export class AnimalHomepageComponent implements OnInit {
 
   animal: AnimalDetailDto = {
-    birthDate: null,
-    createdOn: null,
+    birthDate: new Date(),
     height: 0,
     id: "",
     name: "",
+    gender:null,
     race: "",
     shelter: undefined,
     species: undefined,
@@ -69,8 +71,9 @@ export class AnimalHomepageComponent implements OnInit {
 
 
   constructor(
+    protected globals: Globals,
     protected authService: AuthService,
-    private service: AnimalService,
+    private animalService: AnimalService,
     private paypalService: PaypalService,
     private userService: UserService,
     private route: ActivatedRoute,
@@ -84,7 +87,7 @@ export class AnimalHomepageComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       if (params.get("id")) {
         this.animal.id = params.get("id");
-        let animalObservable: Observable<AnimalDetailDto> = this.service.findById(this.animal.id)
+        let animalObservable: Observable<AnimalDetailDto> = this.animalService.findById(this.animal.id)
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
@@ -143,7 +146,7 @@ export class AnimalHomepageComponent implements OnInit {
                   //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
                   // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
 
-                  //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
+                  //TODO Receiving account animalhub.animalService@gmail.com and 2023ws-se-pr-groupA
                   //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
 
 
@@ -174,7 +177,7 @@ export class AnimalHomepageComponent implements OnInit {
         });
       }
     });
-    this.service.getContents(this.animal.id).subscribe({
+    this.animalService.getContents(this.animal.id).subscribe({
       next: data => {
         this.contents = data;
       },
@@ -233,7 +236,7 @@ export class AnimalHomepageComponent implements OnInit {
 
   public onUpload(): void {
     const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: "TODO make summary"};
-    this.service.addContent(this.animal.id, createFileDto).subscribe({
+    this.animalService.addContent(this.animal.id, createFileDto).subscribe({
       next: fileDto => {
         console.log(fileDto);
         this.newContent = null;
@@ -285,4 +288,5 @@ export class AnimalHomepageComponent implements OnInit {
   }
 
   protected readonly Mode = Mode;
+  protected readonly Gender = Gender;
 }

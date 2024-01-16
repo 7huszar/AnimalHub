@@ -73,6 +73,28 @@ public class AnimalValidator {
             validationErrors.add("Name is too long");
         }
 
+        // # Gender
+
+        if (animalDto.getGender() == null) {
+            validationErrors.add("No Gender selected");
+        }
+
+        // # English Description
+
+        if (animalDto.getEnglishDescription() != null) {
+            if (animalDto.getEnglishDescription().length() > 500) {
+                validationErrors.add("English Description is too long");
+            }
+        }
+
+        // # German Description
+
+        if (animalDto.getGermanDescription() != null) {
+            if (animalDto.getGermanDescription().length() > 500) {
+                validationErrors.add("German Description is too long");
+            }
+        }
+
         // # Species
 
         if (animalDto.getSpecies() == null) {
