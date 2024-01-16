@@ -110,7 +110,7 @@ export class AdminPageComponent implements OnInit {
   userForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
-    this.typeForDeletion = "User";
+    this.modeForDeletion = Mode.USER;
   }
 
   // Common methods
