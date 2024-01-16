@@ -94,6 +94,15 @@ threadpool:
   corePoolSize: 2
   maxPoolSize: 16
   queueCapacity: 128
+
+paypal:
+  client-id: AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv
+  client-secret: EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO
+  sandbox: https://api-m.sandbox.paypal.com
+  auth: /v1/oauth2/token
+  place-order: /v2/checkout/orders
+  capture-order1: /v2/checkout/orders/
+  capture-order2: /capture
 ---
 spring:
   config:
