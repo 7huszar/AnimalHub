@@ -123,7 +123,9 @@
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
-    "EMAIL": "E-Mail:"
+    "EMAIL": "E-Mail:",
+    "CONTACT": "Kontaktiere",
+    "DONATE": "Spende an"
   },
 
   "ANIMAL_LIST": {
