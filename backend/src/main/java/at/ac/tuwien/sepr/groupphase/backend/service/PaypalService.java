@@ -8,5 +8,5 @@ public interface PaypalService {
 
     PaypalTokenDto placeOrder(PaypalDonationDto donationDto);
 
-    void confirmOrder(PaypalCaptureDto captureDto);
+    void captureOrder(PaypalCaptureDto captureDto);
 }

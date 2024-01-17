@@ -63,7 +63,7 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public void confirmOrder(PaypalCaptureDto captureDto) {
+    public void captureOrder(PaypalCaptureDto captureDto) {
         WebClient client = WebClient.create(paypal.getSandbox());
 
         String reply = client.post()
