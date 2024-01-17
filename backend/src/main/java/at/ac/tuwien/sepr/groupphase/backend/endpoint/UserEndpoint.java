@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -385,12 +386,26 @@ public class UserEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("subscriptions/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException {
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException, ConflictException {
         LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
         LOGGER.debug("update Paypal credentials ({})", id);
 
 
         ShelterDetailDto shelter = shelterService.findById(id);
+
+
+        //TODO make this a proper validation
+
+        List<String> conflictErrors = new ArrayList<>();
+
+        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId())|| shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
+            conflictErrors.add("The provided Client Id or Secret are already defined");
+        }
+
+        if (!conflictErrors.isEmpty()) {
+            throw new ConflictException("Creating Animal creates conflict error", conflictErrors);
+        }
+
 
         userService.updatePaypalCredentials(id, shelterDetailDto);
 
@@ -418,16 +433,10 @@ public class UserEndpoint {
             throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
         }
 
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n success");
-
 
         String createSubscription = createSubscriptionPlan(id);
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + createSubscription);
-
         shelterDetailDto.setSubscriptionId(createSubscription);
-
-        ShelterDto sh = shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + sh);
+        shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
 
 
     }
