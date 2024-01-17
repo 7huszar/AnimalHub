@@ -37,7 +37,6 @@ export class AnimalHomepageComponent implements OnInit {
   };
 
   user: UserDetailDto = {
-    paypalClientId: "", paypalSecret: "",
     email: "",
     id: "",
     role: ""

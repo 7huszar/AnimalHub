@@ -61,8 +61,6 @@ export class HomeComponent implements OnInit {
   };
 
   user: UserDetailDto = {
-    paypalClientId: "",
-    paypalSecret: "",
     email: "",
     id: "",
     role: "",

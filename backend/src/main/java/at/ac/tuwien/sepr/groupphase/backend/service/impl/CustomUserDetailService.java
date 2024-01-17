@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -8,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
@@ -74,6 +76,7 @@ public class CustomUserDetailService implements UserService {
     private final UserValidator userValidator;
     private final SecurityProperties securityProperties;
     private final UserMapper userMapper;
+    private final AnimalShelterMapper shelterMapper;
     private final UserConflict conflict;
     private final MailService mail;
 
@@ -530,6 +533,14 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("created Request" + requestEntity);
 
         return requestEntity;
+    }
+
+
+    @Override
+    public void updatePaypalCredentials(UUID id, ShelterDetailDto shelterDetailDto) {
+        LOGGER.trace("Check if user is subscribed");
+
+        shelterRepository.save(shelterMapper.shelterDetailDtoToShelter(shelterDetailDto));
     }
 
 

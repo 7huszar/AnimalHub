@@ -87,23 +87,6 @@
         </div>
       </div>
 
-      <!-- Donation plan id -->
-
-      <div class="custom-input">
-        <div class="custom-row-inner">
-          <label for="shelterName" class="custom-label">
-            Paypal SubscriptionPlan ID
-          </label>
-          <div class="custom-field">
-            <input type="text" id="s" name="SubscriptionPlan" placeholder="SubscriptionPlan"
-                   class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="shelter.subscriptionId"
-                   maxlength="30" #shelterNameModel="ngModel" >
-          </div>
-        </div>
-      </div>
-
-      <!-- PayPal Client Id  -->
-
 
       <div class="custom-input">
         <div class="custom-row-inner">
@@ -112,12 +95,11 @@
           </label>
           <div class="custom-field">
             <input type="text" id="Paypal CLient ID" name="Client ID" placeholder="Client Id"
-                   class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="user.paypalClientId"
-                   maxlength="30" #shelterNameModel="ngModel" >
+                   class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="shelter.paypalClientId"
+                   #shelterNameModel="ngModel" >
           </div>
         </div>
       </div>
-
 
       <div class="custom-input">
         <div class="custom-row-inner">
@@ -126,8 +108,8 @@
           </label>
           <div class="custom-field">
             <input type="text" id="Paypal CLient Secret" name="SubscriptionPlan" placeholder="Paypal Client Secret"
-                   class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="user.paypalSecret"
-                   maxlength="30" #shelterNameModel="ngModel" >
+                   class="form-control" [class]="dynamicCssClassesForInput(shelterNameModel)" [(ngModel)]="shelter.paypalSecret"
+                   #shelterNameModel="ngModel" >
           </div>
         </div>
       </div>

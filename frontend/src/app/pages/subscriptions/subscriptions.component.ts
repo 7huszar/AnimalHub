@@ -35,8 +35,6 @@ export class SubscriptionsComponent implements OnInit {
   };
 
   user: UserDetailDto = {
-    paypalClientId: "",
-    paypalSecret: "",
     email: "",
     id: "",
     role: ""
