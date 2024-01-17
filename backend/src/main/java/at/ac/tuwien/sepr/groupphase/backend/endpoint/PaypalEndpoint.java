@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalCaptureDto
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalTokenDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,17 +25,29 @@ public class PaypalEndpoint {
     static final String BASE_PATH = "api/v1/paypal";
     private final PaypalService paypalService;
 
+    /**
+     *
+     * @param id UUID of shelter
+     * @param donationDto Dto - contains amount
+     * @return Dto containing link for confirming PayPal payment
+     */
     @ResponseStatus(HttpStatus.OK)
     @Secured(UserRole.Values.USER_VALUE)
     @PostMapping("/donate/{id}")
-    public PaypalTokenDto placeOrder(@PathVariable UUID id, @RequestBody PaypalDonationDto donationDto) {
-        return this.paypalService.placeOrder(donationDto);
+    public PaypalTokenDto placeOrder(@PathVariable UUID id, @RequestBody PaypalDonationDto donationDto) throws NotFoundException {
+        return this.paypalService.placeOrder(id, donationDto);
     }
 
+    /**
+     *
+     * @param id PayPal id of transaction
+     * @param captureDto contains the user UUID
+     * @throws NotFoundException if user or transaction not found
+     */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Secured(UserRole.Values.USER_VALUE)
-    @PostMapping("/capture")
-    public void captureOrder(PaypalCaptureDto captureDto) {
-        this.paypalService.captureOrder(captureDto);
+    @PostMapping("/capture/{id}")
+    public void captureOrder(@PathVariable String id, @RequestBody PaypalCaptureDto captureDto) throws NotFoundException {
+        this.paypalService.captureOrder(id, captureDto);
     }
 }
