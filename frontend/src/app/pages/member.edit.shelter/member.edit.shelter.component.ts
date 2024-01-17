@@ -80,7 +80,7 @@ export class MemberEditShelterComponent {
         next: fileDto => {
           this.notification.notifySuccess(`DUMMY.TITLE`);
           console.log('shelter profile image updated', fileDto);
-          this.navigateSuccess(this.shelter.id);
+          this.navigateSuccess();
         }, error: err => {
           console.error(err); // TODO handle
         }
@@ -88,11 +88,13 @@ export class MemberEditShelterComponent {
     }
 
     this.userService.updatePaypalDetails(this.shelter).subscribe({
-      next: userDetailDto => {
-        console.log('User updated', userDetailDto);
+      next: () => {
+        this.notification.notifySuccess("Successfully Updated Paypal Credentials");
+        this.navigateSuccess()
 
       }, error: err => {
         console.error('Error updating Paypal Credentials:', err);
+
         const errorMessage = err.error ? err.error.message : 'Unknown error';
         this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
       }
@@ -100,7 +102,7 @@ export class MemberEditShelterComponent {
 
   }
 
-  private navigateSuccess(id: string): void {
+  private navigateSuccess(): void {
     this.router.navigate(['/home']);
   }
 

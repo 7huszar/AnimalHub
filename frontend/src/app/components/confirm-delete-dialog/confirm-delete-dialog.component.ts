@@ -186,7 +186,7 @@ public deleteEntity() {
   }else if (this.deleteType === 'Animal'){
     this.deleteAnimal()
   }else if (this.deleteType === 'Subscription'){
-    this.cancelSubscription()
+    this.createSubscriptionPlan()
   }
 }
 }

@@ -371,7 +371,7 @@ public class UserEndpoint {
             LOGGER.info("Updating Sheltern with subscription Plan");
             shelterService.update(shelterDto);
 
-            return ("Subscription Plan ID: " + subscriptionPlanId);
+            return (subscriptionPlanId);
         } else {
 
             LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
@@ -385,10 +385,14 @@ public class UserEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("subscriptions/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException {
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException {
         LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
         LOGGER.debug("update Paypal credentials ({})", id);
 
+
+        ShelterDetailDto shelter = shelterService.findById(id);
+
+        userService.updatePaypalCredentials(id, shelterDetailDto);
 
         restTemplate = new RestTemplate();
         String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
@@ -409,12 +413,21 @@ public class UserEndpoint {
 
 
         } catch (Exception e) {
+            userService.updatePaypalCredentials(id, shelter);
             LOGGER.error("Are u sure you provided the correct credentials", e);
             throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
         }
 
-        userService.updatePaypalCredentials(id, shelterDetailDto);
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n success");
 
+
+        String createSubscription = createSubscriptionPlan(id);
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + createSubscription);
+
+        shelterDetailDto.setSubscriptionId(createSubscription);
+
+        ShelterDto sh = shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + sh);
 
 
     }

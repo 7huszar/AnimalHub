@@ -52,6 +52,7 @@ public class ShelterDetailDto {
             + ", phoneNumber='" + phoneNumber + '\''
             + ", email=" + email + '\''
             + ", donation=" + donationId + '\''
+            + ", subscriptionPlanId=" + subscriptionId + '\''
             + ", animals=" + animals + '\''
             + ", createdOn=" + createdOn + '\''
             + '}';
