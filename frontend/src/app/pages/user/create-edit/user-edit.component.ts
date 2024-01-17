@@ -13,7 +13,6 @@ import {UserService} from "../../../services/user.service";
 export class UserEditComponent implements OnInit {
 
   user: UserDetailDto = {
-    paypalClientId: "", paypalSecret: "",
     email: "",
     role: "",
     id: ""

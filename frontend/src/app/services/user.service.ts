@@ -3,6 +3,7 @@ import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/
 import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {ShelterDetailDto} from "../dtos/shelter";
 
 
 @Injectable({
@@ -119,6 +120,17 @@ export class UserService {
 
     return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions', {params})
       .pipe();
+  }
+
+  /**
+   * Updates the given user in the persistent data storage.
+   *
+   * @param shelter user -to-update
+   * @return an Observable for the updated user
+   */
+  updatePaypalDetails(shelter: ShelterDetailDto): Observable<any> {
+    console.log(shelter)
+    return this.httpClient.put<ShelterDetailDto>(this.usersBaseUri + '/subscriptions/' + shelter.id, shelter);
   }
 
 

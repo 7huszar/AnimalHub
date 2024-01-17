@@ -23,6 +23,8 @@ export class MemberEditShelterComponent {
 
 
   shelter: ShelterDto = {
+    paypalClientId: "",
+    paypalSecret: "",
     donationId: '',
     subscriptionId: '',
     id: '',
@@ -36,8 +38,6 @@ export class MemberEditShelterComponent {
   user: UserDetailDto = {
     email: "",
     id: "",
-    paypalClientId: "",
-    paypalSecret: "",
     role: ""
   }
 
@@ -74,40 +74,29 @@ export class MemberEditShelterComponent {
 
   public onSubmit(form: NgForm): void {
 
-    this.shelterService.update(this.shelter).subscribe({
-      next: shelterDto => {
-        console.log('shelter updated', shelterDto);
-        if (this.shelterImage !== null) {
-          const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
-          this.shelterService.updateProfileImage(shelterDto.id, createFileDto).subscribe({
-            next: fileDto => {
-              this.notification.notifySuccess(`DUMMY.TITLE`);
-              console.log('shelter profile image updated', fileDto);
-              this.navigateSuccess(shelterDto.id);
-            }, error: err => {
-              console.error(err); // TODO handle
-            }
-          })
-        } else {
-          this.navigateSuccess(shelterDto.id);
+    if (this.shelterImage !== null) {
+      const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+      this.shelterService.updateProfileImage(this.shelter.id, createFileDto).subscribe({
+        next: fileDto => {
           this.notification.notifySuccess(`DUMMY.TITLE`);
+          console.log('shelter profile image updated', fileDto);
+          this.navigateSuccess(this.shelter.id);
+        }, error: err => {
+          console.error(err); // TODO handle
         }
-      }, error: err => {
-        console.error(err); // TODO handle
-      }
-    });
+      })
+    }
 
-
-    this.userService.update(this.user).subscribe({
+    this.userService.updatePaypalDetails(this.shelter).subscribe({
       next: userDetailDto => {
         console.log('User updated', userDetailDto);
 
       }, error: err => {
-        console.error(err); // TODO handle
-        this.notification.notifyError("Could not update Paypal Credentials", "Error updating Shelter");
+        console.error('Error updating Paypal Credentials:', err);
+        const errorMessage = err.error ? err.error.message : 'Unknown error';
+        this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
       }
     });
-
 
   }
 

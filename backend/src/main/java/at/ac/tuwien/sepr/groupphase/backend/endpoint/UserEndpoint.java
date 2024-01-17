@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
@@ -377,6 +378,44 @@ public class UserEndpoint {
             //TODO make all of these returns proper error messsages
             return "Could not create Subscription Plan please try again Later";
         }
+
+    }
+
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @PutMapping("subscriptions/{id}")
+    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException {
+        LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
+        LOGGER.debug("update Paypal credentials ({})", id);
+
+
+        restTemplate = new RestTemplate();
+        String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
+
+
+        try {
+
+            // Make the POST request to get access token
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+
+            //parsing so just the access Token is being returned
+            String accessToken = userService.parseTokenResponse(response);
+
+            LOGGER.debug("Retrieved Access Token" + accessToken);
+
+
+        } catch (Exception e) {
+            LOGGER.error("Are u sure you provided the correct credentials", e);
+            throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
+        }
+
+        userService.updatePaypalCredentials(id, shelterDetailDto);
+
+
 
     }
 
