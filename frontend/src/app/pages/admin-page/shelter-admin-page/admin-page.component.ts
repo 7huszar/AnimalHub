@@ -82,7 +82,7 @@ export class AdminPageComponent implements OnInit {
   shelterForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
-    this.typeForDeletion = "Shelter";
+    this.modeForDeletion = Mode.SHELTER;
   }
 
   // User-related methods
