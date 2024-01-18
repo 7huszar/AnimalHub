@@ -18,6 +18,7 @@ import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/pa
 import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.component";
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
+import {SuccessComponent} from "./components/donation/success/success.component";
 
 
 const routes: Routes = [
@@ -116,6 +117,9 @@ const routes: Routes = [
         component: MemberEditShelterComponent,
         data: {access: Mode.USER}},
     ] },
+
+  { path: 'donation/success',
+    component: SuccessComponent },
 
   {path: '*', redirectTo: ''}
 ];

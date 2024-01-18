@@ -52,16 +52,15 @@ public class PaypalEndpoint {
      * Captures (=authorizes) and finishes the order.
      *
      * @param id PayPal id of transaction
-     * @param captureDto contains the user UUID
      * @throws NotFoundException if user or transaction not found
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Secured(UserRole.Values.USER_VALUE)
     @PostMapping("/capture/{id}")
-    public void captureOrder(@PathVariable String id, @RequestBody PaypalCaptureDto captureDto) throws NotFoundException {
+    public void captureOrder(@PathVariable String id) throws NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/capture/{}", id);
-        LOGGER.debug("captureDto({}, {})", id, captureDto);
+        LOGGER.debug("captureDto({})", id);
 
-        this.paypalService.captureOrder(id, captureDto);
+        this.paypalService.captureOrder(id);
     }
 }

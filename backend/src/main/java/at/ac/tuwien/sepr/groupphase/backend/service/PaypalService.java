@@ -11,5 +11,5 @@ public interface PaypalService {
 
     PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException;
 
-    void captureOrder(String id, PaypalCaptureDto captureDto) throws NotFoundException;
+    void captureOrder(String id) throws NotFoundException;
 }

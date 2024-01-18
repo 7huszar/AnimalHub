@@ -23,6 +23,7 @@ export class DonationComponent {
     this.service.placeOrder(this.receiver, {amount: this.amount, donator: this.authService.getUser().id}).subscribe({
       next: next => {
         console.log('donated ' + this.amount + '€ to ' + this.receiver);
+        console.log(next.href);
       },
       error: error => {
         console.error(error);

@@ -128,5 +128,7 @@ export class PaypalService {
     return this.httpClient.post<PaypalLinkDto>(this.globals.backendUri + '/paypal/donate/' + receiver, donationDto);
   }
 
-
+  captureOrder(id: string): Observable<any> {
+    return this.httpClient.post<any>(this.globals.backendUri + '/paypal/capture/' + id, {});
+  }
 }

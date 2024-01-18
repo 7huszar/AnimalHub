@@ -43,6 +43,8 @@ import { PasswordComponent } from './components/password/password.component';
 import { PasswordRepeatComponent } from './components/password/password-repeat/password-repeat.component';
 import {EmailFieldComponent} from "./components/email-field/email-field.component";
 import { DonationComponent } from './components/donation/donation.component';
+import { SuccessComponent } from './components/donation/success/success.component';
+import { FailureComponent } from './components/donation/failure/failure.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -79,7 +81,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     PasswordComponent,
     PasswordRepeatComponent,
     EmailFieldComponent,
-    DonationComponent
+    DonationComponent,
+    SuccessComponent,
+    FailureComponent
 
   ],
   imports: [

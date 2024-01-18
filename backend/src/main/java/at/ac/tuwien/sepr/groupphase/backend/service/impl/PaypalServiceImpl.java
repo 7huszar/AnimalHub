@@ -3,6 +3,9 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalCaptureDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalExperienceContextDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalPaymentSourceDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalPaypalDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
@@ -87,7 +90,17 @@ public class PaypalServiceImpl implements PaypalService {
             List.of(new PurchaseUnits(
                 new Amount(
                     "EUR",
-                    donationDto.amount())))
+                    donationDto.amount()))),
+            new PaypalPaymentSourceDto(
+                new PaypalPaypalDto(
+                    new PaypalExperienceContextDto(
+                        "IMMEDIATE_PAYMENT_REQUIRED",
+                        "PAY_NOW",
+                        "http://localhost:4200/#/donation/success",
+                        "http://localhost:4200/#/donation/failure"
+                    )
+                )
+            )
         );
 
         PaypalPlaceOrderResponseDto reply = client.post()
@@ -118,7 +131,7 @@ public class PaypalServiceImpl implements PaypalService {
 
         PaypalLink linkForPayer = null;
         for (PaypalLink link : reply.links()) {
-            if ("approve".equals(link.rel())) {
+            if ("payer-action".equals(link.rel())) {
                 linkForPayer = link;
             }
         }
@@ -131,7 +144,7 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public void captureOrder(String id, PaypalCaptureDto captureDto) throws NotFoundException {
+    public void captureOrder(String id) throws NotFoundException {
         WebClient client = WebClient.create(paypal.getSandbox());
 
         Donation donation = donationRepository.findById(id).orElseThrow(NotFoundException::new);
@@ -139,7 +152,7 @@ public class PaypalServiceImpl implements PaypalService {
         String reply = client.post()
             .uri(paypal.captureOrder(id))
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header("Authorization", captureDto.token())
+            .header("Authorization", "Bearer " + this.retrieveAccessToken(paypal.getClientId(), paypal.getClientSecret()))
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
             .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
