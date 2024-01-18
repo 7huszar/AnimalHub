@@ -126,9 +126,15 @@ public class UserEndpoint {
     @GetMapping("/subscriptions")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get list of subscriptions", security = @SecurityRequirement(name = "apiKey"))
-    public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) {
+    public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("findByUser({})", userDetailDto);
+        //retrieves all subscriptions of the user and checks if they are still active
+        List<SubscriptionDetailDto> checkIfActive = userService.findAllSubscriptionsByUser(userDetailDto);
+        for (SubscriptionDetailDto subscription : checkIfActive) {
+            checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId());
+        }
+
 
         return userService.findAllSubscriptionsByUser(userDetailDto);
     }
@@ -246,7 +252,11 @@ public class UserEndpoint {
                     LOGGER.info("Subscription is active");
                     return "is active";
                 } else if (Objects.equals(isActive, "INACTIVE")) {
-                    LOGGER.info("Subscription is active");
+                    LOGGER.info("Subscription is inactive");
+                    this.userService.deleteSubscription(id);
+                    return "is inactive";
+                } else if (Objects.equals(isActive, "CANCELLED")) {
+                    LOGGER.info("Subscription is inactive");
                     this.userService.deleteSubscription(id);
                     return "is inactive";
                 } else {
