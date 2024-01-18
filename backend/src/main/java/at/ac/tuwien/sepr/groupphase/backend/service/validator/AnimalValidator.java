@@ -101,12 +101,20 @@ public class AnimalValidator {
             validationErrors.add("No Species selected");
         }
 
-        // # Race
+        // # English Race
 
-        if (stringIsEmpty(animalDto.getRace())) {
-            validationErrors.add("No Race selected");
-        } else if (animalDto.getRace().length() > 255) {
-            validationErrors.add("Race name is too long");
+        if (stringIsEmpty(animalDto.getEnglishRace())) {
+            validationErrors.add("No English Race given");
+        } else if (animalDto.getEnglishRace().length() > 255) {
+            validationErrors.add("English Race name is too long");
+        }
+
+        // # German Race
+
+        if (stringIsEmpty(animalDto.getGermanRace())) {
+            validationErrors.add("No German Race given");
+        } else if (animalDto.getGermanRace().length() > 255) {
+            validationErrors.add("German Race name is too long");
         }
 
         // # Birth Date

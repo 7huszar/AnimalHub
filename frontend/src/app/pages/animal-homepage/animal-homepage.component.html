@@ -21,7 +21,7 @@
       <!--    <div class="col" style="max-width: 30em; min-height: 20em">-->
       <h1 class="animal-title" style="text-align: center">{{ animal?.name }}</h1>
       <div class="media">
-        <app-content [mode]="Mode.ANIMAL" [id]="animal.id"></app-content>
+        <app-content [mode]="Mode.ANIMAL_HOME" [id]="animal.id"></app-content>
       </div>
       <div style="margin-top: 5%;display: flex; justify-content: center; align-items: center; text-align: center">
         <div style="max-width: 80%">
@@ -59,7 +59,7 @@
       </div>
       <div class="row align-items-end" style="height: auto; min-height: fit-content">
         <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
-        <div class="col">{{ animal.race }}</div>
+        <div class="col">{{ globals.currentLanguage === "de" ? animal.germanRace : animal.englishRace }}</div>
       </div>
       <div class="row align-items-end" style="height: auto; min-height: fit-content">
         <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>

@@ -2,7 +2,12 @@ import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
-import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {
+  CreateSubscriptionDto,
+  SubscriptionDetailDto,
+  UserDetailDto,
+  UserSearch
+} from "../dtos/user";
 import {ShelterDetailDto} from "../dtos/shelter";
 
 

@@ -7,8 +7,7 @@ import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
 import {Observable} from "rxjs";
 import {PaypalService} from "../../services/paypal.service";
-import {ShelterDetailDto} from "../../dtos/shelter";
-
+import {Mode} from "../../enums/modes";
 
 
 @Component({
@@ -21,10 +20,12 @@ export class ConfirmDeleteDialogComponent {
 
   @Output() deleteErrorEvent = new EventEmitter<{ error: string | null, errorMessage: string }>();
 
-  @Input() deleteWhat: string | undefined = '';
-  @Input() deleteType: string | undefined = '';
+  @Input() deleteName: string | undefined = '';
+  @Input() deleteMode: Mode;
   @Input() DeleteId: string | undefined = '';
   @Input() cancelShelter: string | undefined;
+
+  deleteModeString: string;
 
 
   @HostBinding('class') cssClass = 'modal-fade';
@@ -33,11 +34,14 @@ export class ConfirmDeleteDialogComponent {
     private shelterService: ShelterService,
     private animalService: AnimalService,
     private paypalService: PaypalService,
-    private notification :NotifierService,
+    private notification: NotifierService,
     private userService: UserService,
     private router: Router,
-
   ) {
+  }
+
+  ngOnInit(){
+    this.deleteModeString = this.deleteMode === 3? "USER" : this.deleteMode === 6 ? "ANIMAL" : this.deleteMode === 9 ? "SHELTER" : "undefined";
   }
 
   public deleteShelter() {
@@ -47,7 +51,7 @@ export class ConfirmDeleteDialogComponent {
       this.shelterService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.notifySuccess(`Animal ${this.deleteWhat} successfully deleted.`);
+            this.notification.notifySuccess(`Animal ${this.deleteName} successfully deleted.`);
             this.reloadAdmin();
           },
           error: error => {
@@ -60,7 +64,7 @@ export class ConfirmDeleteDialogComponent {
 
 
   reloadAdmin() {
-    this.router.navigateByUrl('/admin', { skipLocationChange: true }).then(() => {
+    this.router.navigateByUrl('/admin', {skipLocationChange: true}).then(() => {
       window.location.reload();
     });
   }
@@ -71,7 +75,7 @@ export class ConfirmDeleteDialogComponent {
   }
 
   reloadSubscriptions() {
-    this.router.navigateByUrl('/users/subscriptions', { skipLocationChange: true }).then(() => {
+    this.router.navigateByUrl('/users/subscriptions', {skipLocationChange: true}).then(() => {
       window.location.reload();
     });
   }
@@ -81,7 +85,7 @@ export class ConfirmDeleteDialogComponent {
       this.userService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.notifySuccess(`User ${this.deleteWhat} successfully deleted.`);
+            this.notification.notifySuccess(`User ${this.deleteName} successfully deleted.`);
             this.reloadAdmin();
           },
           error: error => {
@@ -108,7 +112,7 @@ export class ConfirmDeleteDialogComponent {
       this.animalService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.notifySuccess(`Shelter ${this.deleteWhat} successfully deleted.`);
+            this.notification.notifySuccess(`Shelter ${this.deleteName} successfully deleted.`);
             this.reloadAnimal();
             //this.adminPageComponent.reloadShelters();
           },
@@ -121,12 +125,12 @@ export class ConfirmDeleteDialogComponent {
   }
 
   //This is just for testing purposes use it
-  public checkSubscription(){
+  public checkSubscription() {
 
     let test: Observable<void> = this.paypalService.checkIfSubscriptionIsActive(this.DeleteId, null)
     test.subscribe({
       next: data => {
-        this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
+        this.notification.notifySuccess(`Subscription to ${this.deleteName} successfully canceled.`);
         this.reloadSubscriptions();
       },
       error: error => {
@@ -140,54 +144,55 @@ export class ConfirmDeleteDialogComponent {
 
   public cancelSubscription() {
 
-  if (this.DeleteId != null) {
-    let test: Observable<void> = this.paypalService.cancelSubscriptions(this.DeleteId, this.cancelShelter)
-    test.subscribe({
-      next: data => {
-        this.notification.notifySuccess(`Subscription to ${this.deleteWhat} successfully canceled.`);
-        this.reloadSubscriptions();
-      },
-      error: error => {
-        //this schould never happen except if no subscriptions have been made
-        console.error('Error posting endpoint', error);
-      }
-    });
-  }
-}
-
-//TODO implement this somewhere when a shelter is being created
-
-  public createSubscriptionPlan() {
-
     if (this.DeleteId != null) {
-      console.log(this.cancelShelter)
-      let test: Observable<void> = this.paypalService.createSubscription(this.cancelShelter)
+      let test: Observable<void> = this.paypalService.cancelSubscriptions(this.DeleteId, this.cancelShelter)
       test.subscribe({
         next: data => {
-          console.log(data)
-          this.notification.notifySuccess(`SubscriptionPlan to successfully created.`);
+          this.notification.notifySuccess(`Subscription to ${this.deleteName} successfully canceled.`);
           this.reloadSubscriptions();
         },
         error: error => {
           //this schould never happen except if no subscriptions have been made
-          console.error('Error creating Plan', error);
+          console.error('Error posting endpoint', error);
         }
       });
     }
   }
 
+//TODO implement this somewhere when a shelter is being created
+
+  // public createSubscriptionPlan() {
+  //
+  //   if (this.DeleteId != null) {
+  //     console.log(this.cancelShelter)
+  //     let test: Observable<void> = this.paypalService.createSubscription(this.cancelShelter)
+  //     test.subscribe({
+  //       next: data => {
+  //         console.log(data)
+  //         this.notification.notifySuccess(`SubscriptionPlan to successfully created.`);
+  //         this.reloadSubscriptions();
+  //       },
+  //       error: error => {
+  //         //this schould never happen except if no subscriptions have been made
+  //         console.error('Error creating Plan', error);
+  //       }
+  //     });
+  //   }
+  // }
 
 
-public deleteEntity() {
-  if (this.deleteType === 'User') {
+
+public delete() {
+  if (this.deleteMode === Mode.USER) {
     this.deleteUser()
-  } else if(this.deleteType === 'Shelter') {
+  } else if(this.deleteMode === Mode.SHELTER) {
     this.deleteShelter()
-  }else if (this.deleteType === 'Animal'){
+  }else if (this.deleteMode === Mode.ANIMAL){
     this.deleteAnimal()
-  }else if (this.deleteType === 'Subscription'){
-    this.createSubscriptionPlan()
   }
+  // else if (this.deleteMode === 'Subscription'){
+  //   this.createSubscriptionPlan()
+  // }
 }
 }
 
