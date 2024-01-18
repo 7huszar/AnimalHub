@@ -35,6 +35,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -121,6 +122,7 @@ public class PaypalServiceImpl implements PaypalService {
 
         Donation donation = Donation.builder()
             .user(donator)
+            .amount(new BigDecimal(donationDto.amount()))
             .stamp(null)
             .payed(false)
             .id(reply.id())
