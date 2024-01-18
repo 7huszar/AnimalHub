@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ShelterRepository extends JpaRepository<Shelter, UUID> {
 
-    List<Shelter> findByNameContainsIgnoreCaseAndAddressContainsIgnoreCaseAndPhoneNumberContainsIgnoreCaseAndEmailContainsIgnoreCase(String name, String address, String phoneNumber, String email);
+    List<Shelter> findByNameIgnoreCaseContaining(String name);
 
     boolean existsById(@NonNull UUID uuid);
 }
