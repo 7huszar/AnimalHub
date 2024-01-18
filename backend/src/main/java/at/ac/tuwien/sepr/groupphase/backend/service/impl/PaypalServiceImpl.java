@@ -34,6 +34,7 @@ import reactor.core.publisher.Mono;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -81,7 +82,13 @@ public class PaypalServiceImpl implements PaypalService {
 
         WebClient client = WebClient.create(paypal.getSandbox());
 
-        CreateOrderDto orderDto = new CreateOrderDto(Intent.CAPTURE, new PurchaseUnits(new Amount("EUR", donationDto.amount())));
+        CreateOrderDto orderDto = new CreateOrderDto(
+            Intent.CAPTURE,
+            List.of(new PurchaseUnits(
+                new Amount(
+                    "EUR",
+                    donationDto.amount())))
+        );
 
         PaypalPlaceOrderResponseDto reply = client.post()
             .uri(paypal.getPlaceOrder())
@@ -111,7 +118,7 @@ public class PaypalServiceImpl implements PaypalService {
 
         PaypalLink linkForPayer = null;
         for (PaypalLink link : reply.links()) {
-            if ("activate".equals(link.rel())) {
+            if ("approve".equals(link.rel())) {
                 linkForPayer = link;
             }
         }
