@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
+import {HttpBackend, HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {SubscriptionDetailDto} from "../dtos/user";
 import {ShelterDetailDto} from "../dtos/shelter";
 
 
@@ -12,14 +12,10 @@ import {ShelterDetailDto} from "../dtos/shelter";
 export class PaypalService {
 
   private usersBaseUri: string = this.globals.backendUri + '/users';
-  private paypalApiUrl = 'https://api.sandbox.paypal.com/v1/billing/subscriptions/';
-  private paypalTokenUrl = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 
   private SellerId: string = "AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv";
   private Sellersecret: string = "EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO";
 
-  //private BuyerId: string = "AQIxpNWdDXGB9l9l_d885Jxf5bLFQF4xG_5IRYEtF6nkQls6q4rSivsvH1hpgWdJWEo94XbHOkqyQqHD";
-  //private Buyersecret: string = "EDEGnfRd7X1ccyWxK_vl-aKBgHgsWDKol0Ab_S30avCmMx5VDzGbwxU689225xiNx8nbnFts9IC1_VD8";
 
 
 
@@ -41,7 +37,6 @@ export class PaypalService {
   }
 
 
-
   checkIfSubscriptionIsActive(id: string, shelterDto: ShelterDetailDto): Observable<any> {
     // Convert the shelterDto to query parameters
     const params = new HttpParams()
@@ -55,10 +50,6 @@ export class PaypalService {
   }
 
   createSubscription(id: string): Observable<any> {
-
     return this.httpClient.post<string>(`${this.usersBaseUri}/subscriptions/${id}`, {});
   }
-
-
-
 }
