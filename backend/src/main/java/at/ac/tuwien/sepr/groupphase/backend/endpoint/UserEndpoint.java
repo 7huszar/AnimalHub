@@ -394,16 +394,9 @@ public class UserEndpoint {
         ShelterDetailDto shelter = shelterService.findById(id);
 
 
-        //TODO make this a proper validation
-
-        List<String> conflictErrors = new ArrayList<>();
-
         if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) && shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
-            conflictErrors.add("The provided Client Id or Secret are already defined");
-        }
-
-        if (!conflictErrors.isEmpty()) {
-            throw new ConflictException("Creating Animal creates conflict error", conflictErrors);
+            shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+            return;
         }
 
 
