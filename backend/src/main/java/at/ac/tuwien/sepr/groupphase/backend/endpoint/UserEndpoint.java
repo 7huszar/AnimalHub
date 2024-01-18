@@ -398,7 +398,7 @@ public class UserEndpoint {
 
         List<String> conflictErrors = new ArrayList<>();
 
-        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) || shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
+        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) && shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
             conflictErrors.add("The provided Client Id or Secret are already defined");
         }
 
