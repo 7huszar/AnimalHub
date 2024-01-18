@@ -32,7 +32,6 @@
                 required
         >
           <option value="USER">USER</option>
-          <option value="ADMIN">ADMIN</option>
           <option value="MEMBER">MEMBER</option>
           <option value="INACTIVE">INACTIVE</option>
 
@@ -57,7 +56,7 @@
       {{ submitButtonText }}
     </button>
   </div>
-  <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteMode]="typeForDeletion"></app-confirm-delete-dialog>
+  <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
 </form>
 
 

@@ -12,7 +12,6 @@ export interface CreateShelterDto {
   phoneNumber: string,
   email: string
   paypalClientId?: string,
-  paypalSecret?: string,
 }
 
 export interface ShelterDetailDto {
@@ -26,7 +25,6 @@ export interface ShelterDetailDto {
   animals?: AnimalDto[],
   createdOn: Date
   paypalClientId?: string,
-  paypalSecret?: string,
 }
 
 export interface ShelterDto {

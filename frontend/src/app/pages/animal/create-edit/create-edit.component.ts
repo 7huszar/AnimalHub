@@ -33,6 +33,10 @@ export class CreateEditComponent implements OnInit {
     createdOn: null
   };
 
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
   dropZoneColor: string = 'text-primary';
 
   animalImageSelected: boolean = false;
@@ -50,6 +54,25 @@ export class CreateEditComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: NotifierService
   ) {
+  }
+
+  /* TODO maybe?
+  public get heading(): string {
+    switch (this.mode) {
+      case Mode.CREATE:
+        return 'Create New Animal';
+      case Mode.EDIT:
+        return 'Edit Animal';
+      default:
+        return '?';
+    }
+  }
+   */
+
+  animalForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "Animal";
   }
 
 
@@ -199,7 +222,4 @@ export class CreateEditComponent implements OnInit {
       this.animalImageURL = URL.createObjectURL(this.animalImage);
     }
   }
-
-  protected readonly now = now;
-  protected readonly Mode = Mode;
 }

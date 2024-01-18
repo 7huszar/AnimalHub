@@ -13,7 +13,7 @@ import {UserService} from "../../../services/user.service";
 export class UserEditComponent implements OnInit {
 
   user: UserDetailDto = {
-    email: "",
+      email: "",
     role: "",
     id: ""
   };

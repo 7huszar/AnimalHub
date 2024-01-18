@@ -1,11 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {debounceTime, Subject} from 'rxjs';
-import {ToastrService} from 'ngx-toastr';
-import {ShelterService} from '../../../services/shelter.service';
-import {UserService} from '../../../services/user.service';
-import {ShelterListDto, ShelterSearch} from '../../../dtos/shelter';
-import {UserDetailDto, UserSearch} from '../../../dtos/user';
-import {Mode} from "../../../enums/modes";
+import { Component, OnInit } from '@angular/core';
+import { debounceTime, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { ShelterService } from '../../../services/shelter.service';
+import { UserService } from '../../../services/user.service';
+import { ShelterListDto, ShelterSearch } from '../../../dtos/shelter';
+import { UserDetailDto, UserSearch } from '../../../dtos/user';
 
 @Component({
   selector: 'app-admin-page',
@@ -14,7 +13,7 @@ import {Mode} from "../../../enums/modes";
 })
 export class AdminPageComponent implements OnInit {
 
-  modeForDeletion: Mode;
+  typeForDeletion: string = '';
   idForDeletion: string = '';
   nameForDeletion: string = '';
 
@@ -82,7 +81,7 @@ export class AdminPageComponent implements OnInit {
   shelterForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
-    this.modeForDeletion = Mode.SHELTER;
+    this.typeForDeletion = "Shelter";
   }
 
   // User-related methods
@@ -110,7 +109,7 @@ export class AdminPageComponent implements OnInit {
   userForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
-    this.modeForDeletion = Mode.USER;
+    this.typeForDeletion = "User";
   }
 
   // Common methods

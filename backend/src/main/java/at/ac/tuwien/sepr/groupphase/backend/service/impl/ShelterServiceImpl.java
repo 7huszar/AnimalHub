@@ -47,9 +47,7 @@ public class ShelterServiceImpl implements ShelterService {
 
     @Override
     public List<ShelterListDto> search(ShelterSearchDto searchParameters) {
-        var shelters =
-            shelterRepository.findByNameContainsIgnoreCaseAndAddressContainsIgnoreCaseAndPhoneNumberContainsIgnoreCaseAndEmailContainsIgnoreCase(searchParameters.name(), searchParameters.address(), searchParameters.phoneNumber(),
-                searchParameters.email());
+        var shelters = shelterRepository.findByNameIgnoreCaseContaining(searchParameters.name());
 
         return shelters.stream()
             .map(mapper::shelterToShelterListDto).toList();
