@@ -27,7 +27,7 @@
 
   <div class="row">
     <div class="col-1 center-column">
-      <i class="arrow bi-chevron-compact-left" (click)="leftClick()"></i>
+      <i class="arrow_tmp arrow bi-chevron-compact-left" (click)="leftClick()"></i>
     </div>
     <div class="col center">
       <div class ="row" style="justify-content: center">
@@ -39,7 +39,7 @@
                            [empty]="emptyLeft">
           </app-animal-card>
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-none d-xxl-block">
           <app-animal-card [name]="getCard(Position.MIDDLE)?.name"
                            [id]="getCard(Position.MIDDLE)?.id"
                            (like)="like(getCard(Position.MIDDLE))"
@@ -47,7 +47,7 @@
                            [empty]="emptyMiddle">
           </app-animal-card>
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-none">
           <app-animal-card [name]="getCard(Position.RIGHT)?.name"
                            [id]="getCard(Position.RIGHT)?.id"
                            (like)="like(getCard(Position.RIGHT))"
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="col-1 center-column">
-      <i class="arrow bi-chevron-compact-right" (click)="rightClick()"></i>
+        <i class="arrow_tmp arrow bi-chevron-compact-right" (click)="rightClick()"></i>
     </div>
   </div>
   <div class="row">

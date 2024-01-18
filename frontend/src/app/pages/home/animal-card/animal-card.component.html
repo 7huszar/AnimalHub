@@ -21,7 +21,7 @@
 
   <div class="row text-center" style="height: 3.75em">
     <div class="col">
-      <i class="bi bi-x-circle-fill text-danger" (click)="dislike.emit()"></i>
+      <i class="bi bi-heartbreak-fill dislike_icon" (click)="dislike.emit()"></i>
     </div>
     <div class="col">
       <a routerLink="/animal/{{id}}">
@@ -29,7 +29,7 @@
       </a>
     </div>
     <div class="col">
-      <i class="bi bi-heart-fill text-primary" (click)="like.emit()"></i>
+      <i class="like_icon bi bi-heart-fill" (click)="like.emit()"></i>
     </div>
   </div>
 </div>

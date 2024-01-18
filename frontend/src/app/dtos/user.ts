@@ -6,8 +6,6 @@ export interface UserDetailDto {
   email: string,
   role: string,
   shelter?: ShelterDto,
-  paypalClientId?: string,
-  paypalSecret?: string,
 }
 
 export interface UserSearch {
