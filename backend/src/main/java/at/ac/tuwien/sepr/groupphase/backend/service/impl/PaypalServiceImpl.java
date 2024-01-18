@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalCaptureDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalExperienceContextDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalPaymentSourceDto;
@@ -13,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.scheduled.SubscriptionCleaner;
 import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.Amount;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.AuthResponseDto;
