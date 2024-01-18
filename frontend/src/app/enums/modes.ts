@@ -1,11 +1,13 @@
 export enum Mode {
-  CREATE,
+  CREATE ,
   EDIT,
   INACTIVE,
   USER,
   MEMBER,
   ADMIN,
   ANIMAL,
+  ANIMAL_HOME,
+  SHELTER_HOME,
   SHELTER,
   CONTENT
 }

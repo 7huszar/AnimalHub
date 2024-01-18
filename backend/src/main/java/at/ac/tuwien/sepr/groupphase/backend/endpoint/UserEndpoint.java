@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -100,7 +102,7 @@ public class UserEndpoint {
 
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("edit/{id}")
-    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Update specific user in database", security = @SecurityRequirement(name = "apiKey"))
     public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
         LOGGER.info("PUT " + BASE_PATH + "/edit/" + id);
         LOGGER.debug("update({},{})", id, userDetailDto);
@@ -370,13 +372,72 @@ public class UserEndpoint {
             LOGGER.info("Updating Sheltern with subscription Plan");
             shelterService.update(shelterDto);
 
-            return ("Subscription Plan ID: " + subscriptionPlanId);
+            return (subscriptionPlanId);
         } else {
 
             LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
             //TODO make all of these returns proper error messsages
             return "Could not create Subscription Plan please try again Later";
         }
+
+    }
+
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @PutMapping("subscriptions/{id}")
+    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException, ConflictException {
+        LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
+        LOGGER.debug("update Paypal credentials ({})", id);
+
+
+        ShelterDetailDto shelter = shelterService.findById(id);
+
+
+        //TODO make this a proper validation
+
+        List<String> conflictErrors = new ArrayList<>();
+
+        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) || shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
+            conflictErrors.add("The provided Client Id or Secret are already defined");
+        }
+
+        if (!conflictErrors.isEmpty()) {
+            throw new ConflictException("Creating Animal creates conflict error", conflictErrors);
+        }
+
+
+        userService.updatePaypalCredentials(id, shelterDetailDto);
+
+        restTemplate = new RestTemplate();
+        String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
+
+
+        try {
+
+            // Make the POST request to get access token
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+
+            //parsing so just the access Token is being returned
+            String accessToken = userService.parseTokenResponse(response);
+
+            LOGGER.debug("Retrieved Access Token" + accessToken);
+
+
+        } catch (Exception e) {
+            userService.updatePaypalCredentials(id, shelter);
+            LOGGER.error("Are u sure you provided the correct credentials", e);
+            throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
+        }
+
+
+        String createSubscription = createSubscriptionPlan(id);
+        shelterDetailDto.setSubscriptionId(createSubscription);
+        shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+
 
     }
 

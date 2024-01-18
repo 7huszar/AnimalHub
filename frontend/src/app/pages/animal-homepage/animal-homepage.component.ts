@@ -29,15 +29,15 @@ export class AnimalHomepageComponent implements OnInit {
     height: 0,
     id: "",
     name: "",
-    gender:null,
-    race: "",
+    gender: null,
+    englishRace: "",
+    germanRace: "",
     shelter: undefined,
     species: undefined,
     weight: 0,
   };
 
   user: UserDetailDto = {
-    paypalClientId: "", paypalSecret: "",
     email: "",
     id: "",
     role: ""
@@ -69,7 +69,6 @@ export class AnimalHomepageComponent implements OnInit {
   protected isSubscribed: boolean;
 
 
-
   constructor(
     protected globals: Globals,
     protected authService: AuthService,
@@ -79,7 +78,6 @@ export class AnimalHomepageComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: ToastrService,
     private el: ElementRef,
-
   ) {
   }
 
@@ -117,11 +115,11 @@ export class AnimalHomepageComponent implements OnInit {
             isSubscribedObservable.subscribe({
               next: data => {
                 console.log("User is subscribed to Animal")
-                if (data!=null){
+                if (data != null) {
                   //this is the case that the user is already subscribed
-                  this.isSubscribed=true;
+                  this.isSubscribed = true;
                   //TODO blurr animal content in this case
-                }else{
+                } else {
                   //if user is not subscribed load the paypal button
 
                   // Load the PayPal script
@@ -131,7 +129,7 @@ export class AnimalHomepageComponent implements OnInit {
                   userObservable.subscribe({
                     next: data => {
                       this.user = data;
-                      this.subscription.user=this.user;
+                      this.subscription.user = this.user;
                     },
                     error: error => {
                       //this schould never happen
@@ -168,7 +166,6 @@ export class AnimalHomepageComponent implements OnInit {
             });
 
 
-
           },
           error: error => {
             console.error('Error finding animal', error);
@@ -186,8 +183,6 @@ export class AnimalHomepageComponent implements OnInit {
         this.notification.error("Could Not find contents of animal");
       }
     })
-
-
 
 
   }
@@ -209,9 +204,9 @@ export class AnimalHomepageComponent implements OnInit {
       },
       onApprove: (data, actions) => {
         console.log(data)
-        this.subscription.animal=this.animal;
-        this.subscription.subscriptionId=data.subscriptionID;
-        this.subscription.tier="1";
+        this.subscription.animal = this.animal;
+        this.subscription.subscriptionId = data.subscriptionID;
+        this.subscription.tier = "1";
         console.log('Subscription Payload:', this.subscription);
         console.log(data)
         this.userService.createSubscription(this.subscription).subscribe(
@@ -235,7 +230,11 @@ export class AnimalHomepageComponent implements OnInit {
   }
 
   public onUpload(): void {
-    const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: "TODO make summary"};
+    const createFileDto: CreateFileDto = {
+      file: this.newContent,
+      name: this.newContent.name,
+      summary: "TODO make summary"
+    };
     this.animalService.addContent(this.animal.id, createFileDto).subscribe({
       next: fileDto => {
         console.log(fileDto);
@@ -257,7 +256,7 @@ export class AnimalHomepageComponent implements OnInit {
     let age = timeDifference;
     console.log("AGE " + timeDifference);
     if (timeDifference > 365.25) {
-      age = Math.floor(timeDifference/365.25);
+      age = Math.floor(timeDifference / 365.25);
       if (age > 1) {
         this.years = true;
       } else {
@@ -265,7 +264,7 @@ export class AnimalHomepageComponent implements OnInit {
       }
     }
     if (timeDifference < 365.25 && timeDifference > 30) {
-      age = Math.floor(timeDifference/(30));
+      age = Math.floor(timeDifference / (30));
       if (age > 1) {
         this.months = true;
       } else {

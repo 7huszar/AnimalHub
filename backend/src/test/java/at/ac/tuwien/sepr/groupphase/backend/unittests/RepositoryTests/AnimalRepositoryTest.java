@@ -50,7 +50,8 @@ public class AnimalRepositoryTest extends TestBase {
             .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)
@@ -66,7 +67,8 @@ public class AnimalRepositoryTest extends TestBase {
             () -> assertEquals(animal.getEnglishDescription(), returnAnimal.getEnglishDescription()),
             () -> assertEquals(animal.getGermanDescription(), returnAnimal.getGermanDescription()),
             () -> assertEquals(animal.getSpecies(), returnAnimal.getSpecies()),
-            () -> assertEquals(animal.getRace(), returnAnimal.getRace()),
+            () -> assertEquals(animal.getEnglishRace(), returnAnimal.getEnglishRace()),
+            () -> assertEquals(animal.getGermanRace(), returnAnimal.getGermanRace()),
             () -> assertEquals(animal.getBirthDate(), returnAnimal.getBirthDate()),
             () -> assertEquals(animal.getHeight(), returnAnimal.getHeight()),
             () -> assertEquals(animal.getWeight(), returnAnimal.getWeight()),
@@ -113,7 +115,8 @@ public class AnimalRepositoryTest extends TestBase {
             .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
             .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)

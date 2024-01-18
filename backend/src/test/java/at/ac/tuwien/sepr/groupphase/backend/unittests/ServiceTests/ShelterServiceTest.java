@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;

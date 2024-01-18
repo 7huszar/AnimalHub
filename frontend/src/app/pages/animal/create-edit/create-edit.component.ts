@@ -8,6 +8,7 @@ import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
 import {NotifierService} from "../../../services/notifier.service";
 import {Globals} from "../../../global/globals";
+import {now} from "lodash";
 
 @Component({
   selector: 'app-create-edit',
@@ -23,7 +24,8 @@ export class CreateEditComponent implements OnInit {
     name: null,
     gender: null,
     species: null,
-    race: null,
+    englishRace: null,
+    germanRace: null,
     birthDate: null,
     shelter: null,
     height: null,
@@ -31,11 +33,9 @@ export class CreateEditComponent implements OnInit {
     createdOn: null
   };
 
-  typeForDeletion: string = '';
-  idForDeletion: string = '';
-  nameForDeletion: string = '';
-
   dropZoneColor: string = 'text-primary';
+
+  animalImageSelected: boolean = false;
 
   private animalImage: File = null;
   protected animalImageURL: any = null;
@@ -50,12 +50,6 @@ export class CreateEditComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: NotifierService
   ) {
-  }
-
-  animalForDeletion(name: string, id: string) {
-    this.idForDeletion = id;
-    this.nameForDeletion = name;
-    this.typeForDeletion = "Animal";
   }
 
 
@@ -142,8 +136,9 @@ export class CreateEditComponent implements OnInit {
   }
 
   public onImageSelected(event: any): void {
-    const img = event.target.files[0];
-    this.setImage(img);
+      const img = event.target.files[0];
+      this.animalImageSelected = true;
+      this.setImage(img);
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -204,4 +199,7 @@ export class CreateEditComponent implements OnInit {
       this.animalImageURL = URL.createObjectURL(this.animalImage);
     }
   }
+
+  protected readonly now = now;
+  protected readonly Mode = Mode;
 }

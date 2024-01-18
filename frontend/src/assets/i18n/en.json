@@ -25,7 +25,9 @@
     "ACCOUNT": "manage account",
     "LOAD_FAILED": "failed to load animals",
     "DONATE_1": "Donate to ",
-    "ADOPT": "Adopt "
+    "ADOPT": "Adopt ",
+    "FAVORITES_TITLE": "Favorites",
+    "NO_FAVORITES": "Like Animals, so they will be saved in your favorites!"
   },
 
   "REGISTER": {
@@ -68,6 +70,16 @@
 
   "LOGO" : "Logo with the writing AnimalHub",
 
+  "CONFIRM_DELETE_DIALOG": {
+    "TITLE": "Delete Operation",
+    "QUESTION_PART_1_SHELTER": "Do you really want to delete the Shelter ",
+    "QUESTION_PART_1_ANIMAL": "Do you really want to delete the Animal ",
+    "QUESTION_PART_1_USER": "Do you really want to delete the User ",
+    "QUESTION_PART_2": " ?",
+    "NO": "No, STOP!",
+    "YES": "Yes, delete FOREVER."
+  },
+
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Species:",
     "GENDER": "Gender:",
@@ -99,7 +111,8 @@
     "NAME": "Name",
     "SPECIES": "Species",
     "GENDER": "Gender",
-    "RACE": "Race",
+    "ENGLISH_RACE": "Race (englisch)",
+    "GERMAN_RACE": "Race (german)",
     "BIRTHDATE": "Date of birth",
     "AGE": "Age",
     "HEIGHT": "Height",
@@ -119,12 +132,16 @@
     "GERMAN_DESCRIPTION": "Description (german)"
   },
 
+  "ANIMAL_CARD": {
+    "NO_MORE_ANIMALS": "No more animals to explore!"
+  },
+
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Address:",
     "PHONE": "Phone Number:",
     "EMAIL": "E-Mail:",
-    "CONTACT": "Contact",
-    "DONATE": "Donate to "
+    "BACK_BUTTON": "BACK",
+    "DONATE_VIA_PAYPAL": "Donate via Paypal"
   },
 
   "ANIMAL_LIST": {

@@ -56,7 +56,7 @@ public class ApplicationUser {
             + ", email='" + email + '\''
             + ", password='" + password + '\''
             + ", role=" + role + '\''
-            + ", shelter=" + shelter + '\''
+            + ", shelter=" + shelter.getName() + '\''
             + '}';
     }
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -8,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
@@ -63,7 +65,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
@@ -74,6 +76,7 @@ public class CustomUserDetailService implements UserService {
     private final UserValidator userValidator;
     private final SecurityProperties securityProperties;
     private final UserMapper userMapper;
+    private final AnimalShelterMapper shelterMapper;
     private final UserConflict conflict;
     private final MailService mail;
 
@@ -509,15 +512,15 @@ public class CustomUserDetailService implements UserService {
 
         String requestBody = "{ "
             + "\"product_id\": \"PROD-0WX22620KG452370H\", "
-            + "\"name\": \"Created Automatically\", "
-            + "\"description\": \"This is a test\", "
+            + "\"name\": \"Subscription to Animal\", "
+            + "\"description\": \"Thank you for your Donation\", "
             + "\"billing_cycles\": [ "
             + "{ "
             + "\"frequency\": { \"interval_unit\": \"MONTH\", \"interval_count\": 1 }, "
             + "\"tenure_type\": \"REGULAR\", "
             + "\"sequence\": 1, "
             + "\"total_cycles\": 12, "
-            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"9.99\", \"currency_code\": \"USD\" } } "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"12.99\", \"currency_code\": \"USD\" } } "
             + "} "
             + "], "
             + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "
@@ -530,6 +533,14 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("created Request" + requestEntity);
 
         return requestEntity;
+    }
+
+
+    @Override
+    public void updatePaypalCredentials(UUID id, ShelterDetailDto shelterDetailDto) {
+        LOGGER.trace("Check if user is subscribed");
+
+        shelterRepository.save(shelterMapper.shelterDetailDtoToShelter(shelterDetailDto));
     }
 
 

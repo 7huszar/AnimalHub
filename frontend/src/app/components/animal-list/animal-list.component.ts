@@ -3,7 +3,7 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {Mode} from "../../enums/modes";
-import {AnimalService} from "../../services/animal.service";
+import {Globals} from "../../global/globals";
 
 @Component({
   selector: 'app-animal-list',
@@ -21,19 +21,9 @@ export class AnimalListComponent {
 
   constructor(private router: Router,
               public authService: AuthService,
-              private animalService: AnimalService) {
+              protected globals: Globals) {
   }
 
-  typeForDeletion: string = '';
-  idForDeletion: string = '';
-  nameForDeletion: string = '';
-
-
-  animalForDeletion(name: string, id: string) {
-    this.idForDeletion = id;
-    this.nameForDeletion = name;
-    this.typeForDeletion = "Shelter";
-  }
   ngOnInit(): void {
     this.displayAnimalCards('all');
   }

@@ -36,8 +36,11 @@ public class AnimalDetailDto {
     @NotNull(message = "Species must not be null")
     private Species species;
 
-    @NotNull(message = "Race must not be null")
-    private String race;
+    @NotNull(message = "English Race must not be null")
+    private String englishRace;
+
+    @NotNull(message = "German Race must not be null")
+    private String germanRace;
 
     @NotNull(message = "Birth Date must not be null")
     private LocalDate birthDate;
@@ -56,8 +59,12 @@ public class AnimalDetailDto {
         return "AnimalDetailDto{"
             + "id=" + id
             + ", name='" + name + '\''
+            + ", gender=" + gender
+            + ", germanDescription='" + germanDescription + '\''
+            + ", englishDescription='" + englishDescription + '\''
             + ", species=" + species
-            + ", race='" + race + '\''
+            + ", englishRace='" + englishRace + '\''
+            + ", germanRace='" + germanRace + '\''
             + ", birthDate=" + birthDate
             + ", shelter=" + shelter
             + ", height=" + height

@@ -7,11 +7,11 @@ import {Globals} from "../../global/globals";
   templateUrl: './lang-select.component.html',
   styleUrls: ['./lang-select.component.scss']
 })
-export class LangSelectComponent{
+export class LangSelectComponent {
 
-  private langMap : Map<string, string> = new Map<string, string>([
-    ["en", "EN"],
-    ["de", "DE"]
+  private langMap: Map<string, string> = new Map<string, string>([
+    ["en", "English"],
+    ["de", "German"]
   ]);
 
   constructor(private translateService : TranslateService, private globals: Globals) {

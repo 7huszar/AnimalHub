@@ -28,15 +28,14 @@ export class SubscriptionsComponent implements OnInit {
     id: "",
     name: "",
     gender: null,
-    race: "",
+    englishRace: null,
+    germanRace: null,
     shelter: undefined,
     species: undefined,
     weight: 0,
   };
 
   user: UserDetailDto = {
-    paypalClientId: "",
-    paypalSecret: "",
     email: "",
     id: "",
     role: ""
