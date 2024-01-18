@@ -5,7 +5,6 @@ import {Globals} from '../global/globals';
 import {
   CreateSubscriptionDto,
   SubscriptionDetailDto,
-  UiLanguageChangeDto,
   UserDetailDto,
   UserSearch
 } from "../dtos/user";
