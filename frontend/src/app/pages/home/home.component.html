@@ -65,7 +65,7 @@
     <div class="col">
       <div class="headings">
         <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
-          <h1 style="float: left">Favorites</h1>
+          <h1 style="float: left">{{'HOME.FAVORITES_TITLE' | translate}}</h1>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@
     </div>
   </div>
   <div class="container" *ngIf="likedAnimals?.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
-    <p style="font-size: 2rem; margin: 0">Noch keine Favoriten? Like ein paar Tierchen!</p>
+    <p style="font-size: 2rem; margin: 0">{{'HOME.NO_FAVORITES' | translate}}</p>
   </div>
 </div>
 

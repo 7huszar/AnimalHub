@@ -25,7 +25,9 @@
     "ACCOUNT": "manage account",
     "LOAD_FAILED": "failed to load animals",
     "DONATE_1": "Donate to ",
-    "ADOPT": "Adopt "
+    "ADOPT": "Adopt ",
+    "FAVORITES_TITLE": "Favorites",
+    "NO_FAVORITES": "Like Animals, so they will be saved in your favorites!"
   },
 
   "REGISTER": {

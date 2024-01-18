@@ -100,7 +100,7 @@ public class UserEndpoint {
 
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("edit/{id}")
-    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Update specific user in database", security = @SecurityRequirement(name = "apiKey"))
     public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
         LOGGER.info("PUT " + BASE_PATH + "/edit/" + id);
         LOGGER.debug("update({},{})", id, userDetailDto);

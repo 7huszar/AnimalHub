@@ -37,12 +37,11 @@ public abstract class TestBase {
     protected List<ApplicationUser> allUserEntities;
 
 
-
     // ### ANIMAL TestData
     protected String TEST_ANIMAL_NAME = "Herbert";
     protected Gender TEST_ANIMAL_GENDER = Gender.MALE;
-    protected String TEST_ANIMAL_ENGLISH_DESCRIPTION="This is a test description in English.";
-    protected String TEST_ANIMAL_GERMAN_DESCRIPTION="Das ist eine Testbeschreibung auf Deutsch.";
+    protected String TEST_ANIMAL_ENGLISH_DESCRIPTION = "This is a test description in English.";
+    protected String TEST_ANIMAL_GERMAN_DESCRIPTION = "Das ist eine Testbeschreibung auf Deutsch.";
     protected Species TEST_ANIMAL_SPECIES = Species.CAT;
     protected String TEST_ANIMAL_ENGLISH_RACE = "Aegean";
     protected String TEST_ANIMAL_GERMAN_RACE = "Ägäisch";
@@ -66,7 +65,6 @@ public abstract class TestBase {
     // ### OTHER TestData
     protected String BASE_URI = "/api/v1";
     protected String ANIMALS_BASE_URI = BASE_URI + "/animals";
-
 
 
     // ### METHODS

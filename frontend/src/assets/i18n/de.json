@@ -25,7 +25,9 @@
     "ACCOUNT": "Account verwalten",
     "LOAD_FAILED": "Tiere konnten nicht geladen werden",
     "DONATE_1": "Spende an ",
-    "ADOPT": "Adoptiere "
+    "ADOPT": "Adoptiere ",
+    "FAVORITES_TITLE": "Favoriten",
+    "NO_FAVORITES": "Like Tiere, dann werden sie hier in den Favoriten gespeichert!"
 
   },
 
