@@ -182,7 +182,7 @@ export class ConfirmDeleteDialogComponent {
 
 
 
-public deleteEntity() {
+public delete() {
   if (this.deleteMode === Mode.USER) {
     this.deleteUser()
   } else if(this.deleteMode === Mode.SHELTER) {
