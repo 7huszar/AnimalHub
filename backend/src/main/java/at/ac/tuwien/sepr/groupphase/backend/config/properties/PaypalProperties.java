@@ -17,6 +17,7 @@ public class PaypalProperties {
     private String placeOrder;
     private String captureOrder1;
     private String captureOrder2;
+
     public String captureOrder(String id) {
         return getCaptureOrder1() + id + getCaptureOrder2();
     }

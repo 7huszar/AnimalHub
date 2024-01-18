@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.dto;
 
+import lombok.Getter;
+
+@Getter
 public enum Intent {
     CAPTURE("CAPTURE"),
     AUTHORIZE("AUTHORIZE");
@@ -8,9 +11,5 @@ public enum Intent {
 
     Intent(String value) {
         this.value = value;
-    }
-
-    public String getValue() {
-        return value;
     }
 }

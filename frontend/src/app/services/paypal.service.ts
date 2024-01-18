@@ -4,6 +4,7 @@ import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
 import {ShelterDetailDto} from "../dtos/shelter";
+import {PaypalDonationDto, PaypalLinkDto} from "../dtos/paypal";
 
 
 @Injectable({
@@ -123,6 +124,9 @@ export class PaypalService {
     return this.httpClient.post<string>(`${this.usersBaseUri}/subscriptions/${id}`, {});
   }
 
+  placeOrder(receiver: string, donationDto: PaypalDonationDto): Observable<PaypalLinkDto> {
+    return this.httpClient.post<PaypalLinkDto>(this.globals.backendUri + '/paypal/donate/' + receiver, donationDto);
+  }
 
 
 }
