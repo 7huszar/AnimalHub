@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.FrontendProperties;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalExperienceContextDto;
@@ -13,7 +14,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.scheduled.SubscriptionCleaner;
 import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.Amount;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.AuthResponseDto;
@@ -52,6 +52,7 @@ public class PaypalServiceImpl implements PaypalService {
     private final DonationRepository donationRepository;
     private final ShelterRepository shelterRepository;
     private final UserRepository userRepository;
+    private final FrontendProperties frontend;
 
     private String retrieveAccessToken(String clientId, String clientSecret) {
         WebClient client = WebClient.create(paypal.getSandbox());
@@ -98,8 +99,8 @@ public class PaypalServiceImpl implements PaypalService {
                     new PaypalExperienceContextDto(
                         "IMMEDIATE_PAYMENT_REQUIRED",
                         "PAY_NOW",
-                        "http://localhost:4200/#/donation/success",
-                        "http://localhost:4200/#/donation/failure"
+                        frontend.getUrl() + "/donation/success",
+                        frontend.getUrl() + "/donation/failure"
                     )
                 )
             )
@@ -154,7 +155,7 @@ public class PaypalServiceImpl implements PaypalService {
 
         Donation donation = donationRepository.findById(id).orElseThrow(NotFoundException::new);
 
-        String reply = client.post()
+        client.post()
             .uri(paypal.captureOrder(id))
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .header("Authorization", "Bearer " + this.retrieveAccessToken(paypal.getClientId(), paypal.getClientSecret()))
