@@ -7,9 +7,7 @@
       <div class="headings">
         <div style="display: flex; align-items: center; justify-content: flex-end">
           <h4>{{'ANIMAL_HOMEPAGE.SHELTER' | translate}}</h4>
-          <button style="margin-left: 0.25em; font-size: 2em" class="btn btn-primary"
-                  [routerLink]="['/shelter', animal?.shelter?.id]">
-            {{animal?.shelter?.name }}
+          <button style="margin-left: 0.25em; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">{{animal?.shelter?.name }}
           </button>
         </div>
       </div>
