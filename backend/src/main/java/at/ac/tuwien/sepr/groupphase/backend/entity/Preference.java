@@ -1,12 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
+
+import java.util.Map;
 
 @Entity
 @Getter
@@ -18,7 +24,17 @@ import java.util.UUID;
 public class Preference {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "preference_id")
-    private UUID id;
+    @ManyToOne
+    private ApplicationUser user;
+
+    @Id
+    @Column(nullable = false)
+    private String species;
+
+    @Column(nullable = false)
+    private long speciesFactor;
+
+    @ElementCollection
+    @Column(nullable = false)
+    private Map<String, Integer> traitPoints;
 }
