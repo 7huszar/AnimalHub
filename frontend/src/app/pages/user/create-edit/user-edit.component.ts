@@ -2,10 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {Observable} from 'rxjs';
+import {debounceTime, Observable, Subject} from 'rxjs';
 import {UserDetailDto} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
 import {NotifierService} from "../../../services/notifier.service";
+import {ShelterListDto, ShelterSearch} from "../../../dtos/shelter";
+import {ShelterService} from "../../../services/shelter.service";
 
 @Component({
   selector: 'app-user-create-edit',
@@ -14,9 +16,15 @@ import {NotifierService} from "../../../services/notifier.service";
 export class UserEditComponent implements OnInit {
 
   user: UserDetailDto = {
-      email: "",
+    email: "",
     role: "",
     id: ""
+  };
+
+  searchChangedObservable = new Subject<void>();
+  shelters: ShelterListDto[] = [];
+  shelterSearchParams: ShelterSearch = {
+    name: '',
   };
 
   constructor(
@@ -24,6 +32,7 @@ export class UserEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private notification :NotifierService,
+    private shelterService: ShelterService,
   ) {
   }
 
@@ -47,6 +56,7 @@ export class UserEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.reloadShelters();
 
     this.route.paramMap.subscribe((params: ParamMap) => {
       const id: string = String(params.get('id'));
@@ -65,6 +75,41 @@ export class UserEditComponent implements OnInit {
           })
       }
     });
+
+
+    this.searchChangedObservable.pipe(debounceTime(300)).subscribe({
+      next: () => {
+        this.reloadShelters();
+      },
+    });
+
+
+
+
+  }
+
+  reloadShelters() {
+    this.shelterService.search(this.shelterSearchParams).subscribe({
+      next: (data) => {
+        this.shelters = data;
+      },
+      error: (error) => {
+        console.error('Error fetching Shelters', error);
+        const errorMessage =
+          error.status === 0
+            ? 'Is the backend up?'
+            : error.message.message;
+        this.notification.notifyError(
+          errorMessage,
+          'Could Not Fetch Shelters'
+        );
+      },
+    });
+  }
+
+
+  shelterSearchChanged(): void {
+    this.searchChangedObservable.next();
   }
 
 
@@ -90,4 +135,9 @@ export class UserEditComponent implements OnInit {
       });
     }
   }
+
+  public assignShelter(){
+
+  }
+
 }

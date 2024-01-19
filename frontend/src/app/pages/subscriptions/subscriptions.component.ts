@@ -44,11 +44,13 @@ export class SubscriptionsComponent implements OnInit {
     role: ""
   };
 
-  subscription: CreateSubscriptionDto = {
+  subscription: SubscriptionDetailDto = {
+    cancelled: false,
+    id: "",
     subscriptionId: "",
     tier: "",
     user: undefined,
-    animal: undefined,
+    animal: undefined
   }
 
   typeForDeletion: string = '';

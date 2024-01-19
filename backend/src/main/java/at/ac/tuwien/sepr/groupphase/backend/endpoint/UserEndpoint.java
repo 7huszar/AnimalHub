@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.Subscripti
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
@@ -42,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -129,11 +129,6 @@ public class UserEndpoint {
     public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("findByUser({})", userDetailDto);
-        //retrieves all subscriptions of the user and checks if they are still active
-        List<SubscriptionDetailDto> checkIfActive = userService.findAllSubscriptionsByUser(userDetailDto);
-        for (SubscriptionDetailDto subscription : checkIfActive) {
-            checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId());
-        }
 
 
         return userService.findAllSubscriptionsByUser(userDetailDto);
@@ -171,11 +166,6 @@ public class UserEndpoint {
         UUID shelterIdUuid = UUID.fromString(shelterIdString);
         System.out.println("Parsed UUID: " + shelterIdUuid);
 
-        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("is active")) {
-            LOGGER.error("The Subscription you tried to cancel was not active");
-            throw new NotFoundException("The subscription you tried to cancel Was not active");
-        }
-
         restTemplate = new RestTemplate();
         //setting up request for the getPaypal token call
         HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(shelterIdUuid);
@@ -198,8 +188,10 @@ public class UserEndpoint {
                 //Actually cancelling
                 ResponseEntity<String> cancelled = restTemplate.postForEntity(cancelUrl, cancelEntity, String.class);
 
-                userService.deleteSubscription(id);
+                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv");
 
+                userService.updateSubscription(id);
+                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncnevmldvksdlvdslkvsvlkdsvl");
 
             } catch (Exception e) {
                 LOGGER.error("Error making external POST request", e);
@@ -295,10 +287,7 @@ public class UserEndpoint {
             return null;
         }
 
-        if (!checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId()).equals("is active")) {
 
-            LOGGER.error("The Subscription you tried to load was not active");
-        }
 
         return userService.isSubscribed(id, user.getId());
     }

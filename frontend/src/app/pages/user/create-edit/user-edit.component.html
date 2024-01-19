@@ -1,63 +1,96 @@
 <app-header></app-header>
 
-<br>
+<!-- User Details Form -->
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+  <div class="row m-4">
+    <h1>User Details</h1>
 
-  <div class="row">
+    <!-- User Email -->
+    <div class="col-4 mb-3">
+      <label class="form-label text-muted">Email:</label>
+      <div class="input-group">
+        <span> <h2>{{ user.email }}</h2></span>
+      </div>
+    </div>
 
-    <div class="mg-2 col-lg-6">
-      <div class="row">
-        <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          Email
-        </label>
-        <div class="col-md-10 col-lg-8">
-          <span>{{ user.email }}</span>
-        </div>
+    <!-- User Role -->
+    <div class="col-4 mb-3">
+      <label for="userRole" class="form-label text-muted"> Switch Role:</label>
+      <select class="form-select" id="userRole" name="userRole" [(ngModel)]="user.role" required>
+        <option value="USER">USER</option>
+        <option value="MEMBER">MEMBER</option>
+        <option value="INACTIVE">INACTIVE</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Delete User and Submit Buttons -->
+  <div class="row m-3">
+    <div class="col-6">
+      <div class="d-flex mt-4">
+        <button type="button" class="btn btn-danger me-2"
+                (click)="userForDeletion(user.email, user.id)"
+                data-bs-toggle="modal"
+                data-bs-target="#confirm-delete-dialog"
+                aria-label="Delete user">
+          <i class="bi bi-trash"></i> Delete User
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+          {{ submitButtonText }}
+        </button>
       </div>
     </div>
   </div>
 
 
-  <div class="mb-2 col-lg-6">
-    <div class="row">
-      <label for="userRole" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-        Role
-      </label>
-      <div class="col-md-10 col-lg-8"
-      >
-        <select class="form-select"
-                id="userRole"
-                name="userRole"
-                [(ngModel)]="user.role"
-                required
-        >
-          <option value="USER">USER</option>
-          <option value="MEMBER">MEMBER</option>
-          <option value="INACTIVE">INACTIVE</option>
-          <option value="ADMIN">ADMIN</option>
+  <!-- Search Shelter Section -->
+  <div class="col-6  m-4">
+    <h2>Select Shelter for member</h2>
 
-        </select>
-      </div>
+    <label for="searchShelterName" class="form-label">Search for Shelter:</label>
+    <div class="input-group mb-3">
+      <input type="text" id="searchShelterName" name="searchShelterName" class="form-control"
+             [(ngModel)]="shelterSearchParams.name" (ngModelChange)="shelterSearchChanged()"
+             placeholder="Enter Shelter Name">
+      <button class="btn btn-primary" (click)="shelterSearchChanged()" aria-label="Search">
+        <i class="bi bi-search"></i> Search
+      </button>
+    </div>
+
+    <!-- Shelters Table -->
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th class="text-center"> Details</th>
+          <th class="text-end"> Assign Shelter</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let shelter of shelters">
+          <td>{{ shelter.name }}</td>
+          <td class="text-center">
+            <div class="btn-group">
+              <button class="btn btn-primary" [routerLink]="['/shelter/', shelter.id]">Details</button>
+            </div>
+          </td>
+
+          <td class="text-end">
+            <div class="btn-group">
+              <button class="btn btn-primary" (click)="assignShelter()" >Assign shelter</button>
+            </div>
+          </td>
+
+
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-
-
-  <div class="mt-4 d-flex flex-row">
-
-    <button type="button" class="btn btn-sm btn-danger"
-            (click)="userForDeletion(user.email, user.id)"
-            data-bs-toggle="modal"
-            data-bs-target="#confirm-delete-dialog"
-            aria-label="Delete shelter">
-      <i class="bi bi-trash"></i> Delete
-    </button>
-    <span class="flex-grow-1"></span>
-    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
-      {{ submitButtonText }}
-    </button>
-  </div>
-  <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
 </form>
 
-
-
+<!-- Confirmation Dialog -->
+<app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>

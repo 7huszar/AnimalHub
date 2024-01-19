@@ -36,6 +36,8 @@ public class Subscription {
 
     private String subscriptionId;
 
+    private Boolean cancelled = false;
+
 
     @Override
     public String toString() {

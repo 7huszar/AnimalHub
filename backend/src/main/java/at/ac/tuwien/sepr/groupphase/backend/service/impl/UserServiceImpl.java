@@ -564,9 +564,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePaypalCredentials(UUID id, ShelterDetailDto shelterDetailDto) {
-        LOGGER.trace("Check if user is subscribed");
+        LOGGER.trace("Update user credentials");
 
         shelterRepository.save(shelterMapper.shelterDetailDtoToShelter(shelterDetailDto));
+    }
+
+    @Override
+    public void updateSubscription(String id) {
+        LOGGER.debug("update({})", id);
+
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
+
+        subscriptionRepository.setCancelled(id);
+
     }
 
 
