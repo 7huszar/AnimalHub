@@ -107,7 +107,8 @@ export class SubscriptionsComponent implements OnInit {
             //this schould never happen except if no subscriptions have been made
             console.error('Error finding subscriptions', error);
             const errorMessage = error.error ? error.error.message : 'Unknown error';
-            this.notification.notifyError(errorMessage, "Could not find subscriptions");          }
+            this.notification.notifyError(errorMessage, "Could not find subscriptions");
+          }
         });
 
 
