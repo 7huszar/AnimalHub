@@ -13,7 +13,7 @@ export class StatisticComponent implements OnInit{
 
   constructor(
     private shelterService: ShelterService,
-    private authService: AuthService
+    protected authService: AuthService
   ) {
   }
 
