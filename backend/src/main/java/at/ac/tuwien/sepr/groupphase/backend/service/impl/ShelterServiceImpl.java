@@ -4,16 +4,20 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DonationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
@@ -31,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,6 +49,8 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
     private final AnimalShelterMapper mapper;
     private final ShelterValidator validator;
+    private final DonationRepository donationRepository;
+    private final DonationMapper donationMapper;
 
     @Override
     public List<ShelterListDto> search(ShelterSearchDto searchParameters) {
@@ -168,5 +175,10 @@ public class ShelterServiceImpl implements ShelterService {
         fileService.delete(oldProfilePictureId);
 
         return createdFile;
+    }
+
+    @Override
+    public List<DonationListDto> findAllDonationsByShelterId(UUID id) {
+        return donationRepository.findAllByShelterId(id).map(donationMapper::donationToDonationListDto).collect(Collectors.toList());
     }
 }

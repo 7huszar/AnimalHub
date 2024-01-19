@@ -1,1 +1,31 @@
-<p>statistic works!</p>
+<app-header></app-header>
+
+<h1 class="mt-4 mb-4" style="display: flex; align-items: center;">Donations received by me
+</h1>
+
+<!-- Create Subscriptions Section -->
+<div class="col-md-6">
+  <div class="row">
+
+    <div class="mt-3">
+      <table class="table table-hover">
+        <!-- Subscriptions Table -->
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Add profile Pic</th>
+
+          <th class="min-width text-end">Actions</th> <!-- Align the header to the end (right) -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let donation of donations" class="center-td">
+          <td>{{ donation.date }}</td>
+          <td>{{ donation.amount + '€'}} </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

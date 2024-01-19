@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.scheduled;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.UserEndpoint;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 
 @AllArgsConstructor
-@EnableScheduling
 @Component
 public class SubscriptionCleaner {
 
