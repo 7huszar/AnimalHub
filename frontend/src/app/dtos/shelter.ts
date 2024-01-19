@@ -73,4 +73,6 @@ export class IdOnlyShelter implements ShelterDto {
 export interface DonationListDto {
   amount: number;
   date: Date;
+  type: string;
+  receiver: string;
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -40,4 +41,8 @@ public class Donation {
     private LocalDateTime stamp;
 
     private boolean payed;
+
+    private DonationType type;
+
+    private String receiver;
 }

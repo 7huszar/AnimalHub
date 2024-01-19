@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalPaypalDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
@@ -127,6 +128,8 @@ public class PaypalServiceImpl implements PaypalService {
             .payed(false)
             .id(reply.id())
             .shelter(receiver)
+            .type(DonationType.ONE_TIME)
+            .receiver(receiver.getName())
             .build();
 
         donationRepository.save(donation);

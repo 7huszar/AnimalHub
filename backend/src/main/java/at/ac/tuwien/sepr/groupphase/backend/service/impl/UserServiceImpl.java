@@ -12,15 +12,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
+import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -56,6 +59,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -80,6 +84,7 @@ public class UserServiceImpl implements UserService {
     private final AnimalShelterMapper shelterMapper;
     private final UserConflict conflict;
     private final MailService mail;
+    private final DonationRepository donationRepository;
 
 
     /**
@@ -332,6 +337,21 @@ public class UserServiceImpl implements UserService {
         subscription.setKey(key);
 
         Subscription ret = subscriptionRepository.save(subscription);
+
+        final LocalDateTime date = LocalDateTime.now();
+        Donation donation = Donation.builder()
+            .user(subscription.getUser())
+            .amount(new BigDecimal("12.99"))
+            .stamp(date)
+            .payed(true)
+            .id(subscription.getSubscriptionId() + date)
+            .shelter(subscription.getAnimal().getShelter())
+            .type(DonationType.SUBSCRIPTION)
+            .receiver(subscription.getAnimal().getName())
+            .build();
+
+        donationRepository.save(donation);
+
 
         return userMapper.subscriptionToSubscriptionDetailDto(ret);
     }
