@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DonationListDto} from "../../../../dtos/shelter";
 import {ShelterService} from "../../../../services/shelter.service";
 import {AuthService} from "../../../../services/auth.service";
+import Decimal from "decimal.js";
 
 @Component({
   selector: 'app-statistic',
@@ -10,6 +11,7 @@ import {AuthService} from "../../../../services/auth.service";
 })
 export class StatisticComponent implements OnInit{
   donations: DonationListDto[];
+  total: Decimal = new Decimal(0);
 
   constructor(
     private shelterService: ShelterService,
@@ -21,6 +23,10 @@ export class StatisticComponent implements OnInit{
     this.shelterService.findAllDonations(this.authService.getUser().shelter.id).subscribe({
       next: next => {
         this.donations = next;
+        this.total = new Decimal(0);
+        this.donations.forEach(donation => {
+          this.total = this.total.add(donation.amount);
+        });
         console.log(next);
       },
       error: error => {
@@ -29,4 +35,16 @@ export class StatisticComponent implements OnInit{
     });
   }
 
+  formatMoney(donation: DonationListDto): string {
+    return new Decimal(donation.amount).toFixed(2) + ' €';
+  }
+
+  mapType(type: string): string {
+    if (type === 'ONE_TIME') {
+      return 'one time donation';
+    } else if (type === 'SUBSCRIPTION') {
+      return 'subscription payment';
+    }
+    return 'unknown type';
+  }
 }

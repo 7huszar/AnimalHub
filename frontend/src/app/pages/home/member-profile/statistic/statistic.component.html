@@ -19,11 +19,14 @@
     <tbody>
     <tr *ngFor="let donation of donations" class="center-td">
       <td>{{ donation.date }}</td>
-      <td>{{ donation.type }}</td>
+      <td>{{ mapType(donation.type) }}</td>
       <td>{{ donation.receiver }}</td>
-      <td>{{ donation.amount + '€' }}</td>
+      <td>{{ formatMoney(donation) }}</td>
+    </tr>
+    <tr>
+      <td colspan="3" style="text-align: right;">Total:</td>
+      <td>{{ total.toFixed(2) + ' €' }}</td>
     </tr>
     </tbody>
   </table>
-
 </div>
