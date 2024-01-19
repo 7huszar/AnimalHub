@@ -20,32 +20,34 @@
           </thead>
           <tbody>
           <tr *ngFor="let subscriptions of subscriptionList" class="center-td">
-            <td class="align-middle">{{ subscriptions.animal.name }}</td>
-            <td class="align-middle">
-              <div class="row mb-3">
-                <div>
-                  <img *ngIf="shelterImageURL" [src]="shelterImageURL" class="img-thumbnail"
-                       style="max-height: 100px; max-width: 100px;" alt="{{ subscriptions.animal.name }} Image">
+            <div *ngIf="subscription.cancelled === true">
+              <td class="align-middle">{{ subscriptions.animal.name }}</td>
+              <td class="align-middle">
+                <div class="row mb-3">
+                  <div>
+                    <img *ngIf="shelterImageURL" [src]="shelterImageURL" class="img-thumbnail"
+                         style="max-height: 100px; max-width: 100px;" alt="{{ subscriptions.animal.name }} Image">
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td class="text-end align-middle">
-              <div class="btn-group">
+              </td>
+              <td class="text-end align-middle">
+                <div class="btn-group">
 
-                <button *ngIf="subscription.cancelled === true" type="button" class="btn btn btn-danger"
-                        (click)="subscriptionForDeletion(subscriptions.animal.name, subscriptions.subscriptionId, subscriptions.animal.shelter.id)"
-                        data-bs-toggle="modal" data-bs-target="#confirm-delete-dialog" aria-label="Cancel Subscription">
-                  Cancel
-                </button>
+                  <button type="button" class="btn btn btn-danger"
+                          (click)="subscriptionForDeletion(subscriptions.animal.name, subscriptions.subscriptionId, subscriptions.animal.shelter.id)"
+                          data-bs-toggle="modal" data-bs-target="#confirm-delete-dialog"
+                          aria-label="Cancel Subscription">
+                    Cancel
+                  </button>
 
 
+                  <button type="button" class="btn btn-primary" [routerLink]="['/animal', subscriptions.animal.id]">
+                    Details
+                  </button>
 
-                <button type="button" class="btn btn-primary" [routerLink]="['/animal', subscriptions.animal.id]">
-                  Details
-                </button>
-
-              </div>
-            </td>
+                </div>
+              </td>
+            </div>
           </tr>
           </tbody>
         </table>
