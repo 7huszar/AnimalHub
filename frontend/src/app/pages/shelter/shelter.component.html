@@ -55,5 +55,5 @@
   <div class="mt-4">
     <app-animal-list [animals]="animals" [shelterId]="shelter.id"></app-animal-list>
   </div>
-  <app-statistic></app-statistic>
+  <app-statistic *ngIf="showStats()"></app-statistic>
 </div>

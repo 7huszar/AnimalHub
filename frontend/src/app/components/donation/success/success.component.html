@@ -1,1 +1,5 @@
-<h1>wait a minute</h1>
+<h1 *ngIf="!failure && !success">wait a minute</h1>
+
+<h1 *ngIf="success">Transaction successful, you can close this tab now</h1>
+
+<h1 *ngIf="failure">Transaction failed</h1>

@@ -12,7 +12,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DonationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;

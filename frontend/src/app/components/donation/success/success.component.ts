@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Subscription} from "rxjs";
 import {PaypalService} from "../../../services/paypal.service";
 
 @Component({
@@ -10,8 +9,9 @@ import {PaypalService} from "../../../services/paypal.service";
 })
 export class SuccessComponent implements OnInit {
 
-  private routeSub: Subscription;
   private token: string;
+  success: boolean = false;
+  failure: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -20,14 +20,17 @@ export class SuccessComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.routeSub = this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe(params => {
       this.token = params.get('token');
       this.service.captureOrder(this.token).subscribe({
         next: next => {
           console.log(next);
+          this.success = true;
+
         },
         error: error => {
           console.error(error);
+          this.failure = true;
         }
       });
     });
