@@ -113,7 +113,7 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
     /**
      * Sends an e-mail with a token valid to reset a password of an existing user. <br>

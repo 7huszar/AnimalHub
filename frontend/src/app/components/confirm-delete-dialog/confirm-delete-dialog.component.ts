@@ -84,15 +84,8 @@ export class ConfirmDeleteDialogComponent {
           },
           error: error => {
             console.error('Error deleting user', error);
-            let title: string = 'ADMIN_PAGE.FAILED';
-
-            // status == 401 / Unauthorized - deleting admin not allowed
-            if (error.status == HttpStatusCode.Unauthorized) {
-              this.notification.notifyError('ADMIN_PAGE.INFO', title);
-            } else {
-              // standard errors, we do not anticpate
-              this.notification.notifyStdError(error, title);
-            }
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Error deleting User");
           }
 
         });
@@ -153,7 +146,6 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-//TODO implement this somewhere when a shelter is being created
 
   public createSubscriptionPlan() {
 
