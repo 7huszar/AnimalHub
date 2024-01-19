@@ -60,11 +60,15 @@ export class MemberEditShelterComponent {
               next: blob => {
                 this.shelterImageURL = URL.createObjectURL(blob);
               }, error: err => {
-                console.error(err); // TODO handle
+                console.error(err);
+                const errorMessage = err.error ? err.error.message : 'Unknown error';
+                this.notification.notifyError(errorMessage, "Error loading Profile Picture");
               }
             });
           }, error: err => {
-            console.error('Error loading shelter: ', err); // TODO handle
+            console.error('Error loading shelter: ', err);
+            const errorMessage = err.error ? err.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Error loading Shelter");
           }
         });
       });
@@ -82,7 +86,7 @@ export class MemberEditShelterComponent {
           console.log('shelter profile image updated', fileDto);
           this.navigateSuccess();
         }, error: err => {
-          console.error(err); // TODO handle
+          console.error(err);
           const errorMessage = err.error ? err.error.message : 'Unknown error';
           this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
         }

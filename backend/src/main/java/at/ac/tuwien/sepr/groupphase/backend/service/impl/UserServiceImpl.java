@@ -259,9 +259,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         LOGGER.debug("update({})", userDetailDto);
 
+        conflict.conflictForUpdate(userDetailDto);
         userValidator.validateUserCredentialsForUpdate(userDetailDto);
         ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
             () -> new NotFoundException("User does not exist.")

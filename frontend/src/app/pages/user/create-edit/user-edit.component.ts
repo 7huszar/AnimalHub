@@ -5,6 +5,7 @@ import {ToastrService} from 'ngx-toastr';
 import {Observable} from 'rxjs';
 import {UserDetailDto} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
+import {NotifierService} from "../../../services/notifier.service";
 
 @Component({
   selector: 'app-user-create-edit',
@@ -22,7 +23,7 @@ export class UserEditComponent implements OnInit {
     private service: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    private notification: ToastrService,
+    private notification :NotifierService,
   ) {
   }
 
@@ -58,7 +59,8 @@ export class UserEditComponent implements OnInit {
             },
             error: error => {
               console.error('Error fetching User', error);
-              this.notification.error('The requested User was not found')
+              const errorMessage = error.error ? error.error.message : 'Unknown error';
+              this.notification.notifyError(errorMessage, "The requested User was not found");
             }
           })
       }
@@ -76,13 +78,14 @@ export class UserEditComponent implements OnInit {
 
       observable.subscribe({
         next: data => {
-          this.notification.success(`User ${this.user.email} successfully ${this.modeActionFinished}.`);
+          this.notification.notifySuccess(`User ${this.user.email} successfully ${this.modeActionFinished}.`);
           this.router.navigate(['/admin']);
         },
         error: error => {
 
-          console.error(`Error editing User.`);
-          this.notification.error(error.error.message, error.error.error);
+          console.error(`Error editing User.` + error);
+          const errorMessage = error.error ? error.error.message : 'Unknown error';
+          this.notification.notifyError(errorMessage, "Error updating User Role");
         }
       });
     }

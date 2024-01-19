@@ -84,15 +84,8 @@ export class ConfirmDeleteDialogComponent {
           },
           error: error => {
             console.error('Error deleting user', error);
-            let title: string = 'ADMIN_PAGE.FAILED';
-
-            // status == 401 / Unauthorized - deleting admin not allowed
-            if (error.status == HttpStatusCode.Unauthorized) {
-              this.notification.notifyError('ADMIN_PAGE.INFO', title);
-            } else {
-              // standard errors, we do not anticpate
-              this.notification.notifyStdError(error, title);
-            }
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Error deleting User");
           }
 
         });
@@ -118,24 +111,6 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-  //This is just for testing purposes use it
-  public checkSubscription(){
-
-    let test: Observable<void> = this.paypalService.checkIfSubscriptionIsActive(this.DeleteId, null)
-    test.subscribe({
-      next: data => {
-        this.notification.notifySuccess(`Subscription to ${this.deleteName} successfully canceled.`);
-        this.reloadSubscriptions();
-      },
-      error: error => {
-        //this schould never happen except if no subscriptions have been made
-        console.error('Error posting endpoint', error);
-      }
-    });
-
-  }
-
-
   public cancelSubscription() {
 
     if (this.DeleteId != null) {
@@ -153,7 +128,7 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-//TODO implement this somewhere when a shelter is being created
+  //This is just for testing purposes
 
   public createSubscriptionPlan() {
 

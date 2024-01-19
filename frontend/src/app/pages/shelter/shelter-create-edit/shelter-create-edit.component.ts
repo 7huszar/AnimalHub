@@ -73,17 +73,19 @@ export class ShelterCreateEditComponent implements OnInit{
         next: shelterDto => {
           console.log('shelter created', shelterDto);
           if (this.shelterImage !== null) {
-            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: this.shelterImage.name};
             this.shelterService.setProfileImage(shelterDto.id, createFileDto).subscribe({
               next: fileDto => {
                 console.log('shelter profile image set', fileDto);
                 this.navigateSuccess(shelterDto.id);
+                this.notification.notifySuccess("Successfully updated Shelter Details");
               }, error: err => {
                 console.error(err); // TODO handle
               }
             });
           } else {
             this.navigateSuccess(shelterDto.id);
+            this.notification.notifySuccess("Successfully updated Shelter Details");
           }
         }, error: err => {
           console.error(err); // TODO handle
@@ -94,19 +96,20 @@ export class ShelterCreateEditComponent implements OnInit{
         next: shelterDto => {
           console.log('shelter updated', shelterDto);
           if (this.shelterImage !== null) {
-            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: this.shelterImage.name};
             this.shelterService.updateProfileImage(shelterDto.id, createFileDto).subscribe({
               next: fileDto => {
-                this.notification.notifySuccess(`DUMMY.TITLE`);
+                this.notification.notifySuccess("Successfully updated Profile Image");
                 console.log('shelter profile image updated', fileDto);
                 this.navigateSuccess(shelterDto.id);
+                this.notification.notifySuccess("Successfully updated Shelter Details");
               }, error: err => {
                 console.error(err); // TODO handle
               }
             })
           } else {
             this.navigateSuccess(shelterDto.id);
-            this.notification.notifySuccess(`DUMMY.TITLE`);
+            this.notification.notifySuccess("Successfully updated Shelter Details");
           }
         }, error: err => {
           console.error(err); // TODO handle

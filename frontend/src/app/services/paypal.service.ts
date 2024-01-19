@@ -14,12 +14,6 @@ export class PaypalService {
 
   private usersBaseUri: string = this.globals.backendUri + '/users';
 
-  private SellerId: string = "AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv";
-  private Sellersecret: string = "EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO";
-
-
-
-
   constructor(
     private httpClient: HttpClient,
     private globals: Globals,
@@ -35,15 +29,6 @@ export class PaypalService {
   cancelSubscriptions(id: string, shelterId: string): Observable<any> {
     const body = { shelterId: shelterId }; // Create an object with the shelterId property
     return this.httpClient.post<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { body });
-  }
-
-
-  checkIfSubscriptionIsActive(id: string, shelterDto: ShelterDetailDto): Observable<any> {
-    // Convert the shelterDto to query parameters
-    const params = new HttpParams()
-      .set('param', shelterDto.id)
-
-    return this.httpClient.get<SubscriptionDetailDto>(`${this.usersBaseUri}/paypal/${id}`, { params });
   }
 
   isSubscribed(animalId: string): Observable<SubscriptionDetailDto> {

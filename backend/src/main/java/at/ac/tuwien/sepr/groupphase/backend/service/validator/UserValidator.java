@@ -46,6 +46,11 @@ public class UserValidator {
         if (user == null) {
             throw new ValidationException("Failed to validate registration data", validationErrors);
         }
+
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            validationErrors.add("You cannot make another User Admin");
+        }
+
         if (!user.getRole().equals(UserRole.USER) && !user.getRole().equals(UserRole.ADMIN) && !user.getRole().equals(UserRole.MEMBER) && !user.getRole().equals(UserRole.INACTIVE)) {
             validationErrors.add("Invalid Role " + user.getRole());
         }

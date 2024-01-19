@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.conflict;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -9,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -34,6 +36,20 @@ public class UserConflict {
             throw new ConflictException("Could not register user", Collections.singletonList("User already registered"));
         }
     }
+
+    public void conflictForUpdate(UserDetailDto userDetailDto) throws NotAuthorizedException {
+        LOGGER.debug("conflictsForUpdate({})", userDetailDto);
+
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (userDetailDto.getEmail().equals(email)) {
+            throw new NotAuthorizedException("Cannot update your own role");
+        }
+    }
+
+
+
+
 
     public void conflictForDelete(UUID id) throws NotAuthorizedException, NotFoundException {
         LOGGER.trace("checkUserDeleteConflicts({})", id);
