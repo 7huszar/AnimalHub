@@ -73,7 +73,7 @@ export class ShelterCreateEditComponent implements OnInit{
         next: shelterDto => {
           console.log('shelter created', shelterDto);
           if (this.shelterImage !== null) {
-            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+            const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: this.shelterImage.name};
             this.shelterService.setProfileImage(shelterDto.id, createFileDto).subscribe({
               next: fileDto => {
                 console.log('shelter profile image set', fileDto);
