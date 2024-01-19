@@ -142,6 +142,8 @@ public class ShelterEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("/donation/{id}")
     public List<DonationListDto> findAllDonations(@PathVariable UUID id) {
+        LOGGER.info("GET " + BASE_PATH + "/donation/" + id);
+        LOGGER.debug("findAllDonations({})", id);
         return shelterService.findAllDonationsByShelterId(id);
     }
 }

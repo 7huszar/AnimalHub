@@ -24,6 +24,7 @@ export class DonationComponent {
       next: next => {
         console.log('donated ' + this.amount + '€ to ' + this.receiver);
         console.log(next.href);
+        window.open(next.href);
       },
       error: error => {
         console.error(error);

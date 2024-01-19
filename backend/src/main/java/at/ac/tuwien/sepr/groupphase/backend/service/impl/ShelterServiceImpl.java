@@ -179,6 +179,7 @@ public class ShelterServiceImpl implements ShelterService {
 
     @Override
     public List<DonationListDto> findAllDonationsByShelterId(UUID id) {
+        LOGGER.trace("findAllDonationsByShelterId({})", id);
         return donationRepository.findAllByShelterId(id).map(donationMapper::donationToDonationListDto).collect(Collectors.toList());
     }
 }

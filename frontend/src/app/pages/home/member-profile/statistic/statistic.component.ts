@@ -18,9 +18,10 @@ export class StatisticComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.shelterService.findAllDonations(this.authService.getUser().id).subscribe({
+    this.shelterService.findAllDonations(this.authService.getUser().shelter.id).subscribe({
       next: next => {
         this.donations = next;
+        console.log(next);
       },
       error: error => {
         console.error(error);
