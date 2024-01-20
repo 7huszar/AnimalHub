@@ -128,7 +128,6 @@ export class UserService {
    * @return an Observable for the updated user
    */
   updatePaypalDetails(shelter: ShelterDetailDto): Observable<any> {
-    console.log(shelter)
     return this.httpClient.put<ShelterDetailDto>(this.usersBaseUri + '/subscriptions/' + shelter.id, shelter);
   }
 

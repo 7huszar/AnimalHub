@@ -153,8 +153,6 @@ public interface UserService extends UserDetailsService {
 
     HttpEntity<String> createSubscriptionPlan(String accessToken);
 
-    void updatePaypalCredentials(UUID id, ShelterDetailDto shelterDetailDto);
-
     void updateSubscription(String id);
 
 

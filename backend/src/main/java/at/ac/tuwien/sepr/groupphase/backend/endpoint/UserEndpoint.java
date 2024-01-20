@@ -307,7 +307,6 @@ public class UserEndpoint {
         // Obtain the PayPal access token
         HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
 
-
         try {
 
             // Make the POST request to get access token
@@ -339,7 +338,6 @@ public class UserEndpoint {
                 // Handle the exception or return an appropriate response
             }
 
-
         } catch (Exception e) {
             LOGGER.error("Are u sure you provided the correct credentials", e);
             // Handle the exception or return an appropriate response
@@ -364,14 +362,13 @@ public class UserEndpoint {
             shelterDto.setSubscriptionId(subscriptionPlanId);
 
             LOGGER.debug("ShelterDto that is being updated" + shelterDto);
-            LOGGER.info("Updating Sheltern with subscription Plan");
+            LOGGER.info("Updating Shelter with subscription Plan");
             shelterService.update(shelterDto);
 
             return (subscriptionPlanId);
         } else {
 
             LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
-            //TODO make all of these returns proper error messsages
             return "Could not create Subscription Plan please try again Later";
         }
 
@@ -399,7 +396,7 @@ public class UserEndpoint {
             }
         }
 
-        userService.updatePaypalCredentials(id, shelterDetailDto);
+        shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
 
         restTemplate = new RestTemplate();
         String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
@@ -420,7 +417,7 @@ public class UserEndpoint {
 
 
         } catch (Exception e) {
-            userService.updatePaypalCredentials(id, shelter);
+            shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelter));
             LOGGER.error("Are u sure you provided the correct credentials", e);
             throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
         }
