@@ -215,4 +215,26 @@ public class ShelterServiceImpl implements ShelterService {
 
         return mapper.shelterToShelterDetailDto(shelterRepository.findByUser(userMapper.userDetailDtoUserToApplicationUser(user)));
     }
+
+
+    @Override
+    public void unassignShelter(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException {
+
+        LOGGER.debug("unassign Shelter({}) from user({})", shelterId, user);
+
+        Optional<Shelter> shelter = shelterRepository.findById(shelterId);
+        Shelter foundShelter;
+        if (shelter.isPresent()) {
+            foundShelter = shelter.get();
+            foundShelter.setUser(null);
+        } else {
+            throw new NotFoundException("Could not find the Paypal ID");
+        }
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getEmail());
+        applicationUser.setShelter(null);
+
+        shelterRepository.save(foundShelter);
+        userRepository.save(applicationUser);
+
+    }
 }

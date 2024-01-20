@@ -44,10 +44,22 @@
 <!-- Search Shelter Section -->
 <div class="col-6 m-4">
   <h2>Currently Assigned to Shelter: {{ shelter.name }}</h2>
-  <h2>Assign Shelter to member</h2>
+  <h2 *ngIf="shelter.name === null">Assign Shelter to member</h2>
+  <h2 *ngIf="shelter.name !== null">Unassign Shelter from member</h2>
 
-  <label for="searchShelterName" class="form-label">Search for Shelter:</label>
-  <div class="input-group mb-3">
+
+  <div class="input-group mb-3" *ngIf="shelter.name !== null">
+
+    <div class="btn-group">
+      <button class="btn btn-danger" (click)="unassignShelter(shelter.id, shelter.name)">Unassign shelter</button>
+    </div>
+
+  </div>
+
+
+
+  <label for="searchShelterName" class="form-label" *ngIf="shelter.name === null">Search for Shelter:</label>
+  <div class="input-group mb-3" *ngIf="shelter.name === null">
     <input type="text" id="searchShelterName" name="searchShelterName" class="form-control"
            [(ngModel)]="shelterSearchParams.name" (ngModelChange)="shelterSearchChanged()"
            placeholder="Enter Shelter Name">
@@ -57,23 +69,31 @@
   </div>
 
   <!-- Shelters Table -->
-  <div class="table-responsive">
+  <div class="table-responsive" *ngIf="shelter.name === null">
     <table class="table table-hover">
       <thead>
       <tr>
+
         <th>Name</th>
+        <th class="text-end">Assigned to</th>
         <th class="text-center">Details</th>
         <th class="text-end">Assign Shelter</th>
+
       </tr>
       </thead>
       <tbody>
+
       <tr *ngFor="let shelter of shelters">
         <td>{{ shelter.name }}</td>
+
+        <td> {{ shelter }}</td>
+
         <td class="text-center">
           <div class="btn-group">
             <button class="btn btn-primary" [routerLink]="['/shelter/', shelter.id]">Details</button>
           </div>
         </td>
+
         <td class="text-end">
           <div class="btn-group">
             <button class="btn btn-primary" (click)="assignShelter(shelter.id, shelter.name)">Assign shelter</button>

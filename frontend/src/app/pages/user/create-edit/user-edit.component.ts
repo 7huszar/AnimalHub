@@ -29,7 +29,7 @@ export class UserEditComponent implements OnInit {
     name: "",
     phoneNumber: "",
     subscriptionId: "",
-    email: ""
+    email: "",
   };
 
 
@@ -43,7 +43,7 @@ export class UserEditComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    private notification :NotifierService,
+    private notification: NotifierService,
     private shelterService: ShelterService,
   ) {
   }
@@ -54,7 +54,6 @@ export class UserEditComponent implements OnInit {
 
   assignShelterName: string = '';
   assignShelterId: string = '';
-
 
 
   userForDeletion(name: string, id: string) {
@@ -126,7 +125,7 @@ export class UserEditComponent implements OnInit {
   reloadAssignedTo() {
     this.shelterService.isAssignedTo(this.user.id).subscribe({
       next: (data) => {
-        this.shelter=data
+        this.shelter = data
         console.log(data)
       }, error: err => {
         console.error('Error checking if User is assigned to a Shelter:', err);
@@ -152,7 +151,8 @@ export class UserEditComponent implements OnInit {
       observable.subscribe({
         next: data => {
           this.notification.notifySuccess(`User ${this.user.email} successfully ${this.modeActionFinished}.`);
-          this.router.navigate(['/admin']);
+          this.navigateSuccess();
+
         },
         error: error => {
 
@@ -164,7 +164,30 @@ export class UserEditComponent implements OnInit {
     }
   }
 
+  private navigateSuccess(): void {
+    this.router.navigate(['/admin']);
+  }
 
+  public unassignShelter(id: string, name: string) {
+    this.assignShelterId = id
+    this.assignShelterName = name
+
+    let observable: Observable<ShelterDetailDto>;
+    observable = this.shelterService.unassignShelter(this.assignShelterId, this.user);
+    observable.subscribe({
+      next: data => {
+        this.notification.notifySuccess(`Shelter ${this.assignShelterName} successfully assigned to user ${this.user.email}.`);
+        this.reloadSite()
+      },
+      error: error => {
+
+        console.error(`Error assigning Shelter to User.` + error);
+        const errorMessage = error.error ? error.error.message : 'Unknown error';
+        this.notification.notifyError(errorMessage, "Error assigning Shelter");
+      }
+    });
+
+  }
 
 
   public assignShelter(id: string, name: string){

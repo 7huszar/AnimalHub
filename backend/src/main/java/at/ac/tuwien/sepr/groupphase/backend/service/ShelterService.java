@@ -120,6 +120,22 @@ public interface ShelterService {
      */
     void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException;
 
+    /**
+     * Unassigns the shelter from a user.
+     *
+     * @param shelterId the shelter to unassign
+     * @param user      the id of the user to unassign the shelter too
+     * @code NotFoundException when there is no shelter with the given ID
+     */
+    void unassignShelter(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException;
+
+
+    /**
+     * finds Assigned shelter.
+     *
+     * @param user      the the user to find the assigned shelter
+     * @code NotFoundException when there is no shelter with the given ID
+     */
     ShelterDetailDto isAssignedTo(UserDetailDto user);
 
 }

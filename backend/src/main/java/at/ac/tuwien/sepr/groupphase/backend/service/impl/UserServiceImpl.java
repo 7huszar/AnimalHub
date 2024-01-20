@@ -449,10 +449,7 @@ public class UserServiceImpl implements UserService {
         // Setting JSON body
         String jsonBody = "{\"reason\": \"cancelled subscription\"}";
 
-        // Creating Request entity
-        HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
-
-        return requestEntity;
+        return new HttpEntity<>(jsonBody, headers);
     }
 
 
@@ -464,10 +461,7 @@ public class UserServiceImpl implements UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
 
-        // Creating Request entity with headers
-        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-
-        return requestEntity;
+        return new HttpEntity<>(headers);
     }
 
 
@@ -546,7 +540,7 @@ public class UserServiceImpl implements UserService {
             + "\"tenure_type\": \"REGULAR\", "
             + "\"sequence\": 1, "
             + "\"total_cycles\": 12, "
-            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"12.99\", \"currency_code\": \"USD\" } } "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"10.00\", \"currency_code\": \"USD\" } } "
             + "} "
             + "], "
             + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "
@@ -564,9 +558,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateSubscription(String id) {
         LOGGER.debug("update({})", id);
-
         subscriptionRepository.setCancelled(id);
-
     }
 
 

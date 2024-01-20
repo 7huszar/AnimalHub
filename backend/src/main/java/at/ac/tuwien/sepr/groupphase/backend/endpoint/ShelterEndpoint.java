@@ -165,5 +165,15 @@ public class ShelterEndpoint {
         return shelterService.isAssignedTo(user);
     }
 
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @PutMapping("/unassign/{id}")
+    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    public void unassignShelter(@PathVariable UUID id, @RequestBody UserDetailDto user) throws NotFoundException, ConflictException {
+        LOGGER.info("POST " + BASE_PATH + "/" + id);
+        LOGGER.debug("Body of request:\n{}", id);
+
+        shelterService.unassignShelter(id, user);
+    }
+
 }
 

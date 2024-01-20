@@ -117,4 +117,16 @@ export class ShelterService {
   }
 
 
+  /**
+   * Assigns a user to the shelter
+   *
+   * @return an Observable for the updated animal
+   * @param shelterId
+   * @param user
+   */
+  unassignShelter(shelterId: string, user : UserDetailDto): Observable<any> {
+
+    return this.httpClient.put<any>(this.shelterBaseUri + '/unassign/' + shelterId, user);
+  }
+
 }
