@@ -141,7 +141,8 @@
     "PHONE": "Phone Number:",
     "EMAIL": "E-Mail:",
     "BACK_BUTTON": "BACK",
-    "DONATE_VIA_PAYPAL": "Donate via Paypal"
+    "DONATE_VIA_PAYPAL": "Donate via Paypal",
+    "CONTACT": "Contact"
   },
 
   "ANIMAL_LIST": {
@@ -151,7 +152,8 @@
     "CAT": "Cat",
     "DOG": "Dog",
     "BIRD": "Bird",
-    "RODENT": "Rodent"
+    "RODENT": "Rodent",
+    "DELETE": "Delete"
   },
 
   "PWD": {
