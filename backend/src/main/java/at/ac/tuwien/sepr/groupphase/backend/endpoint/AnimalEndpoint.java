@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
@@ -45,7 +46,11 @@ public class AnimalEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AnimalService animalService;
 
-    // todo doku
+    /**
+     * Find all animals which are currently stored in the database.
+     *
+     * @return List of AnimalDetailDtos for all the animals
+     */
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -55,7 +60,23 @@ public class AnimalEndpoint {
         return animalService.findAll();
     }
 
-    // todo doku
+    @Secured(UserRole.Values.USER_VALUE)
+    @GetMapping("search")
+    @Operation(summary = "Search for specific animals", security = @SecurityRequirement(name = "apiKey"))
+    public List<AnimalDetailDto> search(@Valid @RequestBody AnimalSearchDto searchParameters) {
+        LOGGER.info("GET " + BASE_PATH + "/search/{}", searchParameters);
+        return animalService.search(searchParameters);
+    }
+
+
+    /**
+     * Find animal by specific id (mainly used for animal-homepage).
+     *
+     * @param id id
+     * @return an AnimalDetailDto containing all the data of the specific animal,
+     *          except its profile picture which has to be fetched separately (via getProfileImg)
+     * @throws NotFoundException when the id points to no existing animal
+     */
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -65,18 +86,35 @@ public class AnimalEndpoint {
         return animalService.findById(id);
     }
 
-    // todo doku
+    /**
+     * create a new animal in the persistent data storage. (profile img has to be stored via setProfileImg).
+     *
+     * @param createDto createDto
+     * @return an AnimalDetailDto containing all the data of the specific animal,
+     *          except its profile picture which has to be fetched separately (via getProfileImg)
+     * @throws ValidationException when the validation for this new animal failed (empty name, etc.)
+     * @throws ConflictException   when there is a conflict with the already existing data and this new animal (shelter does not exist.)
+     */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto create(@Valid @RequestBody CreateAnimalDto animalDto) throws ValidationException, ConflictException {
-        LOGGER.info("POST " + BASE_PATH + "/ " + animalDto.getName());
-        LOGGER.debug("Body of request:\n{}", animalDto);
-        return animalService.create(animalDto);
+    public AnimalDetailDto create(@Valid @RequestBody CreateAnimalDto createDto) throws ValidationException, ConflictException {
+        LOGGER.info("POST " + BASE_PATH + "/ " + createDto.getName());
+        LOGGER.debug("Body of request:\n{}", createDto);
+        return animalService.create(createDto);
     }
 
-    // todo doku
+    /**
+     * updates an existing animal in the database with the given id and overwrites the values with the ones in animalDto.
+     *
+     * @param id        id
+     * @param animalDto values to update animal with
+     * @return an AnimalDetailDto containing all the data of the specific animal,
+     *          except its profile picture which has to be fetched separately (via getProfileImg)
+     * @throws ValidationException when the update values fail to validate (empty name, etc.)
+     * @throws NotFoundException   when the id points to no existing animal in the database
+     */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
@@ -91,7 +129,8 @@ public class AnimalEndpoint {
     /**
      * deletes the animal with the given id.
      *
-     * @param id id of animal-to-delete
+     * @param id id
+     * @throws NotFoundException when the id points to no existing animal
      */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @DeleteMapping("{id}")
@@ -101,6 +140,13 @@ public class AnimalEndpoint {
         animalService.delete(id);
     }
 
+    /**
+     * Get the profile image of the animal with the given id.
+     *
+     * @param id id
+     * @return respond with the File Entity in the HttpResponse
+     * @throws NotFoundException when the id points to no existing animal
+     */
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/profileImg")
     @Operation(summary = "Get animal's profile image", security = @SecurityRequirement(name = "apiKey"))
@@ -115,6 +161,19 @@ public class AnimalEndpoint {
         return new ResponseEntity<>(fileDto.getFile(), headers, HttpStatus.OK);
     }
 
+    /**
+     * Set the profile image for the animal with the given id.
+     *
+     * @param id      id
+     * @param name    name
+     * @param summary summary
+     * @param file    file as MultiPartFile
+     * @return FileDto (which does not contain the actual image file, but rather the metadata of the newly stored image)
+     * @throws ValidationException when the data given fails validation (empty name, etc.)
+     * @throws ConflictException   when the data conflicts with existing data (profile image already set)
+     * @throws IOException         when there is a problem with actually storing or accessing the image file
+     * @throws NotFoundException   when the id points to no existing animal
+     */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PostMapping("{id}/files/profileImg")
     @ResponseStatus(HttpStatus.CREATED)
@@ -127,6 +186,18 @@ public class AnimalEndpoint {
         return animalService.setProfileImage(id, createFileDto);
     }
 
+    /**
+     * Update the profile image for the animal with the given id.
+     *
+     * @param id      id
+     * @param name    name
+     * @param summary summary
+     * @param file    file as MultiPartFile
+     * @return FileDto (which does not contain the actual image file, but rather the metadata of the newly stored image)
+     * @throws ValidationException when the data given fails validation (empty name, etc.)
+     * @throws IOException         when there is a problem with actually storing or accessing the image file
+     * @throws NotFoundException   when the id points to no existing animal
+     */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}/files/profileImg")
     @Operation(summary = "Updates animal's profile image", security = @SecurityRequirement(name = "apiKey"))
@@ -137,6 +208,13 @@ public class AnimalEndpoint {
         return animalService.updateProfileImage(id, createFileDto);
     }
 
+    /**
+     * Get the contents of a specific animal which have been uploaded to the database previously.
+     *
+     * @param id id
+     * @return List of FileDtos which do not actually contain the image file but its metadata
+     * @throws NotFoundException when the id points to no existing animal
+     */
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/content")
     @Operation(summary = "Get content information about animal", security = @SecurityRequirement(name = "apiKey"))
@@ -146,6 +224,14 @@ public class AnimalEndpoint {
         return animalService.getContents(id);
     }
 
+    /**
+     * Get a specific piece of content from a specific animal.
+     *
+     * @param id     id
+     * @param fileId fileId
+     * @return HttpResponse which contains the actual image file
+     * @throws NotFoundException when the id points to no existing animal, or to no existing file
+     */
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}/files/content/{fileId}")
     @Operation(summary = "Get content of animal", security = @SecurityRequirement(name = "apiKey"))
@@ -160,6 +246,18 @@ public class AnimalEndpoint {
         return new ResponseEntity<>(fileDto.getFile(), headers, HttpStatus.OK);
     }
 
+    /**
+     * Add a specific image or video to the content list of a specific animal.
+     *
+     * @param id      id
+     * @param name    name
+     * @param summary summary
+     * @param file    file
+     * @return FileDto which does not actually contain the image file but its metadata
+     * @throws ValidationException when the data given fails validation (empty name, etc.)
+     * @throws IOException         when there is a problem with actually storing or accessing the image file
+     * @throws NotFoundException   when the id points to no existing animal
+     */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PostMapping("{id}/files/content")
     @ResponseStatus(HttpStatus.CREATED)
@@ -171,6 +269,13 @@ public class AnimalEndpoint {
         return animalService.addContent(id, createFileDto);
     }
 
+    /**
+     * Delete a specific piece of content from an animal.
+     *
+     * @param id     id
+     * @param fileId fileId
+     * @throws NotFoundException when the id points to no existing animal, or to no existing file
+     */
     @Secured(UserRole.Values.MEMBER_VALUE)
     @DeleteMapping("{id}/files/content/{fileId}")
     @Operation(summary = "Deletes content of animal", security = @SecurityRequirement(name = "apiKey"))
