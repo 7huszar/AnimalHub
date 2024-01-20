@@ -561,7 +561,6 @@ public class UserServiceImpl implements UserService {
         return requestEntity;
     }
 
-
     @Override
     public void updateSubscription(String id) {
         LOGGER.debug("update({})", id);
