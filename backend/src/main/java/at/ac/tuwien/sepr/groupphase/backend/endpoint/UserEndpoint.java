@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.Subscripti
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
@@ -101,8 +102,8 @@ public class UserEndpoint {
 
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("edit/{id}")
-    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
+    @Operation(summary = "Update specific user in database", security = @SecurityRequirement(name = "apiKey"))
+    public UserDetailDto update(@PathVariable UUID id, @Valid @RequestBody UserDetailDto userDetailDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         LOGGER.info("PUT " + BASE_PATH + "/edit/" + id);
         LOGGER.debug("update({},{})", id, userDetailDto);
 
@@ -125,9 +126,10 @@ public class UserEndpoint {
     @GetMapping("/subscriptions")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get list of subscriptions", security = @SecurityRequirement(name = "apiKey"))
-    public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) {
+    public List<SubscriptionDetailDto> findByUser(UserDetailDto userDetailDto) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("findByUser({})", userDetailDto);
+
 
         return userService.findAllSubscriptionsByUser(userDetailDto);
     }
@@ -164,11 +166,6 @@ public class UserEndpoint {
         UUID shelterIdUuid = UUID.fromString(shelterIdString);
         System.out.println("Parsed UUID: " + shelterIdUuid);
 
-        if (!checkIfSubscriptionActive(id, shelterIdUuid).equals("is active")) {
-            LOGGER.error("The Subscription you tried to cancel was not active");
-            throw new NotFoundException("The subscription you tried to cancel Was not active");
-        }
-
         restTemplate = new RestTemplate();
         //setting up request for the getPaypal token call
         HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(shelterIdUuid);
@@ -191,8 +188,10 @@ public class UserEndpoint {
                 //Actually cancelling
                 ResponseEntity<String> cancelled = restTemplate.postForEntity(cancelUrl, cancelEntity, String.class);
 
-                userService.deleteSubscription(id);
+                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv");
 
+                userService.updateSubscription(id);
+                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncnevmldvksdlvdslkvsvlkdsvl");
 
             } catch (Exception e) {
                 LOGGER.error("Error making external POST request", e);
@@ -245,7 +244,11 @@ public class UserEndpoint {
                     LOGGER.info("Subscription is active");
                     return "is active";
                 } else if (Objects.equals(isActive, "INACTIVE")) {
-                    LOGGER.info("Subscription is active");
+                    LOGGER.info("Subscription is inactive");
+                    this.userService.deleteSubscription(id);
+                    return "is inactive";
+                } else if (Objects.equals(isActive, "CANCELLED")) {
+                    LOGGER.info("Subscription is inactive");
                     this.userService.deleteSubscription(id);
                     return "is inactive";
                 } else {
@@ -284,10 +287,7 @@ public class UserEndpoint {
             return null;
         }
 
-        if (!checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId()).equals("is active")) {
 
-            LOGGER.error("The Subscription you tried to load was not active");
-        }
 
         return userService.isSubscribed(id, user.getId());
     }
@@ -371,7 +371,7 @@ public class UserEndpoint {
             LOGGER.info("Updating Sheltern with subscription Plan");
             shelterService.update(shelterDto);
 
-            return ("Subscription Plan ID: " + subscriptionPlanId);
+            return (subscriptionPlanId);
         } else {
 
             LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
@@ -385,10 +385,21 @@ public class UserEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("subscriptions/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException {
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException, ConflictException {
         LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
         LOGGER.debug("update Paypal credentials ({})", id);
 
+
+        ShelterDetailDto shelter = shelterService.findById(id);
+
+
+        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) && shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
+            shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+            return;
+        }
+
+
+        userService.updatePaypalCredentials(id, shelterDetailDto);
 
         restTemplate = new RestTemplate();
         String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
@@ -409,12 +420,15 @@ public class UserEndpoint {
 
 
         } catch (Exception e) {
+            userService.updatePaypalCredentials(id, shelter);
             LOGGER.error("Are u sure you provided the correct credentials", e);
             throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
         }
 
-        userService.updatePaypalCredentials(id, shelterDetailDto);
 
+        String createSubscription = createSubscriptionPlan(id);
+        shelterDetailDto.setSubscriptionId(createSubscription);
+        shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
 
 
     }

@@ -10,7 +10,8 @@ export interface AnimalDto {
   englishDescription?: string,
   germanDescription?: string,
   species: Species,
-  race: string,
+  englishRace: string,
+  germanRace: string,
   birthDate: Date,
   height: number,
   weight: number,
@@ -24,7 +25,8 @@ export interface AnimalDetailDto {
   englishDescription?: string,
   germanDescription?: string,
   species: Species,
-  race: string,
+  englishRace: string,
+  germanRace: string,
   birthDate: Date,
   shelter: ShelterDto,
   height: number,
@@ -38,7 +40,8 @@ export interface CreateAnimalDto {
   englishDescription?: string,
   germanDescription?: string,
   species: Species,
-  race: string,
+  englishRace: string,
+  germanRace: string,
   birthDate: Date,
   shelter: ShelterDto,
   height: number,
@@ -53,7 +56,8 @@ export interface AnimalListDto {
   name: string;
   gender: Gender,
   species: Species;
-  race: string;
+  englishRace: string,
+  germanRace: string,
   dateOfBirth: Date;
 }
 
@@ -64,7 +68,8 @@ export interface AnimalSearch {
   name?: string;
   gender?: Gender,
   species?: Species;
-  race?: string;
+  englishRace?: string,
+  germanRace?: string,
   birthDate?: Date;
   height?: number;
   weight?: number;

@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,7 +20,11 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
 
     boolean existsByEmail(String email);
 
-    List<ApplicationUser> findApplicationUserByEmailContainsIgnoreCaseAndRoleIs(String email, UserRole role);
+    List<ApplicationUser> findApplicationUsersByRole(UserRole role);
+
+    ApplicationUser findApplicationUsersByRoleAndIdEquals(UserRole role, UUID id);
+
+    List<ApplicationUser> findUsersByEmailIgnoreCaseContaining(String email);
 
     @Modifying
     @Query("update ApplicationUser u set u.role = :role where u.email = :email")
@@ -29,5 +35,7 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     void updatePassword(@Param(value = "email") String email, @Param(value = "password") String password);
 
     ApplicationUser findApplicationUserById(UUID id);
+
+    ApplicationUser findApplicationUserByShelter_Id(UUID shelterId);
 
 }

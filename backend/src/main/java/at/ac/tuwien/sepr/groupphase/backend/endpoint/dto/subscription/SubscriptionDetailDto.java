@@ -26,6 +26,8 @@ public class SubscriptionDetailDto {
 
     private String subscriptionId;
 
+    private Boolean cancelled;
+
     @Override
     public String toString() {
         return "SubscriptionDetailDto{"

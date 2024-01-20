@@ -60,11 +60,15 @@ export class MemberEditShelterComponent {
               next: blob => {
                 this.shelterImageURL = URL.createObjectURL(blob);
               }, error: err => {
-                console.error(err); // TODO handle
+                console.error(err);
+                const errorMessage = err.error ? err.error.message : 'Unknown error';
+                this.notification.notifyError(errorMessage, "Error loading Profile Picture");
               }
             });
           }, error: err => {
-            console.error('Error loading shelter: ', err); // TODO handle
+            console.error('Error loading shelter: ', err);
+            const errorMessage = err.error ? err.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Error loading Shelter");
           }
         });
       });
@@ -75,24 +79,28 @@ export class MemberEditShelterComponent {
   public onSubmit(form: NgForm): void {
 
     if (this.shelterImage !== null) {
-      const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: ""};
+      const createFileDto: CreateFileDto = {file: this.shelterImage, name: this.shelterImage.name, summary: this.shelterImage.name};
       this.shelterService.updateProfileImage(this.shelter.id, createFileDto).subscribe({
         next: fileDto => {
-          this.notification.notifySuccess(`DUMMY.TITLE`);
+          this.notification.notifySuccess("Successfully updated Profile Picture");
           console.log('shelter profile image updated', fileDto);
-          this.navigateSuccess(this.shelter.id);
+          this.navigateSuccess();
         }, error: err => {
-          console.error(err); // TODO handle
+          console.error(err);
+          const errorMessage = err.error ? err.error.message : 'Unknown error';
+          this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
         }
       })
     }
 
     this.userService.updatePaypalDetails(this.shelter).subscribe({
-      next: userDetailDto => {
-        console.log('User updated', userDetailDto);
+      next: () => {
+        this.notification.notifySuccess("Successfully Updated ShelterDetails");
+        this.navigateSuccess()
 
       }, error: err => {
         console.error('Error updating Paypal Credentials:', err);
+
         const errorMessage = err.error ? err.error.message : 'Unknown error';
         this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
       }
@@ -100,7 +108,7 @@ export class MemberEditShelterComponent {
 
   }
 
-  private navigateSuccess(id: string): void {
+  private navigateSuccess(): void {
     this.router.navigate(['/home']);
   }
 

@@ -57,6 +57,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
@@ -90,8 +91,32 @@ public class CustomUserDetailService implements UserService {
      */
     @Override
     public List<UserDetailDto> search(UserSearchDto searchParameters) {
+        LOGGER.trace("search({})", searchParameters);
 
-        return userRepository.findApplicationUserByEmailContainsIgnoreCaseAndRoleIs(searchParameters.email(), searchParameters.role()).stream().map(userMapper::applicationUserToUserDetailDto).toList();
+        List<ApplicationUser> users = new ArrayList<>();
+
+        if (searchParameters.email() == null || searchParameters.email().isEmpty()) {
+            if (searchParameters.role() == null) {
+                users = userRepository.findAll();
+            } else {
+                users = userRepository.findApplicationUsersByRole(searchParameters.role());
+            }
+
+        } else {
+
+            var foundUsers = userRepository.findUsersByEmailIgnoreCaseContaining(searchParameters.email());
+            if (searchParameters.role() == null) {
+                users = foundUsers;
+            } else {
+                for (ApplicationUser foundUser : foundUsers) {
+                    if (userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()) != null) {
+                        users.add(userRepository.findApplicationUsersByRoleAndIdEquals(searchParameters.role(), foundUser.getId()));
+                    }
+                }
+            }
+        }
+        return users.stream()
+            .map(userMapper::applicationUserToUserDetailDto).toList();
     }
 
     @Override
@@ -229,9 +254,10 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         LOGGER.debug("update({})", userDetailDto);
 
+        conflict.conflictForUpdate(userDetailDto);
         userValidator.validateUserCredentialsForUpdate(userDetailDto);
         ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
             () -> new NotFoundException("User does not exist.")
@@ -512,15 +538,15 @@ public class CustomUserDetailService implements UserService {
 
         String requestBody = "{ "
             + "\"product_id\": \"PROD-0WX22620KG452370H\", "
-            + "\"name\": \"Created Automatically\", "
-            + "\"description\": \"This is a test\", "
+            + "\"name\": \"Subscription to Animal\", "
+            + "\"description\": \"Thank you for your Donation\", "
             + "\"billing_cycles\": [ "
             + "{ "
             + "\"frequency\": { \"interval_unit\": \"MONTH\", \"interval_count\": 1 }, "
             + "\"tenure_type\": \"REGULAR\", "
             + "\"sequence\": 1, "
             + "\"total_cycles\": 12, "
-            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"9.99\", \"currency_code\": \"USD\" } } "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"12.99\", \"currency_code\": \"USD\" } } "
             + "} "
             + "], "
             + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "
@@ -538,9 +564,19 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void updatePaypalCredentials(UUID id, ShelterDetailDto shelterDetailDto) {
-        LOGGER.trace("Check if user is subscribed");
+        LOGGER.trace("Update user credentials");
 
         shelterRepository.save(shelterMapper.shelterDetailDtoToShelter(shelterDetailDto));
+    }
+
+    @Override
+    public void updateSubscription(String id) {
+        LOGGER.debug("update({})", id);
+
+        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
+
+        subscriptionRepository.setCancelled(id);
+
     }
 
 

@@ -24,6 +24,7 @@ export interface SubscriptionDetailDto {
   user?: UserDetailDto,
   tier: string,
   subscriptionId: string,
+  cancelled?: boolean,
 }
 export interface CreateSubscriptionDto {
   animal: AnimalDetailDto,

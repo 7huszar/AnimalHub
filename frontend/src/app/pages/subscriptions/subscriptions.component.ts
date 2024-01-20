@@ -8,6 +8,9 @@ import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
 import {Location} from "@angular/common";
 import {PaypalService} from "../../services/paypal.service";
+import {ShelterService} from "../../services/shelter.service";
+import {AnimalService} from "../../services/animal.service";
+import {NotifierService} from "../../services/notifier.service";
 
 
 
@@ -28,7 +31,8 @@ export class SubscriptionsComponent implements OnInit {
     id: "",
     name: "",
     gender: null,
-    race: "",
+    englishRace: null,
+    germanRace: null,
     shelter: undefined,
     species: undefined,
     weight: 0,
@@ -40,11 +44,13 @@ export class SubscriptionsComponent implements OnInit {
     role: ""
   };
 
-  subscription: CreateSubscriptionDto = {
+  subscription: SubscriptionDetailDto = {
+    cancelled: false,
+    id: "",
     subscriptionId: "",
     tier: "",
     user: undefined,
-    animal: undefined,
+    animal: undefined
   }
 
   typeForDeletion: string = '';
@@ -52,13 +58,15 @@ export class SubscriptionsComponent implements OnInit {
   idForDeletion: string = '';
   nameForDeletion: string = '';
   protected subscriptionList: SubscriptionDetailDto[];
+  protected shelterImageURL: any = null;
+
 
 
   constructor(
     public authService: AuthService,
     private userService: UserService,
-    private paypalService: PaypalService,
-    private notification: ToastrService,
+    private animalService: AnimalService,
+    private notification: NotifierService,
     private location: Location,
     private translator: TranslateService) {
   }
@@ -82,11 +90,26 @@ export class SubscriptionsComponent implements OnInit {
           next: data => {
             this.subscriptionList = data;
             console.log("Loaded subscriptions " + this.subscriptionList)
-          },
+
+            this.subscriptionList.forEach((subscription: SubscriptionDetailDto) => {
+              this.animalService.getProfileImage(subscription.animal.id).subscribe({
+                next: blob => {
+                  this.shelterImageURL = URL.createObjectURL(blob);
+                }, error: err => {
+                  console.error(err);
+                  const errorMessage = err.error ? err.error.message : 'Unknown error';
+                  this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
+                }
+              });
+
+
+            });
+            },
           error: error => {
             //this schould never happen except if no subscriptions have been made
             console.error('Error finding subscriptions', error);
-            this.notification.error("Could not find subscriptions");
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Could not find subscriptions");
           }
         });
 
@@ -95,7 +118,8 @@ export class SubscriptionsComponent implements OnInit {
       error: error => {
         //this schould never happen
         console.error('Error finding user', error);
-        this.notification.error("Could not find logged in user");
+        const errorMessage = error.error ? error.error.message : 'Unknown error';
+        this.notification.notifyError(errorMessage, "Could not find logged in user");
       }
     });
   }

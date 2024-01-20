@@ -3,7 +3,7 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {Mode} from "../../enums/modes";
-import {AnimalService} from "../../services/animal.service";
+import {Globals} from "../../global/globals";
 
 @Component({
   selector: 'app-animal-list',
@@ -21,7 +21,7 @@ export class AnimalListComponent {
 
   constructor(private router: Router,
               public authService: AuthService,
-              private animalService: AnimalService) {
+              protected globals: Globals) {
   }
 
   typeForDeletion: string = '';
@@ -50,7 +50,6 @@ export class AnimalListComponent {
       this.router.navigate(['/animal', animalId]);
     }
   }
-
 
   onInput(): void {
     this.displayedAnimals = this.animals

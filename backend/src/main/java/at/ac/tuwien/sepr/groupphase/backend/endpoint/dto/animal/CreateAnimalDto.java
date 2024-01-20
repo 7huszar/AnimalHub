@@ -32,8 +32,11 @@ public class CreateAnimalDto {
     @NotNull(message = "Species must not be null")
     private Species species;
 
-    @NotNull(message = "Race must not be null")
-    private String race;
+    @NotNull(message = "English Race must not be null")
+    private String englishRace;
+
+    @NotNull(message = "German Race must not be null")
+    private String germanRace;
 
     @NotNull(message = "Birth Date must not be null")
     private LocalDate birthDate;
@@ -49,11 +52,16 @@ public class CreateAnimalDto {
     public String toString() {
         return "CreateAnimalDto{"
             + "name='" + name + '\''
-            + ", species='" + species + '\''
-            + ", race='" + race + '\''
-            + ", birthDate='" + birthDate + '\''
-            + ", height='" + height + '\''
-            + ", weight='" + weight + '\''
+            + ", gender=" + gender
+            + ", germanDescription='" + germanDescription + '\''
+            + ", englishDescription='" + englishDescription + '\''
+            + ", species=" + species
+            + ", englishRace='" + englishRace + '\''
+            + ", germanRace='" + germanRace + '\''
+            + ", birthDate=" + birthDate
+            + ", shelter=" + shelter
+            + ", height=" + height
+            + ", weight=" + weight
             + '}';
     }
 }
