@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface PreferenceService {
 
 
-    void like(UUID animalId) throws NotFoundException;
+    void like(UUID animalId, UUID userId) throws NotFoundException;
 }

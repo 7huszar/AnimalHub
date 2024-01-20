@@ -33,10 +33,10 @@ public class PreferenceEndpoint {
      */
     @PostMapping
     @Operation(summary = "Persisting like to the database", security = @SecurityRequirement(name = "apiKey"))
-    public void like(@Valid @RequestBody UUID animalId) throws NotFoundException {
+    public void like(@Valid @RequestBody UUID animalId, UUID userId) throws NotFoundException {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n{}", animalId);
-        preferenceService.like(animalId);
+        preferenceService.like(animalId, userId);
     }
 
 }

@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "PREFERENCE")
+@IdClass(PreferenceId.class)
 public class Preference {
 
     @Id
@@ -29,7 +32,7 @@ public class Preference {
 
     @Id
     @Column(nullable = false)
-    private String species;
+    private Species species;
 
     @Column(nullable = false)
     private long speciesFactor;
