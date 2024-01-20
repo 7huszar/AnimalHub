@@ -10,6 +10,6 @@ import java.util.Map;
 @Getter
 @Setter
 public class TraitPoints {
-    private Map<String, Long> traitPoints;
+    //private Map<String, Long> traitPoints;
 
 }

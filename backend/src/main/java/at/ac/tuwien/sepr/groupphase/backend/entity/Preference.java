@@ -37,8 +37,8 @@ public class Preference {
     @Column(nullable = false)
     private long speciesFactor;
 
-    @ElementCollection
-    @Column(nullable = false)
-    private Map<String, TraitPoints> traitPointMap;
+    //@ElementCollection
+    //@Column(nullable = false)
+    //private Map<String, TraitPoints> traitPointMap;
 
 }
