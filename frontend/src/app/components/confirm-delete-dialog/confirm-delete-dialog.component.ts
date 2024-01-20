@@ -128,29 +128,6 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-  //This is just for testing purposes
-
-  public createSubscriptionPlan() {
-
-    if (this.DeleteId != null) {
-      console.log(this.cancelShelter)
-      let test: Observable<void> = this.paypalService.createSubscription(this.cancelShelter)
-      test.subscribe({
-        next: data => {
-          console.log(data)
-          this.notification.notifySuccess(`SubscriptionPlan to successfully created.`);
-          this.reloadSubscriptions();
-        },
-        error: error => {
-          //this schould never happen except if no subscriptions have been made
-          console.error('Error creating Plan', error);
-        }
-      });
-    }
-  }
-
-
-
   public deleteEntity() {
     if (this.deleteType === 'User') {
       this.deleteUser()
