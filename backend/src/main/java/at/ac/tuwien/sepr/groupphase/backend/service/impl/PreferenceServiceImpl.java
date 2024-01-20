@@ -40,6 +40,7 @@ public class PreferenceServiceImpl implements PreferenceService {
             Preference preference = preferenceRepository.findById(preferenceId).get();
             preference.setSpeciesFactor((long) (preference.getSpeciesFactor() * 1.01));
             preferenceRepository.save(preference);
+            //if (preference.getTraitPointMap().containsKey(animal.))
         } else {
             Map<String, Integer> traitPoints = new HashMap<>();
             traitPoints.put("race", 0);
@@ -47,12 +48,12 @@ public class PreferenceServiceImpl implements PreferenceService {
             traitPoints.put("weight", 0);
             traitPoints.put("age", 0);
 
-            preferenceRepository.save(Preference.builder()
+            /*preferenceRepository.save(Preference.builder()
                 .user(user)
                 .species(animal.getSpecies())
                 .speciesFactor(1L)
                 .traitPoints(traitPoints)
-                .build());
+                .build());*/
         }
 
     }

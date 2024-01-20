@@ -39,5 +39,6 @@ public class Preference {
 
     @ElementCollection
     @Column(nullable = false)
-    private Map<String, Integer> traitPoints;
+    private Map<String, TraitPoints> traitPointMap;
+
 }
