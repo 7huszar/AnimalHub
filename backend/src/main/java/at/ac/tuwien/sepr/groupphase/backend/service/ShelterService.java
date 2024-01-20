@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
@@ -118,7 +119,7 @@ public interface ShelterService {
      * @param user      the id of the user to assign the shelter too
      * @code NotFoundException when there is no shelter with the given ID
      */
-    void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException;
+    void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, NotAuthorizedException;
 
     /**
      * Unassigns the shelter from a user.

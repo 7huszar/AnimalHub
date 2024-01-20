@@ -384,10 +384,11 @@ public class UserEndpoint {
         ShelterDetailDto shelter = shelterService.findById(id);
 
         if (shelter.getPaypalSecret() != null) {
-            if (shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
+            if (shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret()) && shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId())) {
                 shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
                 return;
             }
+
         } else if (shelter.getPaypalClientId() != null) {
             if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId())) {
                 shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
@@ -404,10 +405,8 @@ public class UserEndpoint {
 
 
         try {
-
             // Make the POST request to get access token
             ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
-
 
             //parsing so just the access Token is being returned
             String accessToken = userService.parseTokenResponse(response);

@@ -15,6 +15,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
@@ -182,7 +183,7 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException {
+    public void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, NotAuthorizedException {
 
         LOGGER.debug("assign Shelter({}) to user({})", shelterId, user);
         conflict.conflictForShelterUserUpdate(shelterId, user);

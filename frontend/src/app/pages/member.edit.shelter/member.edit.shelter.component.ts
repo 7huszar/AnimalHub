@@ -98,6 +98,8 @@ export class MemberEditShelterComponent {
               this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
             }
           })
+        }else{
+          this.navigateSuccess()
         }
 
 

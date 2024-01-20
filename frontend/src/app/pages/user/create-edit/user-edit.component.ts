@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
 import {debounceTime, Observable, Subject} from 'rxjs';
 import {UserDetailDto} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
@@ -109,14 +108,8 @@ export class UserEditComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching Shelters', error);
-        const errorMessage =
-          error.status === 0
-            ? 'Is the backend up?'
-            : error.message.message;
-        this.notification.notifyError(
-          errorMessage,
-          'Could Not Fetch Shelters'
-        );
+        const errorMessage = error.status === 0 ? 'Is the backend up?' : error.message.message;
+        this.notification.notifyError(errorMessage, 'Could Not Fetch Shelters');
       },
     });
   }
@@ -210,7 +203,7 @@ export class UserEditComponent implements OnInit {
 
         console.error(`Error assigning Shelter to User.` + error);
         const errorMessage = error.error ? error.error.message : 'Unknown error';
-        this.notification.notifyError(errorMessage, "Error updating User Role");
+        this.notification.notifyError(errorMessage, "Error assigning Shelter");
       }
     });
   }

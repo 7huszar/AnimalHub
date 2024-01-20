@@ -54,8 +54,6 @@ export class SubscriptionsComponent implements OnInit {
   idForDeletion: string = '';
   nameForDeletion: string = '';
   protected subscriptionList: SubscriptionDetailDto[];
-  protected shelterImageURL: any = null;
-  protected imageUrls: string[] = [];
 
 
   constructor(
