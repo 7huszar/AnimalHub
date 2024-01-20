@@ -188,10 +188,7 @@ public class UserEndpoint {
                 //Actually cancelling
                 ResponseEntity<String> cancelled = restTemplate.postForEntity(cancelUrl, cancelEntity, String.class);
 
-                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv");
-
                 userService.updateSubscription(id);
-                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncnevmldvksdlvdslkvsvlkdsvl");
 
             } catch (Exception e) {
                 LOGGER.error("Error making external POST request", e);
@@ -286,7 +283,6 @@ public class UserEndpoint {
         if (subscription == null) {
             return null;
         }
-
 
 
         return userService.isSubscribed(id, user.getId());
@@ -385,19 +381,23 @@ public class UserEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("subscriptions/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException, ConflictException {
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException {
         LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
         LOGGER.debug("update Paypal credentials ({})", id);
 
-
         ShelterDetailDto shelter = shelterService.findById(id);
 
-
-        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) && shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
-            shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
-            return;
+        if (shelter.getPaypalSecret() != null) {
+            if (shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
+                shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+                return;
+            }
+        } else if (shelter.getPaypalClientId() != null) {
+            if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId())) {
+                shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+                return;
+            }
         }
-
 
         userService.updatePaypalCredentials(id, shelterDetailDto);
 

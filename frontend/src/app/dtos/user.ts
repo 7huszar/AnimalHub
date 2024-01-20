@@ -25,6 +25,7 @@ export interface SubscriptionDetailDto {
   tier: string,
   subscriptionId: string,
   cancelled?: boolean,
+  profilePicture?: any,
 }
 export interface CreateSubscriptionDto {
   animal: AnimalDetailDto,

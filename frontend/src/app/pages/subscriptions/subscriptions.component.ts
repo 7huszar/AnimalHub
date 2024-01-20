@@ -1,17 +1,13 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AnimalDetailDto} from "../../dtos/animal";
-import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
+import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {Observable} from "rxjs";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
-import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
 import {Location} from "@angular/common";
-import {PaypalService} from "../../services/paypal.service";
-import {ShelterService} from "../../services/shelter.service";
 import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
-
 
 
 @Component({
@@ -19,7 +15,6 @@ import {NotifierService} from "../../services/notifier.service";
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']
 })
-
 
 
 export class SubscriptionsComponent implements OnInit {
@@ -50,7 +45,8 @@ export class SubscriptionsComponent implements OnInit {
     subscriptionId: "",
     tier: "",
     user: undefined,
-    animal: undefined
+    animal: undefined,
+    profilePicture: undefined,
   }
 
   typeForDeletion: string = '';
@@ -59,7 +55,7 @@ export class SubscriptionsComponent implements OnInit {
   nameForDeletion: string = '';
   protected subscriptionList: SubscriptionDetailDto[];
   protected shelterImageURL: any = null;
-
+  protected imageUrls: string[] = [];
 
 
   constructor(
@@ -70,7 +66,6 @@ export class SubscriptionsComponent implements OnInit {
     private location: Location,
     private translator: TranslateService) {
   }
-
 
 
   ngOnInit() {
@@ -88,23 +83,24 @@ export class SubscriptionsComponent implements OnInit {
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
         subscriptionObservable.subscribe({
           next: data => {
+            console.log(data)
             this.subscriptionList = data;
             console.log("Loaded subscriptions " + this.subscriptionList)
 
             this.subscriptionList.forEach((subscription: SubscriptionDetailDto) => {
               this.animalService.getProfileImage(subscription.animal.id).subscribe({
                 next: blob => {
-                  this.shelterImageURL = URL.createObjectURL(blob);
+                  subscription.profilePicture = URL.createObjectURL(blob);
                 }, error: err => {
                   console.error(err);
                   const errorMessage = err.error ? err.error.message : 'Unknown error';
-                  this.notification.notifyError(errorMessage, "Error updating Paypal Credentials");
+                  this.notification.notifyError(errorMessage, "Could not load Picture of shelter");
                 }
               });
 
 
             });
-            },
+          },
           error: error => {
             //this schould never happen except if no subscriptions have been made
             console.error('Error finding subscriptions', error);
@@ -128,13 +124,12 @@ export class SubscriptionsComponent implements OnInit {
     this.location.back();
   }
 
-  subscriptionForDeletion(name: string, id: string, shelterId: string ) {
+  subscriptionForDeletion(name: string, id: string, shelterId: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
     this.typeForDeletion = "Subscription";
     this.cancelShelter = shelterId;
   }
-
 
 
 }

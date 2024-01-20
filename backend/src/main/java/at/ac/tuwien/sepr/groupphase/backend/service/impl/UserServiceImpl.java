@@ -573,8 +573,6 @@ public class UserServiceImpl implements UserService {
     public void updateSubscription(String id) {
         LOGGER.debug("update({})", id);
 
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + id);
-
         subscriptionRepository.setCancelled(id);
 
     }

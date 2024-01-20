@@ -200,9 +200,7 @@ public class ShelterServiceImpl implements ShelterService {
         applicationUser.setShelter(foundShelter);
 
         shelterRepository.save(foundShelter);
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         userRepository.save(applicationUser);
-        LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     }
 
