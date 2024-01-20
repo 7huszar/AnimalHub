@@ -24,18 +24,6 @@
         <option value="ADMIN">ADMIN</option>
       </select>
     </div>
-
-    <!-- Delete User Button -->
-      <div class="d-flex mt-4">
-        <button type="button" class="btn btn-danger me-2"
-                (click)="userForDeletion(user.email, user.id)"
-                data-bs-toggle="modal"
-                data-bs-target="#confirm-delete-dialog"
-                aria-label="Delete user">
-          <i class="bi bi-trash"></i> Delete User
-        </button>
-    </div>
-
   </div>
 
 
@@ -100,6 +88,3 @@
   </div>
 </div>
 
-<!-- Confirmation Dialog -->
-<app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion"
-                           [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
