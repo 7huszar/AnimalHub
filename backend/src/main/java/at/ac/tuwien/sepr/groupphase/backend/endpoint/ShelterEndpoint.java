@@ -7,11 +7,13 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -47,6 +49,8 @@ public class ShelterEndpoint {
     static final String BASE_PATH = "/api/v1/shelters";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShelterService shelterService;
+    private final UserService userService;
+
 
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping
@@ -137,5 +141,29 @@ public class ShelterEndpoint {
         LOGGER.debug("request parameters: {}", searchParameters);
         return shelterService.search(searchParameters);
     }
+
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @PutMapping("/current/{id}")
+    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    public void assignUserToShelter(@PathVariable UUID id, @RequestBody UserDetailDto user) throws NotFoundException, ConflictException {
+        LOGGER.info("POST " + BASE_PATH + "/" + id);
+        LOGGER.debug("Body of request:\n{}", id);
+
+        shelterService.assignShelterToUser(id, user);
+    }
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @GetMapping("/current/{id}")
+    @Operation(summary = "Get list of filtered shelters", security = @SecurityRequirement(name = "apiKey"))
+    public ShelterDetailDto isAssignedTo(@PathVariable UUID id) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH);
+        LOGGER.debug("request parameters: {}", id);
+
+        UserDetailDto user = userService.findById(id);
+
+        return shelterService.isAssignedTo(user);
+    }
+
 }
 

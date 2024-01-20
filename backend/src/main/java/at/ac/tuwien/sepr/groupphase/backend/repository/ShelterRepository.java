@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,8 @@ import java.util.UUID;
 public interface ShelterRepository extends JpaRepository<Shelter, UUID> {
 
     List<Shelter> findByNameIgnoreCaseContaining(String name);
+
+    Shelter findByUser(ApplicationUser user);
 
     boolean existsById(@NonNull UUID uuid);
 }

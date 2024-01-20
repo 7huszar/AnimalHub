@@ -1,21 +1,22 @@
 <app-header></app-header>
 
 <!-- User Details Form -->
-<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)" class="user-details-form">
   <div class="row m-4">
-    <h1>User Details</h1>
-
-    <!-- User Email -->
-    <div class="col-4 mb-3">
-      <label class="form-label text-muted">Email:</label>
-      <div class="input-group">
-        <span> <h2>{{ user.email }}</h2></span>
-      </div>
+    <div class="d-flex align-items-middle">
+      <h1>User Details of {{ user.email }}</h1>
+      <button type="submit" class="btn btn-primary ms-auto" [disabled]="!form.valid">
+        {{ submitButtonText }}
+      </button>
     </div>
+  </div>
 
-    <!-- User Role -->
-    <div class="col-4 mb-3">
-      <label for="userRole" class="form-label text-muted"> Switch Role:</label>
+  <!-- User Email and Role Section -->
+  <div class="row m-4">
+
+
+    <div class="col-3 mb-3">
+      <label for="userRole" class="form-label text-muted">Switch Role:</label>
       <select class="form-select" id="userRole" name="userRole" [(ngModel)]="user.role" required>
         <option value="USER">USER</option>
         <option value="MEMBER">MEMBER</option>
@@ -23,11 +24,8 @@
         <option value="ADMIN">ADMIN</option>
       </select>
     </div>
-  </div>
 
-  <!-- Delete User and Submit Buttons -->
-  <div class="row m-3">
-    <div class="col-6">
+    <!-- Delete User Button -->
       <div class="d-flex mt-4">
         <button type="button" class="btn btn-danger me-2"
                 (click)="userForDeletion(user.email, user.id)"
@@ -36,61 +34,57 @@
                 aria-label="Delete user">
           <i class="bi bi-trash"></i> Delete User
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
-          {{ submitButtonText }}
-        </button>
-      </div>
     </div>
+
   </div>
 
 
-  <!-- Search Shelter Section -->
-  <div class="col-6  m-4">
-    <h2>Select Shelter for member</h2>
-
-    <label for="searchShelterName" class="form-label">Search for Shelter:</label>
-    <div class="input-group mb-3">
-      <input type="text" id="searchShelterName" name="searchShelterName" class="form-control"
-             [(ngModel)]="shelterSearchParams.name" (ngModelChange)="shelterSearchChanged()"
-             placeholder="Enter Shelter Name">
-      <button class="btn btn-primary" (click)="shelterSearchChanged()" aria-label="Search">
-        <i class="bi bi-search"></i> Search
-      </button>
-    </div>
-
-    <!-- Shelters Table -->
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-        <tr>
-          <th>Name</th>
-          <th class="text-center"> Details</th>
-          <th class="text-end"> Assign Shelter</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let shelter of shelters">
-          <td>{{ shelter.name }}</td>
-          <td class="text-center">
-            <div class="btn-group">
-              <button class="btn btn-primary" [routerLink]="['/shelter/', shelter.id]">Details</button>
-            </div>
-          </td>
-
-          <td class="text-end">
-            <div class="btn-group">
-              <button class="btn btn-primary" (click)="assignShelter()" >Assign shelter</button>
-            </div>
-          </td>
-
-
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 </form>
 
+<!-- Search Shelter Section -->
+<div class="col-6 m-4">
+  <h2>Currently Assigned to Shelter: {{ shelter.name }}</h2>
+  <h2>Assign Shelter to member</h2>
+
+  <label for="searchShelterName" class="form-label">Search for Shelter:</label>
+  <div class="input-group mb-3">
+    <input type="text" id="searchShelterName" name="searchShelterName" class="form-control"
+           [(ngModel)]="shelterSearchParams.name" (ngModelChange)="shelterSearchChanged()"
+           placeholder="Enter Shelter Name">
+    <button class="btn btn-primary" (click)="shelterSearchChanged()" aria-label="Search">
+      <i class="bi bi-search"></i> Search
+    </button>
+  </div>
+
+  <!-- Shelters Table -->
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th class="text-center">Details</th>
+        <th class="text-end">Assign Shelter</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let shelter of shelters">
+        <td>{{ shelter.name }}</td>
+        <td class="text-center">
+          <div class="btn-group">
+            <button class="btn btn-primary" [routerLink]="['/shelter/', shelter.id]">Details</button>
+          </div>
+        </td>
+        <td class="text-end">
+          <div class="btn-group">
+            <button class="btn btn-primary" (click)="assignShelter(shelter.id, shelter.name)">Assign shelter</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <!-- Confirmation Dialog -->
-<app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
+<app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion"
+                           [deleteType]="typeForDeletion"></app-confirm-delete-dialog>

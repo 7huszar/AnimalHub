@@ -48,9 +48,6 @@ public class UserConflict {
     }
 
 
-
-
-
     public void conflictForDelete(UUID id) throws NotAuthorizedException, NotFoundException {
         LOGGER.trace("checkUserDeleteConflicts({})", id);
 
@@ -62,6 +59,19 @@ public class UserConflict {
                 throw new NotAuthorizedException("Cannot delete another Admin");
             }
         }
+    }
+
+    public void conflictForShelterUserUpdate(UUID shelterId, UserDetailDto user) throws ConflictException {
+        LOGGER.debug("conflictsForUpdate({})", shelterId);
+
+        if (userRepository.findApplicationUserByShelter_Id(shelterId) != null) {
+            throw new ConflictException("Shelter already assigned to another user", Collections.singletonList("Shelter already assigned"));
+        }
+
+        if (user.getRole() != UserRole.MEMBER) {
+            throw new ConflictException("Cannot assign a shelter to any other Role than member", Collections.singletonList("Couldn't assign shelter"));
+        }
+
     }
 
 }

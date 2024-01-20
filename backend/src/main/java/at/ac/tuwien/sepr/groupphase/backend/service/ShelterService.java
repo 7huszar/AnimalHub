@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -108,4 +109,18 @@ public interface ShelterService {
      * @throws NotFoundException   when the id points to no existing shelter
      */
     FileDto updateProfileImage(UUID id, CreateFileDto createFileDto) throws ValidationException, IOException, NotFoundException;
+
+
+    /**
+     * Assigns the shelter to a user.
+     *
+     * @param shelterId the shelter to assign
+     * @param user      the id of the user to assign the shelter too
+     * @code NotFoundException when there is no shelter with the given ID
+     */
+    void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException;
+
+    ShelterDetailDto isAssignedTo(UserDetailDto user);
+
 }
+

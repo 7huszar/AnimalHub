@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,5 +35,7 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     void updatePassword(@Param(value = "email") String email, @Param(value = "password") String password);
 
     ApplicationUser findApplicationUserById(UUID id);
+
+    ApplicationUser findApplicationUserByShelter_Id(UUID shelterId);
 
 }
