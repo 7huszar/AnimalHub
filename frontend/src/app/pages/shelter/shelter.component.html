@@ -39,9 +39,7 @@
               <h3 style="text-decoration-line: underline; padding-bottom: 0.5em">{{ 'SHELTER_HOMEPAGE.DONATE_VIA_PAYPAL' | translate }}</h3>
             </div>
             <div class="col-12" style="text-align: center;">
-              <a [href]="'https://www.paypal.com/donate/?hosted_button_id=' + shelter?.donationId" target="_blank">
-                <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate with PayPal" style="width: 150px; height: 50px;">
-              </a>
+              <app-donation [receiver]="shelter.id"></app-donation>
             </div>
 
           </div>
