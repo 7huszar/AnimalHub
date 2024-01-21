@@ -6,8 +6,10 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ErrorListException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.SingleException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import jakarta.persistence.ElementCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -39,7 +41,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // TODO doku
     @ExceptionHandler(value = {NotFoundException.class})
     protected ResponseEntity<Object> handleNotFoundException(SingleException e, WebRequest request) {
-        LOGGER.warn(e.getMessage());
 
         SingleExceptionDto responseBody = new SingleExceptionDto()
             .setMessage(e.getMessage())
@@ -52,7 +53,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // TODO doku
     @ExceptionHandler(value = {ValidationException.class})
     protected ResponseEntity<Object> handleValidationException(ErrorListException e, WebRequest request) {
-        LOGGER.warn(e.getMessage());
 
         ErrorListExceptionDto responseBody = new ErrorListExceptionDto()
             .setUiErrorDescriptor(e.uiErrorSummary())
@@ -65,7 +65,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // TODO doku
     @ExceptionHandler(value = {DataAccessException.class})
     protected ResponseEntity<Object> handleDataAccessException(RuntimeException ex, WebRequest request) {
-        LOGGER.error(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
@@ -78,7 +77,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(value = {NotAuthorizedException.class})
     protected ResponseEntity<Object> handleNotAuthorizedException(SingleException e, WebRequest request) {
-        LOGGER.error(e.getMessage());
 
         SingleExceptionDto responseBody = new SingleExceptionDto()
             .setMessage(e.getMessage())
@@ -89,16 +87,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ConflictException.class})
     protected ResponseEntity<Object> handleConflictException(ErrorListException e, WebRequest request) {
-        LOGGER.warn(e.getMessage());
 
         ErrorListExceptionDto responseBody = new ErrorListExceptionDto()
             .setUiErrorDescriptor(e.uiErrorSummary())
             .setErrors(e.errors())
             .setUiErrors(e.uiErrors());
 
-        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
+    @ExceptionHandler(value = {PaypalException.class})
+    protected ResponseEntity<Object> handlePaypalException(PaypalException e, WebRequest request) {
+        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);
+    }
     // TODO handle IOException.
 
     /**

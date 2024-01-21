@@ -10,11 +10,15 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.conflict.PaypalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.Amount;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.AuthResponseDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.CreateOrderDto;
@@ -22,6 +26,8 @@ import at.ac.tuwien.sepr.groupphase.backend.service.dto.Intent;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.PaypalLink;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.PaypalPlaceOrderResponseDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.PurchaseUnits;
+import at.ac.tuwien.sepr.groupphase.backend.service.validator.PaypalValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +59,11 @@ public class PaypalServiceImpl implements PaypalService {
     private final ShelterRepository shelterRepository;
     private final UserRepository userRepository;
     private final FrontendProperties frontend;
+    private final PaypalConflict paypalConflict;
+    private final PaypalValidator paypalValidator;
 
-    private String retrieveAccessToken(String clientId, String clientSecret) {
+    private String retrieveAccessToken(String clientId, String clientSecret) throws PaypalException {
+        LOGGER.trace("retrieveAccessToken({}, *)", clientId);
         WebClient client = WebClient.create(paypal.getSandbox());
 
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
@@ -66,9 +75,7 @@ public class PaypalServiceImpl implements PaypalService {
             .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ':' + clientSecret).getBytes()))
             .body(BodyInserters.fromFormData(data))
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("4xx, will handle it later - toke")))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("5xx, will handle it later")))
-            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("is error")))
+            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new PaypalException(clientResponse)))
             .bodyToMono(AuthResponseDto.class)
             .block();
 
@@ -80,8 +87,11 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException {
+    public PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException {
         LOGGER.trace("placeOrder({}, {})", id, donationDto);
+
+        paypalValidator.validateDonationOrder(id, donationDto);
+        paypalConflict.conflictForPlacingOrder(id, donationDto);
 
         Shelter receiver = shelterRepository.findById(id).orElseThrow(NotFoundException::new);
         ApplicationUser donator = userRepository.findById(donationDto.donator()).orElseThrow(NotFoundException::new);
@@ -109,12 +119,10 @@ public class PaypalServiceImpl implements PaypalService {
         PaypalPlaceOrderResponseDto reply = client.post()
             .uri(paypal.getPlaceOrder())
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header("Authorization", "Bearer " + this.retrieveAccessToken(paypal.getClientId(), paypal.getClientSecret()))
+            .header("Authorization", "Bearer " + this.retrieveAccessToken(receiver.getPaypalClientId(), receiver.getPaypalSecret()))
             .bodyValue(orderDto)
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("is error")))
+            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new PaypalException(clientResponse)))
             .bodyToMono(PaypalPlaceOrderResponseDto.class)
             .block();
 
@@ -150,7 +158,12 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public void captureOrder(String id) throws NotFoundException {
+    public void captureOrder(String id) throws NotFoundException, ValidationException, ConflictException, PaypalException {
+        LOGGER.trace("captureOrder({})", id);
+
+        paypalValidator.validateCaptureOrder(id);
+        paypalConflict.conflictForCaptureOrder(id);
+
         WebClient client = WebClient.create(paypal.getSandbox());
 
         Donation donation = donationRepository.findById(id).orElseThrow(NotFoundException::new);
@@ -158,11 +171,9 @@ public class PaypalServiceImpl implements PaypalService {
         client.post()
             .uri(paypal.captureOrder(id))
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header("Authorization", "Bearer " + this.retrieveAccessToken(paypal.getClientId(), paypal.getClientSecret()))
+            .header("Authorization", "Bearer " + this.retrieveAccessToken(donation.getShelter().getPaypalClientId(), donation.getShelter().getPaypalSecret()))
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("is error")))
+            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new PaypalException(clientResponse)))
             .bodyToMono(String.class)
             .block();
 
