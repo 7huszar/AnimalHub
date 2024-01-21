@@ -36,7 +36,7 @@ public class Preference {
     private Species species;
 
     @Column(nullable = false)
-    private long speciesFactor;
+    private double speciesFactor;
 
     @ElementCollection
     @Column(nullable = false)

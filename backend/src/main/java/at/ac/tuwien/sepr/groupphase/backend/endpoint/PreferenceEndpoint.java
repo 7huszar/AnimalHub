@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.preference.PreferenceRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PreferenceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,13 +30,15 @@ public class PreferenceEndpoint {
      * This method is responsible for handling POST requests to the "/api/v1/preference" endpoint.
      * It logs the request and delegates the action of liking an animal to the PreferenceService.
      *
-     * @param animalId The UUID of the animal that is to be liked. This is passed in the request body
+     * @param request The UUID of the animal and the user. This is passed in the request body
      */
     @PostMapping
     @Operation(summary = "Persisting like to the database", security = @SecurityRequirement(name = "apiKey"))
-    public void like(@Valid @RequestBody UUID animalId, UUID userId) throws NotFoundException {
+    public void like(@Valid @RequestBody PreferenceRequestDto request) throws NotFoundException {
+        UUID animalId = request.getAnimalId();
+        UUID userId = request.getUserId();
         LOGGER.info("POST " + BASE_PATH);
-        LOGGER.debug("Body of request:\n{}", animalId);
+        LOGGER.debug("Body of request:\n{}\n{}", animalId, userId);
         preferenceService.like(animalId, userId);
     }
 
