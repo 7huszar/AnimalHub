@@ -1,16 +1,43 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AnimalRankingDto {
 
+    public AnimalRankingDto(AnimalDetailDto animal, double score) {
+        id = animal.getId();
+        name = animal.getName();
+        gender = animal.getGender();
+        germanDescription = animal.getGermanDescription();
+        englishDescription = animal.getEnglishDescription();
+        species = animal.getSpecies();
+        englishRace = animal.getEnglishRace();
+        germanRace = animal.getGermanRace();
+        birthDate = animal.getBirthDate();
+        shelter = animal.getShelter();
+        height = animal.getHeight();
+        weight = animal.getWeight();
+        createdOn = animal.getCreatedOn();
+        this.score = score;
+    }
     private UUID id;
 
     @NotNull(message = "Name must not be null")

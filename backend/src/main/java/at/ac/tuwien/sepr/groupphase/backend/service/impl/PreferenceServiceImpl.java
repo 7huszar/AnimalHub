@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PreferenceId;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -11,7 +10,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.PreferenceRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PreferenceService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +82,8 @@ public class PreferenceServiceImpl implements PreferenceService {
         traitPoints.put("height", height);
         age /= getLikedAnimals(userId).size();
         traitPoints.put("age", age);
+
+
         if (!traitPoints.containsKey("gender_" + animal.getGender())) {
             traitPoints.put("gender_" + animal.getGender(), 1.0);
         }
@@ -91,20 +93,61 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
-    public List<AnimalDetailDto> getRecommendedAnimals(UUID userId) throws NotFoundException {
+    @Transactional
+    public List<AnimalRankingDto> getRecommendedAnimals(UUID userId) throws NotFoundException {
         List<AnimalDetailDto> animals = animalService.findAll();
         animals.removeAll(getLikedAnimals(userId));
         animals.removeAll(getDislikedAnimals(userId));
-        List<AnimalRankingDto> animalRanking;
+        List<AnimalRankingDto> animalRanking = new ArrayList<>();
         for (AnimalDetailDto animal : animals) {
             double score = 0;
-            animalRanking.add(new AnimalRankingDto(animal, score);
+            if (userRepository.findById(userId).isPresent()) {
+                if (preferenceRepository.findById(new PreferenceId(userRepository.findById(userId).get(), animal.getSpecies())).isPresent()) {
+                    Preference preference = preferenceRepository.findById(new PreferenceId(userRepository.findById(userId).get(), animal.getSpecies())).get();
+                    if (preference.getTraitPointMap().containsKey("gender_" + animal.getGender().toString().toLowerCase())) {
+                        score += preference.getTraitPointMap().get("gender_" + animal.getGender().toString().toLowerCase());
+                    }
+                    if (preference.getTraitPointMap().containsKey("weight")) {
+                        if (preference.getTraitPointMap().get("weight") / animal.getWeight() > 1) {
+                            score += 1 - preference.getTraitPointMap().get("weight") / animal.getWeight() * 0.1;
+                        } else {
+                            score += preference.getTraitPointMap().get("weight") / animal.getWeight() * 0.1 + 0.9;
+                        }
+                    }
+                    if (preference.getTraitPointMap().containsKey("height")) {
+                        if (preference.getTraitPointMap().get("height") / animal.getHeight() > 1) {
+                            score += 1 - preference.getTraitPointMap().get("height") / animal.getHeight() * 0.1;
+                        } else {
+                            score += preference.getTraitPointMap().get("height") / animal.getHeight() * 0.1 + 0.9;
+                        }
+                    }
+                    if (preference.getTraitPointMap().containsKey("age")) {
+                        int age = Period.between(animal.getBirthDate(), LocalDate.now()).getYears();
+                        if (preference.getTraitPointMap().get("age") / age > 1) {
+                            score += 1 - preference.getTraitPointMap().get("age") / age * 0.1;
+                        } else {
+                            score += preference.getTraitPointMap().get("age") / age * 0.1 + 0.9;
+                        }
+                    }
+                    score *= preference.getSpeciesFactor();
+                }
+            }
+
+            animalRanking.add(new AnimalRankingDto(animal, score));
         }
-        return null;
+        animalRanking.sort(new Comparator<AnimalRankingDto>() {
+          @Override
+          public int compare(AnimalRankingDto o1, AnimalRankingDto o2) {
+            return Double.compare(o2.getScore(), o1.getScore());
+          }
+        });
+
+        return animalRanking;
     }
 
     @Override
     public List<AnimalDetailDto> getDislikedAnimals(UUID userId) throws NotFoundException {
+        //TODO: implement @Tobias
         return null;
     }
 

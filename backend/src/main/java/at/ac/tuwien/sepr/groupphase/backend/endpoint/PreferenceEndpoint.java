@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.preference.PreferenceRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PreferenceService;
@@ -9,12 +10,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -40,6 +46,14 @@ public class PreferenceEndpoint {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n{}\n{}", animalId, userId);
         preferenceService.like(animalId, userId);
+    }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get recommended animals", security = @SecurityRequirement(name = "apiKey"))
+    public List<AnimalRankingDto> getRecommendedAnimals(@PathVariable UUID id) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH);
+        return preferenceService.getRecommendedAnimals(id);
     }
 
 }
