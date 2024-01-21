@@ -25,7 +25,9 @@
     "ACCOUNT": "Account verwalten",
     "LOAD_FAILED": "Tiere konnten nicht geladen werden",
     "DONATE_1": "Spende an ",
-    "ADOPT": "Adoptiere "
+    "ADOPT": "Adoptiere ",
+    "FAVORITES_TITLE": "Favoriten",
+    "NO_FAVORITES": "Like Tiere, dann werden sie hier in den Favoriten gespeichert!"
 
   },
 
@@ -59,8 +61,8 @@
 
   "HEADER": {
     "LOGOUT": "Ausloggen",
-    "ADMIN_PAGE": "Adminansicht",
-    "MEMBER_PAGE": "Member Profil"
+    "ADMIN_PAGE": "Admin-Ansicht",
+    "MEMBER_PAGE": "Dein Tierheim"
   },
 
   "NOTIFIER": {
@@ -70,8 +72,19 @@
 
   "LOGO" : "Logo mit der Aufschrift AnimalHub",
 
+  "CONFIRM_DELETE_DIALOG": {
+    "TITLE": "Löschvorgang",
+    "QUESTION_PART_1_SHELTER": "Willst du wirklich das Tierheim ",
+    "QUESTION_PART_1_ANIMAL": "Willst du wirklich das Tier ",
+    "QUESTION_PART_1_USER": "Willst du wirklich den Nutzer ",
+    "QUESTION_PART_2": " löschen?",
+    "NO": "Nein, STOP!",
+    "YES": "Ja, ENDGÜLTIG löschen."
+  },
+
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
+    "GENDER": "Geschlecht",
     "RACE": "Rasse:",
     "BIRTHDATE": "Geburtsdatum:",
     "AGE": "Alter:",
@@ -80,7 +93,7 @@
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
     "ADOPT": "Adoptiere ",
-    "SHELTER": "Tierheim: ",
+    "SHELTER": "wohnt aktuell im Tierheim: ",
     "NOCONTENT": " hat noch keine Medien.",
     "YEARS": " Jahre",
     "MONTHS": " Monate",
@@ -91,18 +104,56 @@
     "CAT": "Katze",
     "DOG": "Hund",
     "BIRD": "Vogel",
-    "RODENT": "Nagetier"
+    "RODENT": "Nagetier",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich"
+  },
+
+ "ANIMAL_CREATE_EDIT_PAGE": {
+   "NAME": "Name",
+   "SPECIES": "Tierart",
+   "GENDER": "Geschlecht",
+   "ENGLISH_RACE": "Rasse (englisch)",
+   "GERMAN_RACE": "Rasse (deutsch)",
+   "BIRTHDATE": "Geburtsdatum",
+   "AGE": "Alter",
+   "HEIGHT": "Größe",
+   "WEIGHT": "Gewicht",
+   "CAT": "Katze",
+   "DOG": "Hund",
+   "BIRD": "Vogel",
+   "RODENT": "Nagetier",
+   "FEMALE": "Weiblich",
+   "MALE": "Männlich",
+   "IMAGE": "Profilbild",
+   "SUBMIT_CREATE": "Speichern",
+   "SUBMIT_EDIT": "Abspeichern",
+   "DRAG_AND_DROP": "Drag & Drop",
+   "ENGLISH_DESCRIPTION": "Beschreibung (englisch)",
+   "GERMAN_DESCRIPTION": "Beschreibung (deutsch)"
+ },
+
+  "ANIMAL_CARD": {
+    "NO_MORE_ANIMALS": "Keine weiteren Tiere verfügbar!"
   },
 
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
-    "EMAIL": "E-mail:"
+    "EMAIL": "E-Mail:",
+    "DONATE_VIA_PAYPAL": "Spende via Paypal",
+    "CONTACT": "Kontaktiere"
   },
 
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Tierart"
+    "ADD_ANIMAL": "Neues Tier hinzufügen",
+    "ALL_SPECIES": "Alle Tierarten",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier",
+    "DELETE": "Löschen"
   },
 
   "PWD": {

@@ -25,7 +25,9 @@
     "ACCOUNT": "manage account",
     "LOAD_FAILED": "failed to load animals",
     "DONATE_1": "Donate to ",
-    "ADOPT": "Adopt "
+    "ADOPT": "Adopt ",
+    "FAVORITES_TITLE": "Favorites",
+    "NO_FAVORITES": "Like Animals, so they will be saved in your favorites!"
   },
 
   "REGISTER": {
@@ -56,9 +58,9 @@
   },
 
   "HEADER": {
-    "LOGOUT": "logout",
-    "ADMIN_PAGE": "admin page",
-    "MEMBER_PAGE": "member page"
+    "LOGOUT": "Log out",
+    "ADMIN_PAGE": "Admin View",
+    "MEMBER_PAGE": "Your Shelter"
   },
 
   "NOTIFIER": {
@@ -68,8 +70,19 @@
 
   "LOGO" : "Logo with the writing AnimalHub",
 
+  "CONFIRM_DELETE_DIALOG": {
+    "TITLE": "Delete Operation",
+    "QUESTION_PART_1_SHELTER": "Do you really want to delete the Shelter ",
+    "QUESTION_PART_1_ANIMAL": "Do you really want to delete the Animal ",
+    "QUESTION_PART_1_USER": "Do you really want to delete the User ",
+    "QUESTION_PART_2": " ?",
+    "NO": "No, STOP!",
+    "YES": "Yes, delete FOREVER."
+  },
+
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Species:",
+    "GENDER": "Gender:",
     "RACE": "Race:",
     "BIRTHDATE": "Date of birth:",
     "AGE": "Age:",
@@ -78,7 +91,7 @@
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
     "ADOPT": "Adopt ",
-    "SHELTER": "Shelter: ",
+    "SHELTER": "Currently lives at:",
     "NOCONTENT": " does not have any content yet.",
     "YEARS": " years",
     "MONTHS": " months",
@@ -89,18 +102,58 @@
     "CAT": "Cat",
     "DOG": "Dog",
     "BIRD": "Bird",
-    "RODENT": "Rodent"
+    "RODENT": "Rodent",
+    "MALE": "Male",
+    "FEMALE": "Female"
+  },
+
+  "ANIMAL_CREATE_EDIT_PAGE": {
+    "NAME": "Name",
+    "SPECIES": "Species",
+    "GENDER": "Gender",
+    "ENGLISH_RACE": "Race (englisch)",
+    "GERMAN_RACE": "Race (german)",
+    "BIRTHDATE": "Date of birth",
+    "AGE": "Age",
+    "HEIGHT": "Height",
+    "WEIGHT": "Weight",
+    "SHELTER": "Shelter",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "IMAGE": "Profile Picture",
+    "SUBMIT_CREATE": "Create",
+    "SUBMIT_EDIT": "Update",
+    "DRAG_AND_DROP": "Drag & Drop",
+    "ENGLISH_DESCRIPTION": "Description (english)",
+    "GERMAN_DESCRIPTION": "Description (german)"
+  },
+
+  "ANIMAL_CARD": {
+    "NO_MORE_ANIMALS": "No more animals to explore!"
   },
 
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Address:",
-    "PHONE": "Phone:",
-    "EMAIL": "E-mail:"
+    "PHONE": "Phone Number:",
+    "EMAIL": "E-Mail:",
+    "BACK_BUTTON": "BACK",
+    "DONATE_VIA_PAYPAL": "Donate via Paypal",
+    "CONTACT": "Contact"
   },
 
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Species"
+    "ADD_ANIMAL": "Add new Animal",
+    "ALL_SPECIES": "All Species",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "DELETE": "Delete"
   },
 
   "PWD": {

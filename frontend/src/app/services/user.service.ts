@@ -2,7 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {map, Observable, Subscription, switchMap, throwError} from 'rxjs';
 import {Globals} from '../global/globals';
-import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch} from "../dtos/user";
+import {
+  CreateSubscriptionDto,
+  SubscriptionDetailDto,
+  UserDetailDto,
+  UserSearch
+} from "../dtos/user";
+import {ShelterDetailDto} from "../dtos/shelter";
 
 
 @Injectable({
@@ -11,15 +17,10 @@ import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto, UserSearch}
 export class UserService {
 
   private usersBaseUri: string = this.globals.backendUri + '/users';
-  private paypalApiUrl = 'https://api.sandbox.paypal.com/v1/billing/subscriptions/';
-  private paypalTokenUrl = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 
    private SellerId: string = "AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv";
    private Sellersecret: string = "EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO";
-   private noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError: HttpClient;
 
-   //private BuyerId: string = "AQIxpNWdDXGB9l9l_d885Jxf5bLFQF4xG_5IRYEtF6nkQls6q4rSivsvH1hpgWdJWEo94XbHOkqyQqHD";
-   //private Buyersecret: string = "EDEGnfRd7X1ccyWxK_vl-aKBgHgsWDKol0Ab_S30avCmMx5VDzGbwxU689225xiNx8nbnFts9IC1_VD8";
 
 
 
@@ -27,7 +28,6 @@ export class UserService {
     private httpClient: HttpClient,
     private globals: Globals,
     handler: HttpBackend) {
-    this.noBearerSoThatICanUSePaypalItTookWayToLongToFindThisError = new HttpClient(handler);
   }
 
   /**
@@ -119,6 +119,16 @@ export class UserService {
 
     return this.httpClient.get<SubscriptionDetailDto[]>(this.usersBaseUri + '/subscriptions', {params})
       .pipe();
+  }
+
+  /**
+   * Updates the given user in the persistent data storage.
+   *
+   * @param shelter user -to-update
+   * @return an Observable for the updated user
+   */
+  updatePaypalDetails(shelter: ShelterDetailDto): Observable<any> {
+    return this.httpClient.put<ShelterDetailDto>(this.usersBaseUri + '/subscriptions/' + shelter.id, shelter);
   }
 
 

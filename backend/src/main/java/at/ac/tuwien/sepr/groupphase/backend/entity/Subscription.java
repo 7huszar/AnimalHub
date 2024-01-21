@@ -30,17 +30,18 @@ public class Subscription {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-
     private ApplicationUser user;
 
     private int tier;
 
     private String subscriptionId;
 
+    private Boolean cancelled = false;
+
 
     @Override
     public String toString() {
-        return "Shelter{"
+        return "Subscription{"
             + "animal=" + animal
             + ", tier='" + tier + '\''
             + ", user=" + user

@@ -1,9 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {CreateShelterDto, ShelterDetailDto, ShelterDto, ShelterListDto, ShelterSearch} from '../dtos/shelter';
+import {
+  CreateShelterDto,
+  DonationListDto,
+  ShelterDetailDto,
+  ShelterDto,
+  ShelterListDto,
+  ShelterSearch
+} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateFileDto, FileDto} from "../dtos/file";
+import {UserDetailDto} from "../dtos/user";
 
 
 
@@ -92,6 +100,44 @@ export class ShelterService {
     params = params.append('name', searchParams.name);
     return this.httpClient.get<ShelterListDto[]>(this.shelterBaseUri + '/search', {params})
       .pipe();
+  }
+
+  /**
+   * Assigns a user to the shelter
+   *
+   * @return an Observable for the updated animal
+   * @param shelterId
+   * @param user
+   */
+  assignShelter(shelterId: string, user : UserDetailDto): Observable<any> {
+
+    return this.httpClient.put<any>(this.shelterBaseUri + '/current/' + shelterId, user);
+  }
+
+
+  /**
+   * Checks if the user is assigned to any shelter
+   */
+  isAssignedTo(userid: string): Observable<ShelterDetailDto> {
+
+    return this.httpClient.get<ShelterDetailDto>(this.shelterBaseUri +  '/current/' + userid);
+  }
+
+
+  /**
+   * Assigns a user to the shelter
+   *
+   * @return an Observable for the updated animal
+   * @param shelterId
+   * @param user
+   */
+  unassignShelter(shelterId: string, user : UserDetailDto): Observable<any> {
+
+    return this.httpClient.put<any>(this.shelterBaseUri + '/unassign/' + shelterId, user);
+  }
+
+  findAllDonations(id: string): Observable<DonationListDto[]> {
+    return this.httpClient.get<DonationListDto[]>(this.shelterBaseUri + '/donation/' + id);
   }
 
 }

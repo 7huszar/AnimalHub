@@ -39,6 +39,13 @@ import { SubscriptionsComponent } from './pages/subscriptions/subscriptions.comp
 import { FavoritesCardComponent } from './components/home/favorites-card/favorites-card.component';
 import { ContactFormComponent } from './pages/contact-form/contact-form.component';
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
+import { PasswordComponent } from './components/password/password.component';
+import { PasswordRepeatComponent } from './components/password/password-repeat/password-repeat.component';
+import {EmailFieldComponent} from "./components/email-field/email-field.component";
+import { DonationComponent } from './components/donation/donation.component';
+import { SuccessComponent } from './components/donation/success/success.component';
+import { FailureComponent } from './components/donation/failure/failure.component';
+import { StatisticComponent } from './pages/home/member-profile/statistic/statistic.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -71,7 +78,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     CircleLoadComponent,
     ContactFormComponent,
     SubscriptionsComponent,
-    MemberEditShelterComponent
+    MemberEditShelterComponent,
+    PasswordComponent,
+    PasswordRepeatComponent,
+    EmailFieldComponent,
+    DonationComponent,
+    SuccessComponent,
+    FailureComponent,
+    StatisticComponent
 
   ],
   imports: [

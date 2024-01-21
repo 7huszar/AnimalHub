@@ -5,117 +5,131 @@
   <div class="row">
     <div class="col">
       <div class="headings">
-        <div style="display: block; overflow: auto">
-          <h1 style="float: left">{{ animal?.name }}</h1>
-          <button style="float: right; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">
-            {{animal?.shelter?.name }}
+        <div style="display: flex; align-items: center; justify-content: flex-end">
+          <h4>{{'ANIMAL_HOMEPAGE.SHELTER' | translate}}</h4>
+          <button style="margin-left: 0.25em; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">{{animal?.shelter?.name }}
           </button>
         </div>
-        <div style="display: block">
-          <h2>{{ animal.race }}</h2>
-        </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col" style="max-width: 30em; min-height: 20em">
+    <div class="col" style="max-width: 35em;">
+      <!--      old setup-->
+      <!--    <div class="col" style="max-width: 30em; min-height: 20em">-->
+      <h1 class="animal-title" style="text-align: center">{{ animal?.name }}</h1>
       <div class="media">
-        <app-content [mode]="Mode.ANIMAL" [id]="animal.id"></app-content>
+        <app-content [mode]="Mode.ANIMAL_HOME" [id]="animal.id"></app-content>
       </div>
+      <div style="margin-top: 5%;display: flex; justify-content: center; align-items: center; text-align: center">
+        <div style="max-width: 80%">
+          <h6>
+            {{ globals.currentLanguage === "de" ? animal.germanDescription : animal.englishDescription }}
+          </h6>
+        </div>
 
-      <!-- Paypal button -->
-      <div class="col">
-        <h4>{{ isSubscribed ? 'You are already Subscribed to' : 'Subscribe to' }} {{ animal?.name }}</h4>
-        <div *ngIf="!isSubscribed" id="paypal-button-container-P-2J073097VE083035WMWKWHZY" style="max-width: 150px;"></div>
-      </div>
-
-      <!-- end of paypal -->
     </div>
-    <div class="col">
-      <div class="container position-relative" style="height: 100%; padding-left: 0; margin-left: 3rem">
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
-          <div class="col" *ngIf="isCat">{{'ANIMAL_HOMEPAGE.CAT' | translate}}</div>
-          <div class="col" *ngIf="isDog">{{'ANIMAL_HOMEPAGE.DOG' | translate}}</div>
-          <div class="col" *ngIf="isBird">{{'ANIMAL_HOMEPAGE.BIRD' | translate}}</div>
-          <div class="col" *ngIf="isRodent">{{'ANIMAL_HOMEPAGE.RODENT' | translate}}</div>
-        </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
-          <div class="col">{{ animal.race }}</div>
-        </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.BIRTHDATE' | translate}}</div>
-          <div class="col">{{ animal.birthDate }}</div>
-        </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
-          <div class="col" *ngIf="years">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEARS' | translate}}</div>
-          <div class="col" *ngIf="months">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTHS' | translate}}</div>
-          <div class="col" *ngIf="days">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAYS' | translate}}</div>
-          <div class="col" *ngIf="year">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEAR' | translate}}</div>
-          <div class="col" *ngIf="month">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTH' | translate}}</div>
-          <div class="col" *ngIf="day">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAY' | translate}}</div>
 
+
+    <!-- Paypal button -->
+    <div class="col">
+      <h4>{{ isSubscribed ? 'You are already Subscribed to' : 'Subscribe to' }} {{ animal?.name }}</h4>
+      <div *ngIf="!isSubscribed" id="paypal-button-container-P-2J073097VE083035WMWKWHZY"
+           style="max-width: 150px;"></div>
+    </div>
+
+      <app-donation [receiver]="animal.shelter.id"></app-donation>
+
+    <!-- end of paypal -->
+  </div>
+  <div class="col">
+    <div class="container position-relative"
+         style="height: 100%; padding-left: 0; margin-left: 3rem; padding-top: 15%">
+      <div class="row align-items-end" style="height: auto; min-height: fit-content">
+        <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
+        <div class="col" *ngIf="isCat">{{'ANIMAL_HOMEPAGE.CAT' | translate}}</div>
+        <div class="col" *ngIf="isDog">{{'ANIMAL_HOMEPAGE.DOG' | translate}}</div>
+        <div class="col" *ngIf="isBird">{{'ANIMAL_HOMEPAGE.BIRD' | translate}}</div>
+        <div class="col" *ngIf="isRodent">{{'ANIMAL_HOMEPAGE.RODENT' | translate}}</div>
+      </div>
+      <div class="row align-items-end" style="height: auto; min-height: fit-content">
+        <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.GENDER' | translate}}</div>
+        <div class="col" *ngIf="animal.gender===Gender.male">{{'ANIMAL_HOMEPAGE.MALE' | translate}}</div>
+        <div class="col" *ngIf="animal.gender===Gender.female">{{'ANIMAL_HOMEPAGE.FEMALE' | translate}}</div>
+      </div>
+      <div class="row align-items-end" style="height: auto; min-height: fit-content">
+        <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
+        <div class="col">{{ globals.currentLanguage === "de" ? animal.germanRace : animal.englishRace }}</div>
+      </div>
+      <div class="row align-items-end" style="height: auto; min-height: fit-content">
+        <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
+        <div class="col" *ngIf="years">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEARS' | translate}}</div>
+        <div class="col" *ngIf="months">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTHS' | translate}}</div>
+        <div class="col" *ngIf="days">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAYS' | translate}}</div>
+        <div class="col" *ngIf="year">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEAR' | translate}}</div>
+        <div class="col" *ngIf="month">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTH' | translate}}</div>
+        <div class="col" *ngIf="day">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAY' | translate}}</div>
+
+      </div>
+      <div class="row align-items-end" style="height: auto; min-height: fit-content">
+        <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
+        <div class="col">{{ animal.height }} m</div>
+      </div>
+      <div class="row align-items-end" style="height: auto; min-height: fit-content">
+        <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
+        <div class="col">{{ animal.weight }} kg</div>
+      </div>
+      <div class="row fixed-button align-items-end w-100">
+        <div class="col-auto">
+          <button type="button"
+                  class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
         </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
-          <div class="col">{{ animal.height }} m</div>
+        <div *ngIf="canUpload()" class="col-auto">
+          <input type="file" id="newContent" name="newContent"
+                 accept="image/png, image/jpeg, image/gif, image/bmp, video/mp4, video/mpeg"
+                 (change)="onNewContentSelected($event)" class="form-control">
         </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
-          <div class="col">{{ animal.weight }} kg</div>
-        </div>
-        <div class="row align-items-end" style="height: auto; min-height: fit-content">
-          <div class="col-auto">{{'ANIMAL_HOMEPAGE.SHELTER' | translate}}</div>
-          <div class="col">{{ animal.shelter?.name }} </div>
-        </div>
-        <div class="row fixed-button align-items-end w-100">
-          <div class="col-auto">
-            <button type="button" class="btn btn-primary">{{'ANIMAL_HOMEPAGE.ADOPT' | translate}}{{ animal.name }}</button>
-          </div>
-          <div *ngIf="canUpload()" class="col-auto">
-            <input type="file" id="newContent" name="newContent" accept="image/png, image/jpeg, image/gif, image/bmp, video/mp4, video/mpeg"
-                   (change)="onNewContentSelected($event)" class="form-control">
-          </div>
-          <div *ngIf="canUpload()" class="col-auto">
-            <button type="button" class="btn btn-primary" [disabled]="newContent === null" (click)="onUpload()">Upload</button>
-          </div>
+        <div *ngIf="canUpload()" class="col-auto">
+          <button type="button" class="btn btn-primary" [disabled]="newContent === null" (click)="onUpload()">Upload
+          </button>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="headings">
-      <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
-        <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
-      </div>
+<div class="row">
+  <div class="headings">
+    <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
+      <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
     </div>
+  </div>
 
-    <div class="content">
-      <div *ngFor="let content of contents" class="item">
-        <div class="card position-relative" style="border-width: thick; border-color: hotpink; margin-bottom: 1rem">
-          <div class="overflow-hidden">
-            <div class="bg-image">
-              <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content" setClass="object-fit-cover"></app-content>
-              <div
-                class="mask"
-                style="
+  <div class="content">
+    <div *ngFor="let content of contents" class="item">
+      <div class="card position-relative" style="border-width: thick; border-color: hotpink; margin-bottom: 1rem">
+        <div class="overflow-hidden">
+          <div class="bg-image">
+            <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content"
+                         setClass="object-fit-cover"></app-content>
+            <div
+              class="mask"
+              style="
       background: linear-gradient(
         180deg,
         hsla(9, 100%, 64%, 0) 75%,
         hsla(0, 100%, 100%, 1) 100%
       );
     "
-              ></div>
-            </div>
+            ></div>
           </div>
         </div>
       </div>
-      <div class="container" *ngIf="contents?.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
-        <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
-      </div>
+    </div>
+    <div class="container" *ngIf="contents?.length === 0"
+         style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
+      <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
     </div>
   </div>
+</div>
 </div>

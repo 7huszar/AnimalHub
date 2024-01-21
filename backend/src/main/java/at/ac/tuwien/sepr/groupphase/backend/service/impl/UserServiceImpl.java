@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -8,17 +9,21 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
+import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -54,6 +59,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -64,7 +70,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
@@ -75,8 +81,10 @@ public class CustomUserDetailService implements UserService {
     private final UserValidator userValidator;
     private final SecurityProperties securityProperties;
     private final UserMapper userMapper;
+    private final AnimalShelterMapper shelterMapper;
     private final UserConflict conflict;
     private final MailService mail;
+    private final DonationRepository donationRepository;
 
 
     /**
@@ -251,9 +259,10 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException {
+    public UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException, NotAuthorizedException {
         LOGGER.debug("update({})", userDetailDto);
 
+        conflict.conflictForUpdate(userDetailDto);
         userValidator.validateUserCredentialsForUpdate(userDetailDto);
         ApplicationUser oldEntity = userRepository.findById(userDetailDto.getId()).orElseThrow(
             () -> new NotFoundException("User does not exist.")
@@ -329,6 +338,21 @@ public class CustomUserDetailService implements UserService {
         subscription.setKey(key);
 
         Subscription ret = subscriptionRepository.save(subscription);
+
+        final LocalDateTime date = LocalDateTime.now();
+        Donation donation = Donation.builder()
+            .user(subscription.getUser())
+            .amount(new BigDecimal("12.99"))
+            .stamp(date)
+            .payed(true)
+            .id(subscription.getSubscriptionId() + date)
+            .shelter(subscription.getAnimal().getShelter())
+            .type(DonationType.SUBSCRIPTION)
+            .receiver(subscription.getAnimal().getName())
+            .build();
+
+        donationRepository.save(donation);
+
 
         return userMapper.subscriptionToSubscriptionDetailDto(ret);
     }
@@ -445,10 +469,7 @@ public class CustomUserDetailService implements UserService {
         // Setting JSON body
         String jsonBody = "{\"reason\": \"cancelled subscription\"}";
 
-        // Creating Request entity
-        HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
-
-        return requestEntity;
+        return new HttpEntity<>(jsonBody, headers);
     }
 
 
@@ -460,10 +481,7 @@ public class CustomUserDetailService implements UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
 
-        // Creating Request entity with headers
-        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-
-        return requestEntity;
+        return new HttpEntity<>(headers);
     }
 
 
@@ -523,7 +541,7 @@ public class CustomUserDetailService implements UserService {
 
 
     @Override
-    public HttpEntity<String> createSubscriptionPlan(String accessToken) {
+    public HttpEntity<String> createSubscriptionPlan(String accessToken, String productId) {
         LOGGER.trace("Creating a new Subscription Plan");
 
 
@@ -533,16 +551,16 @@ public class CustomUserDetailService implements UserService {
         headers.set("Authorization", "Bearer " + accessToken);
 
         String requestBody = "{ "
-            + "\"product_id\": \"PROD-0WX22620KG452370H\", "
-            + "\"name\": \"Created Automatically\", "
-            + "\"description\": \"This is a test\", "
+            + "\"product_id\": \"" + productId + "\", "
+            + "\"name\": \"Subscription to Animal\", "
+            + "\"description\": \"Thank you for your Donation\", "
             + "\"billing_cycles\": [ "
             + "{ "
             + "\"frequency\": { \"interval_unit\": \"MONTH\", \"interval_count\": 1 }, "
             + "\"tenure_type\": \"REGULAR\", "
             + "\"sequence\": 1, "
             + "\"total_cycles\": 12, "
-            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"9.99\", \"currency_code\": \"USD\" } } "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"10.00\", \"currency_code\": \"USD\" } } "
             + "} "
             + "], "
             + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "
@@ -552,9 +570,82 @@ public class CustomUserDetailService implements UserService {
 
         // Create the HTTP entity with headers and body
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
-        LOGGER.debug("created Request" + String.valueOf(requestEntity));
+        LOGGER.debug("created Request" + requestEntity);
 
         return requestEntity;
+    }
+
+    @Override
+    public HttpEntity<String> createProductId(String accessToken) {
+
+        // Prepare the request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        String requestBody = "{\n"
+            + "  \"name\": \"Product Name\",\n"
+            + "  \"description\": \"Product Description\",\n"
+            + "  \"type\": \"PHYSICAL\",\n"
+            + "  \"image_url\": \"https://example.com/product-image.jpg\",\n"
+            + "  \"home_url\": \"https://example.com/product-details\",\n"
+            + "  \"create_time\": \"2024-01-11T00:00:00Z\",\n"
+            + "  \"update_time\": \"2024-01-11T00:00:00Z\",\n"
+            + "  \"links\": [\n"
+            + "    {\n"
+            + "      \"href\": \"https://example.com/product-link\",\n"
+            + "      \"rel\": \"self\",\n"
+            + "      \"method\": \"GET\"\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}";
+
+        return new HttpEntity<>(requestBody, headers);
+    }
+
+
+    @Override
+    public void updateSubscription(String id) {
+        LOGGER.debug("update({})", id);
+        subscriptionRepository.setCancelled(id);
+    }
+
+    @Override
+    public String parseProductCreationResponse(ResponseEntity<String> response) {
+        LOGGER.debug("Parsing response");
+
+        // Extract the product ID from the response body
+        String responseBody = response.getBody();
+
+        if (responseBody != null && !responseBody.isEmpty()) {
+            try {
+                JsonFactory factory = new JsonFactory();
+                JsonParser parser = factory.createParser(responseBody);
+
+                // Traverse the JSON structure
+                while (parser.nextToken() != null) {
+                    if (JsonToken.FIELD_NAME.equals(parser.getCurrentToken()) && "id".equals(parser.getText())) {
+                        // Move to the value of the "id" field
+                        parser.nextToken();
+                        String productId = parser.getText();
+                        LOGGER.info("Received product ID from PayPal API: {}", productId);
+
+                        // Additional logic or processing for the product ID
+                        return productId;
+                    }
+                }
+
+                // If the loop completes without finding "id"
+                LOGGER.error("No 'id' found in the response");
+                return null;  // or throw an exception if needed
+            } catch (Exception e) {
+                LOGGER.error("Error parsing JSON response: {}", e.getMessage());
+                return null;  // or throw an exception if needed
+            }
+        } else {
+            LOGGER.error("Empty or null response body");
+            return null;  // or throw an exception if needed
+        }
     }
 
 

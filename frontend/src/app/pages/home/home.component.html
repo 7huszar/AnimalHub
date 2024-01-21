@@ -16,11 +16,9 @@
       </button>
       <div class="dropdown-menu bg-primary" aria-labelledby="dropdownMenuButton">
         <!-- Dropdown items go here -->
-        <a class="dropdown-item" href="#">Favourites</a>
         <a class="dropdown-item" *ngIf="authService.isMember()" [routerLink]="['/users/shelter/' + shelterId]" > Edit Shelter
         </a>
         <a class="dropdown-item" [routerLink]="['/users/subscriptions']">My Subscriptions</a>
-        <a class="dropdown-item" [routerLink]="['/admin']">This is an Example Use it</a>
       </div>
     </div>
 <!-- End of burger Menu -->
@@ -29,7 +27,7 @@
 
   <div class="row">
     <div class="col-1 center-column">
-      <i class="arrow bi-chevron-compact-left" (click)="leftClick()"></i>
+      <i class="arrow_tmp arrow bi-chevron-compact-left" (click)="leftClick()"></i>
     </div>
     <div class="col center">
       <div class ="row" style="justify-content: center">
@@ -41,7 +39,7 @@
                            [empty]="emptyLeft">
           </app-animal-card>
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-none d-xxl-block">
           <app-animal-card [name]="getCard(Position.MIDDLE)?.name"
                            [id]="getCard(Position.MIDDLE)?.id"
                            (like)="like(getCard(Position.MIDDLE))"
@@ -49,7 +47,7 @@
                            [empty]="emptyMiddle">
           </app-animal-card>
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-none">
           <app-animal-card [name]="getCard(Position.RIGHT)?.name"
                            [id]="getCard(Position.RIGHT)?.id"
                            (like)="like(getCard(Position.RIGHT))"
@@ -60,14 +58,14 @@
       </div>
     </div>
     <div class="col-1 center-column">
-      <i class="arrow bi-chevron-compact-right" (click)="rightClick()"></i>
+        <i class="arrow_tmp arrow bi-chevron-compact-right" (click)="rightClick()"></i>
     </div>
   </div>
   <div class="row">
     <div class="col">
       <div class="headings">
         <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
-          <h1 style="float: left">Favorites</h1>
+          <h1 style="float: left">{{'HOME.FAVORITES_TITLE' | translate}}</h1>
         </div>
       </div>
     </div>
@@ -81,7 +79,7 @@
     </div>
   </div>
   <div class="container" *ngIf="likedAnimals?.length === 0" style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
-    <p style="font-size: 2rem; margin: 0">Noch keine Favoriten? Like ein paar Tierchen!</p>
+    <p style="font-size: 2rem; margin: 0">{{'HOME.NO_FAVORITES' | translate}}</p>
   </div>
 </div>
 

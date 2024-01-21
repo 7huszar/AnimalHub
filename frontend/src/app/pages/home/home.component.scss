@@ -36,3 +36,11 @@
   padding: 3rem;
 }
 
+.arrow_tmp {
+  cursor: pointer;
+}
+
+.arrow_tmp:hover {
+  background-color: lightgrey;
+  border-radius: 50%;
+}

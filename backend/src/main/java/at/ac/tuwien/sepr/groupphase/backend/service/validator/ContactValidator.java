@@ -3,9 +3,9 @@ package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;

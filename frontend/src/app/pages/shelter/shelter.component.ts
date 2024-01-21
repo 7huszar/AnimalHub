@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
 import { Location } from '@angular/common';
+import {AuthService} from "../../services/auth.service";
 
 
 
@@ -21,12 +22,8 @@ export class ShelterComponent implements OnInit {
   constructor(private shelterService: ShelterService,
               private route: ActivatedRoute,
               private notification: ToastrService,
-              private location: Location,
+              private authService: AuthService
 ) {
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 
   ngOnInit(): void {
@@ -42,6 +39,10 @@ export class ShelterComponent implements OnInit {
           }
         });
       });
+  }
+
+  showStats(): boolean {
+    return this.authService.getUser().shelter && this.authService.getUser().shelter.id === this.shelter.id;
   }
 
   protected readonly Mode = Mode;

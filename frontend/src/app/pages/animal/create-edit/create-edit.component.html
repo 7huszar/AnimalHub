@@ -1,16 +1,34 @@
 <app-header></app-header>
 
-<div class="container">
+<div class="container" style="min-width: 95%">
   <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)" class="custom-form">
+
+    <!--   START - DELETE & SAVE BUTTONS-->
+    <div class="row justify-content-end mb-3" style="min-height: 2em">
+      <div class="col-auto">
+        <div class="btn-group" style="min-width: 15%">
+          <button *ngIf="!modeIsCreate" type="button" class="custom-danger-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#confirm-delete-dialog"
+          aria-label="Delete animal">
+          <i class="bi bi-trash-fill"></i>
+          </button>
+          <button type="submit" class="custom-success-btn" [disabled]="!form.valid && !animalImageSelected">
+            <i class="bi bi-floppy-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--  END - DELETE & SAVE BUTTONS-->
 
     <div class="custom-row">
       <div class="custom-input">
         <div class="custom-row-inner">
           <label for="animalName" class="custom-label">
-            Name
+            {{'ANIMAL_CREATE_EDIT_PAGE.NAME' | translate}}
           </label>
           <div class="custom-field">
-            <input type="text" id="animalName" name="animalName" placeholder="Animal name"
+            <input type="text" id="animalName" name="animalName"
                    class="form-control" [class]="dynamicCssClassesForInput(animalNameModel)" [(ngModel)]="animal.name"
                    maxlength="100" #animalNameModel="ngModel" required>
           </div>
@@ -21,16 +39,14 @@
       </div>
       <div class="custom-input">
         <div class="custom-row-inner">
-          <label for="animalBirthDate" class="custom-label">
-            Date of Birth
+          <label for="animalSpecies" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.GENDER' | translate}}
           </label>
           <div class="custom-field">
-            <input type="date" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}" placeholder="yyyy-mm-dd"
-                   class="form-control" max="{{today}}" [class]="dynamicCssClassesForInput(AnimalBirthDateModel)"
-                   [(ngModel)]="animal.birthDate" #AnimalBirthDateModel="ngModel" required>
-          </div>
-          <div class="invalid-feedback">
-            Date of birth is required
+            <select class="form-select" id="animalGender" name="animalGender" [(ngModel)]="animal.gender" required>
+              <option value="MALE">{{'ANIMAL_CREATE_EDIT_PAGE.MALE' | translate}}</option>
+              <option value="FEMALE">{{'ANIMAL_CREATE_EDIT_PAGE.FEMALE' | translate}}</option>
+            </select>
           </div>
         </div>
       </div>
@@ -39,28 +55,58 @@
     <div class="custom-row">
       <div class="custom-input">
         <div class="custom-row-inner">
+          <label for="animalEnglishDescription" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.ENGLISH_DESCRIPTION' | translate}}
+          </label>
+          <div class="custom-field">
+              <textarea rows="3" cols="160" id="animalEnglishDescription" name="animalEnglishDescription"
+                        class="form-control" [class]="dynamicCssClassesForInput(animalEnglishDescriptionModel)"
+                        [(ngModel)]="animal.englishDescription"
+                        maxlength="500" #animalEnglishDescriptionModel="ngModel"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalGermanDescription" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.GERMAN_DESCRIPTION' | translate}}
+          </label>
+          <div class="custom-field">
+              <textarea rows="3" cols="160" id="animalGermanDescription" name="animalGermanDescription"
+                        class="form-control" [class]="dynamicCssClassesForInput(animalGermanDescriptionModel)"
+                        [(ngModel)]="animal.germanDescription"
+                        maxlength="500" #animalGermanDescriptionModel="ngModel"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="custom-row">
+      <div class="custom-input">
+        <div class="custom-row-inner">
           <label for="animalSpecies" class="custom-label">
-            Species
+            {{'ANIMAL_CREATE_EDIT_PAGE.SPECIES' | translate}}
           </label>
           <div class="custom-field">
             <select class="form-select" id="animalSpecies" name="animalSpecies" [(ngModel)]="animal.species" required>
-              <option value="DOG">Dog</option>
-              <option value="CAT">Cat</option>
-              <option value="BIRD">Bird</option>
-              <option value="RODENT">Rodent</option>
+              <option value="DOG">{{'ANIMAL_CREATE_EDIT_PAGE.DOG' | translate}}</option>
+              <option value="CAT">{{'ANIMAL_CREATE_EDIT_PAGE.CAT' | translate}}</option>
+              <option value="BIRD">{{'ANIMAL_CREATE_EDIT_PAGE.BIRD' | translate}}</option>
+              <option value="RODENT">{{'ANIMAL_CREATE_EDIT_PAGE.RODENT' | translate}}</option>
             </select>
           </div>
         </div>
       </div>
       <div class="custom-input">
         <div class="custom-row-inner">
-          <label for="animalRace" class="custom-label">
-            Race
+          <label for="animalEnglishRace" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.ENGLISH_RACE' | translate}}
           </label>
           <div class="custom-field">
-            <input type="text" id="animalRace" name="animalRace" placeholder="Race" class="form-control"
-                   [class]="dynamicCssClassesForInput(animalRaceModel)" [(ngModel)]="animal.race"
-                   maxlength="100" #animalRaceModel="ngModel" required>
+            <input type="text" id="animalEnglishRace" name="animalEnglishRace" class="form-control"
+                   [class]="dynamicCssClassesForInput(animalEnglishRaceModel)" [(ngModel)]="animal.englishRace"
+                   maxlength="120" #animalEnglishRaceModel="ngModel" required>
           </div>
           <div class="invalid-feedback">
             Race is required
@@ -73,7 +119,7 @@
       <div class="custom-input">
         <div class="custom-row-inner">
           <label for="animalHeight" class="custom-label">
-            Height [m]
+            {{'ANIMAL_CREATE_EDIT_PAGE.HEIGHT' | translate}} [m]
           </label>
           <div class="custom-field">
             <input type="number" class="form-control" id="animalHeight" name="animalHeight" step="0.01"
@@ -83,12 +129,16 @@
       </div>
       <div class="custom-input">
         <div class="custom-row-inner">
-          <label for="animalWeight" class="custom-label">
-            Weight [kg]
+          <label for="animalGermanRace" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.GERMAN_RACE' | translate}}
           </label>
           <div class="custom-field">
-            <input type="number" class="form-control" id="animalWeight" name="animalWeight" step="0.1"
-                   [(ngModel)]="animal.weight" required>
+            <input type="text" id="animalGermanRace" name="animalGermanRace" class="form-control"
+                   [class]="dynamicCssClassesForInput(animalGermanRaceModel)" [(ngModel)]="animal.germanRace"
+                   maxlength="120" #animalGermanRaceModel="ngModel" required>
+          </div>
+          <div class="invalid-feedback">
+            Race is required
           </div>
         </div>
       </div>
@@ -97,26 +147,59 @@
     <div class="custom-row">
       <div class="custom-input">
         <div class="custom-row-inner">
-          <label for="animalImage" class="custom-label">
-            Image
+          <label for="animalWeight" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.WEIGHT' | translate}} [kg]
           </label>
           <div class="custom-field">
-            <input type="file" id="animalImage" name="animalImage" accept="image/png, image/jpeg, image/gif"
-                   (change)="onImageSelected($event)" class="form-control">
+            <input type="number" class="form-control" id="animalWeight" name="animalWeight" step="0.1"
+                   [(ngModel)]="animal.weight" required>
+          </div>
+        </div>
+      </div>
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalBirthDate" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.BIRTHDATE' | translate}}
+          </label>
+          <div class="custom-field">
+            <input type="date" lang="de" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}"
+                   class="form-control" max="{{today}}" [class]="dynamicCssClassesForInput(AnimalBirthDateModel)"
+                   [(ngModel)]="animal.birthDate" #AnimalBirthDateModel="ngModel" required>
+          </div>
+          <div class="invalid-feedback">
+            Date of birth is required
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-end">
+      <div class="custom-input">
+        <div class="custom-row-inner">
+          <label for="animalImage" class="custom-label">
+            {{'ANIMAL_CREATE_EDIT_PAGE.IMAGE' | translate}}
+          </label>
+          <div class="custom-field">
+            <div class="custom-input">
+              <label for="animalImage" class="custom-button">Select Image</label>
+              <input type="file" style="visibility: hidden" id="animalImage" name="animalImage"
+                     accept="image/png, image/jpeg, image/gif, image/bmp"
+                     (change)="onImageSelected($event)" class="form-control" required>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- upload image -->
-    <div class="row">
-      <div class="selected-pic" (drop)="dropped($event)" (dragenter)="enterDropZone($event)" (dragleave)="leaveDropZone($event)"
-      [style.border-style]="animalImageURL ? 'none' : 'dashed'">
-        <div class="m-1 text-center">
-        </div>
+    <div class="row justify-content-end">
+      <div class="selected-pic" style="align-self: flex-end" (drop)="dropped($event)"
+           (dragenter)="enterDropZone($event)"
+           (dragleave)="leaveDropZone($event)"
+           [style.border-style]="animalImageURL ? 'none' : 'dashed'">
         <div *ngIf="!animalImageURL" style="pointer-events: none;">
           <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
-          drag and drop
+          {{'ANIMAL_CREATE_EDIT_PAGE.DRAG_AND_DROP' | translate}}
         </div>
         <img *ngIf="animalImageURL" [src]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
       </div>
@@ -139,6 +222,6 @@
         </div>
       </div>
     </div>
-    <app-confirm-delete-dialog [deleteWhat]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
+    <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
   </form>
 </div>

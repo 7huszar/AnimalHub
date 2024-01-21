@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,11 +22,21 @@ public class CreateAnimalDto {
     @NotNull(message = "Name must not be null")
     private String name;
 
+    @NotNull(message = "Gender must not be null")
+    private Gender gender;
+
+    private String germanDescription;
+
+    private String englishDescription;
+
     @NotNull(message = "Species must not be null")
     private Species species;
 
-    @NotNull(message = "Race must not be null")
-    private String race;
+    @NotNull(message = "English Race must not be null")
+    private String englishRace;
+
+    @NotNull(message = "German Race must not be null")
+    private String germanRace;
 
     @NotNull(message = "Birth Date must not be null")
     private LocalDate birthDate;
@@ -41,11 +52,16 @@ public class CreateAnimalDto {
     public String toString() {
         return "CreateAnimalDto{"
             + "name='" + name + '\''
-            + ", species='" + species + '\''
-            + ", race='" + race + '\''
-            + ", birthDate='" + birthDate + '\''
-            + ", height='" + height + '\''
-            + ", weight='" + weight + '\''
+            + ", gender=" + gender
+            + ", germanDescription='" + germanDescription + '\''
+            + ", englishDescription='" + englishDescription + '\''
+            + ", species=" + species
+            + ", englishRace='" + englishRace + '\''
+            + ", germanRace='" + germanRace + '\''
+            + ", birthDate=" + birthDate
+            + ", shelter=" + shelter
+            + ", height=" + height
+            + ", weight=" + weight
             + '}';
     }
 }

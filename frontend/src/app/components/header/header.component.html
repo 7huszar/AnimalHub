@@ -24,19 +24,22 @@
        -->
     </ul>
 
-      <button *ngIf="authService.isLoggedIn()" (click)="logout()" routerLink="" class="btn btn-outline-dark">
-        <i class="bi bi-box-arrow-left text-black me-1"></i>
-        {{'HEADER.LOGOUT' | translate}}
+      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
+        <i class="bi bi-tools text-black me-1"></i>
+        {{'HEADER.MEMBER_PAGE' | translate}}
       </button>
       <button *ngIf="authService.isAdmin()" class="btn btn-outline-dark" routerLink="/admin">
         <i class="bi bi-tools text-black me-1"></i>
         {{'HEADER.ADMIN_PAGE' | translate}}
       </button>
-      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
-        <i class="bi bi-tools text-black me-1"></i>
-        {{'HEADER.MEMBER_PAGE' | translate}}
+      <button *ngIf="authService.isLoggedIn()" (click)="logout()" routerLink="" class="btn btn-outline-dark">
+        <i class="bi bi-box-arrow-left text-black me-1"></i>
+        {{'HEADER.LOGOUT' | translate}}
       </button>
-
+      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/home/member-profile/statistic">
+        <i class="bi bi-currency-euro"></i>
+        Donation stats
+      </button>
     </div>
     <div class="lang-select">
       <app-lang-select></app-lang-select>
