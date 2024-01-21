@@ -12,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
@@ -61,7 +62,7 @@ public class PaypalServiceImpl implements PaypalService {
     private final PaypalConflict paypalConflict;
     private final PaypalValidator paypalValidator;
 
-    private String retrieveAccessToken(String clientId, String clientSecret) {
+    private String retrieveAccessToken(String clientId, String clientSecret) throws PaypalException {
         LOGGER.trace("retrieveAccessToken({}, *)", clientId);
         WebClient client = WebClient.create(paypal.getSandbox());
 
@@ -74,9 +75,7 @@ public class PaypalServiceImpl implements PaypalService {
             .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ':' + clientSecret).getBytes()))
             .body(BodyInserters.fromFormData(data))
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("4xx, will handle it later - toke")))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("5xx, will handle it later")))
-            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("is error")))
+            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new PaypalException(clientResponse)))
             .bodyToMono(AuthResponseDto.class)
             .block();
 
@@ -88,7 +87,7 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException {
+    public PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException {
         LOGGER.trace("placeOrder({}, {})", id, donationDto);
 
         paypalValidator.validateDonationOrder(id, donationDto);
@@ -123,9 +122,7 @@ public class PaypalServiceImpl implements PaypalService {
             .header("Authorization", "Bearer " + this.retrieveAccessToken(paypal.getClientId(), paypal.getClientSecret()))
             .bodyValue(orderDto)
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("is error")))
+            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new PaypalException(clientResponse)))
             .bodyToMono(PaypalPlaceOrderResponseDto.class)
             .block();
 
@@ -161,7 +158,7 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public void captureOrder(String id) throws NotFoundException, ValidationException, ConflictException {
+    public void captureOrder(String id) throws NotFoundException, ValidationException, ConflictException, PaypalException {
         LOGGER.trace("captureOrder({})", id);
 
         paypalValidator.validateCaptureOrder(id);
@@ -176,9 +173,7 @@ public class PaypalServiceImpl implements PaypalService {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .header("Authorization", "Bearer " + this.retrieveAccessToken(paypal.getClientId(), paypal.getClientSecret()))
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException(clientResponse.toString())))
-            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("is error")))
+            .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new PaypalException(clientResponse)))
             .bodyToMono(String.class)
             .block();
 

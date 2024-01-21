@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalCaptureDto
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.PaypalLink;
 
@@ -23,7 +24,7 @@ public interface PaypalService {
      * @throws ValidationException If failed to validate data
      * @throws ConflictException If donator and receiver are the same
      */
-    PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException;
+    PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException;
 
     /**
      * Capture PayPal order and thus finalizes payment process.
@@ -34,5 +35,5 @@ public interface PaypalService {
      * @throws ValidationException if id not given
      * @throws ConflictException if order already paid
      */
-    void captureOrder(String id) throws NotFoundException, ValidationException, ConflictException;
+    void captureOrder(String id) throws NotFoundException, ValidationException, ConflictException, PaypalException;
 }
