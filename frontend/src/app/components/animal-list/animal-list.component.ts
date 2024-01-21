@@ -32,7 +32,7 @@ export class AnimalListComponent {
   animalForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
-    this.typeForDeletion = "Shelter";
+    this.typeForDeletion = "Animal";
   }
   ngOnInit(): void {
     this.displayAnimalCards('all');

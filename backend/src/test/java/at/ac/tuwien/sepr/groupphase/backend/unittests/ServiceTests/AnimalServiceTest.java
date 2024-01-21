@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.unittests.ServiceTests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
@@ -10,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -63,6 +65,27 @@ public class AnimalServiceTest extends TestBase {
             () -> assertEquals(result.size(), allAnimalEntities.size())
         );
     }
+
+    // function - FIND ALL
+    // POSITIVE TEST(S)
+    @Test
+    public void searchForSpecificAnimalSuccessfully() {
+        AnimalSearchDto searchParameters = AnimalSearchDto.builder()
+            .name("mad")
+            .gender(Gender.FEMALE)
+            .species(Species.BIRD)
+            .race("blu")
+            .bornAfter(LocalDate.of(2023, 1, 1))
+            .build();
+        List<AnimalDetailDto> result = animalService.search(searchParameters);
+        AnimalDetailDto expected = mapper.animalToAnimalDetailDto(allAnimalEntities.get(0));
+
+        assertAll(
+            () -> assertEquals(1, result.size()),
+            () -> assertEquals(expected.toString(), result.get(0).toString())
+        );
+    }
+
 
     // function - CREATE
     // POSITIVE TEST(S)

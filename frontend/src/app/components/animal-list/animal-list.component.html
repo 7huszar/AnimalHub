@@ -7,13 +7,14 @@
         <i class="bi bi-search search-icon"></i>
       </div>
       <div class="search-container">
-          <select class="form-select" id="animalSpecies" name="animalSpecies" [(ngModel)]="searchTermSpecies" (change)="onInput()" >
-            <option value="" selected>{{'ANIMAL_LIST.ALL_SPECIES' | translate}}</option>
-            <option value="DOG">{{'ANIMAL_LIST.DOG' | translate}}</option>
-            <option value="CAT">{{'ANIMAL_LIST.CAT' | translate}}</option>
-            <option value="BIRD">{{'ANIMAL_LIST.BIRD' | translate}}</option>
-            <option value="RODENT">{{'ANIMAL_LIST.RODENT' | translate}}</option>
-          </select>
+        <select class="form-select" id="animalSpecies" name="animalSpecies" [(ngModel)]="searchTermSpecies"
+                (change)="onInput()">
+          <option value="" selected>{{'ANIMAL_LIST.ALL_SPECIES' | translate}}</option>
+          <option value="DOG">{{'ANIMAL_LIST.DOG' | translate}}</option>
+          <option value="CAT">{{'ANIMAL_LIST.CAT' | translate}}</option>
+          <option value="BIRD">{{'ANIMAL_LIST.BIRD' | translate}}</option>
+          <option value="RODENT">{{'ANIMAL_LIST.RODENT' | translate}}</option>
+        </select>
       </div>
       <div>
         <button *ngIf="isUserAllowed()" (click)="addAnimal()"
@@ -25,28 +26,36 @@
     <div class="col-12 col-sm-6 col-md-4 col-lg-3"
          *ngFor="let animal of displayedAnimals | paginate: { itemsPerPage: 12, currentPage: p }">
       <div class="card animal-card">
-        <app-content [mode]="Mode.ANIMAL" [id]="animal.id" setClass="card-img-top"/>
-        <div class="card-body">
-          <h5 class="card-title">{{ animal.name }}</h5>
-          <p class="card-text">{{ animal.species.charAt(0).toUpperCase() + animal.species.toLowerCase().slice(1) }}</p>
-          <button class="btn btn-primary" (click)="editAnimal(animal.id)">Details</button>
+        <a routerLink="/animal/{{animal.id}}" style="position: relative;">
+          <app-content [mode]="Mode.ANIMAL" [id]="animal.id" setClass="card-img-top"/>
+        </a>
+        <div class="card-body" style="padding-bottom: 0.5em">
+          <div class="row">
 
-
-
-          <button type="button" class="custom-danger-btn"
-                  (click)="animalForDeletion(animal.name, animal.id)"
-                  data-bs-toggle="modal"
-                  data-bs-target="#confirm-delete-dialog"
-                  aria-label="Delete shelter">
-            <i class="bi bi-trash"></i> {{'ANIMAL_LIST.DELETE' | translate}}
-          </button>
+            <h5 class="card-title">{{ animal.name }}
+              ({{ globals.currentLanguage === "de" ? animal.germanRace : animal.englishRace }})</h5>
+            <div *ngIf="isUserAllowed()" class="btn-group">
+              <button class="custom-warning-btn" (click)="editAnimal(animal.id)"><i
+                class="bi bi-pencil-fill"></i></button>
+              <button class="custom-button" style="width: 20%" routerLink="/animal/{{animal.id}}"><i
+                class="bi bi-info-circle-fill"></i></button>
+              <button type="button" class="custom-danger-btn"
+                      (click)="animalForDeletion(animal.name, animal.id)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirm-delete-dialog"
+                      aria-label="Delete animal">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
+    <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion"
+                               [deleteType]="typeForDeletion"></app-confirm-delete-dialog>
 
   </div>
-  <div class="d-flex justify-content-center pagination-container">
+  <div *ngIf="animals.length>12" class="d-flex justify-content-center pagination-container">
     <pagination-controls (pageChange)="p = $event"></pagination-controls>
   </div>
 </div>

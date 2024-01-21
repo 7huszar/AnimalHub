@@ -23,7 +23,10 @@
       </li>
        -->
     </ul>
-
+      <button class="btn btn-outline-dark" routerLink="/search">
+        <i class="bi bi-search text-black me-1"></i>
+        {{'HEADER.SEARCH' | translate}}
+      </button>
       <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
         <i class="bi bi-tools text-black me-1"></i>
         {{'HEADER.MEMBER_PAGE' | translate}}
@@ -38,7 +41,7 @@
       </button>
       <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/home/member-profile/statistic">
         <i class="bi bi-currency-euro"></i>
-        Donation stats
+        {{'HEADER.STATISTICS' | translate}}
       </button>
     </div>
     <div class="lang-select">

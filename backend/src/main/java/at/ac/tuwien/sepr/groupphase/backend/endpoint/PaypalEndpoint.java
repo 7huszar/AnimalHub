@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalCaptureDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.PaypalLink;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +43,21 @@ public class PaypalEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @Secured(UserRole.Values.USER_VALUE)
     @PostMapping("/donate/{id}")
-    public PaypalLink placeOrder(@PathVariable UUID id, @RequestBody PaypalDonationDto donationDto) throws NotFoundException {
+    public PaypalLink placeOrder(@PathVariable UUID id, @RequestBody PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException {
         LOGGER.info("POST " + BASE_PATH + "/donate/{}", id);
         LOGGER.debug("placeOrder({}, {})", id, donationDto);
 
-        return this.paypalService.placeOrder(id, donationDto);
+        try {
+            return this.paypalService.placeOrder(id, donationDto);
+        } catch (ValidationException | ConflictException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
+        } catch (PaypalException e) {
+            LOGGER.warn(e.getResponse().toString());
+            throw e;
+        }
+
+
     }
 
     /**
@@ -57,10 +69,18 @@ public class PaypalEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Secured(UserRole.Values.USER_VALUE)
     @PostMapping("/capture/{id}")
-    public void captureOrder(@PathVariable String id) throws NotFoundException {
+    public void captureOrder(@PathVariable String id) throws NotFoundException, ValidationException, ConflictException, PaypalException {
         LOGGER.info("POST " + BASE_PATH + "/capture/{}", id);
         LOGGER.debug("captureDto({})", id);
 
-        this.paypalService.captureOrder(id);
+        try {
+            this.paypalService.captureOrder(id);
+        } catch (ValidationException | ConflictException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
+        } catch (PaypalException e) {
+            LOGGER.warn(e.getResponse().toString());
+            throw e;
+        }
     }
 }

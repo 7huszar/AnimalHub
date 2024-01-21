@@ -20,6 +20,7 @@ import {ContactFormComponent} from "./pages/contact-form/contact-form.component"
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
 import {SuccessComponent} from "./components/donation/success/success.component";
 import {StatisticComponent} from "./pages/home/member-profile/statistic/statistic.component";
+import {AnimalSearchComponent} from "./pages/animal-search/animal-search.component";
 
 
 const routes: Routes = [
@@ -49,6 +50,11 @@ const routes: Routes = [
     canActivate: mapToCanActivate([AuthGuard]),
     component: StatisticComponent,
     data: {access: Mode.MEMBER}},
+
+  { path: 'search',
+    canActivate: mapToCanActivate([AuthGuard]),
+    component: AnimalSearchComponent,
+    data: {access: Mode.USER} },
 
   { path: 'admin',
     canActivate: mapToCanActivate([AuthGuard]),

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
@@ -52,6 +53,26 @@ public class AnimalServiceImpl implements AnimalService {
         LOGGER.trace("Find all Animals");
 
         return animalRepository.findAll().stream()
+            .map(mapper::animalToAnimalDetailDto)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDetailDto> search(AnimalSearchDto searchParameters) {
+        LOGGER.trace("Search for animals which fulfill these parameters {}", searchParameters);
+
+        return animalRepository.findAnimalsByParameters(
+                searchParameters.getName(),
+                searchParameters.getGender(),
+                searchParameters.getSpecies(),
+                searchParameters.getRace(),
+                searchParameters.getBornBefore(),
+                searchParameters.getBornAfter(),
+                searchParameters.getHeavierThan(),
+                searchParameters.getLighterThan(),
+                searchParameters.getTallerThan(),
+                searchParameters.getSmallerThan()
+            ).stream()
             .map(mapper::animalToAnimalDetailDto)
             .collect(Collectors.toList());
     }

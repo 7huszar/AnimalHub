@@ -22,7 +22,7 @@ export class ShelterComponent implements OnInit {
   constructor(private shelterService: ShelterService,
               private route: ActivatedRoute,
               private notification: ToastrService,
-              private authService: AuthService
+              public authService: AuthService
 ) {
   }
 

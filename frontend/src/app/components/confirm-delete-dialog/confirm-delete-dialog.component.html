@@ -6,12 +6,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
-        Do you really want to delete {{deleteType}} “{{deleteName}}“?
+        {{'CONFIRM_DELETE_DIALOG.QUESTION_PART_1_' + deleteType.toUpperCase() | translate}}"{{deleteName}}"{{'CONFIRM_DELETE_DIALOG.QUESTION_PART_2' | translate}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{'CONFIRM_DELETE_DIALOG.NO' | translate}}</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteEntity()">{{'CONFIRM_DELETE_DIALOG.YES' | translate}}</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="delete()">{{'CONFIRM_DELETE_DIALOG.YES' | translate}}</button>
       </div>
     </div>
   </div>
