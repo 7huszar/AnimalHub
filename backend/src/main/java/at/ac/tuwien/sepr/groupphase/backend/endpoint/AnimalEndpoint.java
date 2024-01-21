@@ -5,6 +5,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -16,6 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,10 +64,35 @@ public class AnimalEndpoint {
         return animalService.findAll();
     }
 
+    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("search")
     @Operation(summary = "Search for specific animals", security = @SecurityRequirement(name = "apiKey"))
-    public List<AnimalDetailDto> search(@Valid @RequestBody AnimalSearchDto searchParameters) {
+    public List<AnimalDetailDto> search(@RequestParam(name = "name", required = false) String name,
+                                        @RequestParam(name = "gender", required = false) String gender,
+                                        @RequestParam(name = "species", required = false) String species,
+                                        @RequestParam(name = "race", required = false) String race,
+                                        @RequestParam(name = "bornBefore", required = false)
+                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate bornBefore,
+                                        @RequestParam(name = "bornAfter", required = false)
+                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate bornAfter,
+                                        @RequestParam(name = "heavierThan", required = false) Double heavierThan,
+                                        @RequestParam(name = "lighterThan", required = false) Double lighterThan,
+                                        @RequestParam(name = "tallerThan", required = false) Double tallerThan,
+                                        @RequestParam(name = "smallerThan", required = false) Double smallerThan) {
+
+        AnimalSearchDto searchParameters = AnimalSearchDto.builder()
+            .name(name)
+            .gender(gender != null ? Gender.valueOf(gender) : null)
+            .species(species != null ? Species.valueOf(species) : null)
+            .race(race)
+            .bornBefore(bornBefore)
+            .bornAfter(bornAfter)
+            .heavierThan(heavierThan != null ? heavierThan : 0)
+            .lighterThan(lighterThan != null ? lighterThan : 0)
+            .tallerThan(tallerThan != null ? tallerThan : 0)
+            .smallerThan(smallerThan != null ? smallerThan : 0)
+            .build();
         LOGGER.info("GET " + BASE_PATH + "/search/{}", searchParameters);
         return animalService.search(searchParameters);
     }
@@ -73,8 +102,7 @@ public class AnimalEndpoint {
      * Find animal by specific id (mainly used for animal-homepage).
      *
      * @param id id
-     * @return an AnimalDetailDto containing all the data of the specific animal,
-     *          except its profile picture which has to be fetched separately (via getProfileImg)
+     * @return an AnimalDetailDto containing all the data of the specific animal, except its profile picture which has to be fetched separately (via getProfileImg)
      * @throws NotFoundException when the id points to no existing animal
      */
     @Secured(UserRole.Values.USER_VALUE)
@@ -90,8 +118,7 @@ public class AnimalEndpoint {
      * create a new animal in the persistent data storage. (profile img has to be stored via setProfileImg).
      *
      * @param createDto createDto
-     * @return an AnimalDetailDto containing all the data of the specific animal,
-     *          except its profile picture which has to be fetched separately (via getProfileImg)
+     * @return an AnimalDetailDto containing all the data of the specific animal, except its profile picture which has to be fetched separately (via getProfileImg)
      * @throws ValidationException when the validation for this new animal failed (empty name, etc.)
      * @throws ConflictException   when there is a conflict with the already existing data and this new animal (shelter does not exist.)
      */
@@ -110,8 +137,7 @@ public class AnimalEndpoint {
      *
      * @param id        id
      * @param animalDto values to update animal with
-     * @return an AnimalDetailDto containing all the data of the specific animal,
-     *          except its profile picture which has to be fetched separately (via getProfileImg)
+     * @return an AnimalDetailDto containing all the data of the specific animal, except its profile picture which has to be fetched separately (via getProfileImg)
      * @throws ValidationException when the update values fail to validate (empty name, etc.)
      * @throws NotFoundException   when the id points to no existing animal in the database
      */

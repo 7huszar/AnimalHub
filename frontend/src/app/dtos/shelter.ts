@@ -1,4 +1,4 @@
-import {AnimalDto} from "./animal";
+import {AnimalDetailDto, AnimalDto} from "./animal";
 
 
 /**

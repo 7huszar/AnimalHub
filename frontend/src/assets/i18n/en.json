@@ -16,11 +16,9 @@
     "LOGIN_FAILED": "Failed to login",
     "HOW_DOES_IT_WORK": "How does AnimalHub work?"
   },
-
   "LANG_SELECT": {
     "DROPDOWN": "Language"
   },
-
   "HOME": {
     "ACCOUNT": "manage account",
     "LOAD_FAILED": "failed to load animals",
@@ -29,7 +27,6 @@
     "FAVORITES_TITLE": "Favorites",
     "NO_FAVORITES": "Like Animals, so they will be saved in your favorites!"
   },
-
   "REGISTER": {
     "REGISTER_TITLE": "Register",
     "USERNAME_PLACEHOLDER": "E-mail Address",
@@ -45,7 +42,7 @@
     "PWD_MISS_MATCH": "passwords don't match",
     "FAILED_REGISTRATION": "failed to register account",
     "ALREADY_EXISTS": "account already exists",
-    "CHECK_MAILBOX" : "Check your mailbox to verify your e-mail.",
+    "CHECK_MAILBOX": "Check your mailbox to verify your e-mail.",
     "CONFIRM": {
       "ERROR": "failed to verify e-mail",
       "INVALID_TOKEN": "invalid token, please ask for a new one",
@@ -56,20 +53,17 @@
       "VERIFY_TEXT": "Do you want to verify your e-mail?"
     }
   },
-
   "HEADER": {
+    "SEARCH": "Search",
     "LOGOUT": "Log out",
     "ADMIN_PAGE": "Admin View",
     "MEMBER_PAGE": "Your Shelter"
   },
-
   "NOTIFIER": {
     "CONNECTION_FAILED": "Connection error",
     "INTERNAL_SERVER_ERROR": "internal server error - we apologize"
   },
-
-  "LOGO" : "Logo with the writing AnimalHub",
-
+  "LOGO": "Logo with the writing AnimalHub",
   "CONFIRM_DELETE_DIALOG": {
     "TITLE": "Delete Operation",
     "QUESTION_PART_1_SHELTER": "Do you really want to delete the Shelter ",
@@ -79,7 +73,6 @@
     "NO": "No, STOP!",
     "YES": "Yes, delete FOREVER."
   },
-
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Species:",
     "GENDER": "Gender:",
@@ -106,7 +99,25 @@
     "MALE": "Male",
     "FEMALE": "Female"
   },
-
+  "ANIMAL_SEARCH": {
+    "NAME": "Name",
+    "ALL_SPECIES": "All Species",
+    "ALL_GENDERS": "All Gender",
+    "FEMALE": "Female",
+    "MALE": "Male",
+    "RACE": "Race",
+    "BORN_BEFORE": "Born before",
+    "BORN_AFTER": "Born after",
+    "HEAVIER_THAN": "Heavier than",
+    "LIGHTER_THAN": "Lighter than",
+    "TALLER_THAN": "Taller than",
+    "SMALLER_THAN": "Smaller than",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "SHELTER": "Shelter"
+  },
   "ANIMAL_CREATE_EDIT_PAGE": {
     "NAME": "Name",
     "SPECIES": "Species",
@@ -131,11 +142,9 @@
     "ENGLISH_DESCRIPTION": "Description (english)",
     "GERMAN_DESCRIPTION": "Description (german)"
   },
-
   "ANIMAL_CARD": {
     "NO_MORE_ANIMALS": "No more animals to explore!"
   },
-
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Address:",
     "PHONE": "Phone Number:",
@@ -143,7 +152,6 @@
     "BACK_BUTTON": "BACK",
     "DONATE_VIA_PAYPAL": "Donate via Paypal"
   },
-
   "ANIMAL_LIST": {
     "NAME": "Name",
     "ADD_ANIMAL": "Add new Animal",
@@ -153,7 +161,6 @@
     "BIRD": "Bird",
     "RODENT": "Rodent"
   },
-
   "PWD": {
     "INSTRUCTION": "Type in your e-mail to reset your password",
     "MAIL": "e-mail",
@@ -166,12 +173,10 @@
       "SUCCESS": "Passwort erfolgreich zurückgesetzt"
     }
   },
-
   "ADMIN_PAGE": {
     "INFO": "Man kann keinen anderen Admin löschen",
     "FAILED": "Löschung kaputt"
   },
-
   "CONTACT_PAGE": {
     "TITLE": "Contact",
     "NAME": "Name",
@@ -183,7 +188,6 @@
     "FAILED": "Failed to send message",
     "CONTACT": "Contact"
   },
-
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"

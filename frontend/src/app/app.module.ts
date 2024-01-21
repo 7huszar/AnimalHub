@@ -42,6 +42,7 @@ import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edi
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordRepeatComponent } from './components/password/password-repeat/password-repeat.component';
 import {EmailFieldComponent} from "./components/email-field/email-field.component";
+import { AnimalSearchComponent } from './pages/animal-search/animal-search.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -77,7 +78,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MemberEditShelterComponent,
     PasswordComponent,
     PasswordRepeatComponent,
-    EmailFieldComponent
+    EmailFieldComponent,
+    AnimalSearchComponent
 
   ],
   imports: [

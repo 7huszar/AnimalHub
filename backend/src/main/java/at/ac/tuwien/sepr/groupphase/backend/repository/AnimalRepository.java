@@ -22,10 +22,10 @@ public interface AnimalRepository extends JpaRepository<Animal, UUID> {
         + "AND (:race IS NULL OR LOWER(a.germanRace) LIKE LOWER(CONCAT('%', :race, '%')) OR LOWER(a.englishRace) LIKE LOWER(CONCAT('%', :race, '%'))) "
         + "AND (:bornBefore IS NULL OR a.birthDate <= :bornBefore) "
         + "AND (:bornAfter IS NULL OR a.birthDate >= :bornAfter) "
-        + "AND (:heavierThan = 0 OR a.weight > :heavierThan) "
-        + "AND (:lighterThan = 0 OR a.weight < :lighterThan) "
-        + "AND (:tallerThan = 0 OR a.height > :tallerThan) "
-        + "AND (:smallerThan = 0 OR a.height < :smallerThan)")
+        + "AND (:heavierThan <= 0.0 OR a.weight > :heavierThan) "
+        + "AND (:lighterThan <= 0.0 OR a.weight < :lighterThan) "
+        + "AND (:tallerThan <= 0.0 OR a.height > :tallerThan) "
+        + "AND (:smallerThan <= 0.0 OR a.height < :smallerThan)")
     List<Animal> findAnimalsByParameters(
         @Param("name") String name,
         @Param("gender") Gender gender,

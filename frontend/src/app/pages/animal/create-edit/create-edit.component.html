@@ -162,7 +162,7 @@
             {{'ANIMAL_CREATE_EDIT_PAGE.BIRTHDATE' | translate}}
           </label>
           <div class="custom-field">
-            <input type="date" lang="de" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}"
+            <input type="date" id="animalBirthDate" name="animalBirthDate" pattern="\d{4}-\d{2}-\d{2}"
                    class="form-control" max="{{today}}" [class]="dynamicCssClassesForInput(AnimalBirthDateModel)"
                    [(ngModel)]="animal.birthDate" #AnimalBirthDateModel="ngModel" required>
           </div>

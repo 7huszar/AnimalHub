@@ -18,6 +18,7 @@ import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/pa
 import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.component";
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
+import {AnimalSearchComponent} from "./pages/animal-search/animal-search.component";
 
 
 const routes: Routes = [
@@ -42,6 +43,11 @@ const routes: Routes = [
     canActivate: mapToCanActivate([AuthGuard]),
     component: MemberProfileComponent,
     data: {access: Mode.MEMBER} },
+
+  { path: 'search',
+    canActivate: mapToCanActivate([AuthGuard]),
+    component: AnimalSearchComponent,
+    data: {access: Mode.USER} },
 
   { path: 'admin',
     canActivate: mapToCanActivate([AuthGuard]),
