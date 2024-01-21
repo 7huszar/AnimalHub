@@ -34,6 +34,9 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     @Query("update ApplicationUser u set u.password = :password where u.email = :email")
     void updatePassword(@Param(value = "email") String email, @Param(value = "password") String password);
 
+    @Query("SELECT 1 FROM ApplicationUser WHERE id = :id")
+    boolean isMember(@Param(value = "id") UUID id);
+
     ApplicationUser findApplicationUserById(UUID id);
 
     ApplicationUser findApplicationUserByShelter_Id(UUID shelterId);

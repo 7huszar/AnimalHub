@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 public interface DonationRepository extends JpaRepository<Donation, String> {
     Stream<Donation> findAllByShelterId(UUID id);
 
-    @Modifying
     @Query("SELECT payed FROM Donation WHERE id = :id")
     boolean isPayed(@Param(value = "id") String id);
 }

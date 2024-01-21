@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.conflict;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +17,7 @@ import java.util.UUID;
 public class PaypalConflict {
 
     private final DonationRepository donationRepository;
+    private final UserRepository userRepository;
 
     public void conflictForCaptureOrder(String id) throws ConflictException {
         if (donationRepository.isPayed(id)) {
@@ -22,8 +26,10 @@ public class PaypalConflict {
         }
     }
 
-    public void conflictForPlacingOrder(UUID id, PaypalDonationDto donationDto) throws ConflictException {
-        if (id.equals(donationDto.donator())) {
+    public void conflictForPlacingOrder(UUID id, PaypalDonationDto donationDto) throws ConflictException, NotFoundException {
+        ApplicationUser user = userRepository.findById(donationDto.donator()).orElseThrow(NotFoundException::new);
+
+        if (user.getShelter() != null && user.getShelter().getId().equals(id)) {
             throw new ConflictException("conflict placing order",
                 Collections.singletonList("donator and receiver are the same"));
         }
