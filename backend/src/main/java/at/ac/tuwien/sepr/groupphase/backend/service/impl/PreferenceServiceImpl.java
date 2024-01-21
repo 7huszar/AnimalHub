@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PreferenceId;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.LikedDislikedAnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PreferenceRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
@@ -14,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +31,7 @@ public class PreferenceServiceImpl implements PreferenceService {
     private final PreferenceRepository preferenceRepository;
     private final AnimalService animalService;
     private final UserRepository userRepository;
+    private final LikedDislikedAnimalRepository likedDislikedAnimalRepository;
 
     @Override
     public void like(UUID animalId, UUID userId) throws NotFoundException {
@@ -35,18 +40,35 @@ public class PreferenceServiceImpl implements PreferenceService {
         var user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User with id " + userId + " does not exist.")
         );
+        //TODO: implement here @Tobias
         PreferenceId preferenceId = new PreferenceId(user, animal.getSpecies());
         if (preferenceRepository.findById(preferenceId).isPresent()) {
             Preference preference = preferenceRepository.findById(preferenceId).get();
             preference.setSpeciesFactor((long) (preference.getSpeciesFactor() * 1.01));
             preferenceRepository.save(preference);
-            //if (preference.getTraitPointMap().containsKey(animal.))
+            if (!preference.getTraitPointMap().containsKey("weight")) {
+
+            }
+                double weight = 0;
+                double height = 0;
+                double age = 0;
+
+                for(AnimalDetailDto animalDetailDto : getLikedAnimals(userId)) {
+                    weight += animalDetailDto.getWeight();
+                    height += animalDetailDto.getHeight();
+                    age += Period.between(animalDetailDto.getBirthDate(), LocalDate.now()).getYears();
+                }
+                weight /= getLikedAnimals(userId).length;
+                preference.getTraitPointMap().put("weight", weight);
+                height /= getLikedAnimals(userId).length;
+                preference.getTraitPointMap().put("height", height);
+                age /= getLikedAnimals(userId).length;
+                preference.getTraitPointMap().put("age", age);
+                //if ()
+
         } else {
             Map<String, Integer> traitPoints = new HashMap<>();
-            traitPoints.put("race", 0);
-            traitPoints.put("height", 0);
-            traitPoints.put("weight", 0);
-            traitPoints.put("age", 0);
+
 
             /*preferenceRepository.save(Preference.builder()
                 .user(user)
@@ -56,5 +78,11 @@ public class PreferenceServiceImpl implements PreferenceService {
                 .build());*/
         }
 
+    }
+
+    @Override
+    public AnimalDetailDto[] getLikedAnimals(UUID userId) throws NotFoundException {
+        //TODO: implement @Tobias
+        return new AnimalDetailDto[0];
     }
 }

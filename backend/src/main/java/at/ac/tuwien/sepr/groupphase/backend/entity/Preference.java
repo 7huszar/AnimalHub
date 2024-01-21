@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -37,8 +38,8 @@ public class Preference {
     @Column(nullable = false)
     private long speciesFactor;
 
-    //@ElementCollection
-    //@Column(nullable = false)
-    //private Map<String, TraitPoints> traitPointMap;
+    @ElementCollection
+    @Column(nullable = false)
+    private Map<String, Double> traitPointMap;
 
 }
