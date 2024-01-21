@@ -66,7 +66,7 @@ public class AnimalDetailDto {
             + ", englishRace='" + englishRace + '\''
             + ", germanRace='" + germanRace + '\''
             + ", birthDate=" + birthDate
-            + ", shelter=" + shelter
+            + ", shelter=" + shelter.getName()
             + ", height=" + height
             + ", weight=" + weight
             + ", createdOn=" + createdOn

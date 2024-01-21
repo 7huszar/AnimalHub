@@ -46,6 +46,7 @@ import { DonationComponent } from './components/donation/donation.component';
 import { SuccessComponent } from './components/donation/success/success.component';
 import { FailureComponent } from './components/donation/failure/failure.component';
 import { StatisticComponent } from './pages/home/member-profile/statistic/statistic.component';
+import { AnimalSearchComponent } from './pages/animal-search/animal-search.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -85,7 +86,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     DonationComponent,
     SuccessComponent,
     FailureComponent,
-    StatisticComponent
+    StatisticComponent,
+    EmailFieldComponent,
+    AnimalSearchComponent
 
   ],
   imports: [

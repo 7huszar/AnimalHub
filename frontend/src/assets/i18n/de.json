@@ -16,11 +16,9 @@
     "LOGIN_FAILED": "Anmeldung fehlgeschlagen",
     "HOW_DOES_IT_WORK": "Wie funktioniert AnimalHub?"
   },
-
   "LANG_SELECT": {
     "DROPDOWN": "Sprache"
   },
-
   "HOME": {
     "ACCOUNT": "Account verwalten",
     "LOAD_FAILED": "Tiere konnten nicht geladen werden",
@@ -28,9 +26,7 @@
     "ADOPT": "Adoptiere ",
     "FAVORITES_TITLE": "Favoriten",
     "NO_FAVORITES": "Like Tiere, dann werden sie hier in den Favoriten gespeichert!"
-
   },
-
   "REGISTER": {
     "REGISTER_TITLE": "Registrieren",
     "USERNAME_PLACEHOLDER": "E-mail Addresse",
@@ -56,22 +52,18 @@
       "ABORT_WARN": "Verifizierung abgebrochen",
       "VERIFY_TEXT": "Willst du deine E-Mail Adresse verifizieren?"
     }
-
   },
-
   "HEADER": {
+    "SEARCH": "Suche",
     "LOGOUT": "Ausloggen",
     "ADMIN_PAGE": "Admin-Ansicht",
     "MEMBER_PAGE": "Dein Tierheim"
   },
-
   "NOTIFIER": {
     "CONNECTION_FAILED": "Verbindungsfehler",
     "INTERNAL_SERVER_ERROR": "Interne Fehler in unserem Server - Entschuldigung"
   },
-
-  "LOGO" : "Logo mit der Aufschrift AnimalHub",
-
+  "LOGO": "Logo mit der Aufschrift AnimalHub",
   "CONFIRM_DELETE_DIALOG": {
     "TITLE": "Löschvorgang",
     "QUESTION_PART_1_SHELTER": "Willst du wirklich das Tierheim ",
@@ -81,7 +73,6 @@
     "NO": "Nein, STOP!",
     "YES": "Ja, ENDGÜLTIG löschen."
   },
-
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
     "GENDER": "Geschlecht",
@@ -108,35 +99,51 @@
     "FEMALE": "Weiblich",
     "MALE": "Männlich"
   },
-
- "ANIMAL_CREATE_EDIT_PAGE": {
-   "NAME": "Name",
-   "SPECIES": "Tierart",
-   "GENDER": "Geschlecht",
-   "ENGLISH_RACE": "Rasse (englisch)",
-   "GERMAN_RACE": "Rasse (deutsch)",
-   "BIRTHDATE": "Geburtsdatum",
-   "AGE": "Alter",
-   "HEIGHT": "Größe",
-   "WEIGHT": "Gewicht",
-   "CAT": "Katze",
-   "DOG": "Hund",
-   "BIRD": "Vogel",
-   "RODENT": "Nagetier",
-   "FEMALE": "Weiblich",
-   "MALE": "Männlich",
-   "IMAGE": "Profilbild",
-   "SUBMIT_CREATE": "Speichern",
-   "SUBMIT_EDIT": "Abspeichern",
-   "DRAG_AND_DROP": "Drag & Drop",
-   "ENGLISH_DESCRIPTION": "Beschreibung (englisch)",
-   "GERMAN_DESCRIPTION": "Beschreibung (deutsch)"
- },
-
+  "ANIMAL_SEARCH": {
+    "NAME": "Name",
+    "ALL_SPECIES": "Alle Tierarten",
+    "ALL_GENDERS": "Alle Geschlechter",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich",
+    "RACE": "Rasse",
+    "BORN_BEFORE": "Geboren vor",
+    "BORN_AFTER": "Geboren nach",
+    "HEAVIER_THAN": "Schwerer als",
+    "LIGHTER_THAN": "Leichter als",
+    "TALLER_THAN": "Größer als",
+    "SMALLER_THAN": "Kleiner als",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier",
+    "SHELTER": "Tierheim"
+  },
+  "ANIMAL_CREATE_EDIT_PAGE": {
+    "NAME": "Name",
+    "SPECIES": "Tierart",
+    "GENDER": "Geschlecht",
+    "ENGLISH_RACE": "Rasse (englisch)",
+    "GERMAN_RACE": "Rasse (deutsch)",
+    "BIRTHDATE": "Geburtsdatum",
+    "AGE": "Alter",
+    "HEIGHT": "Größe",
+    "WEIGHT": "Gewicht",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich",
+    "IMAGE": "Profilbild",
+    "SUBMIT_CREATE": "Speichern",
+    "SUBMIT_EDIT": "Abspeichern",
+    "DRAG_AND_DROP": "Drag & Drop",
+    "ENGLISH_DESCRIPTION": "Beschreibung (englisch)",
+    "GERMAN_DESCRIPTION": "Beschreibung (deutsch)"
+  },
   "ANIMAL_CARD": {
     "NO_MORE_ANIMALS": "Keine weiteren Tiere verfügbar!"
   },
-
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
@@ -144,7 +151,6 @@
     "DONATE_VIA_PAYPAL": "Spende via Paypal",
     "CONTACT": "Kontaktiere"
   },
-
   "ANIMAL_LIST": {
     "NAME": "Name",
     "ADD_ANIMAL": "Neues Tier hinzufügen",
@@ -155,7 +161,6 @@
     "RODENT": "Nagetier",
     "DELETE": "Löschen"
   },
-
   "PWD": {
     "INSTRUCTION": "Gib deine E-Mail an um dein Passwort zurückzusetzen",
     "MAIL": "E-Mail",
@@ -168,19 +173,15 @@
       "SUCCESS": "successfully reset password"
     }
   },
-
   "ADMIN_PAGE": {
     "INFO": "Cannot delete another admin",
     "FAILED": "deletion failed"
   },
-
   "SUBSCRIPTION_PAGE": {
     "EMAIL": "email",
     "SUBSCRIPTION_ID": "Abonnement Id",
     "SUBSCRIBED_TO": "meine Abonnements"
-
   },
-
   "CONTACT_PAGE": {
     "TITLE": "Contact",
     "NAME": "Name",
@@ -191,7 +192,6 @@
     "FAILED": "Fehler beim senden der Nachricht",
     "CONTACT": "Kontaktiere"
   },
-
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"

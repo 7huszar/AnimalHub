@@ -11,7 +11,7 @@ export class LangSelectComponent {
 
   private langMap: Map<string, string> = new Map<string, string>([
     ["en", "English"],
-    ["de", "German"]
+    ["de", "Deutsch"]
   ]);
 
   constructor(private translateService : TranslateService, private globals: Globals) {

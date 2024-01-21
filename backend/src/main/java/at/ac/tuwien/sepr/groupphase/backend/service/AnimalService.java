@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
@@ -25,6 +26,14 @@ public interface AnimalService {
      * @return List of all Animals as AnimalDetailDto
      */
     List<AnimalDetailDto> findAll();
+
+    /**
+     * Search for specific animals using this set of searchParameters.
+     *
+     * @param searchParameters searchParameters
+     * @return List of AnimalDetailDtos which fit the searchParameters
+     */
+    List<AnimalDetailDto> search(AnimalSearchDto searchParameters);
 
     /**
      * Validate and then create a new animal in the persistent data storage with the given parameters.
