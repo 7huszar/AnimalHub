@@ -61,15 +61,15 @@ public class UserConflict {
         }
     }
 
-    public void conflictForShelterUserUpdate(UUID shelterId, UserDetailDto user) throws ConflictException {
+    public void conflictForShelterUserUpdate(UUID shelterId, UserDetailDto user) throws  NotAuthorizedException {
         LOGGER.debug("conflictsForUpdate({})", shelterId);
 
         if (userRepository.findApplicationUserByShelter_Id(shelterId) != null) {
-            throw new ConflictException("Shelter already assigned to another user", Collections.singletonList("Shelter already assigned"));
+            throw new NotAuthorizedException("Shelter is already assigned to another user");
         }
 
         if (user.getRole() != UserRole.MEMBER) {
-            throw new ConflictException("Cannot assign a shelter to any other Role than member", Collections.singletonList("Couldn't assign shelter"));
+            throw new NotAuthorizedException("Cannot assign a Shelter to any other role then member");
         }
 
     }

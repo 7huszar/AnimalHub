@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {SubscriptionDetailDto} from "../dtos/user";
+import {ShelterDetailDto} from "../dtos/shelter";
+import {PaypalDonationDto, PaypalLinkDto} from "../dtos/paypal";
 
 
 @Injectable({
@@ -14,7 +16,8 @@ export class PaypalService {
 
   constructor(
     private httpClient: HttpClient,
-    private globals: Globals) {
+    private globals: Globals,
+    handler: HttpBackend) {
   }
 
   /**
@@ -34,5 +37,13 @@ export class PaypalService {
 
   createSubscription(id: string): Observable<any> {
     return this.httpClient.post<string>(`${this.usersBaseUri}/subscriptions/${id}`, {});
+  }
+
+  placeOrder(receiver: string, donationDto: PaypalDonationDto): Observable<PaypalLinkDto> {
+    return this.httpClient.post<PaypalLinkDto>(this.globals.backendUri + '/paypal/donate/' + receiver, donationDto);
+  }
+
+  captureOrder(id: string): Observable<any> {
+    return this.httpClient.post<any>(this.globals.backendUri + '/paypal/capture/' + id, {});
   }
 }

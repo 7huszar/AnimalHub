@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
@@ -10,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
@@ -142,11 +144,19 @@ public class ShelterEndpoint {
         return shelterService.search(searchParameters);
     }
 
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @GetMapping("/donation/{id}")
+    public List<DonationListDto> findAllDonations(@PathVariable UUID id) {
+        LOGGER.info("GET " + BASE_PATH + "/donation/" + id);
+        LOGGER.debug("findAllDonations({})", id);
+        return shelterService.findAllDonationsByShelterId(id);
+    }
+
 
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("/current/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public void assignUserToShelter(@PathVariable UUID id, @RequestBody UserDetailDto user) throws NotFoundException, ConflictException {
+    public void assignUserToShelter(@PathVariable UUID id, @RequestBody UserDetailDto user) throws NotFoundException, ConflictException, NotAuthorizedException {
         LOGGER.info("POST " + BASE_PATH + "/" + id);
         LOGGER.debug("Body of request:\n{}", id);
 
@@ -163,6 +173,16 @@ public class ShelterEndpoint {
         UserDetailDto user = userService.findById(id);
 
         return shelterService.isAssignedTo(user);
+    }
+
+    @Secured(UserRole.Values.ADMIN_VALUE)
+    @PutMapping("/unassign/{id}")
+    @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
+    public void unassignShelter(@PathVariable UUID id, @RequestBody UserDetailDto user) throws NotFoundException, ConflictException {
+        LOGGER.info("POST " + BASE_PATH + "/" + id);
+        LOGGER.debug("Body of request:\n{}", id);
+
+        shelterService.unassignShelter(id, user);
     }
 
 }

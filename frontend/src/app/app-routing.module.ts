@@ -18,6 +18,8 @@ import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/pa
 import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.component";
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
+import {SuccessComponent} from "./components/donation/success/success.component";
+import {StatisticComponent} from "./pages/home/member-profile/statistic/statistic.component";
 
 
 const routes: Routes = [
@@ -42,6 +44,11 @@ const routes: Routes = [
     canActivate: mapToCanActivate([AuthGuard]),
     component: MemberProfileComponent,
     data: {access: Mode.MEMBER} },
+
+  { path: 'home/member-profile/statistic',
+    canActivate: mapToCanActivate([AuthGuard]),
+    component: StatisticComponent,
+    data: {access: Mode.MEMBER}},
 
   { path: 'admin',
     canActivate: mapToCanActivate([AuthGuard]),
@@ -116,6 +123,9 @@ const routes: Routes = [
         component: MemberEditShelterComponent,
         data: {access: Mode.USER}},
     ] },
+
+  { path: 'donation/success',
+    component: SuccessComponent },
 
   {path: '*', redirectTo: ''}
 ];
