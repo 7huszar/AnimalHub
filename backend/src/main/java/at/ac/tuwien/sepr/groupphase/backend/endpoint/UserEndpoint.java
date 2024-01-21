@@ -8,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.Subscripti
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
@@ -188,10 +187,7 @@ public class UserEndpoint {
                 //Actually cancelling
                 ResponseEntity<String> cancelled = restTemplate.postForEntity(cancelUrl, cancelEntity, String.class);
 
-                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv");
-
                 userService.updateSubscription(id);
-                LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncnevmldvksdlvdslkvsvlkdsvl");
 
             } catch (Exception e) {
                 LOGGER.error("Error making external POST request", e);
@@ -288,7 +284,6 @@ public class UserEndpoint {
         }
 
 
-
         return userService.isSubscribed(id, user.getId());
     }
 
@@ -306,11 +301,12 @@ public class UserEndpoint {
 
         String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
         String creatingUrl = "https://api-m.sandbox.paypal.com/v1/billing/plans";
+        String createProductId = "https://api-m.sandbox.paypal.com/v1/catalogs/products";
+
 
         ResponseEntity<String> responseEntity;
         // Obtain the PayPal access token
         HttpEntity<MultiValueMap<String, String>> requestEntity = userService.getPaypalAccessToken(id);
-
 
         try {
 
@@ -325,24 +321,45 @@ public class UserEndpoint {
 
 
             try {
-                HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken);
 
+                HttpEntity<String> productRequest = userService.createProductId(accessToken);
 
-                // Make the HTTP POST request to create the subscription plan
-                responseEntity = restTemplate.exchange(
-                    creatingUrl,
+                //creating Product Id
+                ResponseEntity<String> productResponse = restTemplate.exchange(
+                    createProductId,
                     HttpMethod.POST,
-                    createSubscriptionPlan,
+                    productRequest,
                     String.class
                 );
 
+                String productId = userService.parseProductCreationResponse(productResponse);
+
+
+                try {
+
+                    HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken, productId);
+
+
+                    // Make the HTTP POST request to create the subscription plan
+                    responseEntity = restTemplate.exchange(
+                        creatingUrl,
+                        HttpMethod.POST,
+                        createSubscriptionPlan,
+                        String.class
+                    );
+
+
+                } catch (Exception e) {
+                    LOGGER.error("Error making external POST request", e);
+                    return "error creating plan";
+                    // Handle the exception or return an appropriate response
+                }
+
 
             } catch (Exception e) {
-                LOGGER.error("Error making external POST request", e);
+                System.err.println("Error creating Product API: " + e.getMessage());
                 return "error creating plan";
-                // Handle the exception or return an appropriate response
             }
-
 
         } catch (Exception e) {
             LOGGER.error("Are u sure you provided the correct credentials", e);
@@ -368,14 +385,13 @@ public class UserEndpoint {
             shelterDto.setSubscriptionId(subscriptionPlanId);
 
             LOGGER.debug("ShelterDto that is being updated" + shelterDto);
-            LOGGER.info("Updating Sheltern with subscription Plan");
+            LOGGER.info("Updating Shelter with subscription Plan");
             shelterService.update(shelterDto);
 
             return (subscriptionPlanId);
         } else {
 
             LOGGER.debug("Failed to create subscription plan. Status code: " + responseEntity.getStatusCode());
-            //TODO make all of these returns proper error messsages
             return "Could not create Subscription Plan please try again Later";
         }
 
@@ -385,21 +401,26 @@ public class UserEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("subscriptions/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))
-    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException, ConflictException {
+    public void updatePaypalDetails(@PathVariable UUID id, @RequestBody ShelterDetailDto shelterDetailDto) throws NotFoundException, NotAuthorizedException, ValidationException, JsonProcessingException {
         LOGGER.info("PUT " + BASE_PATH + "/subscriptions/" + id);
         LOGGER.debug("update Paypal credentials ({})", id);
 
-
         ShelterDetailDto shelter = shelterService.findById(id);
 
+        if (shelter.getPaypalSecret() != null) {
+            if (shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret()) && shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId())) {
+                shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+                return;
+            }
 
-        if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId()) && shelter.getPaypalSecret().equals(shelterDetailDto.getPaypalSecret())) {
-            shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
-            return;
+        } else if (shelter.getPaypalClientId() != null) {
+            if (shelter.getPaypalClientId().equals(shelterDetailDto.getPaypalClientId())) {
+                shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
+                return;
+            }
         }
 
-
-        userService.updatePaypalCredentials(id, shelterDetailDto);
+        shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelterDetailDto));
 
         restTemplate = new RestTemplate();
         String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
@@ -408,10 +429,8 @@ public class UserEndpoint {
 
 
         try {
-
             // Make the POST request to get access token
             ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
-
 
             //parsing so just the access Token is being returned
             String accessToken = userService.parseTokenResponse(response);
@@ -420,7 +439,7 @@ public class UserEndpoint {
 
 
         } catch (Exception e) {
-            userService.updatePaypalCredentials(id, shelter);
+            shelterService.update(shelterMapper.shelterDetailDtoToShelterDto(shelter));
             LOGGER.error("Are u sure you provided the correct credentials", e);
             throw new NotAuthorizedException("Provided invalid Paypal credentials. Please make sure you provided the correct Client id and secret");
         }
