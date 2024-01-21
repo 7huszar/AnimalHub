@@ -521,7 +521,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public HttpEntity<String> createSubscriptionPlan(String accessToken) {
+    public HttpEntity<String> createSubscriptionPlan(String accessToken, String productId) {
         LOGGER.trace("Creating a new Subscription Plan");
 
 
@@ -531,7 +531,7 @@ public class UserServiceImpl implements UserService {
         headers.set("Authorization", "Bearer " + accessToken);
 
         String requestBody = "{ "
-            + "\"product_id\": \"PROD-0WX22620KG452370H\", "
+            + "\"product_id\": \"" + productId + "\", "
             + "\"name\": \"Subscription to Animal\", "
             + "\"description\": \"Thank you for your Donation\", "
             + "\"billing_cycles\": [ "
@@ -556,9 +556,76 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public HttpEntity<String> createProductId(String accessToken) {
+
+        // Prepare the request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        String requestBody = "{\n"
+            + "  \"name\": \"Product Name\",\n"
+            + "  \"description\": \"Product Description\",\n"
+            + "  \"type\": \"PHYSICAL\",\n"
+            + "  \"image_url\": \"https://example.com/product-image.jpg\",\n"
+            + "  \"home_url\": \"https://example.com/product-details\",\n"
+            + "  \"create_time\": \"2024-01-11T00:00:00Z\",\n"
+            + "  \"update_time\": \"2024-01-11T00:00:00Z\",\n"
+            + "  \"links\": [\n"
+            + "    {\n"
+            + "      \"href\": \"https://example.com/product-link\",\n"
+            + "      \"rel\": \"self\",\n"
+            + "      \"method\": \"GET\"\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}";
+
+        return new HttpEntity<>(requestBody, headers);
+    }
+
+
+    @Override
     public void updateSubscription(String id) {
         LOGGER.debug("update({})", id);
         subscriptionRepository.setCancelled(id);
+    }
+
+    @Override
+    public String parseProductCreationResponse(ResponseEntity<String> response) {
+        LOGGER.debug("Parsing response");
+
+        // Extract the product ID from the response body
+        String responseBody = response.getBody();
+
+        if (responseBody != null && !responseBody.isEmpty()) {
+            try {
+                JsonFactory factory = new JsonFactory();
+                JsonParser parser = factory.createParser(responseBody);
+
+                // Traverse the JSON structure
+                while (parser.nextToken() != null) {
+                    if (JsonToken.FIELD_NAME.equals(parser.getCurrentToken()) && "id".equals(parser.getText())) {
+                        // Move to the value of the "id" field
+                        parser.nextToken();
+                        String productId = parser.getText();
+                        LOGGER.info("Received product ID from PayPal API: {}", productId);
+
+                        // Additional logic or processing for the product ID
+                        return productId;
+                    }
+                }
+
+                // If the loop completes without finding "id"
+                LOGGER.error("No 'id' found in the response");
+                return null;  // or throw an exception if needed
+            } catch (Exception e) {
+                LOGGER.error("Error parsing JSON response: {}", e.getMessage());
+                return null;  // or throw an exception if needed
+            }
+        } else {
+            LOGGER.error("Empty or null response body");
+            return null;  // or throw an exception if needed
+        }
     }
 
 

@@ -301,6 +301,8 @@ public class UserEndpoint {
 
         String apiUrl = "https://api.sandbox.paypal.com/v1/oauth2/token";
         String creatingUrl = "https://api-m.sandbox.paypal.com/v1/billing/plans";
+        String createProductId = "https://api-m.sandbox.paypal.com/v1/catalogs/products";
+
 
         ResponseEntity<String> responseEntity;
         // Obtain the PayPal access token
@@ -319,22 +321,44 @@ public class UserEndpoint {
 
 
             try {
-                HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken);
 
+                HttpEntity<String> productRequest = userService.createProductId(accessToken);
 
-                // Make the HTTP POST request to create the subscription plan
-                responseEntity = restTemplate.exchange(
-                    creatingUrl,
+                //creating Product Id
+                ResponseEntity<String> productResponse = restTemplate.exchange(
+                    createProductId,
                     HttpMethod.POST,
-                    createSubscriptionPlan,
+                    productRequest,
                     String.class
                 );
 
+                String productId = userService.parseProductCreationResponse(productResponse);
+
+
+                try {
+
+                    HttpEntity<String> createSubscriptionPlan = userService.createSubscriptionPlan(accessToken, productId);
+
+
+                    // Make the HTTP POST request to create the subscription plan
+                    responseEntity = restTemplate.exchange(
+                        creatingUrl,
+                        HttpMethod.POST,
+                        createSubscriptionPlan,
+                        String.class
+                    );
+
+
+                } catch (Exception e) {
+                    LOGGER.error("Error making external POST request", e);
+                    return "error creating plan";
+                    // Handle the exception or return an appropriate response
+                }
+
 
             } catch (Exception e) {
-                LOGGER.error("Error making external POST request", e);
+                System.err.println("Error creating Product API: " + e.getMessage());
                 return "error creating plan";
-                // Handle the exception or return an appropriate response
             }
 
         } catch (Exception e) {

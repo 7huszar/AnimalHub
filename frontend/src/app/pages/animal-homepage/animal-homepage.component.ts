@@ -143,7 +143,7 @@ export class AnimalHomepageComponent implements OnInit {
                   //TODO Receiving account animalhub.animalService@gmail.com and 2023ws-se-pr-groupA
                   //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
 
-                  script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
+                  script.src = 'https://www.paypal.com/sdk/js?client-id=AR0oqkbXswFlCLbMov_tYujivOjvgUrFZlGD1tpI5G40i6va-ylDS-uaPKK5mi99VJWXJKNP5eWGNIfr&vault=true&intent=subscription';
                   script.onload = () => {
                     // PayPal script is loaded, render the button
                     this.renderPayPalButton();

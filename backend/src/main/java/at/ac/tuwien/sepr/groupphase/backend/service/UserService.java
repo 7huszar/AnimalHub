@@ -151,9 +151,13 @@ public interface UserService extends UserDetailsService {
 
     SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId);
 
-    HttpEntity<String> createSubscriptionPlan(String accessToken);
+    HttpEntity<String> createSubscriptionPlan(String accessToken, String productId);
 
     void updateSubscription(String id);
+
+    HttpEntity<String> createProductId(String accessToken);
+
+    String parseProductCreationResponse(ResponseEntity<String> response);
 
 
 }
