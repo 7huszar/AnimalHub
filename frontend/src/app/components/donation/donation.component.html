@@ -1,3 +1,28 @@
-<div class="btn btn-primary" (click)="donate()">
-  donate
+<button class="btn"
+     (click)="click()"
+     style="background-color: #FFC439;"
+     data-bs-toggle="modal"
+     data-bs-target="#donate-dialog">
+  one time donation
+</button>
+
+<div  id="donate-dialog" class="modal fade" tabindex="-1" aria-labelledby="Donate the shelter something man" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="confirm-delete-dialog-title">{{'CONFIRM_DELETE_DIALOG.TITLE' | translate}}</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="donate()">
+        <div class="form-group" [formGroup]="giveMoney">
+            <input id="arbitrary" formControlName="arbitrary" type="number" placeholder="arbitrary amount">
+            <div class="modal-footer">
+              <button class="btn btn-primary">donate</button>
+            </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
