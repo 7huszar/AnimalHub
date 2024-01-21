@@ -57,7 +57,8 @@
     "SEARCH": "Search",
     "LOGOUT": "Log out",
     "ADMIN_PAGE": "Admin View",
-    "MEMBER_PAGE": "Your Shelter"
+    "MEMBER_PAGE": "Your Shelter",
+    "STATISTICS": "Statistics"
   },
   "NOTIFIER": {
     "CONNECTION_FAILED": "Connection error",

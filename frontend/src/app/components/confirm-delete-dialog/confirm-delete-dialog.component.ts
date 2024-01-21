@@ -45,11 +45,11 @@ export class ConfirmDeleteDialogComponent {
       this.shelterService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.notifySuccess(`Animal ${this.deleteName} successfully deleted.`);
+            this.notification.notifySuccess(`Shelter ${this.deleteName} successfully deleted.`);
             this.reloadAdmin();
           },
           error: error => {
-            console.error('Error deleting Animal', error);
+            console.error('Error deleting Shelter', error);
             this.notification.notifyError(error.error.message, error.error.error);
           }
         });
@@ -64,9 +64,6 @@ export class ConfirmDeleteDialogComponent {
   }
 
 
-  reloadAnimal() {
-    this.router.navigate(['/shelter/' + this.DeleteId])
-  }
 
   reloadSubscriptions() {
     this.router.navigateByUrl('/users/subscriptions', {skipLocationChange: true}).then(() => {
@@ -95,16 +92,13 @@ export class ConfirmDeleteDialogComponent {
 
   public deleteAnimal() {
     if (this.DeleteId != null) {
-
       this.animalService.delete(this.DeleteId)
         .subscribe({
           next: () => {
-            this.notification.notifySuccess(`Shelter ${this.deleteName} successfully deleted.`);
-            this.reloadAnimal();
-            //this.adminPageComponent.reloadShelters();
+            this.notification.notifySuccess(`Animal ${this.deleteName} successfully deleted.`);
           },
           error: error => {
-            console.error('Error deleting shelter', error);
+            console.error('Error deleting animal', error);
             this.notification.notifyError(error.error.message, error.error.error);
           }
         });
@@ -128,7 +122,7 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-  public deleteEntity() {
+  public delete() {
     if (this.deleteType === 'User') {
       this.deleteUser()
     } else if(this.deleteType === 'Shelter') {
@@ -138,6 +132,7 @@ export class ConfirmDeleteDialogComponent {
     }else if (this.deleteType === 'Subscription'){
       this.cancelSubscription()
     }
+    window.location.reload();
   }
 }
 

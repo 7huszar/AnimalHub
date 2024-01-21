@@ -57,7 +57,8 @@
     "SEARCH": "Suche",
     "LOGOUT": "Ausloggen",
     "ADMIN_PAGE": "Admin-Ansicht",
-    "MEMBER_PAGE": "Dein Tierheim"
+    "MEMBER_PAGE": "Dein Tierheim",
+    "STATISTICS": "Statistik"
   },
   "NOTIFIER": {
     "CONNECTION_FAILED": "Verbindungsfehler",
