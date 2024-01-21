@@ -7,7 +7,6 @@ import {Router} from "@angular/router";
 import {AnimalService} from "../../services/animal.service";
 import {Observable} from "rxjs";
 import {PaypalService} from "../../services/paypal.service";
-import {Mode} from "../../enums/modes";
 
 
 @Component({
@@ -21,11 +20,9 @@ export class ConfirmDeleteDialogComponent {
   @Output() deleteErrorEvent = new EventEmitter<{ error: string | null, errorMessage: string }>();
 
   @Input() deleteName: string | undefined = '';
-  @Input() deleteMode: Mode;
+  @Input() deleteType: string | undefined = '';
   @Input() DeleteId: string | undefined = '';
   @Input() cancelShelter: string | undefined;
-
-  deleteModeString: string;
 
 
   @HostBinding('class') cssClass = 'modal-fade';
@@ -34,14 +31,11 @@ export class ConfirmDeleteDialogComponent {
     private shelterService: ShelterService,
     private animalService: AnimalService,
     private paypalService: PaypalService,
-    private notification: NotifierService,
+    private notification :NotifierService,
     private userService: UserService,
     private router: Router,
-  ) {
-  }
 
-  ngOnInit(){
-    this.deleteModeString = this.deleteMode === 3? "USER" : this.deleteMode === 6 ? "ANIMAL" : this.deleteMode === 9 ? "SHELTER" : "undefined";
+  ) {
   }
 
   public deleteShelter() {
@@ -90,15 +84,8 @@ export class ConfirmDeleteDialogComponent {
           },
           error: error => {
             console.error('Error deleting user', error);
-            let title: string = 'ADMIN_PAGE.FAILED';
-
-            // status == 401 / Unauthorized - deleting admin not allowed
-            if (error.status == HttpStatusCode.Unauthorized) {
-              this.notification.notifyError('ADMIN_PAGE.INFO', title);
-            } else {
-              // standard errors, we do not anticpate
-              this.notification.notifyStdError(error, title);
-            }
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Error deleting User");
           }
 
         });
@@ -124,24 +111,6 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-  //This is just for testing purposes use it
-  public checkSubscription() {
-
-    let test: Observable<void> = this.paypalService.checkIfSubscriptionIsActive(this.DeleteId, null)
-    test.subscribe({
-      next: data => {
-        this.notification.notifySuccess(`Subscription to ${this.deleteName} successfully canceled.`);
-        this.reloadSubscriptions();
-      },
-      error: error => {
-        //this schould never happen except if no subscriptions have been made
-        console.error('Error posting endpoint', error);
-      }
-    });
-
-  }
-
-
   public cancelSubscription() {
 
     if (this.DeleteId != null) {
@@ -159,41 +128,17 @@ export class ConfirmDeleteDialogComponent {
     }
   }
 
-//TODO implement this somewhere when a shelter is being created
-
-  // public createSubscriptionPlan() {
-  //
-  //   if (this.DeleteId != null) {
-  //     console.log(this.cancelShelter)
-  //     let test: Observable<void> = this.paypalService.createSubscription(this.cancelShelter)
-  //     test.subscribe({
-  //       next: data => {
-  //         console.log(data)
-  //         this.notification.notifySuccess(`SubscriptionPlan to successfully created.`);
-  //         this.reloadSubscriptions();
-  //       },
-  //       error: error => {
-  //         //this schould never happen except if no subscriptions have been made
-  //         console.error('Error creating Plan', error);
-  //       }
-  //     });
-  //   }
-  // }
-
-
-
-public delete() {
-  if (this.deleteMode === Mode.USER) {
-    this.deleteUser()
-  } else if(this.deleteMode === Mode.SHELTER) {
-    this.deleteShelter()
-  }else if (this.deleteMode === Mode.ANIMAL){
-    this.deleteAnimal()
+  public deleteEntity() {
+    if (this.deleteType === 'User') {
+      this.deleteUser()
+    } else if(this.deleteType === 'Shelter') {
+      this.deleteShelter()
+    }else if (this.deleteType === 'Animal'){
+      this.deleteAnimal()
+    }else if (this.deleteType === 'Subscription'){
+      this.cancelSubscription()
+    }
   }
-  // else if (this.deleteMode === 'Subscription'){
-  //   this.createSubscriptionPlan()
-  // }
-}
 }
 
 

@@ -12,7 +12,6 @@ export interface CreateShelterDto {
   phoneNumber: string,
   email: string
   paypalClientId?: string,
-  paypalSecret?: string,
 }
 
 export interface ShelterDetailDto {
@@ -26,7 +25,6 @@ export interface ShelterDetailDto {
   animals?: AnimalDto[],
   createdOn: Date
   paypalClientId?: string,
-  paypalSecret?: string,
 }
 
 export interface ShelterDto {
@@ -70,4 +68,11 @@ export class IdOnlyShelter implements ShelterDto {
   public constructor(id: string) {
     this.id = id;
   }
+}
+
+export interface DonationListDto {
+  amount: number;
+  date: Date;
+  type: string;
+  receiver: string;
 }

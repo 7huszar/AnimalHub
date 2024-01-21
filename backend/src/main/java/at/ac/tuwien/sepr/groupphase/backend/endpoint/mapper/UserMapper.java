@@ -11,6 +11,9 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     UserDetailDto applicationUserToUserDetailDto(ApplicationUser user);
 
+    ApplicationUser userDetailDtoUserToApplicationUser(UserDetailDto user);
+
+
     Subscription subscriptionDetailDtoToSubscription(SubscriptionDetailDto subscriptionDetailDto);
 
     Subscription createSubscriptionDtoToSubscription(CreateSubscriptionDto subscriptionDetailDto);

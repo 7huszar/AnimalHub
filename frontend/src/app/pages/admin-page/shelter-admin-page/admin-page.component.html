@@ -57,7 +57,7 @@
           </tr>
           </tbody>
         </table>
-        <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteMode]="modeForDeletion" (deleteErrorEvent)="onDeleteError"></app-confirm-delete-dialog>
+        <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" (deleteErrorEvent)="onDeleteError"></app-confirm-delete-dialog>
       </div>
     </div>
 
@@ -132,7 +132,7 @@
           </tr>
           </tbody>
         </table>
-        <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteMode]="modeForDeletion" (deleteErrorEvent)="onDeleteError($event)"></app-confirm-delete-dialog>
+        <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" (deleteErrorEvent)="onDeleteError($event)"></app-confirm-delete-dialog>
 
       </div>
     </div>

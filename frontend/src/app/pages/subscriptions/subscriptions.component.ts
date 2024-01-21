@@ -1,14 +1,13 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AnimalDetailDto} from "../../dtos/animal";
-import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
+import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {Observable} from "rxjs";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
-import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
 import {Location} from "@angular/common";
-import {PaypalService} from "../../services/paypal.service";
-
+import {AnimalService} from "../../services/animal.service";
+import {NotifierService} from "../../services/notifier.service";
 
 
 @Component({
@@ -16,7 +15,6 @@ import {PaypalService} from "../../services/paypal.service";
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']
 })
-
 
 
 export class SubscriptionsComponent implements OnInit {
@@ -41,11 +39,14 @@ export class SubscriptionsComponent implements OnInit {
     role: ""
   };
 
-  subscription: CreateSubscriptionDto = {
+  subscription: SubscriptionDetailDto = {
+    cancelled: false,
+    id: "",
     subscriptionId: "",
     tier: "",
     user: undefined,
     animal: undefined,
+    profilePicture: undefined,
   }
 
   typeForDeletion: string = '';
@@ -58,12 +59,11 @@ export class SubscriptionsComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private userService: UserService,
-    private paypalService: PaypalService,
-    private notification: ToastrService,
+    private animalService: AnimalService,
+    private notification: NotifierService,
     private location: Location,
     private translator: TranslateService) {
   }
-
 
 
   ngOnInit() {
@@ -81,13 +81,29 @@ export class SubscriptionsComponent implements OnInit {
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
         subscriptionObservable.subscribe({
           next: data => {
+            console.log(data)
             this.subscriptionList = data;
             console.log("Loaded subscriptions " + this.subscriptionList)
+
+            this.subscriptionList.forEach((subscription: SubscriptionDetailDto) => {
+              this.animalService.getProfileImage(subscription.animal.id).subscribe({
+                next: blob => {
+                  subscription.profilePicture = URL.createObjectURL(blob);
+                }, error: err => {
+                  console.error(err);
+                  const errorMessage = err.error ? err.error.message : 'Unknown error';
+                  this.notification.notifyError(errorMessage, "Could not load Picture of shelter");
+                }
+              });
+
+
+            });
           },
           error: error => {
             //this schould never happen except if no subscriptions have been made
             console.error('Error finding subscriptions', error);
-            this.notification.error("Could not find subscriptions");
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.notification.notifyError(errorMessage, "Could not find subscriptions");
           }
         });
 
@@ -96,7 +112,8 @@ export class SubscriptionsComponent implements OnInit {
       error: error => {
         //this schould never happen
         console.error('Error finding user', error);
-        this.notification.error("Could not find logged in user");
+        const errorMessage = error.error ? error.error.message : 'Unknown error';
+        this.notification.notifyError(errorMessage, "Could not find logged in user");
       }
     });
   }
@@ -105,13 +122,12 @@ export class SubscriptionsComponent implements OnInit {
     this.location.back();
   }
 
-  subscriptionForDeletion(name: string, id: string, shelterId: string ) {
+  subscriptionForDeletion(name: string, id: string, shelterId: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
     this.typeForDeletion = "Subscription";
     this.cancelShelter = shelterId;
   }
-
 
 
 }

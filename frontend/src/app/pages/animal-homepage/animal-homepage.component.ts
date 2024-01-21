@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
@@ -13,6 +13,7 @@ import {Species} from "../../dtos/species";
 import {PaypalService} from "../../services/paypal.service";
 import {Gender} from "../../dtos/gender";
 import {Globals} from "../../global/globals";
+import {NotifierService} from "../../services/notifier.service";
 
 declare var paypal;
 
@@ -50,7 +51,6 @@ export class AnimalHomepageComponent implements OnInit {
     animal: undefined,
   };
 
-  // TODO: add fitting animal attributes
   protected animalAge: number;
   protected contents: FileDto[];
   protected newContent: File = null;
@@ -77,7 +77,9 @@ export class AnimalHomepageComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
+    private betternotifier: NotifierService,
     private el: ElementRef,
+    private router: Router,
   ) {
   }
 
@@ -138,18 +140,10 @@ export class AnimalHomepageComponent implements OnInit {
                     }
                   });
 
-                  //TODO handle the case in which the user is already subscribed to the animal
-
-
-                  //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
-                  // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
-
                   //TODO Receiving account animalhub.animalService@gmail.com and 2023ws-se-pr-groupA
                   //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
 
-
-                  //TODO change this for live version if there is multiple receivers the client id determines who receives the money (i think not sure)
-                  script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
+                  script.src = 'https://www.paypal.com/sdk/js?client-id='+ this.animal.shelter.paypalClientId + '&vault=true&intent=subscription';
                   script.onload = () => {
                     // PayPal script is loaded, render the button
                     this.renderPayPalButton();
@@ -213,10 +207,14 @@ export class AnimalHomepageComponent implements OnInit {
           response => {
             // Handle the response
             console.log("Subscription created successfully:", response);
+            this.betternotifier.notifySuccess("Successfully created subscription")
+            this.reloadSubscriptions()
           },
           error => {
             // Handle the error
-            console.error("Error creating subscription:", error);
+            console.error(error);
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.betternotifier.notifyError(errorMessage, "Could not load Picture of shelter");
           }
         );
       },
@@ -227,6 +225,13 @@ export class AnimalHomepageComponent implements OnInit {
     if (event.target.files[0]) {
       this.newContent = event.target.files[0];
     }
+  }
+
+
+  reloadSubscriptions() {
+    this.router.navigateByUrl('/animal/'+ this.animal.id, {skipLocationChange: true}).then(() => {
+      window.location.reload();
+    });
   }
 
   public onUpload(): void {

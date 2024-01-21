@@ -24,6 +24,16 @@ export class AnimalListComponent {
               protected globals: Globals) {
   }
 
+  typeForDeletion: string = '';
+  idForDeletion: string = '';
+  nameForDeletion: string = '';
+
+
+  animalForDeletion(name: string, id: string) {
+    this.idForDeletion = id;
+    this.nameForDeletion = name;
+    this.typeForDeletion = "Shelter";
+  }
   ngOnInit(): void {
     this.displayAnimalCards('all');
   }
@@ -40,7 +50,6 @@ export class AnimalListComponent {
       this.router.navigate(['/animal', animalId]);
     }
   }
-
 
   onInput(): void {
     this.displayedAnimals = this.animals

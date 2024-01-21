@@ -203,9 +203,25 @@
         </div>
         <img *ngIf="animalImageURL" [src]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
       </div>
-
+      <div class="custom-submit">
+        <div class="row">
+          <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+            <button type="submit" class="custom-button" [disabled]="!form.valid">
+              {{submitButtonText}}
+            </button>
+          </div>
+          <div class="col-12 col-sm-8 offset-sm-4 col-xl-6 offset-xl-6">
+            <button type="button" class="btn btn-sm btn-danger"
+                    (click)="animalForDeletion(animal.name, animal.id)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirm-delete-dialog"
+                    aria-label="Delete shelter">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    <app-confirm-delete-dialog [deleteName]="animal.name" [DeleteId]="animal.id"
-                               [deleteMode]="Mode.ANIMAL"></app-confirm-delete-dialog>
+    <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
   </form>
 </div>

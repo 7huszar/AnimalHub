@@ -148,7 +148,8 @@
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
     "EMAIL": "E-Mail:",
-    "DONATE_VIA_PAYPAL": "Spende via Paypal"
+    "DONATE_VIA_PAYPAL": "Spende via Paypal",
+    "CONTACT": "Kontaktiere"
   },
   "ANIMAL_LIST": {
     "NAME": "Name",
@@ -157,7 +158,8 @@
     "CAT": "Katze",
     "DOG": "Hund",
     "BIRD": "Vogel",
-    "RODENT": "Nagetier"
+    "RODENT": "Nagetier",
+    "DELETE": "Löschen"
   },
   "PWD": {
     "INSTRUCTION": "Gib deine E-Mail an um dein Passwort zurückzusetzen",

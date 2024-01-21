@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -113,7 +114,7 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      * @code NotFoundException when there is no user with the given ID
      */
-    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException;
+    UserDetailDto update(UserDetailDto userDetailDto) throws ValidationException, NotFoundException, NotAuthorizedException;
 
     /**
      * Sends an e-mail with a token valid to reset a password of an existing user. <br>
@@ -150,9 +151,13 @@ public interface UserService extends UserDetailsService {
 
     SubscriptionDetailDto isSubscribed(UUID animalId, UUID userId);
 
-    HttpEntity<String> createSubscriptionPlan(String accessToken);
+    HttpEntity<String> createSubscriptionPlan(String accessToken, String productId);
 
-    void updatePaypalCredentials(UUID id, ShelterDetailDto shelterDetailDto);
+    void updateSubscription(String id);
+
+    HttpEntity<String> createProductId(String accessToken);
+
+    String parseProductCreationResponse(ResponseEntity<String> response);
 
 
 }
