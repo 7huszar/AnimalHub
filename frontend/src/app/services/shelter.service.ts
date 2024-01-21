@@ -1,6 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {CreateShelterDto, ShelterDetailDto, ShelterDto, ShelterListDto, ShelterSearch} from '../dtos/shelter';
+import {
+  CreateShelterDto,
+  DonationListDto,
+  ShelterDetailDto,
+  ShelterDto,
+  ShelterListDto,
+  ShelterSearch
+} from '../dtos/shelter';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {CreateFileDto, FileDto} from "../dtos/file";
@@ -127,6 +134,10 @@ export class ShelterService {
   unassignShelter(shelterId: string, user : UserDetailDto): Observable<any> {
 
     return this.httpClient.put<any>(this.shelterBaseUri + '/unassign/' + shelterId, user);
+  }
+
+  findAllDonations(id: string): Observable<DonationListDto[]> {
+    return this.httpClient.get<DonationListDto[]>(this.shelterBaseUri + '/donation/' + id);
   }
 
 }

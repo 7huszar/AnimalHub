@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
@@ -141,6 +142,14 @@ public class ShelterEndpoint {
         LOGGER.info("GET " + BASE_PATH);
         LOGGER.debug("request parameters: {}", searchParameters);
         return shelterService.search(searchParameters);
+    }
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @GetMapping("/donation/{id}")
+    public List<DonationListDto> findAllDonations(@PathVariable UUID id) {
+        LOGGER.info("GET " + BASE_PATH + "/donation/" + id);
+        LOGGER.debug("findAllDonations({})", id);
+        return shelterService.findAllDonationsByShelterId(id);
     }
 
 
