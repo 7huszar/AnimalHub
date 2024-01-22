@@ -135,11 +135,14 @@ public class PreferenceServiceImpl implements PreferenceService {
                     }
                     if (preference.getTraitPointMap().containsKey("age")) {
                         int age = Period.between(animal.getBirthDate(), LocalDate.now()).getYears();
-                        if (preference.getTraitPointMap().get("age") / age > 1) {
-                            score += 1 - preference.getTraitPointMap().get("age") / age * 0.1;
-                        } else {
-                            score += preference.getTraitPointMap().get("age") / age * 0.1 + 0.9;
+                        if (age != 0) {
+                            if (preference.getTraitPointMap().get("age") / age > 1) {
+                                score += 1 - preference.getTraitPointMap().get("age") / age * 0.1;
+                            } else {
+                                score += preference.getTraitPointMap().get("age") / age * 0.1 + 0.9;
+                            }
                         }
+
                     }
                     score *= preference.getSpeciesFactor();
                 }
