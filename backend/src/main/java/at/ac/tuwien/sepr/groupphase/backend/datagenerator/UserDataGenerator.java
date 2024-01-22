@@ -21,10 +21,9 @@ import java.util.List;
 public class UserDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
+    private final UserRepository userRepository;
     private final ShelterRepository shelterRepository;
 
 

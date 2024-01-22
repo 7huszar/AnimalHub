@@ -25,18 +25,7 @@ declare var paypal;
 })
 export class AnimalHomepageComponent implements OnInit {
 
-  animal: AnimalDetailDto = {
-    birthDate: new Date(),
-    height: 0,
-    id: "",
-    name: "",
-    gender: null,
-    englishRace: "",
-    germanRace: "",
-    shelter: undefined,
-    species: undefined,
-    weight: 0,
-  };
+  animal: AnimalDetailDto;
 
   user: UserDetailDto = {
     email: "",
@@ -86,8 +75,10 @@ export class AnimalHomepageComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       if (params.get("id")) {
-        this.animal.id = params.get("id");
-        let animalObservable: Observable<AnimalDetailDto> = this.animalService.findById(this.animal.id)
+
+        const id = params.get("id");
+
+        let animalObservable: Observable<AnimalDetailDto> = this.animalService.findById(id)
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
@@ -159,7 +150,15 @@ export class AnimalHomepageComponent implements OnInit {
               }
             });
 
-
+            this.animalService.getContents(this.animal.id).subscribe({
+              next: data => {
+                this.contents = data;
+              },
+              error: error => {
+                console.error('Error finding contents', error);
+                this.notification.error("Could Not find contents of animal");
+              }
+            })
           },
           error: error => {
             console.error('Error finding animal', error);
@@ -168,17 +167,6 @@ export class AnimalHomepageComponent implements OnInit {
         });
       }
     });
-    this.animalService.getContents(this.animal.id).subscribe({
-      next: data => {
-        this.contents = data;
-      },
-      error: error => {
-        console.error('Error finding contents', error);
-        this.notification.error("Could Not find contents of animal");
-      }
-    })
-
-
   }
 
   private renderPayPalButton(): void {

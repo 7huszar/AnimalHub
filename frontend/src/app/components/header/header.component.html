@@ -23,22 +23,29 @@
       </li>
        -->
     </ul>
-
+      <button class="btn btn-outline-dark" routerLink="/search">
+        <i class="bi bi-search text-black me-1"></i>
+        {{'HEADER.SEARCH' | translate}}
+      </button>
       <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
         <i class="bi bi-tools text-black me-1"></i>
         {{'HEADER.MEMBER_PAGE' | translate}}
+      </button>
+      <button class="btn btn-outline-dark" routerLink="/users/appointments">
+        <i class="bi bi-calendar3 text-black me-1"></i>
+        {{'APPOINTMENT.APPOINTMENTS' | translate}}
       </button>
       <button *ngIf="authService.isAdmin()" class="btn btn-outline-dark" routerLink="/admin">
         <i class="bi bi-tools text-black me-1"></i>
         {{'HEADER.ADMIN_PAGE' | translate}}
       </button>
+      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/home/member-profile/statistic">
+        <i class="bi bi-currency-euro"></i>
+        {{'HEADER.STATISTICS' | translate}}
+      </button>
       <button *ngIf="authService.isLoggedIn()" (click)="logout()" routerLink="" class="btn btn-outline-dark">
         <i class="bi bi-box-arrow-left text-black me-1"></i>
         {{'HEADER.LOGOUT' | translate}}
-      </button>
-      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/home/member-profile/statistic">
-        <i class="bi bi-currency-euro"></i>
-        Donation stats
       </button>
     </div>
     <div class="lang-select">

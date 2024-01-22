@@ -7,12 +7,12 @@
         <div ngbDropdown autoClose="true" class="dropdown">
           <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-globe-americas text-black me-1"></i>
-<!--            {{"LANG_SELECT.DROPDOWN" | translate}}-->
+            {{"LANG_SELECT.DROPDOWN" | translate}}
           </button>
           <div ngbDropdownMenu  style="width: 100%; overflow: auto;">
             <div *ngFor="let lang of getLangs()"
                  ngbDropdownItem
-                 style="width: 100%;"
+                 style="width: 100%; text-align: center"
                  class="custom-dropDownItem"
                  (click)="setLang(lang)">
               {{formattedLang(lang)}}

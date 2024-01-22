@@ -1,0 +1,109 @@
+<app-header></app-header>
+<div class="container" style="min-width: 90%; padding-top: 2em">
+  <div class="col input-container">
+    <div class="input-group">
+      <div class="search-container">
+        <input (input)="onTextInput()" [(ngModel)]="animalSearch.name"
+               placeholder="{{'ANIMAL_SEARCH.NAME' | translate}}" class="form-control">
+      </div>
+
+      <div class="search-container">
+        <select class="form-select" id="animalGender" name="animalGender" [(ngModel)]="animalSearch.gender"
+                (change)="onInput()">
+          <option value="" selected>{{'ANIMAL_SEARCH.ALL_GENDERS' | translate}}</option>
+          <option value="FEMALE">{{'ANIMAL_SEARCH.FEMALE' | translate}}</option>
+          <option value="MALE">{{'ANIMAL_SEARCH.MALE' | translate}}</option>
+        </select>
+      </div>
+      <div class="search-container">
+        <select class="form-select" id="animalSpecies" name="animalSpecies" [(ngModel)]="animalSearch.species"
+                (change)="onInput()">
+          <option value="" selected>{{'ANIMAL_SEARCH.ALL_SPECIES' | translate}}</option>
+          <option value="DOG">{{'ANIMAL_SEARCH.DOG' | translate}}</option>
+          <option value="CAT">{{'ANIMAL_SEARCH.CAT' | translate}}</option>
+          <option value="BIRD">{{'ANIMAL_SEARCH.BIRD' | translate}}</option>
+          <option value="RODENT">{{'ANIMAL_SEARCH.RODENT' | translate}}</option>
+        </select>
+      </div>
+      <div class="search-container" style="max-width: 8em">
+        <input (input)="onTextInput()" [(ngModel)]="animalSearch.race"
+               placeholder="{{'ANIMAL_SEARCH.RACE' | translate}}"
+               class="form-control">
+      </div>
+      <div class="search-container">
+        <select class="form-select" id="dateModifierSelect" name="dateModifierSelect"
+                (change)="dateModifierSelectChange()" [(ngModel)]="birthDateMode">
+          <option value="BORN_AFTER" selected>{{'ANIMAL_SEARCH.BORN_AFTER' | translate}}</option>
+          <option value="BORN_BEFORE">{{'ANIMAL_SEARCH.BORN_BEFORE' | translate}}</option>
+        </select>
+      </div>
+      <div class="search-container">
+        <input *ngIf="birthDateMode==='BORN_AFTER'" type="date"
+               pattern="\d{4}-\d{2}-\d{2}" max="{{today}}"
+               class="form-control" (change)="onInput()"
+               [(ngModel)]="animalSearch.bornAfter"
+               [class]="dynamicCssClassesForInput(AnimalSearchBornAfterModel)"
+               #AnimalSearchBornAfterModel="ngModel"
+        >
+        <input *ngIf="birthDateMode==='BORN_BEFORE'" type="date"
+               pattern="\d{4}-\d{2}-\d{2}"
+               class="form-control" max="{{today}}" (change)="onInput()"
+               [(ngModel)]="animalSearch.bornBefore"
+               [class]="dynamicCssClassesForInput(AnimalSearchBornBeforeModel)"
+               #AnimalSearchBornBeforeModel="ngModel"
+        >
+      </div>
+      <div class="search-container">
+        <select class="form-select" id="heightModifierSelect" name="heightModifierSelect"
+                (change)="heightModifierSelectChange()" [(ngModel)]="heightMode">
+          <option value="TALLER_THAN" selected>{{'ANIMAL_SEARCH.TALLER_THAN' | translate}}</option>
+          <option value="SMALLER_THAN">{{'ANIMAL_SEARCH.SMALLER_THAN' | translate}}</option>
+        </select>
+      </div>
+      <div class="search-container" style="max-width: 6em">
+        <input *ngIf="this.heightMode === 'TALLER_THAN'" type="number" class="form-control" step="0.01" placeholder="m"
+               [(ngModel)]="animalSearch.tallerThan" (change)="onInput()">
+        <input *ngIf="this.heightMode === 'SMALLER_THAN'" type="number" class="form-control" step="0.01" placeholder="m"
+               [(ngModel)]="animalSearch.smallerThan" (change)="onInput()">
+      </div>
+      <div class="search-container">
+        <select class="form-select" id="weightModifierSelect" name="weightModifierSelect"
+                (change)="weightModifierSelectChange()" [(ngModel)]="weightMode">
+          <option value="HEAVIER_THAN" selected>{{'ANIMAL_SEARCH.HEAVIER_THAN' | translate}}</option>
+          <option value="LIGHTER_THAN">{{'ANIMAL_SEARCH.LIGHTER_THAN' | translate}}</option>
+        </select>
+      </div>
+      <div class="search-container" style="max-width: 6em">
+        <input *ngIf="this.weightMode === 'HEAVIER_THAN'" type="number" class="form-control" step="0.01" placeholder="kg"
+               [(ngModel)]="animalSearch.heavierThan" (change)="onInput()">
+        <input *ngIf="this.weightMode === 'LIGHTER_THAN'" type="number" class="form-control" step="0.01" placeholder="kg"
+               [(ngModel)]="animalSearch.lighterThan" (change)="onInput()">
+      </div>
+    </div>
+
+
+  </div>
+  <div id="animal-cards" class="row">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3"
+         *ngFor="let animal of animals | paginate: { itemsPerPage: 12, currentPage: pageNumber }">
+      <div class="card animal-card">
+        <a routerLink="/animal/{{animal.id}}" style="position: relative;">
+          <app-content [mode]="Mode.ANIMAL" [id]="animal.id" setClass="card-img-top"/>
+        </a>
+        <div class="card-body" style="padding-bottom: 0.5em">
+          <div class="row">
+
+            <h5 class="card-title" style="font-weight:bold;color: #64B5F6">{{ animal.name }}
+              ({{ globals.currentLanguage === "de" ? animal.germanRace : animal.englishRace }})</h5>
+            <h6 style="color: #f08fb4">{{'ANIMAL_SEARCH.SHELTER' | translate}}: {{animal.shelter.name}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div *ngIf="animals.length>12" class="d-flex justify-content-center pagination-container">
+    <pagination-controls (pageChange)="pageNumber = $event"></pagination-controls>
+  </div>
+</div>
