@@ -16,4 +16,5 @@ import java.util.UUID;
 public class PreferenceRequestDto {
     private UUID animalId;
     private UUID userId;
+    private boolean like;
 }

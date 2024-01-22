@@ -43,6 +43,7 @@ public class PreferenceEndpoint {
     public void like(@Valid @RequestBody PreferenceRequestDto request) throws NotFoundException {
         UUID animalId = request.getAnimalId();
         UUID userId = request.getUserId();
+        boolean like = request.getLike();
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n{}\n{}", animalId, userId);
         preferenceService.like(animalId, userId);

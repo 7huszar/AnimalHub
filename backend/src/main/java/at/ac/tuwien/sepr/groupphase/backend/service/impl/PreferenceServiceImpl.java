@@ -83,13 +83,10 @@ public class PreferenceServiceImpl implements PreferenceService {
         age /= getLikedAnimals(userId).size();
         traitPoints.put("age", age);
 
-
         if (!traitPoints.containsKey("gender_" + animal.getGender())) {
             traitPoints.put("gender_" + animal.getGender(), 1.0);
         }
         traitPoints.put("gender_" + animal.getGender(), traitPoints.get("gender_" + animal.getGender()) * 1.01);
-
-
     }
 
     @Override
@@ -136,10 +133,10 @@ public class PreferenceServiceImpl implements PreferenceService {
             animalRanking.add(new AnimalRankingDto(animal, score));
         }
         animalRanking.sort(new Comparator<AnimalRankingDto>() {
-          @Override
-          public int compare(AnimalRankingDto o1, AnimalRankingDto o2) {
-            return Double.compare(o2.getScore(), o1.getScore());
-          }
+            @Override
+            public int compare(AnimalRankingDto o1, AnimalRankingDto o2) {
+                return Double.compare(o2.getScore(), o1.getScore());
+            }
         });
 
         return animalRanking;
