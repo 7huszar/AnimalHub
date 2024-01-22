@@ -15,12 +15,18 @@ export class PreferencesService {
 
   }
 
-  loadPreferencesByUserId(UserId: string): Observable<PreferenceDto[]> {
-    return this.httpClient.get<PreferenceDto[]>(this.preferenceBaseUri + '/' + UserId)
+  loadPreferencesByUserId(userId: string): Observable<PreferenceDto[]> {
+    return this.httpClient.get<PreferenceDto[]>(this.preferenceBaseUri + '/' + userId)
   }
   updatePreference(preference: PreferenceDto): Observable<PreferenceDto> {
     return this.httpClient.put<PreferenceDto>(this.preferenceBaseUri + '/', preference)
   }
+
+  /*like(userId: string, animalId: string)
+
+   */
+
+
 }
 
 
