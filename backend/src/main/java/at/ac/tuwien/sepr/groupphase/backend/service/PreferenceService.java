@@ -18,5 +18,7 @@ public interface PreferenceService {
     List<AnimalDetailDto> getDislikedAnimals(UUID userId) throws NotFoundException;
 
     List<AnimalDetailDto> getLikedAnimals(UUID userId) throws NotFoundException;
+
+    void dislike(UUID animalId, UUID userId);
 }
 

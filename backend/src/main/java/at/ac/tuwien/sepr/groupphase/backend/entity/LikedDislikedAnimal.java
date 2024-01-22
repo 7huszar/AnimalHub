@@ -24,7 +24,6 @@ import java.util.Map;
 @AllArgsConstructor
 @Table(name = "LIKEDDISLIKEDANIMAL")
 @IdClass(LikedDislikedAnimalId.class)
-
 public class LikedDislikedAnimal {
 
     @Id
@@ -36,5 +35,5 @@ public class LikedDislikedAnimal {
     private Animal animal;
 
     @Column(nullable = false)
-    private boolean like;
+    private boolean liked;
 }

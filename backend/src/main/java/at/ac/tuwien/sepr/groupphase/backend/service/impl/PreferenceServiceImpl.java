@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,14 +51,13 @@ public class PreferenceServiceImpl implements PreferenceService {
         var user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User with id " + userId + " does not exist.")
         );
-
-        //TODO: implement here @Tobias
         var animal2 = animalRepository.findById(animalId).orElseThrow(
             () -> new NotFoundException("Animal with id " + animalId + " does not exist.")
         );
         likedDislikedAnimalRepository.save(LikedDislikedAnimal.builder()
             .user(user)
             .animal(animal2)
+            .liked(true)
             .build());
 
 
@@ -165,7 +162,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         //TODO: implement @Tobias
         LOGGER.trace("Find all disliked Animals");
 
-        return likedDislikedAnimalRepository.findByUserIdAndLike(userId, false).stream()
+        return likedDislikedAnimalRepository.findByUserIdAndLiked(userId, false).stream()
             .map(this::mapToAnimalDetailDto).toList();
     }
 
@@ -174,11 +171,16 @@ public class PreferenceServiceImpl implements PreferenceService {
         //TODO: implement @Tobias
         LOGGER.trace("Find all liked Animals");
 
-        return likedDislikedAnimalRepository.findByUserIdAndLike(userId, true).stream()
+        return likedDislikedAnimalRepository.findByUserIdAndLiked(userId, true).stream()
             .map(this::mapToAnimalDetailDto).toList();
     }
 
     private AnimalDetailDto mapToAnimalDetailDto(LikedDislikedAnimal animal) {
         return animalShelterMapper.animalToAnimalDetailDto(animal.getAnimal());
+    }
+
+    @Override
+    public void dislike(UUID animalId, UUID userId) {
+
     }
 }
