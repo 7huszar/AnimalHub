@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AnimalDto} from "../../dtos/animal";
-import  {ShelterService} from "../../services/shelter.service";
+import {ShelterService} from "../../services/shelter.service";
 import {ShelterDetailDto} from "../../dtos/shelter";
 import {ActivatedRoute} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
@@ -18,7 +18,6 @@ import {AppointmentStatus} from "../../enums/appointment";
 import {AppointmentService} from "../../services/appointment.service";
 
 
-
 @Component({
   selector: 'app-shelter',
   templateUrl: './shelter.component.html',
@@ -31,6 +30,7 @@ export class ShelterComponent implements OnInit {
 
   protected animals: AnimalDto[] = [];
   protected shelter: ShelterDetailDto;
+  protected pendingAmount: number;
 
   constructor(private shelterService: ShelterService,
               private route: ActivatedRoute,
@@ -75,6 +75,14 @@ export class ShelterComponent implements OnInit {
   }
 
   private loadUpcomingAppointments(): void {
+    this.appointmentService.findByShelterIdWithStatus(this.shelter.id, AppointmentStatus.PENDING).subscribe(pendingAppointments => {
+      if (pendingAppointments.length > 0) {
+        this.pendingAmount = pendingAppointments.length;
+      } else {
+        this.pendingAmount = null;
+      }
+    });
+
     // TODO replace load only upcoming
     this.appointmentService.findByShelterId(this.shelter.id).subscribe(appointments => {
       this.calendarComponent.getApi().removeAllEvents();

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.appointment.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.AppointmentStatus;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,6 +56,14 @@ public class AppointmentEndpoint {
     public List<AppointmentDto> findByShelterId(@PathVariable UUID id) {
         // TODO log
         return appointmentService.findByShelterId(id);
+    }
+
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    @GetMapping("shelter/{id}/{status}")
+    @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
+    public List<AppointmentDto> findByShelterIdWithStatus(@PathVariable UUID id, @PathVariable AppointmentStatus status) {
+        // TODO log
+        return appointmentService.findByShelterIdWithStatus(id, status);
     }
 
     @Secured(UserRole.Values.USER_VALUE)

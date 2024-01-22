@@ -62,6 +62,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public List<AppointmentDto> findByShelterIdWithStatus(UUID id, AppointmentStatus status) {
+
+        // TODO validation
+
+        return appointmentRepository.findByShelterIdAndStatus(id, status).stream()
+            .map(appointmentMapper::appointmentToAppointmentDto)
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public AppointmentDto create(AppointmentDto appointmentDto) {
 
         // TODO validate and conflict check
