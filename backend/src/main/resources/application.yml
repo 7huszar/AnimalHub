@@ -95,9 +95,6 @@ threadpool:
   maxPoolSize: 16
   queueCapacity: 128
 
-frontend:
-  url: http://localhost:4200/#
-
 mail:
   email: animalhub.service@gmail.com
 
@@ -158,3 +155,14 @@ spring:
           starttls:
             enable: false
             required: false
+---
+spring:
+  frontend:
+    url: http://localhost:4200/#
+---
+spring:
+  config:
+    activate:
+      on-cloud-platform: kubernetes
+  frontend:
+    url: https://23ws-se-pr-qse-12-oerc8ofbpcvccyz4z49jt.apps.student.inso-w.at/
