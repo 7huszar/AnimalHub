@@ -44,6 +44,8 @@ public class MailService {
      */
     @Async
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
+        LOGGER.trace("sendVerificationMail({}, {}, {})", email, language, regStamp);
+
         if (timeoutCollector.hasTimeout(email)) {
             LOGGER.warn(email + " has timout");
             return;
@@ -68,6 +70,8 @@ public class MailService {
      */
     @Async
     public void sendResetPasswordMail(String email, String language) {
+        LOGGER.trace("sendResetPasswordMail({},{})", email, language);
+
         if (timeoutCollector.hasTimeout(email)) {
             LOGGER.warn(email + " has timout");
             return;
