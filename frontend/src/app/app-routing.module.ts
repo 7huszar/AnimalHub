@@ -18,6 +18,7 @@ import {PasswordVerifyComponent} from "./pages/password-reset/password-verify/pa
 import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.component";
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
+import {AppointmentComponent} from "./pages/appointment/appointment.component";
 import {SuccessComponent} from "./components/donation/success/success.component";
 import {StatisticComponent} from "./pages/home/member-profile/statistic/statistic.component";
 import {AnimalSearchComponent} from "./pages/animal-search/animal-search.component";
@@ -102,10 +103,17 @@ const routes: Routes = [
         component: ContactFormComponent,
         data: {access: Mode.USER} },
 
+      {
+        path: 'appointments',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: AppointmentComponent,
+        data: {mode: Mode.SHELTER, access: Mode.MEMBER}
+      },
+
       { path: ':id',
         canActivate: mapToCanActivate([AuthGuard]),
         component: ShelterComponent,
-        data: {access: Mode.USER}}
+        data: {access: Mode.USER} }
     ] },
 
   { path: 'users', children: [
@@ -128,6 +136,13 @@ const routes: Routes = [
         canActivate: mapToCanActivate([AuthGuard]),
         component: MemberEditShelterComponent,
         data: {access: Mode.USER}},
+
+      {
+        path: 'appointments',
+        canActivate: mapToCanActivate([AuthGuard]),
+        component: AppointmentComponent,
+        data: {mode: Mode.USER, access: Mode.USER}
+      }
     ] },
 
   { path: 'donation/success',

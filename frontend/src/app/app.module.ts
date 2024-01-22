@@ -47,6 +47,9 @@ import { SuccessComponent } from './components/donation/success/success.componen
 import { FailureComponent } from './components/donation/failure/failure.component';
 import { StatisticComponent } from './pages/home/member-profile/statistic/statistic.component';
 import { AnimalSearchComponent } from './pages/animal-search/animal-search.component';
+import { AppointmentComponent } from './pages/appointment/appointment.component';
+import { FullCalendarModule } from "@fullcalendar/angular";
+import { AppointmentModalComponent } from './components/appointment-modal/appointment-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -88,8 +91,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     FailureComponent,
     StatisticComponent,
     EmailFieldComponent,
-    AnimalSearchComponent
-
+    AnimalSearchComponent,
+    EmailFieldComponent,
+    AppointmentComponent,
+    AppointmentModalComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +114,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
       defaultLanguage: 'de'
     }),
-    NgOptimizedImage
+    NgOptimizedImage,
+    FullCalendarModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

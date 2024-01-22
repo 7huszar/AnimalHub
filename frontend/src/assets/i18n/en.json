@@ -191,6 +191,28 @@
     "FAILED": "Failed to send message",
     "CONTACT": "Contact"
   },
+
+  "APPOINTMENT": {
+    "APPOINTMENTS": "Appointments",
+    "MANAGEMENT": "Manage Appointments",
+    "USER_HEADER": "Manage your Appointments",
+    "SHELTER_HEADER": "Manage Shelter Appointments",
+    "CREATE": "Create Appointment",
+    "INFO": "Appointment Information",
+    "USER_EMAIL": "User-Email",
+    "SHELTER": "Shelter",
+    "ANIMAL": "Animal",
+    "PLAY": "Play",
+    "WALK": "Walk",
+    "TYPE": "Appointment-Type",
+    "TITLE": "Title",
+    "MSG": "Message",
+    "CREATE_BTN": "Create",
+    "CONFIRM_BTN": "Confirm",
+    "DECLINE_BTN": "Decline",
+    "DELETE_BTN": "Delete"
+  },
+
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"
