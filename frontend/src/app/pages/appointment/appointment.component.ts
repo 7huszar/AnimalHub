@@ -38,14 +38,14 @@ export class AppointmentComponent implements OnInit {
       height: 'auto',
       contentHeight: 'auto',
       initialView: 'dayGridMonth',
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin],
+      plugins: [dayGridPlugin, timeGridPlugin, bootstrap5Plugin],
       locales: [enLocale, deLocale],
       locale: this.translate.currentLang,
       themeSystem: 'bootstrap5',
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       eventClick: info => {
         this.openModal(info);
@@ -64,7 +64,7 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
-  private loadAppointments(): void {
+  loadAppointments(): void {
     if (this.mode === Mode.USER) {
       this.appointmentService.findByUserId(this.authService.getUser().id).subscribe(appointments => {
         this.calendarComponent.getApi().removeAllEvents();

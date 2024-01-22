@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {
   NgbCalendar,
   NgbDate,
@@ -24,6 +24,7 @@ export class AppointmentModalComponent implements OnInit{
 
   @ViewChild('content') content: TemplateRef<any>;
 
+  @Output() actionPerformed = new EventEmitter<void>();
   @Input() type: Mode;  // SHELTER | ANIMAL
   @Input() mode: Mode;  // CREATE | CONFIRM | DELETE
   @Input() header: string;
@@ -100,7 +101,7 @@ export class AppointmentModalComponent implements OnInit{
 
     this.appointmentService.create(this.appointment).subscribe(value => {
       console.log('create appointment called!', value);
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
   }
 
@@ -109,7 +110,7 @@ export class AppointmentModalComponent implements OnInit{
 
     this.appointmentService.updateStatus(this.appointment).subscribe(value => {
       console.log('status updated!', value);
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
   }
 
@@ -118,14 +119,19 @@ export class AppointmentModalComponent implements OnInit{
 
     this.appointmentService.updateStatus(this.appointment).subscribe(value => {
       console.log('status updated!', value);
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
   }
 
   public delete() {
     this.appointmentService.delete(this.appointment.id).subscribe(() => {
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
+  }
+
+  private actionFinished(): void {
+    this.actionPerformed.emit();
+    this.modalService.dismissAll();
   }
 
   onDateSelection(date: NgbDate, datepicker: NgbInputDatepicker) {
