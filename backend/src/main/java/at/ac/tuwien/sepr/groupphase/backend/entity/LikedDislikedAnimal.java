@@ -36,5 +36,5 @@ public class LikedDislikedAnimal {
     private Animal animal;
 
     @Column(nullable = false)
-    private int preference;
+    private boolean like;
 }

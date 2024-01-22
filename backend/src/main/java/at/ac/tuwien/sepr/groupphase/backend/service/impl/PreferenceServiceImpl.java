@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PreferenceId;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,7 @@ public class PreferenceServiceImpl implements PreferenceService {
     private final LikedDislikedAnimalRepository likedDislikedAnimalRepository;
 
     private final AnimalRepository animalRepository;
+    private final AnimalShelterMapper animalShelterMapper;
 
     @Override
     @Transactional
@@ -160,12 +164,22 @@ public class PreferenceServiceImpl implements PreferenceService {
     @Override
     public List<AnimalDetailDto> getDislikedAnimals(UUID userId) throws NotFoundException {
         //TODO: implement @Tobias
-        return null;
+        LOGGER.trace("Find all disliked Animals");
+
+        return likedDislikedAnimalRepository.findByUserIdAndLike(userId, false).stream()
+            .map(this::mapToAnimalDetailDto).toList();
     }
 
     @Override
     public List<AnimalDetailDto> getLikedAnimals(UUID userId) throws NotFoundException {
         //TODO: implement @Tobias
-        return null;
+        LOGGER.trace("Find all liked Animals");
+
+        return likedDislikedAnimalRepository.findByUserIdAndLike(userId, true).stream()
+            .map(this::mapToAnimalDetailDto).toList();
+    }
+
+    private AnimalDetailDto mapToAnimalDetailDto(LikedDislikedAnimal animal) {
+        return animalShelterMapper.animalToAnimalDetailDto(animal.getAnimal());
     }
 }
