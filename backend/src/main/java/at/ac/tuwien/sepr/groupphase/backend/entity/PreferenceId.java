@@ -15,7 +15,9 @@ import java.io.Serializable;
 public class PreferenceId implements Serializable {
 
     private ApplicationUser user;
+
     private Species species;
+
     public PreferenceId() {
     }
 

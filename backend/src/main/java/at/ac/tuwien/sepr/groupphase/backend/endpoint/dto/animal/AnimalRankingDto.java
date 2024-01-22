@@ -38,6 +38,7 @@ public class AnimalRankingDto {
         createdOn = animal.getCreatedOn();
         this.score = score;
     }
+
     private UUID id;
 
     @NotNull(message = "Name must not be null")

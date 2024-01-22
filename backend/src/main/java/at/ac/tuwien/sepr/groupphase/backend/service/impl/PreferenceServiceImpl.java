@@ -2,9 +2,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PreferenceId;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.LikedDislikedAnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PreferenceRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -37,6 +39,8 @@ public class PreferenceServiceImpl implements PreferenceService {
     private final UserRepository userRepository;
     private final LikedDislikedAnimalRepository likedDislikedAnimalRepository;
 
+    private final AnimalRepository animalRepository;
+
     @Override
     @Transactional
     public void like(UUID animalId, UUID userId) throws NotFoundException {
@@ -45,7 +49,17 @@ public class PreferenceServiceImpl implements PreferenceService {
         var user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User with id " + userId + " does not exist.")
         );
+
         //TODO: implement here @Tobias
+        var animal2 = animalRepository.findById(animalId).orElseThrow(
+            () -> new NotFoundException("Animal with id " + animalId + " does not exist.")
+        );
+        likedDislikedAnimalRepository.save(LikedDislikedAnimal.builder()
+            .user(user)
+            .animal(animal2)
+            .build());
+
+
         PreferenceId preferenceId = new PreferenceId(user, animal.getSpecies());
         if (preferenceRepository.findById(preferenceId).isEmpty()) {
             preferenceRepository.save(Preference.builder()
