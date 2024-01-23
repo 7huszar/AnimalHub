@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Globals} from '../global/globals';
 import {Observable} from "rxjs";
 import {PreferenceDto} from "../dtos/preference";
+import {AnimalDetailDto} from "../dtos/animal";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,11 @@ export class PreferencesService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
 
+  }
+
+  getLikedDislikedAnimals(userId: string, like: boolean): Observable<AnimalDetailDto[]> {
+    console.log('Create preference: ' + like);
+    return this.httpClient.get<AnimalDetailDto[]>(this.preferenceBaseUri + '/' + userId + '/' + like);
   }
 
   /*loadPreferencesByUserId(userId: string): Observable<PreferenceDto[]> {

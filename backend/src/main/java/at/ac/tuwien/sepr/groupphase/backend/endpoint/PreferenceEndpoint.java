@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.preference.PreferenceRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -60,5 +61,15 @@ public class PreferenceEndpoint {
         LOGGER.info("GET " + BASE_PATH);
         return preferenceService.getRecommendedAnimals(id);
     }
+
+    @GetMapping("{id}/{like}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get liked animals", security = @SecurityRequirement(name = "apiKey"))
+    public List<AnimalDetailDto> getLikedDislikedAnimals(@PathVariable UUID id, @PathVariable boolean like) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH);
+        if (like) return preferenceService.getLikedAnimals(id);
+        else return preferenceService.getDislikedAnimals(id);
+    }
+
 
 }
