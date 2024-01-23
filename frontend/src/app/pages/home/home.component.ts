@@ -1,17 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {AnimalDetailDto} from "../../dtos/animal";
-import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
-import {TranslateService} from "@ngx-translate/core";
-import {forEach, indexOf} from "lodash";
-import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
-import {Observable} from "rxjs";
-import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
-import {ShelterDetailDto} from "../../dtos/shelter";
 import {PreferencesService} from "../../services/preferences.service";
-import {PreferenceDto} from "../../dtos/preference";
+import {removeElement} from "../../util/util";
 
 @Component({
   selector: 'app-home',
@@ -25,12 +18,7 @@ export class HomeComponent implements OnInit {
   private right: AnimalDetailDto;
 
   protected animalList: AnimalDetailDto[] = [];
-  protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
-  protected likedAnimals2: AnimalDetailDto[] = [];
-  protected dislikedAnimals: AnimalDetailDto[] = [];
-  protected shelterId: string;
-
 
   counter = 1;
   emptyLeft: boolean = false;
@@ -39,98 +27,24 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private animalService: AnimalService,
-    private userService: UserService,
     private notification: ToastrService,
     private notifier: NotifierService,
-    private translator: TranslateService,
     private preferencesService: PreferencesService) {
   }
 
-  animal: AnimalDetailDto = {
-    birthDate: null,
-    createdOn: null,
-    height: 0,
-    id: "",
-    name: "",
-    gender: undefined,
-    englishRace: null,
-    germanRace: null,
-    shelter: undefined,
-    species: undefined,
-    weight: 0,
-  };
-
-  user: UserDetailDto = {
-    email: "",
-    id: "",
-    role: "",
-    shelter: undefined,
-  };
-
-  subscription: SubscriptionDetailDto = {
-    id: "",
-    subscriptionId: "",
-    tier: "",
-    user: undefined,
-    animal: undefined,
-  };
-
-  preference: PreferenceDto = {
-    userId: "",
-    animalId: "",
-    like: undefined
-  };
-
   ngOnInit() {
-    this.animalService.findAll().subscribe({
+    this.initAnimals();
+
+    const user = this.authService.getUser();
+
+    this.preferencesService.getLikedDislikedAnimals(user.id, true).subscribe( {
       next: data => {
-        this.animalList = data;
+        this.likedAnimals = data;
       },
       error: error => {
-        console.error("Failed to load animals", error);
+        console.error("Failed to load liked animals", error);
       }
-    });
-
-    //loading the currently active user
-    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
-    userObservable.subscribe({
-      next: data => {
-        this.user = data;
-        this.subscription.user = this.user;
-        this.shelterId = this.user.shelter?.id;
-        this.preference.userId = this.user?.id;
-        //loading the subscriptions of the user
-        let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
-        subscriptionObservable.subscribe({
-          next: data => {
-            this.subscriptionList = data;
-          },
-          error: error => {
-            //this schould never happen
-            console.error('Error finding subscriptions', error);
-            this.notification.error("Could not find subscriptions");
-          }
-        });
-        this.preferencesService.getLikedDislikedAnimals(this.user.id, true).subscribe( {
-          next: data => {
-            this.likedAnimals2 = data;
-            this.animalList = this.animalList.filter(animal => !this.likedAnimals2.some(likedAnimal =>
-            animal.id === likedAnimal.id));
-            this.loadCards()
-          },
-          error: error => {
-            console.error("Failed to load liked animals", error);
-          }
-        })
-      },
-
-      error: error => {
-        //this should never happen
-        console.error('Error finding user', error);
-        this.notification.error("Could not find logged in user");
-      }
-    });
+    })
   }
 
   loadCards() {
@@ -169,56 +83,81 @@ export class HomeComponent implements OnInit {
   }
 
   like(animal: AnimalDetailDto) {
-    if (this.dislikedAnimals.includes(animal)) {
-      this.dislikedAnimals.splice(this.dislikedAnimals.indexOf(animal), 1);
+    // Remove animal
+    this.animalList = removeElement(this.animalList, animal);
+
+    const pref = {
+      userId: this.authService.getUser().id,
+      animalId: animal.id,
+      like: true
     }
-    if (!this.likedAnimals.includes(animal)) {
-      this.likedAnimals.push(animal);
-    }
-    this.animalList.splice(this.animalList.indexOf(animal), 1);
-    //TODO call preferenceservice
-    this.preference.animalId = animal.id;
-    this.preference.like = true;
-    this.preferencesService.likeDislike(this.preference).subscribe(
-      (response) => {
-        console.log("Success", response);
-        this.preferencesService.getLikedDislikedAnimals(this.user.id, true).subscribe( {
-          next: data => {
-            this.likedAnimals2 = data;
-            this.loadCards();
-          },
-          error: error => {
-            console.error("Failed to load liked animals", error);
-          }
-          }
-        )
+
+    this.preferencesService.likeDislike(pref).subscribe({
+      next: data => {
+        this.likedAnimals.push(animal);
+        this.getNextAnimal();
+      },
+      error: err => {
+        // TODO notify
       }
-    );  }
+    });
+  }
 
   dislike(animal: AnimalDetailDto) {
-    if (this.likedAnimals.includes(animal)) {
-      this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
+    // Remove animal
+    this.animalList = removeElement(this.animalList, animal);
+
+    const pref = {
+      userId: this.authService.getUser().id,
+      animalId: animal.id,
+      like: false
     }
-    if (!this.likedAnimals.includes(animal)) {
-      this.dislikedAnimals.push(animal);
-    }
-    this.animalList.splice(this.animalList.indexOf(animal), 1);
-    this.loadCards();
-    //TODO call preferenceservice
-    this.preference.animalId = animal.id;
-    this.preference.like = false;
-    this.preferencesService.likeDislike(this.preference).subscribe(
-      (response) => {
-        console.log("Success", response);
+
+    this.preferencesService.likeDislike(pref).subscribe({
+      next: data => {
+        this.getNextAnimal();
+      },
+      error: err => {
+        // TODO notify
       }
-    );
+    });
   }
-  remove(animal: AnimalDetailDto){
-    if (this.likedAnimals.includes(animal)) {
-      this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
-      this.animalList.push(animal);
-      this.loadCards();
-    }
+
+  private initAnimals() {
+    this.preferencesService.getRecommendedAnimals(this.authService.getUser().id).subscribe({
+        next: data => {
+          this.animalList.push(data.shift());
+          this.animalList.push(data.shift());
+          this.animalList.push(data.shift());
+          this.loadCards();
+        },
+        error: err => {
+          // TODO notify
+        }
+    });
+  }
+
+  private getNextAnimal() {
+    this.preferencesService.getRecommendedAnimals(this.authService.getUser().id).subscribe({
+        next: animals => {
+          animals.some(animal => {
+            if (!this.animalList.find(element => element.id === animal.id)) {
+              this.animalList.push(animal);
+              this.loadCards();
+              return true;
+            }
+          });
+        },
+        error: err => {
+          // TODO notify
+        }
+    })
+  }
+
+  removeLikedAnimal(animal: AnimalDetailDto){
+    // Remove liked animal
+    this.likedAnimals = removeElement(this.likedAnimals, animal);
+
     //TODO call preferenceservice
   }
 
@@ -244,9 +183,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  protected readonly AuthService = AuthService;
   protected readonly Position = Position;
-  protected readonly name = name;
 }
 
 enum Position {
