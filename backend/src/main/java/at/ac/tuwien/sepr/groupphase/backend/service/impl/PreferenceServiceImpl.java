@@ -151,8 +151,10 @@ public class PreferenceServiceImpl implements PreferenceService {
     @Transactional
     public List<AnimalRankingDto> getRecommendedAnimals(UUID userId) throws NotFoundException {
         List<AnimalDetailDto> animals = animalService.findAll();
-        animals.removeAll(getLikedAnimals(userId));
-        animals.removeAll(getDislikedAnimals(userId));
+        List<AnimalDetailDto> likedAnimals = getLikedAnimals(userId);
+        animals.removeIf(animal -> likedAnimals.stream().anyMatch(animal1 -> animal1.getId().equals(animal.getId())));
+        List<AnimalDetailDto> dislikedAnimals = getLikedAnimals(userId);
+        animals.removeIf(animal -> dislikedAnimals.stream().anyMatch(animal1 -> animal1.getId().equals(animal.getId())));
         List<AnimalRankingDto> animalRanking = new ArrayList<>();
         for (AnimalDetailDto animal : animals) {
             double score = 0;
