@@ -50,6 +50,7 @@ import { AnimalSearchComponent } from './pages/animal-search/animal-search.compo
 import { AppointmentComponent } from './pages/appointment/appointment.component';
 import { FullCalendarModule } from "@fullcalendar/angular";
 import { AppointmentModalComponent } from './components/appointment-modal/appointment-modal.component';
+import { StandardLayoutComponent } from './components/standard-layout/standard-layout.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -94,7 +95,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnimalSearchComponent,
     EmailFieldComponent,
     AppointmentComponent,
-    AppointmentModalComponent
+    AppointmentModalComponent,
+    StandardLayoutComponent
   ],
   imports: [
     BrowserModule,

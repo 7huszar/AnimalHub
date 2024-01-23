@@ -22,6 +22,7 @@ import {AppointmentComponent} from "./pages/appointment/appointment.component";
 import {SuccessComponent} from "./components/donation/success/success.component";
 import {StatisticComponent} from "./pages/home/member-profile/statistic/statistic.component";
 import {AnimalSearchComponent} from "./pages/animal-search/animal-search.component";
+import {FailureComponent} from "./components/donation/failure/failure.component";
 
 
 const routes: Routes = [
@@ -145,8 +146,12 @@ const routes: Routes = [
       }
     ] },
 
-  { path: 'donation/success',
-    component: SuccessComponent },
+  { path: 'donation', children: [
+      { path: 'success',
+        component: SuccessComponent },
+      { path: 'failure',
+        component: FailureComponent }
+  ] },
 
   {path: '*', redirectTo: ''}
 ];
