@@ -70,8 +70,11 @@ public class PreferenceEndpoint {
     @Operation(summary = "Get liked animals", security = @SecurityRequirement(name = "apiKey"))
     public List<AnimalDetailDto> getLikedDislikedAnimals(@PathVariable UUID id, @PathVariable boolean like) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
-        if (like) return preferenceService.getLikedAnimals(id);
-        else return preferenceService.getDislikedAnimals(id);
+        if (like) {
+            return preferenceService.getLikedAnimals(id);
+        } else {
+            return preferenceService.getDislikedAnimals(id);
+        }
     }
 
     @DeleteMapping("{userId}/{animalId}")

@@ -225,7 +225,7 @@ public class PreferenceServiceImpl implements PreferenceService {
 
         List<AnimalDetailDto> animals = new ArrayList<>(likedDislikedAnimalRepository.findByUserIdAndLiked(userId, true).stream()
                 .map(this::mapToAnimalDetailDto).toList());
-      animals.removeIf(animal -> animal.getSpecies() != species);
+        animals.removeIf(animal -> animal.getSpecies() != species);
         return animals;
     }
 
