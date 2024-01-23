@@ -31,7 +31,6 @@ public class SubscriptionCleaner {
     public void cleanSubscriptions() {
         LOGGER.trace("cleanSubscriptions()");
 
-
         repository.findAll().forEach((subscription) -> {
             try {
                 endpoint.checkIfSubscriptionActive(subscription.getSubscriptionId(), subscription.getAnimal().getShelter().getId());
@@ -54,10 +53,5 @@ public class SubscriptionCleaner {
 
             donationRepository.save(donation);
         }));
-    }
-
-    @PostConstruct
-    public void hey() {
-        LOGGER.error("hate");
     }
 }

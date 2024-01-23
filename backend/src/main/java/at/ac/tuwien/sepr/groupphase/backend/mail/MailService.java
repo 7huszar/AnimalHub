@@ -29,7 +29,7 @@ public class MailService {
 
     private final JavaMailSender emailSender;
     private final JwtTokenizer jwtTokenizer;
-    private final MailTimeout timeoutCollector;
+    private final TimeoutService timeoutCollector;
     private final ContactValidator contactValidator;
     private final LanguageConfig lang;
     private final FrontendProperties frontend;
@@ -46,11 +46,11 @@ public class MailService {
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
         LOGGER.trace("sendVerificationMail({}, {}, {})", email, language, regStamp);
 
-        if (timeoutCollector.hasTimeout(email)) {
+        if (timeoutCollector.hasTimeout(email + "vm")) {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEmail(email);
+        timeoutCollector.addEntity(new StampedEmail(email + "vm"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailProperties.getEmail());
         message.setTo(email);
@@ -72,11 +72,11 @@ public class MailService {
     public void sendResetPasswordMail(String email, String language) {
         LOGGER.trace("sendResetPasswordMail({},{})", email, language);
 
-        if (timeoutCollector.hasTimeout(email)) {
+        if (timeoutCollector.hasTimeout(email + "pwd")) {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEmail(email);
+        timeoutCollector.addEntity(new StampedEmail(email + "pwd"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailProperties.getEmail());
         message.setTo(email);
