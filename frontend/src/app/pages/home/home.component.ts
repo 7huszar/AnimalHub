@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit {
   private right: AnimalDetailDto;
 
   protected animalList: AnimalDetailDto[] = [];
-  protected preferenceList: PreferenceDto[] = [];
   protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
   protected dislikedAnimals: AnimalDetailDto[] = [];
@@ -79,7 +78,7 @@ export class HomeComponent implements OnInit {
   preference: PreferenceDto = {
     userId: "",
     animalId: "",
-    preference: undefined
+    like: undefined
   };
 
   ngOnInit() {
@@ -100,6 +99,7 @@ export class HomeComponent implements OnInit {
         this.user = data;
         this.subscription.user = this.user;
         this.shelterId = this.user.shelter?.id;
+        this.preference.userId = this.user?.id;
         //loading the subscriptions of the user
         let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
         subscriptionObservable.subscribe({
@@ -119,15 +119,6 @@ export class HomeComponent implements OnInit {
         this.notification.error("Could not find logged in user");
       }
     });
-
-    this.preferencesService.loadPreferencesByUserId(this.user.id).subscribe({
-      next: data => {
-        this.preferenceList = data;
-        //TODO finish
-      }
-    })
-
-
   }
 
   loadCards() {
@@ -175,7 +166,13 @@ export class HomeComponent implements OnInit {
     this.animalList.splice(this.animalList.indexOf(animal), 1);
     this.loadCards();
     //TODO call preferenceservice
-  }
+    this.preference.animalId = animal.id;
+    this.preference.like = true;
+    this.preferencesService.likeDislike(this.preference).subscribe(
+      (response) => {
+        console.log("Success", response);
+      }
+    );  }
 
   dislike(animal: AnimalDetailDto) {
     if (this.likedAnimals.includes(animal)) {
@@ -187,6 +184,13 @@ export class HomeComponent implements OnInit {
     this.animalList.splice(this.animalList.indexOf(animal), 1);
     this.loadCards();
     //TODO call preferenceservice
+    this.preference.animalId = animal.id;
+    this.preference.like = false;
+    this.preferencesService.likeDislike(this.preference).subscribe(
+      (response) => {
+        console.log("Success", response);
+      }
+    );
   }
   remove(animal: AnimalDetailDto){
     if (this.likedAnimals.includes(animal)) {

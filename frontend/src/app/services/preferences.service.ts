@@ -11,20 +11,26 @@ export class PreferencesService {
 
   private preferenceBaseUri: string = this.globals.backendUri + '/preference';
 
+
   constructor(private httpClient: HttpClient, private globals: Globals) {
 
   }
 
-  loadPreferencesByUserId(userId: string): Observable<PreferenceDto[]> {
+  /*loadPreferencesByUserId(userId: string): Observable<PreferenceDto[]> {
     return this.httpClient.get<PreferenceDto[]>(this.preferenceBaseUri + '/' + userId)
   }
   updatePreference(preference: PreferenceDto): Observable<PreferenceDto> {
     return this.httpClient.put<PreferenceDto>(this.preferenceBaseUri + '/', preference)
   }
 
-  /*like(userId: string, animalId: string)
-
    */
+
+  likeDislike(preference: PreferenceDto): Observable<PreferenceDto> {
+    console.log('Create preference: ' + preference.like);
+    return this.httpClient.post<PreferenceDto>(this.preferenceBaseUri, preference);
+  }
+
+
 
 
 }
