@@ -16,7 +16,7 @@
       </button>
       <div class="dropdown-menu bg-primary" aria-labelledby="dropdownMenuButton">
         <!-- Dropdown items go here -->
-        <a class="dropdown-item" *ngIf="authService.isMember()" [routerLink]="['/users/shelter/' + authService.getUserShelter().id]" > Edit Shelter
+        <a class="dropdown-item" *ngIf="authService.isMemberWithShelter()" [routerLink]="['/users/shelter/' + authService.getUserShelter().id]" > Edit Shelter
         </a>
         <a class="dropdown-item" [routerLink]="['/users/subscriptions']">My Subscriptions</a>
       </div>
