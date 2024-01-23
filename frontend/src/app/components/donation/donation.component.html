@@ -25,9 +25,10 @@
                 <div class="form-group" [formGroup]="giveMoney">
 
                   <div class="input-group">
-                    <input id="euros"
-                           formControlName="euros"
+                    <input id="euro"
+                           formControlName="euro"
                            type="text"
+                           allowOnlyNumber
                            placeholder="0"
                            class="form-control" style="text-align: right;">
 
@@ -35,9 +36,10 @@
                       <span class="input-group-text">.</span>
                     </div>
 
-                    <input id="cents"
-                           formControlName="cents"
+                    <input id="cent"
+                           formControlName="cent"
                            type="text"
+                           allowOnlyNumber
                            placeholder="00"
                            class="form-control"
                            maxlength="2" style="width: 45px; flex: none;">

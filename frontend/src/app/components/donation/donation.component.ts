@@ -3,6 +3,7 @@ import {PaypalService} from "../../services/paypal.service";
 import {AuthService} from "../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ShelterDetailDto} from "../../dtos/shelter";
+import Decimal from "decimal.js";
 
 @Component({
   selector: 'app-donation',
@@ -22,7 +23,8 @@ export class DonationComponent {
     formBuilder: UntypedFormBuilder
   ) {
     this.giveMoney = formBuilder.group({
-      arbitrary: ['', [Validators.pattern('\\d+(.\\d{1,2})?')]]
+      euro: ['', [Validators.pattern('\\d+')]],
+      cent: ['', Validators.pattern('\\d*')]
     });
   }
 
@@ -32,10 +34,14 @@ export class DonationComponent {
 
   donate() :void {
     if (this.giveMoney.valid) {
-      console.log(this.giveMoney.get('arbitrary').value);
-      this.service.placeOrder(this.receiver.id, {amount: this.giveMoney.get('arbitrary').value, donator: this.authService.getUser().id}).subscribe({
+      let cents: string = this.giveMoney.get('cent').value;
+      if (cents === '') {
+        cents = '00';
+      }
+      this.service.placeOrder(this.receiver.id,
+        {amount: this.giveMoney.get('euro').value + '.' + cents,
+          donator: this.authService.getUser().id}).subscribe({
         next: next => {
-          console.log(next)
           window.open(next.href);
         },
         error: error => {
