@@ -1,9 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {PaypalService} from "../../services/paypal.service";
-import {AuthService} from "../../services/auth.service";
+import {PaypalService} from "../../../services/paypal.service";
+import {AuthService} from "../../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {ShelterDetailDto} from "../../dtos/shelter";
-import Decimal from "decimal.js";
+import {ShelterDetailDto} from "../../../dtos/shelter";
 
 @Component({
   selector: 'app-donation',
@@ -13,6 +12,7 @@ import Decimal from "decimal.js";
 export class DonationComponent {
 
   @Input() receiver: ShelterDetailDto = null;
+  @Input() width: string = '200px';
 
   clicked: boolean = false;
   giveMoney: UntypedFormGroup;

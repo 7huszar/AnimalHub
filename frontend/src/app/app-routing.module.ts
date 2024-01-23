@@ -19,10 +19,10 @@ import {SubscriptionsComponent} from "./pages/subscriptions/subscriptions.compon
 import {ContactFormComponent} from "./pages/contact-form/contact-form.component";
 import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edit.shelter.component";
 import {AppointmentComponent} from "./pages/appointment/appointment.component";
-import {SuccessComponent} from "./components/donation/success/success.component";
+import {SuccessComponent} from "./components/money-action/donation/success/success.component";
 import {StatisticComponent} from "./pages/home/member-profile/statistic/statistic.component";
 import {AnimalSearchComponent} from "./pages/animal-search/animal-search.component";
-import {FailureComponent} from "./components/donation/failure/failure.component";
+import {FailureComponent} from "./components/money-action/donation/failure/failure.component";
 
 
 const routes: Routes = [

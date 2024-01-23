@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {PaypalService} from "../../../services/paypal.service";
+import {PaypalService} from "../../../../services/paypal.service";
 
 @Component({
   selector: 'app-success',

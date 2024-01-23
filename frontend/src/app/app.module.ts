@@ -42,9 +42,9 @@ import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edi
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordRepeatComponent } from './components/password/password-repeat/password-repeat.component';
 import {EmailFieldComponent} from "./components/email-field/email-field.component";
-import { DonationComponent } from './components/donation/donation.component';
-import { SuccessComponent } from './components/donation/success/success.component';
-import { FailureComponent } from './components/donation/failure/failure.component';
+import { DonationComponent } from './components/money-action/donation/donation.component';
+import { SuccessComponent } from './components/money-action/donation/success/success.component';
+import { FailureComponent } from './components/money-action/donation/failure/failure.component';
 import { StatisticComponent } from './pages/home/member-profile/statistic/statistic.component';
 import { AnimalSearchComponent } from './pages/animal-search/animal-search.component';
 import { AppointmentComponent } from './pages/appointment/appointment.component';
@@ -52,6 +52,8 @@ import { FullCalendarModule } from "@fullcalendar/angular";
 import { AppointmentModalComponent } from './components/appointment-modal/appointment-modal.component';
 import { StandardLayoutComponent } from './components/standard-layout/standard-layout.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
+import { MoneyActionComponent } from './components/money-action/money-action.component';
+import { SubscribeComponent } from './components/money-action/subscribe/subscribe.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -98,7 +100,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppointmentComponent,
     AppointmentModalComponent,
     StandardLayoutComponent,
-    OnlyNumberDirective
+    OnlyNumberDirective,
+    MoneyActionComponent,
+    SubscribeComponent
   ],
   imports: [
     BrowserModule,
