@@ -9,16 +9,14 @@ public class SingleException extends Exception {
 
     private String uiErrorSummary = "";
     private String uiError = "";
-    private String code = "";
 
     public SingleException(String messageSummary) {
         super(messageSummary);
     }
 
-    public SingleException(String messageSummary, String uiErrorSummary, String uiError, String code) {
+    public SingleException(String messageSummary, String uiErrorSummary, String uiError) {
         super(messageSummary);
         this.uiError = uiError;
         this.uiErrorSummary = uiErrorSummary;
-        this.code = code;
     }
 }

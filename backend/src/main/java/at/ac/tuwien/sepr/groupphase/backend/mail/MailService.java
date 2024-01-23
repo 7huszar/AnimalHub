@@ -46,7 +46,6 @@ public class MailService {
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
         LOGGER.trace("sendVerificationMail({}, {}, {})", email, language, regStamp);
 
-        if (timeoutCollector.hasTimeout(email)) {
         if (timeoutCollector.hasTimeout(email + "vm")) {
             LOGGER.warn(email + " has timout");
             return;
@@ -73,12 +72,11 @@ public class MailService {
     public void sendResetPasswordMail(String email, String language) {
         LOGGER.trace("sendResetPasswordMail({},{})", email, language);
 
-        if (timeoutCollector.hasTimeout(email)) {
         if (timeoutCollector.hasTimeout(email + "pwd")) {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEntity(new StampedEmail(email + "pdw"));
+        timeoutCollector.addEntity(new StampedEmail(email + "pwd"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailProperties.getEmail());
         message.setTo(email);

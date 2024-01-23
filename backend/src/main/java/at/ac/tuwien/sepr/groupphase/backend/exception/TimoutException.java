@@ -4,8 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class TimoutException extends SingleException {
+
     private final long timeout;
-    public TimoutException(String messageSummary, int timeout) {
+
+    public TimoutException(String messageSummary, long timeout) {
         super(messageSummary);
         this.timeout = timeout;
     }

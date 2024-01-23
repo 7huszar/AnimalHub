@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService {
     private final UserValidator userValidator;
     private final SecurityProperties securityProperties;
     private final UserMapper userMapper;
-    private final AnimalShelterMapper shelterMapper;
     private final UserConflict conflict;
     private final MailService mail;
     private final DonationRepository donationRepository;
@@ -157,7 +156,7 @@ public class UserServiceImpl implements UserService {
     public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, TimoutException {
         LOGGER.trace("login({}, {})", userLoginDto, request);
         if (timeoutService.hasTimeout(request.getRemoteAddr())) {
-            throw new TimoutException("user by ip " + request.getRemoteAddr() + "has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
+            throw new TimoutException("user by ip " + request.getRemoteAddr() + " has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
         }
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails;

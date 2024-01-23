@@ -40,7 +40,7 @@ public class LoginEndpoint {
         LOGGER.debug("login({})", userLoginDto);
         try {
             token = userService.login(userLoginDto, request);
-        } catch (UsernameNotFoundException | BadCredentialsException e) {
+        } catch (UsernameNotFoundException | NotFoundException | BadCredentialsException e) {
             LOGGER.warn(e.getMessage());
             throw new NotAuthorizedException("Failed to login user");
         } catch (TimoutException e) {

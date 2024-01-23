@@ -34,7 +34,7 @@ public class StampedEmail implements Blockable {
 
     @Override
     public boolean decrement() {
-        return false;
+        return true;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class StampedEmail implements Blockable {
         return "StampedEmail{email=" + email + ", stamp=" + timestamp.toString() + "}";
     }
 
-    Override
+    @Override
     public long remainingTimout() {
         return this.getDelay(TimeUnit.MICROSECONDS);
     }

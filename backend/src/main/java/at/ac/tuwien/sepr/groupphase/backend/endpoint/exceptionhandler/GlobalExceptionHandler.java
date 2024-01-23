@@ -107,6 +107,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             .setMessage("Action hast timeout for user");
         return handleExceptionInternal(e, dto, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
+
     @ExceptionHandler(value = {PaypalException.class})
     protected ResponseEntity<Object> handlePaypalException(PaypalException e, WebRequest request) {
         return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);

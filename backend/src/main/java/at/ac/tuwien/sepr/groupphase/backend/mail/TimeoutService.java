@@ -34,7 +34,9 @@ public class TimeoutService {
     public long remainingTimout(String blocked) {
         if (this.blocked.containsKey(blocked)) {
             return this.blocked.get(blocked).remainingTimout();
-        } else return 0;
+        } else {
+            return 0;
+        }
     }
 
     @PostConstruct
