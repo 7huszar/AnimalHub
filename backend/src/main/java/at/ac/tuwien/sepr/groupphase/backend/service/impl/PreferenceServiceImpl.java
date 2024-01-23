@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PreferenceId;
+import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.LikedDislikedAnimalRepository;
@@ -46,17 +47,16 @@ public class PreferenceServiceImpl implements PreferenceService {
     @Override
     @Transactional
     public void like(UUID animalId, UUID userId) throws NotFoundException {
-        LOGGER.trace("Change Preferences, animal with id {} user with id{}", animalId, userId);
-        AnimalDetailDto animal = animalService.findById(animalId);
+        LOGGER.trace("like animal with id {} user with id{}", animalId, userId);
         var user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User with id " + userId + " does not exist.")
         );
-        var animal2 = animalRepository.findById(animalId).orElseThrow(
+        var animal = animalRepository.findById(animalId).orElseThrow(
             () -> new NotFoundException("Animal with id " + animalId + " does not exist.")
         );
         likedDislikedAnimalRepository.save(LikedDislikedAnimal.builder()
             .user(user)
-            .animal(animal2)
+            .animal(animal)
             .liked(true)
             .build());
 
@@ -91,17 +91,53 @@ public class PreferenceServiceImpl implements PreferenceService {
             height += animalDetailDto.getHeight();
             age += Period.between(animalDetailDto.getBirthDate(), LocalDate.now()).getYears();
         }
-        weight /= getLikedAnimals(userId).size();
+        weight /= getLikedSpecies(userId, animal.getSpecies()).size();
         traitPoints.put("weight", weight);
-        height /= getLikedAnimals(userId).size();
+        height /= getLikedSpecies(userId, animal.getSpecies()).size();
         traitPoints.put("height", height);
-        age /= getLikedAnimals(userId).size();
+        age /= getLikedSpecies(userId, animal.getSpecies()).size();
         traitPoints.put("age", age);
 
         if (!traitPoints.containsKey("gender_" + animal.getGender())) {
             traitPoints.put("gender_" + animal.getGender(), 1.0);
         }
         traitPoints.put("gender_" + animal.getGender(), traitPoints.get("gender_" + animal.getGender()) * 1.01);
+    }
+
+    @Override
+    public void dislike(UUID animalId, UUID userId) throws NotFoundException {
+        LOGGER.trace("Change Preferences, animal with id {} user with id{}", animalId, userId);
+        AnimalDetailDto animal = animalService.findById(animalId);
+        var user = userRepository.findById(userId).orElseThrow(
+            () -> new NotFoundException("User with id " + userId + " does not exist.")
+        );
+        var animal2 = animalRepository.findById(animalId).orElseThrow(
+            () -> new NotFoundException("Animal with id " + animalId + " does not exist.")
+        );
+        likedDislikedAnimalRepository.save(LikedDislikedAnimal.builder()
+            .user(user)
+            .animal(animal2)
+            .liked(true)
+            .build());
+
+
+        PreferenceId preferenceId = new PreferenceId(user, animal.getSpecies());
+        if (preferenceRepository.findById(preferenceId).isEmpty()) {
+            preferenceRepository.save(Preference.builder()
+                .user(user)
+                .species(animal.getSpecies())
+                .speciesFactor(1)
+                .traitPointMap(new HashMap<>())
+                .build());
+        }
+        Preference preference = preferenceRepository.findById(preferenceId).get();
+        preference.setSpeciesFactor((preference.getSpeciesFactor() * 0.99));
+        preferenceRepository.save(preference);
+        Map<String, Double> traitPoints = preference.getTraitPointMap();
+        if (!traitPoints.containsKey("gender_" + animal.getGender())) {
+            traitPoints.put("gender_" + animal.getGender(), 1.0);
+        }
+        traitPoints.put("gender_" + animal.getGender(), traitPoints.get("gender_" + animal.getGender()) * 0.99);
     }
 
     @Override
@@ -162,7 +198,6 @@ public class PreferenceServiceImpl implements PreferenceService {
 
     @Override
     public List<AnimalDetailDto> getDislikedAnimals(UUID userId) throws NotFoundException {
-        //TODO: implement @Tobias
         LOGGER.trace("Find all disliked Animals");
 
         return likedDislikedAnimalRepository.findByUserIdAndLiked(userId, false).stream()
@@ -171,19 +206,27 @@ public class PreferenceServiceImpl implements PreferenceService {
 
     @Override
     public List<AnimalDetailDto> getLikedAnimals(UUID userId) throws NotFoundException {
-        //TODO: implement @Tobias
         LOGGER.trace("Find all liked Animals");
 
         return likedDislikedAnimalRepository.findByUserIdAndLiked(userId, true).stream()
             .map(this::mapToAnimalDetailDto).toList();
     }
 
+    @Override
+    public List<AnimalDetailDto> getLikedSpecies(UUID userId, Species species) throws NotFoundException {
+        LOGGER.trace("Find all liked Animals with species {}", species);
+
+        List<AnimalDetailDto> animals = new ArrayList<>(likedDislikedAnimalRepository.findByUserIdAndLiked(userId, true).stream()
+                .map(this::mapToAnimalDetailDto).toList());
+      animals.removeIf(animal -> animal.getSpecies() != species);
+        return animals;
+    }
+
     private AnimalDetailDto mapToAnimalDetailDto(LikedDislikedAnimal animal) {
         return animalShelterMapper.animalToAnimalDetailDto(animal.getAnimal());
     }
 
-    @Override
-    public void dislike(UUID animalId, UUID userId) {
 
-    }
+
+
 }
