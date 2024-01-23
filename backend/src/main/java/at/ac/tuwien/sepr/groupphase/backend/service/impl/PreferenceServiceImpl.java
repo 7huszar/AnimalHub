@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.LikedDislikedAnimal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Preference;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PreferenceId;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.LikedDislikedAnimalRepository;
@@ -14,16 +15,22 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.PreferenceRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PreferenceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -197,7 +204,7 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
-    public List<AnimalDetailDto> getDislikedAnimals(UUID userId) throws NotFoundException {
+    public List<AnimalDetailDto> getDislikedAnimals(UUID userId) {
         LOGGER.trace("Find all disliked Animals");
 
         return likedDislikedAnimalRepository.findByUserIdAndLiked(userId, false).stream()
@@ -205,7 +212,7 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
-    public List<AnimalDetailDto> getLikedAnimals(UUID userId) throws NotFoundException {
+    public List<AnimalDetailDto> getLikedAnimals(UUID userId) {
         LOGGER.trace("Find all liked Animals");
 
         return likedDislikedAnimalRepository.findByUserIdAndLiked(userId, true).stream()
@@ -218,8 +225,17 @@ public class PreferenceServiceImpl implements PreferenceService {
 
         List<AnimalDetailDto> animals = new ArrayList<>(likedDislikedAnimalRepository.findByUserIdAndLiked(userId, true).stream()
                 .map(this::mapToAnimalDetailDto).toList());
-      animals.removeIf(animal -> animal.getSpecies() != species);
+        animals.removeIf(animal -> animal.getSpecies() != species);
         return animals;
+    }
+
+    @Override
+    public void removeLikedAnimal(UUID userId, UUID animalId) throws NotFoundException {
+        LOGGER.trace("delete({}{})", userId, animalId);
+
+        var animal = likedDislikedAnimalRepository.findByUserIdAndAnimalId(userId, animalId);
+
+        likedDislikedAnimalRepository.delete(animal);
     }
 
     private AnimalDetailDto mapToAnimalDetailDto(LikedDislikedAnimal animal) {

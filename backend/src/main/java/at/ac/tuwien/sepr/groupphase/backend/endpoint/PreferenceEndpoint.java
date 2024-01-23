@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalRankingDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.preference.PreferenceRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PreferenceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,8 +70,19 @@ public class PreferenceEndpoint {
     @Operation(summary = "Get liked animals", security = @SecurityRequirement(name = "apiKey"))
     public List<AnimalDetailDto> getLikedDislikedAnimals(@PathVariable UUID userId, @PathVariable boolean like) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
-        if (like) return preferenceService.getLikedAnimals(userId);
-        else return preferenceService.getDislikedAnimals(userId);
+        if (like) {
+            return preferenceService.getLikedAnimals(userId);
+        } else {
+            return preferenceService.getDislikedAnimals(userId);
+        }
+    }
+
+    @DeleteMapping("{userId}/{animalId}")
+    @Operation(summary = "Removes animal from likedDisliked", security = @SecurityRequirement(name = "apiKey"))
+    public void removeLikedAnimal(@PathVariable UUID userId, @PathVariable UUID animalId) throws NotFoundException {
+        LOGGER.info("DELETE " + BASE_PATH + "/{}/{}", userId, animalId);
+
+        preferenceService.removeLikedAnimal(userId, animalId);
     }
 
 
