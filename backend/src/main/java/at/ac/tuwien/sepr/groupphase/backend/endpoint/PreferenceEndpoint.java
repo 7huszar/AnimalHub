@@ -54,21 +54,21 @@ public class PreferenceEndpoint {
         }
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{userId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get recommended animals", security = @SecurityRequirement(name = "apiKey"))
-    public List<AnimalRankingDto> getRecommendedAnimals(@PathVariable UUID id) throws NotFoundException {
+    public List<AnimalRankingDto> getRecommendedAnimals(@PathVariable UUID userId) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
-        return preferenceService.getRecommendedAnimals(id);
+        return preferenceService.getRecommendedAnimals(userId);
     }
 
-    @GetMapping("{id}/{like}")
+    @GetMapping("{userId}/{like}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get liked animals", security = @SecurityRequirement(name = "apiKey"))
-    public List<AnimalDetailDto> getLikedDislikedAnimals(@PathVariable UUID id, @PathVariable boolean like) throws NotFoundException {
+    public List<AnimalDetailDto> getLikedDislikedAnimals(@PathVariable UUID userId, @PathVariable boolean like) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH);
-        if (like) return preferenceService.getLikedAnimals(id);
-        else return preferenceService.getDislikedAnimals(id);
+        if (like) return preferenceService.getLikedAnimals(userId);
+        else return preferenceService.getDislikedAnimals(userId);
     }
 
 
