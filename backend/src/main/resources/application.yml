@@ -165,4 +165,4 @@ spring:
     activate:
       on-cloud-platform: kubernetes
   frontend:
-    url: https://23ws-se-pr-qse-12-oerc8ofbpcvccyz4z49jt.apps.student.inso-w.at/
+    url: https://23ws-se-pr-qse-12-oerc8ofbpcvccyz4z49jt.apps.student.inso-w.at/#
