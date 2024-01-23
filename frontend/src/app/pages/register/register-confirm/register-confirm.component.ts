@@ -7,7 +7,7 @@ import {jwtDecode} from "jwt-decode";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-register-confirm',
+  selector: 'app-email-field-confirm',
   templateUrl: './register-confirm.component.html',
   styleUrls: ['./register-confirm.component.scss']
 })

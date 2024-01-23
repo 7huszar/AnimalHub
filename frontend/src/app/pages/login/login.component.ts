@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../services/notifier.service";
+import {EmailFieldComponent} from "../../components/email-field/email-field.component";
+import {PasswordComponent} from "../../components/password/password.component";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +15,9 @@ import {NotifierService} from "../../services/notifier.service";
 })
 export class LoginComponent {
 
-  loginForm: UntypedFormGroup;
+   @ViewChild('emailField') emailField: EmailFieldComponent;
+   @ViewChild('pwdField') pwdField: PasswordComponent;
+
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
@@ -22,42 +26,22 @@ export class LoginComponent {
   isPwdInvalid: boolean = false;
   delayed: boolean = false;
 
-  pwdField: string = 'password';
-
   constructor(
-    private formBuilder: UntypedFormBuilder,
     private authService: AuthService,
     private router: Router,
     private notification: NotifierService
    ) {
-    this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]]
-    });
-    this.loginForm.valueChanges.subscribe(() => {
-      if (this.failedLogin) {
-        this.submitted = false;
-      }
-    });
-    this.loginForm.get('username').valueChanges.subscribe(() => {
-      this.isEmailInvalid = false;
-    });
-    this.loginForm.get('password').valueChanges.subscribe(() => {
-      this.isPwdInvalid = false;
-    });
   }
 
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
    */
   loginUser() {
-    this.submitted = true;
-    if (this.loginForm.valid) {
-      const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
+    this.emailField.submit();
+    this.pwdField.submit();
+    if (this.emailField.valid() && this.pwdField.valid()) {
+      const authRequest: AuthRequest = new AuthRequest(this.emailField.submit(), this.pwdField.submit());
       this.authenticateUser(authRequest);
-    } else {
-      console.log('Invalid input');
-      this.failedLogin = false;
     }
   }
 
@@ -86,6 +70,8 @@ export class LoginComponent {
       },
       error: error => {
         console.error('Failed to log in:', error);
+        this.emailField.fail();
+        this.pwdField.fail();
         let title: string = 'LOGIN.LOGIN_FAILED';
         // status == 401 / Unauthorized - wrong login credentials
          if (error.status == HttpStatusCode.Unauthorized) {
@@ -105,28 +91,5 @@ export class LoginComponent {
     });
   }
 
-  validForm() :string {
-    return this.submitted ? 'is-valid' : '';
-  }
-
-  invalidForm() :string {
-    return this.submitted ? 'is-invalid' : '';
-  }
-
-  invalidEmail() :string {
-    return this.isEmailInvalid ? 'is-invalid' : '';
-  }
-
-  invalidPwd() :string {
-    return this.isPwdInvalid ? 'is-invalid' : '';
-  }
-
-  togglePwd() :void {
-    if (this.pwdField === 'password') {
-      this.pwdField = 'text';
-    } else {
-      this.pwdField = 'password';
-    }
-  }
 
 }

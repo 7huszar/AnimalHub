@@ -4,19 +4,30 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.CreateShelterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DonationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.conflict.UserConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.ShelterValidator;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
@@ -31,6 +42,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,16 +54,16 @@ public class ShelterServiceImpl implements ShelterService {
     private final FileService fileService;
     private final FileMapper fileMapper;
     private final ShelterRepository shelterRepository;
+    private final UserRepository userRepository;
     private final AnimalShelterMapper mapper;
+    private final UserMapper userMapper;
     private final ShelterValidator validator;
+    private final DonationRepository donationRepository;
+    private final DonationMapper donationMapper;
+    private final UserService userService;
+    private final UserConflict conflict;
 
-    /**
-     * Search for users in the persistent data store matching all provided fields.
-     * The name is considered a match, if the search string is a substring of the field in user.
-     *
-     * @param searchParameters the search parameters to use in filtering.
-     * @return the users where the given fields match.
-     */
+
     @Override
     public List<ShelterListDto> search(ShelterSearchDto searchParameters) {
         var shelters = shelterRepository.findByNameIgnoreCaseContaining(searchParameters.name());
@@ -111,14 +123,6 @@ public class ShelterServiceImpl implements ShelterService {
         return mapper.shelterToShelterDetailDto(shelter);
     }
 
-    @Override
-    public List<ShelterDto> findByNameIgnoreCase(String name) {
-        LOGGER.debug("Find Shelters with name containing {}", name);
-
-        return shelterRepository.findByNameIgnoreCaseContaining(name).stream()
-            .map(mapper::shelterToShelterDto).toList();
-    }
-
 
     @Override
     public void delete(UUID id) throws NotFoundException {
@@ -166,20 +170,88 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public FileDto updateProfileImage(UUID id, CreateFileDto fileDto) throws ValidationException, IOException, NotFoundException {
+    public FileDto updateProfileImage(UUID id, CreateFileDto createFileDto) throws ValidationException, IOException, NotFoundException {
 
         var shelter = shelterRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
 
-        // TODO remove old image
+        UUID oldProfilePictureId = shelter.getProfilePicture().getId();
 
-        var createdFile = fileService.create(fileDto);
+        var createdFile = fileService.create(createFileDto);
         var file = fileMapper.fileDtoToFile(createdFile);
 
         shelter.setProfilePicture(file);
         shelterRepository.save(shelter);
 
+        fileService.delete(oldProfilePictureId);
+
         return createdFile;
+    }
+
+    @Override
+    public void assignShelterToUser(UUID shelterId, UserDetailDto user) throws NotFoundException, NotAuthorizedException {
+
+        LOGGER.debug("assign Shelter({}) to user({})", shelterId, user);
+        conflict.conflictForShelterUserUpdate(shelterId, user);
+
+        Optional<Shelter> shelter = shelterRepository.findById(shelterId);
+        Shelter foundShelter;
+        if (shelter.isPresent()) {
+            foundShelter = shelter.get();
+            foundShelter.setUser(userMapper.userDetailDtoUserToApplicationUser(user));
+            user.setShelter(mapper.shelterToShelterDto(foundShelter));
+        } else {
+            throw new NotFoundException("Could not find the Paypal ID");
+        }
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getEmail());
+        applicationUser.setShelter(foundShelter);
+
+        shelterRepository.save(foundShelter);
+        userRepository.save(applicationUser);
+
+    }
+
+    @Override
+    public ShelterDetailDto isAssignedTo(UserDetailDto user) {
+        LOGGER.debug("looking for assigned Shelter of User({})", user);
+
+        var shelter = shelterRepository.findByUser(userMapper.userDetailDtoUserToApplicationUser(user));
+        if (shelter == null) {
+            return new ShelterDetailDto();
+        }
+
+        return mapper.shelterToShelterDetailDto(shelterRepository.findByUser(userMapper.userDetailDtoUserToApplicationUser(user)));
+    }
+
+
+    @Override
+    public void unassignShelter(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException {
+
+        LOGGER.debug("unassign Shelter({}) from user({})", shelterId, user);
+
+        Optional<Shelter> shelter = shelterRepository.findById(shelterId);
+        Shelter foundShelter;
+        if (shelter.isPresent()) {
+            foundShelter = shelter.get();
+            foundShelter.setUser(null);
+        } else {
+            throw new NotFoundException("Could not find the Paypal ID");
+        }
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getEmail());
+        applicationUser.setShelter(null);
+
+        shelterRepository.save(foundShelter);
+        userRepository.save(applicationUser);
+
+    }
+
+    @Override
+    public List<DonationListDto> findAllDonationsByShelterId(UUID id) {
+        LOGGER.trace("findAllDonationsByShelterId({})", id);
+        return donationRepository.findAllByShelterId(id)
+            .filter(Donation::isPayed)
+            .map(donationMapper::donationToDonationListDto)
+            .collect(Collectors.toList());
     }
 }

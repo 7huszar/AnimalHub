@@ -3,7 +3,7 @@ import {AnimalDto} from "../../dtos/animal";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {Mode} from "../../enums/modes";
-import {AnimalService} from "../../services/animal.service";
+import {Globals} from "../../global/globals";
 
 @Component({
   selector: 'app-animal-list',
@@ -16,12 +16,12 @@ export class AnimalListComponent {
   @Input() shelterId: string;
   displayedAnimals: AnimalDto[] = [];
   p: number;
-  searchTermSpecies: String;
-  searchTermName: String;
+  searchTermSpecies: String = '';
+  searchTermName: String = '';
 
   constructor(private router: Router,
               public authService: AuthService,
-              private animalService: AnimalService) {
+              protected globals: Globals) {
   }
 
   typeForDeletion: string = '';
@@ -32,7 +32,7 @@ export class AnimalListComponent {
   animalForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
-    this.typeForDeletion = "Shelter";
+    this.typeForDeletion = "Animal";
   }
   ngOnInit(): void {
     this.displayAnimalCards('all');
@@ -44,26 +44,19 @@ export class AnimalListComponent {
   }
 
   editAnimal(animalId: String): void {
-    if (this.isPrivileged()) {
-      this.router.navigate(['/animal/edit', animalId]).then(r => console.log(r));
+    if (this.isUserAllowed()) {
+      this.router.navigate(['/animal/edit', animalId]);
     } else {
-      this.router.navigate(['/animal', animalId]).then(r => console.log(r));
+      this.router.navigate(['/animal', animalId]);
     }
   }
 
   onInput(): void {
-    if (this.searchTermName) {
-      this.displayedAnimals = this.animals
-        .filter(animal => animal.name.toLowerCase().includes(this.searchTermName.toLowerCase()))
-    }
-    if (this.searchTermSpecies) {
-      this.displayedAnimals = this.animals
-        .filter(animal => animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
-    }
-
+    this.displayedAnimals = this.animals
+      .filter(animal => animal.name.toLowerCase().includes(this.searchTermName.toLowerCase()) && animal.species.toLowerCase().includes(this.searchTermSpecies.toLowerCase()))
   }
 
-  isPrivileged(): boolean {
+  isUserAllowed(): boolean {
     return this.authService.isAdmin() || this.authService.isMemberOf(this.shelterId);
   }
 

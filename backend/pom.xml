@@ -145,6 +145,11 @@
             <artifactId>spring-content-commons</artifactId>
             <version>3.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>3.1.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -207,7 +212,7 @@
                         </ports>
                         <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                         <jvmFlags>
-                            <jvmFlag>-Dspring.profiles.active=qa,generateData</jvmFlag>
+                            <jvmFlag>-Dspring.profiles.active=qa</jvmFlag>
                             <jvmFlag>-Xmx128m</jvmFlag>
                         </jvmFlags>
                     </container>

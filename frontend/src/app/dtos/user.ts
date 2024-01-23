@@ -6,8 +6,6 @@ export interface UserDetailDto {
   email: string,
   role: string,
   shelter?: ShelterDto,
-  paypalClientId?: string,
-  paypalSecret?: string,
 }
 
 export interface UserSearch {
@@ -26,6 +24,8 @@ export interface SubscriptionDetailDto {
   user?: UserDetailDto,
   tier: string,
   subscriptionId: string,
+  cancelled?: boolean,
+  profilePicture?: any,
 }
 export interface CreateSubscriptionDto {
   animal: AnimalDetailDto,

@@ -49,15 +49,15 @@ export class HomeComponent implements OnInit {
     height: 0,
     id: "",
     name: "",
-    race: "",
+    gender: undefined,
+    englishRace: null,
+    germanRace: null,
     shelter: undefined,
     species: undefined,
     weight: 0,
   };
 
   user: UserDetailDto = {
-    paypalClientId: "",
-    paypalSecret: "",
     email: "",
     id: "",
     role: "",

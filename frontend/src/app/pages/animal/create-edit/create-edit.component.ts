@@ -7,6 +7,8 @@ import {IdOnlyShelter} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
 import {CreateFileDto} from "../../../dtos/file";
 import {NotifierService} from "../../../services/notifier.service";
+import {Globals} from "../../../global/globals";
+import {now} from "lodash";
 
 @Component({
   selector: 'app-create-edit',
@@ -20,8 +22,10 @@ export class CreateEditComponent implements OnInit {
   animal: AnimalDetailDto = {
     id: null,
     name: null,
+    gender: null,
     species: null,
-    race: null,
+    englishRace: null,
+    germanRace: null,
     birthDate: null,
     shelter: null,
     height: null,
@@ -35,6 +39,8 @@ export class CreateEditComponent implements OnInit {
 
   dropZoneColor: string = 'text-primary';
 
+  animalImageSelected: boolean = false;
+
   private animalImage: File = null;
   protected animalImageURL: any = null;
 
@@ -42,6 +48,7 @@ export class CreateEditComponent implements OnInit {
 
 
   constructor(
+    protected globals: Globals,
     private animalService: AnimalService,
     private router: Router,
     private route: ActivatedRoute,
@@ -152,8 +159,9 @@ export class CreateEditComponent implements OnInit {
   }
 
   public onImageSelected(event: any): void {
-    const img = event.target.files[0];
-    this.setImage(img);
+      const img = event.target.files[0];
+      this.animalImageSelected = true;
+      this.setImage(img);
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {

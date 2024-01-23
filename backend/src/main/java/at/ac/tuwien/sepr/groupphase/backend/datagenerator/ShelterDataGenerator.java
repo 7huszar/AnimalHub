@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
@@ -25,11 +26,11 @@ public class ShelterDataGenerator {
     private final String subscriptionId = "P-3SG76502UP218412UMWKYVRY";
 
 
-
     private final String[] shelterProfilePictureNames = {"shelter demo 1", "shelter demo 2", "shelter demo 3"};
 
     private final ShelterRepository shelterRepository;
     private final FileRepository fileRepository;
+    private final PaypalProperties paypalProperties;
 
 
     public void generateShelters() {
@@ -44,8 +45,8 @@ public class ShelterDataGenerator {
                     .subscriptionId(subscriptionId)
                     .address(shelterAddresses[i])
                     .phoneNumber(shelterPhoneNumbers[i])
-                    .paypalClientId("AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv")
-                    .paypalSecret("EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO")
+                    .paypalClientId(paypalProperties.getClientId())
+                    .paypalSecret(paypalProperties.getClientSecret())
                     .email(shelterEmails[i])
                     .profilePicture(fileRepository.findByName(shelterProfilePictureNames[i])[0])
                     .build();

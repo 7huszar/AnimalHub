@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.mail;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.LanguageConfig;
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.FrontendProperties;
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.MailProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.contact.ContactMailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -30,6 +32,8 @@ public class MailService {
     private final TimeoutService timeoutCollector;
     private final ContactValidator contactValidator;
     private final LanguageConfig lang;
+    private final FrontendProperties frontend;
+    private final MailProperties mailProperties;
 
     /**
      * Send a verification link to specified e-mail.
@@ -40,16 +44,19 @@ public class MailService {
      */
     @Async
     public void sendVerificationMail(String email, String language, LocalDateTime regStamp) {
+        LOGGER.trace("sendVerificationMail({}, {}, {})", email, language, regStamp);
+
+        if (timeoutCollector.hasTimeout(email)) {
         if (timeoutCollector.hasTimeout(email + "vm")) {
             LOGGER.warn(email + " has timout");
             return;
         }
         timeoutCollector.addEntity(new StampedEmail(email + "vm"));
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("animalhub.service@gmail.com");
+        message.setFrom(mailProperties.getEmail());
         message.setTo(email);
         message.setSubject("Animalhub e-mail confirmation");
-        message.setText(lang.getTranslation(language + ".mail.verifyEmail") + "\nhttp://localhost:4200/#/register/confirm/"
+        message.setText(lang.getTranslation(language + ".mail.verifyEmail") + "\n" + frontend.getUrl() + "/register/confirm/"
             + jwtTokenizer.getActivationToken(email, language, regStamp));
         emailSender.send(message);
     }
@@ -64,16 +71,19 @@ public class MailService {
      */
     @Async
     public void sendResetPasswordMail(String email, String language) {
+        LOGGER.trace("sendResetPasswordMail({},{})", email, language);
+
+        if (timeoutCollector.hasTimeout(email)) {
         if (timeoutCollector.hasTimeout(email + "pwd")) {
             LOGGER.warn(email + " has timout");
             return;
         }
         timeoutCollector.addEntity(new StampedEmail(email + "pdw"));
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("animalhub.service@gmail.com");
+        message.setFrom(mailProperties.getEmail());
         message.setTo(email);
         message.setSubject("Animal Hub reset password");
-        message.setText(lang.getTranslation(language + ".mail.resetPwd") + "\nhttp://localhost:4200/#/password/reset/"
+        message.setText(lang.getTranslation(language + ".mail.resetPwd") + "\n" + frontend.getUrl() + "/password/reset/"
             + jwtTokenizer.getPasswordToken(email, language));
         emailSender.send(message);
     }

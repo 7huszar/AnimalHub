@@ -26,9 +26,9 @@ export class ContentComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.id != null && this.mode != null) {
-      if (this.mode === Mode.ANIMAL) {
+      if (this.mode === Mode.ANIMAL || this.mode === Mode.ANIMAL_HOME) {
         this.loadAnimalProfileImage(changes.id.currentValue);
-      } else if (this.mode === Mode.SHELTER) {
+      } else if (this.mode === Mode.SHELTER || this.mode === Mode.SHELTER_HOME) {
         this.loadShelterProfileImage(changes.id.currentValue);
       } else if (this.mode === Mode.CONTENT) {
         this.loadFile(changes.id.currentValue);
@@ -87,4 +87,6 @@ export class ContentComponent implements OnChanges{
   protected isVideo(): boolean {
     return this.type===Type.VIDEO;
   }
+
+  protected readonly Mode = Mode;
 }

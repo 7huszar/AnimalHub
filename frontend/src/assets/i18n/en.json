@@ -16,18 +16,17 @@
     "LOGIN_FAILED": "Failed to login",
     "HOW_DOES_IT_WORK": "How does AnimalHub work?"
   },
-
   "LANG_SELECT": {
     "DROPDOWN": "Language"
   },
-
   "HOME": {
     "ACCOUNT": "manage account",
     "LOAD_FAILED": "failed to load animals",
     "DONATE_1": "Donate to ",
-    "ADOPT": "Adopt "
+    "ADOPT": "Adopt ",
+    "FAVORITES_TITLE": "Favorites",
+    "NO_FAVORITES": "Like Animals, so they will be saved in your favorites!"
   },
-
   "REGISTER": {
     "REGISTER_TITLE": "Register",
     "USERNAME_PLACEHOLDER": "E-mail Address",
@@ -43,7 +42,7 @@
     "PWD_MISS_MATCH": "passwords don't match",
     "FAILED_REGISTRATION": "failed to register account",
     "ALREADY_EXISTS": "account already exists",
-    "CHECK_MAILBOX" : "Check your mailbox to verify your e-mail.",
+    "CHECK_MAILBOX": "Check your mailbox to verify your e-mail.",
     "CONFIRM": {
       "ERROR": "failed to verify e-mail",
       "INVALID_TOKEN": "invalid token, please ask for a new one",
@@ -54,22 +53,30 @@
       "VERIFY_TEXT": "Do you want to verify your e-mail?"
     }
   },
-
   "HEADER": {
-    "LOGOUT": "logout",
-    "ADMIN_PAGE": "admin page",
-    "MEMBER_PAGE": "member page"
+    "SEARCH": "Search",
+    "LOGOUT": "Log out",
+    "ADMIN_PAGE": "Admin View",
+    "MEMBER_PAGE": "Your Shelter",
+    "STATISTICS": "Statistics"
   },
-
   "NOTIFIER": {
     "CONNECTION_FAILED": "Connection error",
     "INTERNAL_SERVER_ERROR": "internal server error - we apologize"
   },
-
-  "LOGO" : "Logo with the writing AnimalHub",
-
+  "LOGO": "Logo with the writing AnimalHub",
+  "CONFIRM_DELETE_DIALOG": {
+    "TITLE": "Delete Operation",
+    "QUESTION_PART_1_SHELTER": "Do you really want to delete the Shelter ",
+    "QUESTION_PART_1_ANIMAL": "Do you really want to delete the Animal ",
+    "QUESTION_PART_1_USER": "Do you really want to delete the User ",
+    "QUESTION_PART_2": " ?",
+    "NO": "No, STOP!",
+    "YES": "Yes, delete FOREVER."
+  },
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Species:",
+    "GENDER": "Gender:",
     "RACE": "Race:",
     "BIRTHDATE": "Date of birth:",
     "AGE": "Age:",
@@ -78,7 +85,7 @@
     "CONTENT": "Content",
     "DONATE_1": "Donate to ",
     "ADOPT": "Adopt ",
-    "SHELTER": "Shelter: ",
+    "SHELTER": "Currently lives at:",
     "NOCONTENT": " does not have any content yet.",
     "YEARS": " years",
     "MONTHS": " months",
@@ -89,20 +96,74 @@
     "CAT": "Cat",
     "DOG": "Dog",
     "BIRD": "Bird",
-    "RODENT": "Rodent"
+    "RODENT": "Rodent",
+    "MALE": "Male",
+    "FEMALE": "Female"
   },
-
+  "ANIMAL_SEARCH": {
+    "NAME": "Name",
+    "ALL_SPECIES": "All Species",
+    "ALL_GENDERS": "All Gender",
+    "FEMALE": "Female",
+    "MALE": "Male",
+    "RACE": "Race",
+    "BORN_BEFORE": "Born before",
+    "BORN_AFTER": "Born after",
+    "HEAVIER_THAN": "Heavier than",
+    "LIGHTER_THAN": "Lighter than",
+    "TALLER_THAN": "Taller than",
+    "SMALLER_THAN": "Smaller than",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "SHELTER": "Shelter"
+  },
+  "ANIMAL_CREATE_EDIT_PAGE": {
+    "NAME": "Name",
+    "SPECIES": "Species",
+    "GENDER": "Gender",
+    "ENGLISH_RACE": "Race (englisch)",
+    "GERMAN_RACE": "Race (german)",
+    "BIRTHDATE": "Date of birth",
+    "AGE": "Age",
+    "HEIGHT": "Height",
+    "WEIGHT": "Weight",
+    "SHELTER": "Shelter",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "IMAGE": "Profile Picture",
+    "SUBMIT_CREATE": "Create",
+    "SUBMIT_EDIT": "Update",
+    "DRAG_AND_DROP": "Drag & Drop",
+    "ENGLISH_DESCRIPTION": "Description (english)",
+    "GERMAN_DESCRIPTION": "Description (german)"
+  },
+  "ANIMAL_CARD": {
+    "NO_MORE_ANIMALS": "No more animals to explore!"
+  },
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Address:",
-    "PHONE": "Phone:",
-    "EMAIL": "E-mail:"
+    "PHONE": "Phone Number:",
+    "EMAIL": "E-Mail:",
+    "BACK_BUTTON": "BACK",
+    "DONATE_VIA_PAYPAL": "Donate via Paypal",
+    "CONTACT": "Contact"
   },
-
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Species"
+    "ADD_ANIMAL": "Add new Animal",
+    "ALL_SPECIES": "All Species",
+    "CAT": "Cat",
+    "DOG": "Dog",
+    "BIRD": "Bird",
+    "RODENT": "Rodent",
+    "DELETE": "Delete"
   },
-
   "PWD": {
     "INSTRUCTION": "Type in your e-mail to reset your password",
     "MAIL": "e-mail",
@@ -115,12 +176,10 @@
       "SUCCESS": "Passwort erfolgreich zurückgesetzt"
     }
   },
-
   "ADMIN_PAGE": {
     "INFO": "Man kann keinen anderen Admin löschen",
     "FAILED": "Löschung kaputt"
   },
-
   "CONTACT_PAGE": {
     "TITLE": "Contact",
     "NAME": "Name",
@@ -131,6 +190,27 @@
     "SUCCESS": "Message sent",
     "FAILED": "Failed to send message",
     "CONTACT": "Contact"
+  },
+
+  "APPOINTMENT": {
+    "APPOINTMENTS": "Appointments",
+    "MANAGEMENT": "Manage Appointments",
+    "USER_HEADER": "Manage your Appointments",
+    "SHELTER_HEADER": "Manage Shelter Appointments",
+    "CREATE": "Create Appointment",
+    "INFO": "Appointment Information",
+    "USER_EMAIL": "User-Email",
+    "SHELTER": "Shelter",
+    "ANIMAL": "Animal",
+    "PLAY": "Play",
+    "WALK": "Walk",
+    "TYPE": "Appointment-Type",
+    "TITLE": "Title",
+    "MSG": "Message",
+    "CREATE_BTN": "Create",
+    "CONFIRM_BTN": "Confirm",
+    "DECLINE_BTN": "Decline",
+    "DELETE_BTN": "Delete"
   },
 
   "DUMMY": {

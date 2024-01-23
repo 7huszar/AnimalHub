@@ -12,7 +12,7 @@
           <div ngbDropdownMenu  style="width: 100%; overflow: auto;">
             <div *ngFor="let lang of getLangs()"
                  ngbDropdownItem
-                 style="width: 100%;"
+                 style="width: 100%; text-align: center"
                  class="custom-dropDownItem"
                  (click)="setLang(lang)">
               {{formattedLang(lang)}}

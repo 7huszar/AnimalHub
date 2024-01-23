@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {Mode} from "../../enums/modes";
@@ -11,6 +11,9 @@ import {CreateSubscriptionDto, SubscriptionDetailDto, UserDetailDto} from "../..
 import {UserService} from "../../services/user.service";
 import {Species} from "../../dtos/species";
 import {PaypalService} from "../../services/paypal.service";
+import {Gender} from "../../dtos/gender";
+import {Globals} from "../../global/globals";
+import {NotifierService} from "../../services/notifier.service";
 
 declare var paypal;
 
@@ -22,20 +25,9 @@ declare var paypal;
 })
 export class AnimalHomepageComponent implements OnInit {
 
-  animal: AnimalDetailDto = {
-    birthDate: null,
-    createdOn: null,
-    height: 0,
-    id: "",
-    name: "",
-    race: "",
-    shelter: undefined,
-    species: undefined,
-    weight: 0,
-  };
+  animal: AnimalDetailDto;
 
   user: UserDetailDto = {
-    paypalClientId: "", paypalSecret: "",
     email: "",
     id: "",
     role: ""
@@ -48,7 +40,6 @@ export class AnimalHomepageComponent implements OnInit {
     animal: undefined,
   };
 
-  // TODO: add fitting animal attributes
   protected animalAge: number;
   protected contents: FileDto[];
   protected newContent: File = null;
@@ -67,24 +58,27 @@ export class AnimalHomepageComponent implements OnInit {
   protected isSubscribed: boolean;
 
 
-
   constructor(
+    protected globals: Globals,
     protected authService: AuthService,
-    private service: AnimalService,
+    private animalService: AnimalService,
     private paypalService: PaypalService,
     private userService: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
+    private betternotifier: NotifierService,
     private el: ElementRef,
-
+    private router: Router,
   ) {
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       if (params.get("id")) {
-        this.animal.id = params.get("id");
-        let animalObservable: Observable<AnimalDetailDto> = this.service.findById(this.animal.id)
+
+        const id = params.get("id");
+
+        let animalObservable: Observable<AnimalDetailDto> = this.animalService.findById(id)
         animalObservable.subscribe({
           next: data => {
             this.animal = data;
@@ -114,11 +108,11 @@ export class AnimalHomepageComponent implements OnInit {
             isSubscribedObservable.subscribe({
               next: data => {
                 console.log("User is subscribed to Animal")
-                if (data!=null){
+                if (data != null) {
                   //this is the case that the user is already subscribed
-                  this.isSubscribed=true;
+                  this.isSubscribed = true;
                   //TODO blurr animal content in this case
-                }else{
+                } else {
                   //if user is not subscribed load the paypal button
 
                   // Load the PayPal script
@@ -128,7 +122,7 @@ export class AnimalHomepageComponent implements OnInit {
                   userObservable.subscribe({
                     next: data => {
                       this.user = data;
-                      this.subscription.user=this.user;
+                      this.subscription.user = this.user;
                     },
                     error: error => {
                       //this schould never happen
@@ -137,18 +131,10 @@ export class AnimalHomepageComponent implements OnInit {
                     }
                   });
 
-                  //TODO handle the case in which the user is already subscribed to the animal
-
-
-                  //TODO LOGIN details for transaction are test.t23est@test.com and 2023ws-se-pr-groupA
-                  // Personal Account can be used but cannot be used to cancel subscriptions since those dont have a client id and secret in the sandbox (they do in a live version)
-
-                  //TODO Receiving account animalhub.service@gmail.com and 2023ws-se-pr-groupA
+                  //TODO Receiving account animalhub.animalService@gmail.com and 2023ws-se-pr-groupA
                   //TODO Business account for sandbox testing buisness.payer@gmail.com and 2023ws-se-pr-groupA
 
-
-                  //TODO change this for live version if there is multiple receivers the client id determines who receives the money (i think not sure)
-                  script.src = 'https://www.paypal.com/sdk/js?client-id=ATDSVmhK53uv4p0BsnfQeNdgOUF77jr8u2TpuOnWqJ8CoNeGPrBmRo4DUFY1JpMEYiVYk5oLqu_oktoC&vault=true&intent=subscription';
+                  script.src = 'https://www.paypal.com/sdk/js?client-id='+ this.animal.shelter.paypalClientId + '&vault=true&intent=subscription';
                   script.onload = () => {
                     // PayPal script is loaded, render the button
                     this.renderPayPalButton();
@@ -164,8 +150,15 @@ export class AnimalHomepageComponent implements OnInit {
               }
             });
 
-
-
+            this.animalService.getContents(this.animal.id).subscribe({
+              next: data => {
+                this.contents = data;
+              },
+              error: error => {
+                console.error('Error finding contents', error);
+                this.notification.error("Could Not find contents of animal");
+              }
+            })
           },
           error: error => {
             console.error('Error finding animal', error);
@@ -174,19 +167,6 @@ export class AnimalHomepageComponent implements OnInit {
         });
       }
     });
-    this.service.getContents(this.animal.id).subscribe({
-      next: data => {
-        this.contents = data;
-      },
-      error: error => {
-        console.error('Error finding contents', error);
-        this.notification.error("Could Not find contents of animal");
-      }
-    })
-
-
-
-
   }
 
   private renderPayPalButton(): void {
@@ -206,19 +186,23 @@ export class AnimalHomepageComponent implements OnInit {
       },
       onApprove: (data, actions) => {
         console.log(data)
-        this.subscription.animal=this.animal;
-        this.subscription.subscriptionId=data.subscriptionID;
-        this.subscription.tier="1";
+        this.subscription.animal = this.animal;
+        this.subscription.subscriptionId = data.subscriptionID;
+        this.subscription.tier = "1";
         console.log('Subscription Payload:', this.subscription);
         console.log(data)
         this.userService.createSubscription(this.subscription).subscribe(
           response => {
             // Handle the response
             console.log("Subscription created successfully:", response);
+            this.betternotifier.notifySuccess("Successfully created subscription")
+            this.reloadSubscriptions()
           },
           error => {
             // Handle the error
-            console.error("Error creating subscription:", error);
+            console.error(error);
+            const errorMessage = error.error ? error.error.message : 'Unknown error';
+            this.betternotifier.notifyError(errorMessage, "Could not load Picture of shelter");
           }
         );
       },
@@ -231,9 +215,20 @@ export class AnimalHomepageComponent implements OnInit {
     }
   }
 
+
+  reloadSubscriptions() {
+    this.router.navigateByUrl('/animal/'+ this.animal.id, {skipLocationChange: true}).then(() => {
+      window.location.reload();
+    });
+  }
+
   public onUpload(): void {
-    const createFileDto: CreateFileDto = {file: this.newContent, name: this.newContent.name, summary: "TODO make summary"};
-    this.service.addContent(this.animal.id, createFileDto).subscribe({
+    const createFileDto: CreateFileDto = {
+      file: this.newContent,
+      name: this.newContent.name,
+      summary: "TODO make summary"
+    };
+    this.animalService.addContent(this.animal.id, createFileDto).subscribe({
       next: fileDto => {
         console.log(fileDto);
         this.newContent = null;
@@ -254,7 +249,7 @@ export class AnimalHomepageComponent implements OnInit {
     let age = timeDifference;
     console.log("AGE " + timeDifference);
     if (timeDifference > 365.25) {
-      age = Math.floor(timeDifference/365.25);
+      age = Math.floor(timeDifference / 365.25);
       if (age > 1) {
         this.years = true;
       } else {
@@ -262,7 +257,7 @@ export class AnimalHomepageComponent implements OnInit {
       }
     }
     if (timeDifference < 365.25 && timeDifference > 30) {
-      age = Math.floor(timeDifference/(30));
+      age = Math.floor(timeDifference / (30));
       if (age > 1) {
         this.months = true;
       } else {
@@ -285,4 +280,5 @@ export class AnimalHomepageComponent implements OnInit {
   }
 
   protected readonly Mode = Mode;
+  protected readonly Gender = Gender;
 }

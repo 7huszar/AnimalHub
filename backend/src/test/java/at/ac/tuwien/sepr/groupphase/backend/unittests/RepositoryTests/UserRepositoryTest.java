@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 // the entire application context
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserRepositoryTest extends TestBase {
 
     @Autowired
@@ -41,22 +43,13 @@ public class UserRepositoryTest extends TestBase {
     @Test
     public void whenCreateSubscription_thenFindById() {
         // Given
-        Animal animal = Animal.builder()
-            .name(TEST_ANIMAL_NAME)
-            .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
-            .birthDate(TEST_ANIMAL_BIRTH_DATE)
-            .height(TEST_ANIMAL_HEIGHT)
-            .weight(TEST_ANIMAL_WEIGHT)
-            .shelter(allShelterEntities.get(0))
-            .build();
+        Animal animal = allAnimalEntities.get(0);
         ApplicationUser user = ApplicationUser.builder()
             .registrationStamp(LocalDateTime.now())
             .email("harry@gmail.com")
             .role(UserRole.USER)
             .password("password")
             .build();
-        animalRepository.save(animal);
         userRepository.save(user);
 
         SubscriptionKey key = SubscriptionKey.builder()

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AnimalRepositoryTest extends TestBase {
 
     @Autowired
@@ -44,8 +46,12 @@ public class AnimalRepositoryTest extends TestBase {
     public void createNewAnimalSuccessfully() {
         Animal animal = Animal.builder()
             .name(TEST_ANIMAL_NAME)
+            .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)
@@ -57,8 +63,12 @@ public class AnimalRepositoryTest extends TestBase {
         assertAll(
             () -> assertEquals(allAnimalEntities.size() + 1, animalRepository.findAll().size()),
             () -> assertEquals(animal.getName(), returnAnimal.getName()),
+            () -> assertEquals(animal.getGender(), returnAnimal.getGender()),
+            () -> assertEquals(animal.getEnglishDescription(), returnAnimal.getEnglishDescription()),
+            () -> assertEquals(animal.getGermanDescription(), returnAnimal.getGermanDescription()),
             () -> assertEquals(animal.getSpecies(), returnAnimal.getSpecies()),
-            () -> assertEquals(animal.getRace(), returnAnimal.getRace()),
+            () -> assertEquals(animal.getEnglishRace(), returnAnimal.getEnglishRace()),
+            () -> assertEquals(animal.getGermanRace(), returnAnimal.getGermanRace()),
             () -> assertEquals(animal.getBirthDate(), returnAnimal.getBirthDate()),
             () -> assertEquals(animal.getHeight(), returnAnimal.getHeight()),
             () -> assertEquals(animal.getWeight(), returnAnimal.getWeight()),
@@ -101,8 +111,12 @@ public class AnimalRepositoryTest extends TestBase {
         Animal nonExistingAnimal = Animal.builder()
             .id(UUID.randomUUID())
             .name(TEST_ANIMAL_NAME)
+            .gender(TEST_ANIMAL_GENDER)
+            .englishDescription(TEST_ANIMAL_ENGLISH_DESCRIPTION)
+            .germanDescription(TEST_ANIMAL_GERMAN_DESCRIPTION)
             .species(TEST_ANIMAL_SPECIES)
-            .race(TEST_ANIMAL_RACE)
+            .englishRace(TEST_ANIMAL_ENGLISH_RACE)
+            .germanRace(TEST_ANIMAL_GERMAN_RACE)
             .birthDate(TEST_ANIMAL_BIRTH_DATE)
             .height(TEST_ANIMAL_HEIGHT)
             .weight(TEST_ANIMAL_WEIGHT)

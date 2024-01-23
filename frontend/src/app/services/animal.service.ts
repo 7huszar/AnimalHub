@@ -59,7 +59,7 @@ export class AnimalService {
    * @param id id
    */
   delete(id: string): Observable<any> {
-    return this.httpClient.delete<void>(this.animalBaseUri+'/'+id);
+    return this.httpClient.delete<void>(this.animalBaseUri + '/' + id);
   }
 
   getProfileImage(id: string): Observable<Blob> {
@@ -89,7 +89,7 @@ export class AnimalService {
   }
 
   getContent(id: string, fileId: string): Observable<Blob> {
-    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/content/' + fileId, { responseType: 'blob' });
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/content/' + fileId, {responseType: 'blob'});
   }
 
   addContent(id: string, file: CreateFileDto): Observable<FileDto> {
@@ -111,33 +111,48 @@ export class AnimalService {
    * @param searchParams parameters for the search
    */
   search(searchParams: AnimalSearch): Observable<AnimalListDto[]> {
-    if (searchParams.name === '') {
-      delete searchParams.name;
-    }
     let params = new HttpParams();
-    if (searchParams.name) {
-      params = params.append('name', searchParams.name);
+
+    console.log("searchParams:", searchParams);
+
+    if (searchParams.name && searchParams.name !== "") {
+      params = params.set('name', searchParams.name);
     }
-    if (searchParams.species) {
-      params = params.append('species', searchParams.species);
+    if (searchParams.gender && searchParams.gender !== "") {
+      params = params.set('gender', searchParams.gender);
     }
-    if (searchParams.race) {
-      params = params.append('race', searchParams.race);
+    if (searchParams.species && searchParams.species !== "") {
+      params = params.set('species', searchParams.species);
     }
-    if (searchParams.height) {
-      params = params.append('height', searchParams.height);
+    if (searchParams.race && searchParams.race !== "") {
+      params = params.set('race', searchParams.race);
     }
-    if (searchParams.weight) {
-      params = params.append('weight', searchParams.weight);
+    if (searchParams.bornBefore !== undefined && searchParams.bornBefore != null) {
+      params = params.set('bornBefore', searchParams.bornBefore.toString());
     }
-    if (searchParams.shelter) {
-      params = params.append('shelter', searchParams.shelter.id);
+    if (searchParams.bornAfter !== undefined && searchParams.bornAfter != null) {
+      params = params.set('bornAfter', searchParams.bornAfter.toString());
+    }
+    if (searchParams.heavierThan !== undefined && searchParams.heavierThan != null) {
+      params = params.set('heavierThan', searchParams.heavierThan);
+    }
+    if (searchParams.lighterThan !== undefined && searchParams.lighterThan != null) {
+      params = params.set('lighterThan', searchParams.lighterThan);
+    }
+    if (searchParams.tallerThan !== undefined && searchParams.tallerThan != null) {
+      params = params.set('tallerThan', searchParams.tallerThan.valueOf());
+    }
+    if (searchParams.smallerThan !== undefined && searchParams.smallerThan != null) {
+      params = params.set('smallerThan', searchParams.smallerThan);
     }
 
-    return this.httpClient.get<AnimalListDto[]>(this.animalBaseUri, { params })
-      .pipe(tap(shelters => shelters.map(h => {
-        h.dateOfBirth = new Date(h.dateOfBirth); // Parse date string
-      })));
+    return this.httpClient.get<AnimalListDto[]>(this.animalBaseUri + "/search", {params})
+      .pipe(
+        tap(animals => animals.forEach(animal => {
+          animal.dateOfBirth = new Date(animal.dateOfBirth); // Parse date string
+        }))
+      );
   }
+
 
 }

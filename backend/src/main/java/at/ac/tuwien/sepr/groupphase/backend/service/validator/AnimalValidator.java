@@ -73,18 +73,48 @@ public class AnimalValidator {
             validationErrors.add("Name is too long");
         }
 
+        // # Gender
+
+        if (animalDto.getGender() == null) {
+            validationErrors.add("No Gender selected");
+        }
+
+        // # English Description
+
+        if (animalDto.getEnglishDescription() != null) {
+            if (animalDto.getEnglishDescription().length() > 500) {
+                validationErrors.add("English Description is too long");
+            }
+        }
+
+        // # German Description
+
+        if (animalDto.getGermanDescription() != null) {
+            if (animalDto.getGermanDescription().length() > 500) {
+                validationErrors.add("German Description is too long");
+            }
+        }
+
         // # Species
 
         if (animalDto.getSpecies() == null) {
             validationErrors.add("No Species selected");
         }
 
-        // # Race
+        // # English Race
 
-        if (stringIsEmpty(animalDto.getRace())) {
-            validationErrors.add("No Race selected");
-        } else if (animalDto.getRace().length() > 255) {
-            validationErrors.add("Race name is too long");
+        if (stringIsEmpty(animalDto.getEnglishRace())) {
+            validationErrors.add("No English Race given");
+        } else if (animalDto.getEnglishRace().length() > 255) {
+            validationErrors.add("English Race name is too long");
+        }
+
+        // # German Race
+
+        if (stringIsEmpty(animalDto.getGermanRace())) {
+            validationErrors.add("No German Race given");
+        } else if (animalDto.getGermanRace().length() > 255) {
+            validationErrors.add("German Race name is too long");
         }
 
         // # Birth Date

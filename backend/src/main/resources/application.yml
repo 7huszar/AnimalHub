@@ -1,7 +1,7 @@
 logging:
   file.name: ./log/backend.log
   level:
-    root: DEBUG
+    root: INFO
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
   pattern:
     level: r=%X{r} ip=%X{ip} u=%X{u} %5p
@@ -95,6 +95,18 @@ threadpool:
   maxPoolSize: 16
   queueCapacity: 128
 
+mail:
+  email: animalhub.service@gmail.com
+
+paypal:
+  client-id: AfH_enM1Jb3sXHqaZ5V2LpTN-xJbPXQLmFogThTBDLzMvw-81iGtaX1wnIj_NwJhIUtRnQqUypiRdfxv
+  client-secret: EB2gtcxcvRY6-46X9G1XiQ4hZXN9FTC8moRaStTRUme7z65v-6rj7Vt3nA-V3aSHnQ9IWpwc8nNYxoZO
+  sandbox: https://api-m.sandbox.paypal.com
+  auth: /v1/oauth2/token
+  place-order: /v2/checkout/orders
+  capture-order1: /v2/checkout/orders/
+  capture-order2: /capture
+
 timeouts:
   login: 60
   email: 60
@@ -147,3 +159,14 @@ spring:
           starttls:
             enable: false
             required: false
+---
+spring:
+  frontend:
+    url: http://localhost:4200/#
+---
+spring:
+  config:
+    activate:
+      on-cloud-platform: kubernetes
+  frontend:
+    url: https://23ws-se-pr-qse-12-oerc8ofbpcvccyz4z49jt.apps.student.inso-w.at/#

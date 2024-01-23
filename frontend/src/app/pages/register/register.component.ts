@@ -7,6 +7,8 @@ import {HttpStatusCode} from "@angular/common/http";
 import {MailRequestDto} from "../../dtos/user";
 import {CircleLoadComponent} from "../../components/circle-load/circle-load.component";
 import {TranslateService} from "@ngx-translate/core";
+import {EmailFieldComponent} from "../../components/email-field/email-field.component";
+import {PasswordComponent} from "../../components/password/password.component";
 
 @Component({
   selector: 'app-login',
@@ -15,8 +17,9 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class RegisterComponent {
 
-  loginForm: UntypedFormGroup;
   @ViewChild('circleLoader') circleLoader: CircleLoadComponent;
+  @ViewChild('emailField') emailField: EmailFieldComponent;
+  @ViewChild('pwd') pwd: PasswordComponent;
 
   // After first submission attempt, form validation will start
   submitted: boolean = false;
@@ -25,29 +28,22 @@ export class RegisterComponent {
   mailRequestTimout: number = 60_000;
   mailRequest: MailRequestDto = {email: '', lang: ''};
 
-  pwdField: string = 'password';
-
-  constructor(private formBuilder: UntypedFormBuilder,
-              private service: RegisterService,
+  constructor(private service: RegisterService,
               private notifier: NotifierService,
               private translator: TranslateService) {
-    this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
-      password_repeat: ['', [Validators.required]]
-    });
   }
 
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
    */
   register() {
-    this.submitted = true;
-    if (this.loginForm.valid && this.pwdMatch()) {
-     this.service.register(new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value)).subscribe({
+    this.emailField.submit();
+    this.pwd.submit();
+    if (this.emailField.valid() && this.pwd.valid()) {
+     this.service.register(new AuthRequest(this.emailField.submit(), this.pwd.submit())).subscribe({
        next :data => {
         console.log("successfully registered", data);
-        this.mailRequest.email = this.loginForm.controls.username.value;
+        this.mailRequest.email = this.emailField.submit();
         this.mailRequest.lang = this.translator.currentLang;
         this.success = true;
         this.request()
@@ -69,28 +65,6 @@ export class RegisterComponent {
     }
   }
 
-  /**
-   * returns bootstrap is-valid class if form was once submitted
-   */
-  validForm() :string {
-    return this.submitted ? 'is-valid' : '';
-  }
-
-
-  /**
-   * returns bootstrap is-invalid class if form was once submitted
-   */
-  invalidForm() :string {
-    return this.submitted ? 'is-invalid' : '';
-  }
-
-  /**
-   * compares passwords of equality
-   */
-  pwdMatch() :boolean {
-    return this.loginForm.controls.password.value === this.loginForm.controls.password_repeat.value;
-  }
-
   request() :void {
     this.service.requestMail(this.mailRequest).subscribe({
       next: next => {
@@ -105,13 +79,4 @@ export class RegisterComponent {
     }, this.mailRequestTimout);
     this.circleLoader.startCountdown();
   }
-
-  togglePwd() :void {
-    if (this.pwdField === 'password') {
-      this.pwdField = 'text';
-    } else {
-      this.pwdField = 'password';
-    }
-  }
-
 }

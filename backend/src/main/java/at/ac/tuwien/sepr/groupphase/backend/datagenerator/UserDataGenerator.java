@@ -21,10 +21,9 @@ import java.util.List;
 public class UserDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
+    private final UserRepository userRepository;
     private final ShelterRepository shelterRepository;
 
 
@@ -74,13 +73,13 @@ public class UserDataGenerator {
             LOGGER.debug("saving user {}", admin);
             userRepository.save(admin);
 
-            LOGGER.debug("saving user {}", member1);
+            LOGGER.debug("saving member user 1 {}", member1);
             userRepository.save(member1);
 
-            LOGGER.debug("saving user {}", member2);
+            LOGGER.debug("saving member user 2 {}", member2);
             userRepository.save(member2);
 
-            LOGGER.debug("saving user {}", member3);
+            LOGGER.debug("saving member user 3 {}", member3);
             userRepository.save(member3);
 
             LOGGER.debug("saving user {}", user);

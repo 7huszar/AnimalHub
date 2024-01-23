@@ -16,19 +16,17 @@
     "LOGIN_FAILED": "Anmeldung fehlgeschlagen",
     "HOW_DOES_IT_WORK": "Wie funktioniert AnimalHub?"
   },
-
   "LANG_SELECT": {
     "DROPDOWN": "Sprache"
   },
-
   "HOME": {
     "ACCOUNT": "Account verwalten",
     "LOAD_FAILED": "Tiere konnten nicht geladen werden",
     "DONATE_1": "Spende an ",
-    "ADOPT": "Adoptiere "
-
+    "ADOPT": "Adoptiere ",
+    "FAVORITES_TITLE": "Favoriten",
+    "NO_FAVORITES": "Like Tiere, dann werden sie hier in den Favoriten gespeichert!"
   },
-
   "REGISTER": {
     "REGISTER_TITLE": "Registrieren",
     "USERNAME_PLACEHOLDER": "E-mail Addresse",
@@ -54,24 +52,31 @@
       "ABORT_WARN": "Verifizierung abgebrochen",
       "VERIFY_TEXT": "Willst du deine E-Mail Adresse verifizieren?"
     }
-
   },
-
   "HEADER": {
+    "SEARCH": "Suche",
     "LOGOUT": "Ausloggen",
-    "ADMIN_PAGE": "Adminansicht",
-    "MEMBER_PAGE": "Member Profil"
+    "ADMIN_PAGE": "Admin-Ansicht",
+    "MEMBER_PAGE": "Dein Tierheim",
+    "STATISTICS": "Statistik"
   },
-
   "NOTIFIER": {
     "CONNECTION_FAILED": "Verbindungsfehler",
     "INTERNAL_SERVER_ERROR": "Interne Fehler in unserem Server - Entschuldigung"
   },
-
-  "LOGO" : "Logo mit der Aufschrift AnimalHub",
-
+  "LOGO": "Logo mit der Aufschrift AnimalHub",
+  "CONFIRM_DELETE_DIALOG": {
+    "TITLE": "Löschvorgang",
+    "QUESTION_PART_1_SHELTER": "Willst du wirklich das Tierheim ",
+    "QUESTION_PART_1_ANIMAL": "Willst du wirklich das Tier ",
+    "QUESTION_PART_1_USER": "Willst du wirklich den Nutzer ",
+    "QUESTION_PART_2": " löschen?",
+    "NO": "Nein, STOP!",
+    "YES": "Ja, ENDGÜLTIG löschen."
+  },
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
+    "GENDER": "Geschlecht",
     "RACE": "Rasse:",
     "BIRTHDATE": "Geburtsdatum:",
     "AGE": "Alter:",
@@ -79,8 +84,7 @@
     "WEIGHT": "Gewicht:",
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
-    "ADOPT": "Adoptiere ",
-    "SHELTER": "Tierheim: ",
+    "SHELTER": "wohnt aktuell im Tierheim: ",
     "NOCONTENT": " hat noch keine Medien.",
     "YEARS": " Jahre",
     "MONTHS": " Monate",
@@ -91,20 +95,72 @@
     "CAT": "Katze",
     "DOG": "Hund",
     "BIRD": "Vogel",
-    "RODENT": "Nagetier"
+    "RODENT": "Nagetier",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich"
   },
-
+  "ANIMAL_SEARCH": {
+    "NAME": "Name",
+    "ALL_SPECIES": "Alle Tierarten",
+    "ALL_GENDERS": "Alle Geschlechter",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich",
+    "RACE": "Rasse",
+    "BORN_BEFORE": "Geboren vor",
+    "BORN_AFTER": "Geboren nach",
+    "HEAVIER_THAN": "Schwerer als",
+    "LIGHTER_THAN": "Leichter als",
+    "TALLER_THAN": "Größer als",
+    "SMALLER_THAN": "Kleiner als",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier",
+    "SHELTER": "Tierheim"
+  },
+  "ANIMAL_CREATE_EDIT_PAGE": {
+    "NAME": "Name",
+    "SPECIES": "Tierart",
+    "GENDER": "Geschlecht",
+    "ENGLISH_RACE": "Rasse (englisch)",
+    "GERMAN_RACE": "Rasse (deutsch)",
+    "BIRTHDATE": "Geburtsdatum",
+    "AGE": "Alter",
+    "HEIGHT": "Größe",
+    "WEIGHT": "Gewicht",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier",
+    "FEMALE": "Weiblich",
+    "MALE": "Männlich",
+    "IMAGE": "Profilbild",
+    "SUBMIT_CREATE": "Speichern",
+    "SUBMIT_EDIT": "Abspeichern",
+    "DRAG_AND_DROP": "Drag & Drop",
+    "ENGLISH_DESCRIPTION": "Beschreibung (englisch)",
+    "GERMAN_DESCRIPTION": "Beschreibung (deutsch)"
+  },
+  "ANIMAL_CARD": {
+    "NO_MORE_ANIMALS": "Keine weiteren Tiere verfügbar!"
+  },
   "SHELTER_HOMEPAGE": {
     "ADDRESS": "Addresse:",
     "PHONE": "Telefon-Nr.:",
-    "EMAIL": "E-mail:"
+    "EMAIL": "E-Mail:",
+    "DONATE_VIA_PAYPAL": "Spende via Paypal",
+    "CONTACT": "Kontaktiere"
   },
-
   "ANIMAL_LIST": {
     "NAME": "Name",
-    "SPECIES": "Tierart"
+    "ADD_ANIMAL": "Neues Tier hinzufügen",
+    "ALL_SPECIES": "Alle Tierarten",
+    "CAT": "Katze",
+    "DOG": "Hund",
+    "BIRD": "Vogel",
+    "RODENT": "Nagetier",
+    "DELETE": "Löschen"
   },
-
   "PWD": {
     "INSTRUCTION": "Gib deine E-Mail an um dein Passwort zurückzusetzen",
     "MAIL": "E-Mail",
@@ -117,19 +173,15 @@
       "SUCCESS": "successfully reset password"
     }
   },
-
   "ADMIN_PAGE": {
     "INFO": "Cannot delete another admin",
     "FAILED": "deletion failed"
   },
-
   "SUBSCRIPTION_PAGE": {
     "EMAIL": "email",
     "SUBSCRIPTION_ID": "Abonnement Id",
     "SUBSCRIBED_TO": "meine Abonnements"
-
   },
-
   "CONTACT_PAGE": {
     "TITLE": "Contact",
     "NAME": "Name",
@@ -139,6 +191,27 @@
     "SUCCESS": "Nachricht erfolgreich gesendet",
     "FAILED": "Fehler beim senden der Nachricht",
     "CONTACT": "Kontaktiere"
+  },
+
+  "APPOINTMENT": {
+    "APPOINTMENTS": "Termine",
+    "MANAGEMENT": "Termine verwalten",
+    "USER_HEADER": "Deine Termine verwalten",
+    "SHELTER_HEADER": "Tierheim Termine verwalten",
+    "CREATE": "Termin vereinbaren",
+    "INFO": "Termin-Infos",
+    "USER_EMAIL": "User-Email",
+    "SHELTER": "Tierheim",
+    "ANIMAL": "Tier",
+    "PLAY": "Spielen",
+    "WALK": "Spaziergang",
+    "TYPE": "Terminart",
+    "TITLE": "Titel",
+    "MSG": "Nachricht",
+    "CREATE_BTN": "Erstellen",
+    "CONFIRM_BTN": "Bestätigen",
+    "DECLINE_BTN": "Ablehnen",
+    "DELETE_BTN": "Löschen"
   },
 
   "DUMMY": {

@@ -18,9 +18,7 @@ export class RegisterService {
 
 
   constructor(handler :HttpBackend,
-              private globals :Globals,
-              private httpIntercepted: HttpClient,
-              private authService: AuthService) {
+              private globals :Globals) {
     this.http = new HttpClient(handler);
   }
 
