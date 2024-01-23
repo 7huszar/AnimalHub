@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {PaypalService} from "../../services/paypal.service";
 import {AuthService} from "../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {ShelterDetailDto} from "../../dtos/shelter";
 
 @Component({
   selector: 'app-donation',
@@ -10,7 +11,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 })
 export class DonationComponent {
 
-  @Input() receiver: string = '0';
+  @Input() receiver: ShelterDetailDto = null;
 
   clicked: boolean = false;
   giveMoney: UntypedFormGroup;
@@ -32,7 +33,7 @@ export class DonationComponent {
   donate() :void {
     if (this.giveMoney.valid) {
       console.log(this.giveMoney.get('arbitrary').value);
-      this.service.placeOrder(this.receiver, {amount: this.giveMoney.get('arbitrary').value, donator: this.authService.getUser().id}).subscribe({
+      this.service.placeOrder(this.receiver.id, {amount: this.giveMoney.get('arbitrary').value, donator: this.authService.getUser().id}).subscribe({
         next: next => {
           console.log(next)
           window.open(next.href);
@@ -44,5 +45,4 @@ export class DonationComponent {
     }
   }
 
-  protected readonly onsubmit = onsubmit;
 }

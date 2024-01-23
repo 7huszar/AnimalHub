@@ -6,22 +6,59 @@
   one time donation
 </button>
 
-<div  id="donate-dialog" class="modal fade" tabindex="-1" aria-labelledby="Donate the shelter something man" aria-hidden="true">
+<div  id="donate-dialog"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="donate man"
+      aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="confirm-delete-dialog-title">{{'CONFIRM_DELETE_DIALOG.TITLE' | translate}}</h4>
+        <h4 class="modal-title">Donate to {{ receiver?.name }} shelter</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="donate()">
-        <div class="form-group" [formGroup]="giveMoney">
-            <input id="arbitrary" formControlName="arbitrary" type="number" placeholder="arbitrary amount">
-            <div class="modal-footer">
-              <button class="btn btn-primary">donate</button>
+        <div class="container mb-3">
+          <div class="row">
+            <div class="offset-4 col-8">
+              <form>
+                <div class="form-group" [formGroup]="giveMoney">
+
+                  <div class="input-group">
+                    <input id="euros"
+                           formControlName="euros"
+                           type="text"
+                           placeholder="0"
+                           class="form-control" style="text-align: right;">
+
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">.</span>
+                    </div>
+
+                    <input id="cents"
+                           formControlName="cents"
+                           type="text"
+                           placeholder="00"
+                           class="form-control"
+                           maxlength="2" style="width: 45px; flex: none;">
+
+                    <div class="input-group-append">
+                      <span class="input-group-text">€</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
             </div>
+          </div>
         </div>
-        </form>
+
+          <div class="modal-footer">
+              <button class="btn" (click)="donate()" style="background-color: #FFC439; width: 250px;">
+                <img alt="paypal" src="../../../assets/img/de-pp-logo-150px.png" height="20.8" width="80"/>
+              </button>
+            </div>
+
       </div>
     </div>
   </div>
