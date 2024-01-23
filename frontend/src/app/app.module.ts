@@ -51,6 +51,7 @@ import { AppointmentComponent } from './pages/appointment/appointment.component'
 import { FullCalendarModule } from "@fullcalendar/angular";
 import { AppointmentModalComponent } from './components/appointment-modal/appointment-modal.component';
 import { StandardLayoutComponent } from './components/standard-layout/standard-layout.component';
+import { OnlyNumberDirective } from './directives/only-number.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -96,7 +97,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     EmailFieldComponent,
     AppointmentComponent,
     AppointmentModalComponent,
-    StandardLayoutComponent
+    StandardLayoutComponent,
+    OnlyNumberDirective
   ],
   imports: [
     BrowserModule,

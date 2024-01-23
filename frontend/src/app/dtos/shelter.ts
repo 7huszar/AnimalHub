@@ -1,4 +1,5 @@
 import {AnimalDetailDto, AnimalDto} from "./animal";
+import Decimal from "decimal.js";
 
 
 /**
@@ -71,7 +72,7 @@ export class IdOnlyShelter implements ShelterDto {
 }
 
 export interface DonationListDto {
-  amount: number;
+  amount: Decimal;
   date: Date;
   type: string;
   receiver: string;
