@@ -4,7 +4,7 @@ import {AnimalDetailDto} from "../../dtos/animal";
 import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
 import {TranslateService} from "@ngx-translate/core";
-import {indexOf} from "lodash";
+import {forEach, indexOf} from "lodash";
 import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
 import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";
@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   protected animalList: AnimalDetailDto[] = [];
   protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
+  protected likedAnimals2: AnimalDetailDto[] = [];
   protected dislikedAnimals: AnimalDetailDto[] = [];
   protected shelterId: string;
 
@@ -85,7 +86,6 @@ export class HomeComponent implements OnInit {
     this.animalService.findAll().subscribe({
       next: data => {
         this.animalList = data;
-        this.loadCards();
       },
       error: error => {
         console.error("Failed to load animals", error);
@@ -112,9 +112,21 @@ export class HomeComponent implements OnInit {
             this.notification.error("Could not find subscriptions");
           }
         });
+        this.preferencesService.getLikedDislikedAnimals(this.user.id, true).subscribe( {
+          next: data => {
+            this.likedAnimals2 = data;
+            this.animalList = this.animalList.filter(animal => !this.likedAnimals2.some(likedAnimal =>
+            animal.id === likedAnimal.id));
+            this.loadCards()
+          },
+          error: error => {
+            console.error("Failed to load liked animals", error);
+          }
+        })
       },
+
       error: error => {
-        //this schould never happen
+        //this should never happen
         console.error('Error finding user', error);
         this.notification.error("Could not find logged in user");
       }
@@ -164,13 +176,22 @@ export class HomeComponent implements OnInit {
       this.likedAnimals.push(animal);
     }
     this.animalList.splice(this.animalList.indexOf(animal), 1);
-    this.loadCards();
     //TODO call preferenceservice
     this.preference.animalId = animal.id;
     this.preference.like = true;
     this.preferencesService.likeDislike(this.preference).subscribe(
       (response) => {
         console.log("Success", response);
+        this.preferencesService.getLikedDislikedAnimals(this.user.id, true).subscribe( {
+          next: data => {
+            this.likedAnimals2 = data;
+            this.loadCards();
+          },
+          error: error => {
+            console.error("Failed to load liked animals", error);
+          }
+          }
+        )
       }
     );  }
 
