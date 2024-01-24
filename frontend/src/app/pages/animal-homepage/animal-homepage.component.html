@@ -32,11 +32,6 @@
       </div>
 
     <!-- Paypal button -->
-    <div class="col">
-      <h4>{{ isSubscribed ? 'You are already Subscribed to' : 'Subscribe to' }} {{ animal?.name }}</h4>
-      <div *ngIf="!isSubscribed" id="paypal-button-container-P-2J073097VE083035WMWKWHZY"
-           style="max-width: 150px;"></div>
-    </div>
 
     <app-money-action [shelter]="animal.shelter" [animal]="animal"></app-money-action>
 

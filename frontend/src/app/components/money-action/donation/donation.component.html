@@ -56,10 +56,16 @@
         </div>
 
           <div class="modal-footer">
+              <div class="spinner-grow me-2 text-primary"
+                   role="status"
+                   *ngIf="donated"
+                   style="width: 2rem; height: 2rem;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
               <button class="btn" (click)="donate()" style="background-color: #FFC439; width: 250px;">
                 <img alt="paypal" src="../../../../assets/img/de-pp-logo-150px.png" height="20.8" width="80"/>
               </button>
-            </div>
+          </div>
 
       </div>
     </div>

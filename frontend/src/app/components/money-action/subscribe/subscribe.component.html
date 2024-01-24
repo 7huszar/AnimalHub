@@ -2,11 +2,13 @@
         (click)="click()"
         style="width: 100%;"
         data-bs-toggle="modal"
-        data-bs-target="#subscribe-dialog">
-  subscribe
+        data-bs-target="#subscribe-dialog"
+        [disabled]="isSubscribed">
+  <div *ngIf="!isSubscribed">subscribe</div>
+  <div *ngIf="isSubscribed">subscribed !!!</div>
 </button>
 
-<div  id="subscribe-dialog"
+<div *ngIf="!isSubscribed" id="subscribe-dialog"
       class="modal fade"
       tabindex="-1"
       aria-labelledby="subscribe man"
@@ -19,9 +21,14 @@
       </div>
       <div class="modal-body">
 
-        pay 11.99€ to see stuff of the animal
+        pay 10.00€ or something like this to see stuff of the animal
 
         <div class="modal-footer">
+          <div class="col">
+            <h4>{{ isSubscribed ? 'You are already Subscribed to' : 'Subscribe to' }} {{ animal?.name }}</h4>
+            <div *ngIf="!isSubscribed" id="paypal-button-container-P-2J073097VE083035WMWKWHZY"
+                 style="max-width: 150px;"></div>
+          </div>
         </div>
 
       </div>

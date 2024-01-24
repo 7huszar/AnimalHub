@@ -16,6 +16,7 @@ export class DonationComponent {
 
   clicked: boolean = false;
   giveMoney: UntypedFormGroup;
+  donated: boolean = false;
 
   constructor(
     private service: PaypalService,
@@ -38,6 +39,7 @@ export class DonationComponent {
       if (cents === '') {
         cents = '00';
       }
+      this.donated = true;
       this.service.placeOrder(this.receiver.id,
         {amount: this.giveMoney.get('euro').value + '.' + cents,
           donator: this.authService.getUser().id}).subscribe({
