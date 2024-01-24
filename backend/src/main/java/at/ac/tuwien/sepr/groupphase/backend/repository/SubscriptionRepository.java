@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SubscriptionKey;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +20,11 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Subs
     Subscription findBySubscriptionId(String subscriptionId);
 
     Subscription findByKey(SubscriptionKey id);
+
+    void deleteAllByUser(ApplicationUser user);
+
+    void deleteAllByAnimal(Animal animal);
+
 
     @Modifying
     @Transactional

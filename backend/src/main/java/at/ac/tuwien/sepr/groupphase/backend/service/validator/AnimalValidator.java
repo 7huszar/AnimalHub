@@ -156,6 +156,13 @@ public class AnimalValidator {
     public void validateForCreate(CreateAnimalDto animalDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", animalDto);
         List<String> validationErrors = validateAnimalDetails(mapper.createAnimalDtoToAnimalDetailDto(animalDto));
+
+        if (animalDto.getShelter().getPaypalClientId() == null) {
+
+            validationErrors.add("Please set up Paypal Credentials first under the edit shelter Page");
+        }
+
+
         if (!validationErrors.isEmpty()) {
             throw new ValidationException("Failed to validate data for creating animal", validationErrors);
         }
