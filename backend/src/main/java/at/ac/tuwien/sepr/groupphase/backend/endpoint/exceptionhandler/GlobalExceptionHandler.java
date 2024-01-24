@@ -2,16 +2,15 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.ErrorListExceptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.SingleExceptionDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.TimeoutExceptionDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.exception.BlockedIpExceptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ErrorListException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.SingleException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.BlockedIpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import jakarta.persistence.ElementCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -29,7 +28,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /**
@@ -99,9 +97,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-    @ExceptionHandler(value = {TimeoutException.class})
-    protected ResponseEntity<Object> handleTimoutException(TimoutException e, WebRequest request) {
-        TimeoutExceptionDto dto = (TimeoutExceptionDto) new TimeoutExceptionDto()
+    @ExceptionHandler(value = {BlockedIpException.class})
+    protected ResponseEntity<Object> handleTimoutException(BlockedIpException e, WebRequest request) {
+        BlockedIpExceptionDto dto = (BlockedIpExceptionDto) new BlockedIpExceptionDto()
             .setTimeout(e.getTimeout())
             .setUiError("TE0")
             .setMessage("Action hast timeout for user");

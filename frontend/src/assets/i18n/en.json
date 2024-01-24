@@ -14,7 +14,9 @@
     "PWD_LONG": "the length of the password must not exceed 255",
     "BAD_CREDENTIALS": "Username or password incorrect",
     "LOGIN_FAILED": "Failed to login",
-    "HOW_DOES_IT_WORK": "How does AnimalHub work?"
+    "HOW_DOES_IT_WORK": "How does AnimalHub work?",
+    "BLOCKED1": "zu viele Anmeldeversuche, versuche es in ",
+    "BLOCKED2": "s wieder."
   },
   "LANG_SELECT": {
     "DROPDOWN": "Language"

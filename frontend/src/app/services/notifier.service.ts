@@ -13,19 +13,19 @@ export class NotifierService {
     private translator :TranslateService
   ) { }
 
-  notifyWarn(titleKey :string) :void {
+  notifyWarn(titleKey: string) :void {
     this.translator.get(titleKey).subscribe((titleTranslation :string) => {
       this.notification.warning(titleTranslation);
     });
   }
 
-  notifySuccess(titleKey :string) :void {
+  notifySuccess(titleKey: string) :void {
     this.translator.get(titleKey).subscribe((titleTranslation :string) =>{
       this.notification.success(titleTranslation);
     });
   }
 
-  notifyError(bodyKey :string, titleKey :string) :void {
+  notifyError(bodyKey: string, titleKey :string) :void {
     this.translator.get(bodyKey).subscribe( (bodyTranslation :string) => {
       this.translator.get(titleKey).subscribe( (titleTranslation :string) => {
         this.notification.error(bodyTranslation, titleTranslation);
@@ -33,7 +33,7 @@ export class NotifierService {
     })
   }
 
-  notifyStdError(error :any, titleKey :string) {
+  notifyStdError(error: any, titleKey: string) {
     // status == 0 means no response (not a member of HttpStatusCode)
     let title :string = 'error';
     this.translator.get(titleKey).subscribe((titleTranslation :string) => {
@@ -55,6 +55,15 @@ export class NotifierService {
     } else if (error.error) {
       this.notification.error(error.error, title);
     }
+  }
+
+  notifySplitBody(body1: string, middle: string, body2) {
+    this.translator.get(body1).subscribe((trans1 :string) => {
+      this.translator.get(body2).subscribe((trans2 :string) => {
+        this.notification.error(trans1 + middle + trans2);
+      });
+    });
+
   }
 
 }

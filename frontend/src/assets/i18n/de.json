@@ -14,7 +14,9 @@
     "PWD_LONG": "Das Passwort darf maximal 255 Zeichen lang sein",
     "BAD_CREDENTIALS": "Benutzername oder Passwort falsch",
     "LOGIN_FAILED": "Anmeldung fehlgeschlagen",
-    "HOW_DOES_IT_WORK": "Wie funktioniert AnimalHub?"
+    "HOW_DOES_IT_WORK": "Wie funktioniert AnimalHub?",
+    "BLOCKED1": "zu viele Anmeldeversuche, versuche es in ",
+    "BLOCKED2": "s wieder."
   },
   "LANG_SELECT": {
     "DROPDOWN": "Sprache"

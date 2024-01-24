@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -9,11 +8,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.BlockedIpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.JwtException;
@@ -55,7 +53,7 @@ public interface UserService extends UserDetailsService {
      * @return the JWT, if successful
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
-    String login(UserLoginDto userLoginDto, HttpServletRequest request) throws NotFoundException, TimoutException;
+    String login(UserLoginDto userLoginDto, HttpServletRequest request) throws NotFoundException, BlockedIpException;
 
     /**
      * Registers a user and sends an e-mail to verify given e-mail.

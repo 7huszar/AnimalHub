@@ -1,5 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
@@ -7,6 +6,7 @@ import {HttpStatusCode} from "@angular/common/http";
 import {NotifierService} from "../../services/notifier.service";
 import {EmailFieldComponent} from "../../components/email-field/email-field.component";
 import {PasswordComponent} from "../../components/password/password.component";
+import {BlockedIpExceptionDto} from "../../dtos/error";
 
 @Component({
   selector: 'app-login',
@@ -73,10 +73,14 @@ export class LoginComponent {
         this.emailField.fail();
         this.pwdField.fail();
         let title: string = 'LOGIN.LOGIN_FAILED';
+        let jsonObj = JSON.parse(error.error);
+        let tmp: BlockedIpExceptionDto = jsonObj as BlockedIpExceptionDto;
+        console.log(tmp);
+
         // status == 401 / Unauthorized - wrong login credentials
          if (error.status == HttpStatusCode.Unauthorized) {
-           if (error.errors?.timeOut) {
-             this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
+           if (tmp.uiError === 'TE0') {
+             this.notification.notifySplitBody('LOGIN.BLOCKED1', (Math.ceil(tmp.timeout / 1000)).toString(), 'LOGIN.BLOCKED2');
            } else {
              this.notification.notifyError('LOGIN.BAD_CREDENTIALS', title);
            }

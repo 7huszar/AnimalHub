@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -9,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
@@ -21,7 +19,7 @@ import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.BlockedIpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.mail.BlockedIp;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
@@ -153,10 +151,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, TimoutException {
+    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, BlockedIpException {
         LOGGER.trace("login({}, {})", userLoginDto, request);
         if (timeoutService.hasTimeout(request.getRemoteAddr())) {
-            throw new TimoutException("user by ip " + request.getRemoteAddr() + " has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
+            throw new BlockedIpException("user by ip " + request.getRemoteAddr() + " has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
         }
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails;
