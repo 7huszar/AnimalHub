@@ -138,7 +138,6 @@ public class ShelterServiceImpl implements ShelterService {
         List<Animal> animals = shelter.getAnimals();
 
         for (Animal animal : animals) {
-            LOGGER.debug("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + animals);
             subscriptionRepository.deleteAllByAnimal(animal);
         }
 
