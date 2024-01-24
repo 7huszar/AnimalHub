@@ -235,7 +235,6 @@ public class ShelterServiceImpl implements ShelterService {
         return mapper.shelterToShelterDetailDto(shelterRepository.findByUser(userMapper.userDetailDtoUserToApplicationUser(user)));
     }
 
-
     @Override
     public void unassignShelter(UUID shelterId, UserDetailDto user) throws NotFoundException, ConflictException {
 

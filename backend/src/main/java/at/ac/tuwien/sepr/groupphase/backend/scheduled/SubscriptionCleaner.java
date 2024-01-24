@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -37,15 +38,16 @@ public class SubscriptionCleaner {
                 // already handled
             }
         });
+
         final LocalDateTime date = LocalDateTime.now();
         repository.findAll().forEach((subscription -> {
             Donation donation = Donation.builder()
                 .user(subscription.getUser())
-                .amount(new BigDecimal("12.99"))
+                .amount(new BigDecimal("10.00"))
                 .stamp(date)
                 .payed(true)
                 .receiver(subscription.getAnimal().getId())
-                .id(subscription.getSubscriptionId() + date)
+                .id(subscription.getSubscriptionId() + LocalDate.now().getYear() + LocalDate.now().getMonth())
                 .shelter(subscription.getAnimal().getShelter())
                 .type(DonationType.SUBSCRIPTION)
                 .build();

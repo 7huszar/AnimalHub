@@ -6,8 +6,8 @@
   <h1 class="m-4" style="display: flex; align-items: center;">
     Donations received by {{ authService.getUser().shelter.name }}
   </h1>
-  <form class="d-flex flex-row w-auto mb-3" (ngSubmit)="reloadDonations()">
-    <div class="flex-grow-1">
+  <form class="row" (ngSubmit)="reloadDonations()">
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
       <label for="id" class="col-form-label">
         ID
       </label>
@@ -17,7 +17,7 @@
              (ngModelChange)="searchChanged()">
     </div>
 
-    <div class="flex-grow-1">
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
       <label for="receiver" class="col-form-label">
         receiver
       </label>
@@ -26,7 +26,7 @@
     </div>
 
 
-    <div class="flex-grow-1">
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
       <label for="amountAfter" class="col-form-label">
         amount after
       </label>
@@ -39,7 +39,7 @@
              (ngModelChange)="searchChanged()">
     </div>
 
-    <div class="flex-grow-1">
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
       <label for="amountBefore" class="col-form-label">
         amount before
       </label>
@@ -53,8 +53,7 @@
       >
     </div>
 
-
-    <div class="ms-1">
+    <div class="col-auto">
       <label for="dateBefore" class="col-form-label">
         date before
       </label>
@@ -67,7 +66,7 @@
       >
     </div>
 
-    <div class="ms-1">
+    <div class="col-auto">
       <label for="dateAfter" class="col-form-label">
         date after
       </label>
@@ -85,6 +84,7 @@
     <!-- Donation Table -->
     <thead>
     <tr>
+      <th>ID</th>
       <th>Date</th>
       <th>Type</th>
       <th>receiver</th>
@@ -93,13 +93,14 @@
     </thead>
     <tbody>
     <tr *ngFor="let donation of donations" class="center-td">
+      <td>{{ donation.id }}</td>
       <td>{{ donation.date }}</td>
       <td>{{ mapType(donation.type) }}</td>
       <td>{{ donation.receiver }}</td>
       <td>{{ formatMoney(donation) }}</td>
     </tr>
     <tr>
-      <td colspan="3" style="text-align: right;">Total:</td>
+      <td colspan="4" style="text-align: right;">Total:</td>
       <td>{{ total.toFixed(2) + ' €' }}</td>
     </tr>
     </tbody>

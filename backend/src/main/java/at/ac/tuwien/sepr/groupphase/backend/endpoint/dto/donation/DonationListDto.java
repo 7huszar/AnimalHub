@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record DonationListDto(
+    String id,
     BigDecimal amount,
     LocalDate date,
     DonationType type,

@@ -357,10 +357,10 @@ public class UserServiceImpl implements UserService {
         final LocalDateTime date = LocalDateTime.now();
         Donation donation = Donation.builder()
             .user(subscription.getUser())
-            .amount(new BigDecimal("12.99"))
+            .amount(new BigDecimal("10.00"))
             .stamp(date)
             .payed(true)
-            .id(subscription.getSubscriptionId() + date)
+            .id(subscription.getSubscriptionId() + "I")
             .shelter(subscription.getAnimal().getShelter())
             .type(DonationType.SUBSCRIPTION)
             .receiver(subscription.getAnimal().getId())

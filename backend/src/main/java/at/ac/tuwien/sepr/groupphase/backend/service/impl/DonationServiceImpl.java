@@ -77,26 +77,34 @@ public class DonationServiceImpl implements DonationService {
                 UUID id = UUID.fromString(donationList.receiver());
                 Animal animal = animalRepository.findAnimalById(id);
                 if (animal != null) {
-                    return new DonationListDto(donationList.amount(),
+                    return new DonationListDto(
+                        donationList.id(),
+                        donationList.amount(),
                         donationList.date(),
                         donationList.type(),
                         animal.getName());
                 }
                 Shelter shelter = shelterRepository.findShelterById(id);
                 if (shelter != null) {
-                    return new DonationListDto(donationList.amount(),
+                    return new DonationListDto(
+                        donationList.id(),
+                        donationList.amount(),
                         donationList.date(),
                         donationList.type(),
                         shelter.getName());
                 }
                 shelter = shelterRepository.findShelterById(shelterId);
                 if (shelter != null) {
-                    return new DonationListDto(donationList.amount(),
+                    return new DonationListDto(
+                        donationList.id(),
+                        donationList.amount(),
                         donationList.date(),
                         donationList.type(),
                         shelter.getName());
                 }
-                return new DonationListDto(donationList.amount(),
+                return new DonationListDto(
+                    donationList.id(),
+                    donationList.amount(),
                     donationList.date(),
                     donationList.type(),
                     "error");
