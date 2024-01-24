@@ -50,11 +50,16 @@ export class DonationBarGraphComponent implements OnInit {
     this.chartOptions = {
       grid: {
         top: 0,
-        bottom: 0,
+        bottom: 20,
         containLabel: false
       },
       xAxis: {
         type: 'value',
+        axisLabel: {
+          formatter: function(value) {
+            return value + ' €';
+          }
+        }
       },
       yAxis: {
         type: 'category',
@@ -89,7 +94,7 @@ export class DonationBarGraphComponent implements OnInit {
   }
 
   private calculateHeight(): void {
-    this.height = (this.thickness + this.gap * this.thickness / 100) * this.visibleDataCount;
+    this.height = (this.thickness + this.gap * this.thickness / 100) * this.visibleDataCount + 20;
   }
 
   isMore(): boolean {
