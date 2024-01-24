@@ -17,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.AnimalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
+import at.ac.tuwien.sepr.groupphase.backend.util.ImageBlur;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -212,7 +213,14 @@ public class AnimalServiceImpl implements AnimalService {
             throw new NotFoundException("Animal does not exist.");
         }
 
-        return fileService.findById(fileId);
+        try {
+            var fileDto = fileService.findById(fileId);
+            var file = ImageBlur.blur(fileDto.getFile(), fileDto.getContentMimeType());
+            fileDto.setFile(file);
+            return fileDto;
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
     }
 
     @Override
