@@ -219,7 +219,7 @@ public class AnimalServiceImpl implements AnimalService {
             var fileDto = fileService.findById(fileId);
             return ImageBlur.blur(fileDto);
         } catch (IOException e) {
-          throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 

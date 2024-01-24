@@ -112,6 +112,7 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
+    @Transactional
     public void dislike(UUID animalId, UUID userId) throws NotFoundException {
         LOGGER.trace("Change Preferences, animal with id {} user with id{}", animalId, userId);
         AnimalDetailDto animal = animalService.findById(animalId);
@@ -124,7 +125,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         likedDislikedAnimalRepository.save(LikedDislikedAnimal.builder()
             .user(user)
             .animal(animal2)
-            .liked(true)
+            .liked(false)
             .build());
 
 
