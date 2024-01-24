@@ -211,23 +211,33 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDetailDto getContent(UUID animalId, UUID userId, UUID fileId) throws NotFoundException {
-        LOGGER.trace("getContent({},{},{})", animalId, userId, fileId);
-        if (!animalRepository.existsById(animalId)) {
+    public FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException {
+        LOGGER.trace("getContent({},{})", id, fileId);
+        if (!animalRepository.existsById(id)) {
             throw new NotFoundException("Animal does not exist.");
         }
+        // TODO check if is image
 
+        var user = userService.getCurrentUser();
 
-        // TODO check if is image and check if is subscribed
-        var subscription = this.userService.isSubscribed(animalId, userId);
+        if (this.userService.isSubscribed(id, user.getId()) == null) {
+            if (user.getShelter() != null && user.getShelter().getId() == findById(id).getShelter().getId()) {
+                return fileService.findById(fileId);
+            } else {
+                try {
+                    var fileDto = fileService.findById(fileId);
 
-        if (subscription == null) {
-            try {
-                var fileDto = fileService.findById(fileId);
-                return ImageBlur.blur(fileDto);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                /*if (fileDto.getContentMimeType().toLowerCase().startsWith("video")) {
+                    throw new NotFoundException("Videos not shown when user not subscribed");
+                };
+                 */
+
+                    return ImageBlur.blur(fileDto);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         } else {
             return fileService.findById(fileId);
         }

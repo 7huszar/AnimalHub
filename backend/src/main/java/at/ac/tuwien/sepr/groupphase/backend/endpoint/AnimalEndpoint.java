@@ -253,18 +253,17 @@ public class AnimalEndpoint {
     /**
      * Get a specific piece of content from a specific animal.
      *
-     * @param animalId animalId
-     * @param userId userId
+     * @param id id
      * @param fileId fileId
      * @return HttpResponse which contains the actual image file
      * @throws NotFoundException when the id points to no existing animal, or to no existing file
      */
     @Secured(UserRole.Values.USER_VALUE)
-    @GetMapping("{animalId}/{userId}/files/content/{fileId}")
+    @GetMapping("{id}/files/content/{fileId}")
     @Operation(summary = "Get content of animal", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<?> getContent(@PathVariable UUID animalId, @PathVariable UUID userId, @PathVariable UUID fileId) throws NotFoundException {
-        LOGGER.info("GET " + BASE_PATH + "/{}/{}/files/{}", animalId, userId, fileId);
-        var fileDto = animalService.getContent(animalId, userId, fileId);
+    public ResponseEntity<?> getContent(@PathVariable UUID id, @PathVariable UUID fileId) throws NotFoundException {
+        LOGGER.info("GET " + BASE_PATH + "/{}/files/{}", id, fileId);
+        var fileDto = animalService.getContent(id, fileId);
 
         var headers = new HttpHeaders();
         headers.set("Content-Type", fileDto.getContentMimeType());

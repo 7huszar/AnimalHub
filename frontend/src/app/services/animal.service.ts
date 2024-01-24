@@ -88,8 +88,8 @@ export class AnimalService {
     return this.httpClient.get<FileDto[]>(this.animalBaseUri + '/' + id + '/files/content');
   }
 
-  getContent(animalId: string, userId: string, fileId: string): Observable<Blob> {
-    return this.httpClient.get(this.animalBaseUri + '/' + animalId + '/' + userId + '/files/content/' + fileId, {responseType: 'blob'});
+  getContent(id: string, fileId: string): Observable<Blob> {
+    return this.httpClient.get(this.animalBaseUri + '/' + id + '/files/content/' + fileId, {responseType: 'blob'});
   }
 
   addContent(id: string, file: CreateFileDto): Observable<FileDto> {
