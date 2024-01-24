@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -44,5 +45,5 @@ public class Donation {
 
     private DonationType type;
 
-    private String receiver;
+    private UUID receiver;
 }

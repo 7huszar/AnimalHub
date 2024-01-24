@@ -360,7 +360,7 @@ public class UserServiceImpl implements UserService {
             .id(subscription.getSubscriptionId() + date)
             .shelter(subscription.getAnimal().getShelter())
             .type(DonationType.SUBSCRIPTION)
-            .receiver(subscription.getAnimal().getName())
+            .receiver(subscription.getAnimal().getId())
             .build();
 
         donationRepository.save(donation);

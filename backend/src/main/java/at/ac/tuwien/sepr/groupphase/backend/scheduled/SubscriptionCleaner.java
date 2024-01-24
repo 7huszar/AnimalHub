@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,7 @@ public class SubscriptionCleaner {
                 .amount(new BigDecimal("12.99"))
                 .stamp(date)
                 .payed(true)
-                .receiver(subscription.getAnimal().getName())
+                .receiver(subscription.getAnimal().getId())
                 .id(subscription.getSubscriptionId() + date)
                 .shelter(subscription.getAnimal().getShelter())
                 .type(DonationType.SUBSCRIPTION)

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DonationListDto} from "../../../../dtos/shelter";
+import {DonationListDto, ShelterDetailDto, ShelterDto} from "../../../../dtos/shelter";
 import {ShelterService} from "../../../../services/shelter.service";
 import {AuthService} from "../../../../services/auth.service";
 import Decimal from "decimal.js";
@@ -12,15 +12,17 @@ import Decimal from "decimal.js";
 export class StatisticComponent implements OnInit{
   donations: DonationListDto[];
   total: Decimal = new Decimal(0);
+  shelter: ShelterDto;
 
   constructor(
     private shelterService: ShelterService,
     protected authService: AuthService
   ) {
+    this.shelter = this.authService.getUser().shelter;
   }
 
   ngOnInit() {
-    this.shelterService.findAllDonations(this.authService.getUser().shelter.id).subscribe({
+    this.shelterService.findAllDonations(this.shelter.id).subscribe({
       next: next => {
         this.donations = next;
         this.total = new Decimal(0);
