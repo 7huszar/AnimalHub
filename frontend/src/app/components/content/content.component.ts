@@ -13,6 +13,7 @@ import {ShelterService} from "../../services/shelter.service";
 export class ContentComponent implements OnChanges{
 
   @Input() id: string;
+  @Input() userId: string;
   @Input() mode: Mode;
   @Input() file: FileDto;
   @Input() setClass: string;

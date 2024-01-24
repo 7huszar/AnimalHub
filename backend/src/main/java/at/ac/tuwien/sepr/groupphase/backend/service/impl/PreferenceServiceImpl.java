@@ -115,16 +115,15 @@ public class PreferenceServiceImpl implements PreferenceService {
     @Transactional
     public void dislike(UUID animalId, UUID userId) throws NotFoundException {
         LOGGER.trace("Change Preferences, animal with id {} user with id{}", animalId, userId);
-        AnimalDetailDto animal = animalService.findById(animalId);
         var user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User with id " + userId + " does not exist.")
         );
-        var animal2 = animalRepository.findById(animalId).orElseThrow(
+        var animal = animalRepository.findById(animalId).orElseThrow(
             () -> new NotFoundException("Animal with id " + animalId + " does not exist.")
         );
         likedDislikedAnimalRepository.save(LikedDislikedAnimal.builder()
             .user(user)
-            .animal(animal2)
+            .animal(animal)
             .liked(false)
             .build());
 

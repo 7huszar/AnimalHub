@@ -52,9 +52,9 @@ export class HomeComponent implements OnInit {
       if (this.animalList[this.counter + 1] == undefined && this.animalList[this.counter - 2] != undefined) {
         this.counter--;
       }
-      this.right = this.animalList[this.counter - 1];
+      this.left = this.animalList[this.counter - 1];
       this.middle = this.animalList[this.counter];
-      this.left = this.animalList[this.counter + 1];
+      this.right = this.animalList[this.counter + 1];
     }
   }
 
@@ -96,6 +96,7 @@ export class HomeComponent implements OnInit {
       next: data => {
         this.likedAnimals.push(animal);
         this.getNextAnimal();
+        this.loadCards();
       },
       error: err => {
         // TODO notify
@@ -116,6 +117,7 @@ export class HomeComponent implements OnInit {
     this.preferencesService.likeDislike(pref).subscribe({
       next: data => {
         this.getNextAnimal();
+        this.loadCards();
       },
       error: err => {
         // TODO notify
@@ -140,6 +142,9 @@ export class HomeComponent implements OnInit {
   private getNextAnimal() {
     this.preferencesService.getRecommendedAnimals(this.authService.getUser().id).subscribe({
         next: animals => {
+          console.log(animals)
+          console.log("animalList:")
+          console.log(this.animalList)
           animals.some(animal => {
             if (!this.animalList.find(element => element.id === animal.id)) {
               this.animalList.push(animal);
@@ -158,10 +163,18 @@ export class HomeComponent implements OnInit {
     // Remove liked animal
     this.likedAnimals = removeElement(this.likedAnimals, animal);
 
-    //TODO call preferenceservice
+    this.preferencesService.removeLikedAnimal(this.authService.getUser().id, animal.id).subscribe({
+      error: err => {
+        // TODO notify
+      }
+    });
   }
 
-  leftClick(): void {
+  rightClick(): void {
+    this.getNextAnimal();
+    this.getNextAnimal();
+    this.getNextAnimal();
+
     for (let i = 0; i < 3; i++) {
       if (this.counter + 2 < this.animalList.length) {
         this.right = this.middle;
@@ -172,7 +185,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  rightClick(): void {
+  leftClick(): void {
     for (let i = 0; i < 3; i++) {
       if (this.counter - 2 >= 0) {
         this.left = this.middle;

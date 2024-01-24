@@ -13,8 +13,11 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
+import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.AnimalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
 import at.ac.tuwien.sepr.groupphase.backend.util.ImageBlur;
@@ -43,6 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final FileService fileService;
+    private final UserService userService;
     private final FileMapper fileMapper;
     private final AnimalRepository animalRepository;
     private final AnimalShelterMapper mapper;
@@ -212,14 +216,30 @@ public class AnimalServiceImpl implements AnimalService {
         if (!animalRepository.existsById(id)) {
             throw new NotFoundException("Animal does not exist.");
         }
+        // TODO check if is image
 
-        // TODO check if is image and check if is subscribed
+        var user = userService.getCurrentUser();
 
-        try {
-            var fileDto = fileService.findById(fileId);
-            return ImageBlur.blur(fileDto);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (this.userService.isSubscribed(id, user.getId()) == null) {
+            if (user.getShelter() != null && user.getShelter().getId() == findById(id).getShelter().getId()) {
+                return fileService.findById(fileId);
+            } else {
+                try {
+                    var fileDto = fileService.findById(fileId);
+
+                /*if (fileDto.getContentMimeType().toLowerCase().startsWith("video")) {
+                    throw new NotFoundException("Videos not shown when user not subscribed");
+                };
+                 */
+
+                    return ImageBlur.blur(fileDto);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        } else {
+            return fileService.findById(fileId);
         }
     }
 
