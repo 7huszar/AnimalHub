@@ -34,60 +34,68 @@ public class AppointmentEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AppointmentService appointmentService;
 
+    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public AppointmentDto findById(@PathVariable UUID id) {
-        // TODO log
+        LOGGER.info("GET " + BASE_PATH + "/" + id);
         return appointmentService.findById(id);
     }
 
+    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("user/{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public List<AppointmentDto> findByUserId(@PathVariable UUID id) {
-        // TODO log
+        LOGGER.info("GET " + BASE_PATH + "/user/" + id);
         return appointmentService.findByUserId(id);
     }
 
+    // TODO doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("shelter/{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public List<AppointmentDto> findByShelterId(@PathVariable UUID id) {
-        // TODO log
+        LOGGER.info("GET " + BASE_PATH + "/shelter/" + id);
         return appointmentService.findByShelterId(id);
     }
 
+    // TODO doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("shelter/{id}/{status}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public List<AppointmentDto> findByShelterIdWithStatus(@PathVariable UUID id, @PathVariable AppointmentStatus status) {
-        // TODO log
+        LOGGER.info("GET " + BASE_PATH + "/shelter/" + id + "/" + status);
         return appointmentService.findByShelterIdWithStatus(id, status);
     }
 
+    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public AppointmentDto create(@RequestBody AppointmentDto appointmentDto) {
-        // TODO log
+        LOGGER.info("POST " + BASE_PATH);
+        LOGGER.debug("Body of request:\n{}", appointmentDto);
         return appointmentService.create(appointmentDto);
     }
 
+    // TODO doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public AppointmentDto updateStatus(@PathVariable UUID id, @RequestBody AppointmentDto appointmentDto) {
-        // TODO log
+        LOGGER.info("PUT " + BASE_PATH + "/" + id);
         return appointmentService.updateStatus(appointmentDto);
     }
 
+    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @DeleteMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public void delete(@PathVariable UUID id) {
-        // TODO log
+        LOGGER.info("DELETE " + BASE_PATH + "/" + id);
         appointmentService.delete(id);
     }
 }

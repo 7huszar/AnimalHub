@@ -8,19 +8,27 @@ import java.util.UUID;
 
 public interface AppointmentService {
 
+    // TODO doku
     AppointmentDto findById(UUID id);
 
+    // TODO doku
     List<AppointmentDto> findByUserId(UUID userId);
 
+    // TODO doku
     List<AppointmentDto> findByShelterId(UUID shelterId);
 
+    // TODO doku
     List<AppointmentDto> findByShelterIdWithStatus(UUID id, AppointmentStatus status);
 
+    // TODO doku
     AppointmentDto create(AppointmentDto appointmentDto);
 
+    // TODO doku
     AppointmentDto updateStatus(AppointmentDto appointmentDto);
 
+    // TODO doku
     void delete(UUID id);
 
+    // TODO doku
     List<AppointmentDto> getUpcomingAppointments();
 }

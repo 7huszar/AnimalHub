@@ -31,10 +31,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final AnimalService animalService;
-    private final AnimalShelterMapper animalShelterMapper;
 
     @Override
     public AppointmentDto findById(UUID id) {
+        LOGGER.trace("Find appointment by Id {}", id);
 
         // TODO validation
 
@@ -43,6 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDto> findByUserId(UUID userId) {
+        LOGGER.trace("Find appointments of user by id {}", userId);
 
         // TODO validation
 
@@ -53,6 +54,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDto> findByShelterId(UUID shelterId) {
+        LOGGER.trace("Find appointments of shelter by id {}", shelterId);
 
         // TODO validation
 
@@ -63,6 +65,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDto> findByShelterIdWithStatus(UUID id, AppointmentStatus status) {
+        LOGGER.trace("Find appointments of shelter by id {} and status {}", id, status);
 
         // TODO validation
 
@@ -73,6 +76,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDto create(AppointmentDto appointmentDto) {
+        LOGGER.trace("Create new appointment: {}", appointmentDto);
 
         // TODO validate and conflict check
 
@@ -101,6 +105,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDto updateStatus(AppointmentDto appointmentDto) {
+        LOGGER.trace("Update appointments {} status to {}", appointmentDto.getId(), appointmentDto.getStatus());
+
+        // TODO validate
+
         try {
             var appointment = appointmentRepository.findById(appointmentDto.getId()).orElseThrow(NotFoundException::new); // TODO throw notfound
 
@@ -111,12 +119,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             return appointmentMapper.appointmentToAppointmentDto(appointment);
 
         } catch (NotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // TODO handle
         }
     }
 
     @Override
     public void delete(UUID id) {
+        LOGGER.trace("Delete appointment with id {}", id);
+
         // TODO throw not found
 
         appointmentRepository.deleteById(id);

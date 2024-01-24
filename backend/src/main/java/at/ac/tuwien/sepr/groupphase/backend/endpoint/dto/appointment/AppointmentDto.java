@@ -33,4 +33,20 @@ public class AppointmentDto {
     private AppointmentType type;
 
     private AppointmentStatus status;
+
+    @Override
+    public String toString() {
+        return "AppointmentDto{"
+            + "id=" + id
+            + ", user=" + user
+            + ", shelter=" + shelter
+            + ", animal=" + animal
+            + ", timeFrom=" + timeFrom
+            + ", timeTo=" + timeTo
+            + ", title='" + title + '\''
+            + ", msg='" + msg + '\''
+            + ", type=" + type
+            + ", status=" + status
+            + '}';
+    }
 }
