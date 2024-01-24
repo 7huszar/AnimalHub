@@ -264,10 +264,13 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("delete({})", id);
 
         conflict.conflictForDelete(id);
-        var shelter = userRepository.findById(id).orElseThrow(
+        var user = userRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
-        userRepository.delete(shelter);
+
+        subscriptionRepository.deleteAllByUser(user);
+
+        userRepository.delete(user);
     }
 
     @Override

@@ -71,6 +71,12 @@ export class ConfirmDeleteDialogComponent {
     });
   }
 
+  reloadAnimal() {
+    this.router.navigateByUrl('/users/subscriptions', {skipLocationChange: true}).then(() => {
+      window.location.reload();
+    });
+  }
+
   public deleteUser() {
     if (this.DeleteId != null) {
       this.userService.delete(this.DeleteId)
@@ -96,6 +102,7 @@ export class ConfirmDeleteDialogComponent {
         .subscribe({
           next: () => {
             this.notification.notifySuccess(`Animal ${this.deleteName} successfully deleted.`);
+            this.reloadAnimal();
           },
           error: error => {
             console.error('Error deleting animal', error);
@@ -132,7 +139,6 @@ export class ConfirmDeleteDialogComponent {
     }else if (this.deleteType === 'Subscription'){
       this.cancelSubscription()
     }
-    window.location.reload();
   }
 }
 
