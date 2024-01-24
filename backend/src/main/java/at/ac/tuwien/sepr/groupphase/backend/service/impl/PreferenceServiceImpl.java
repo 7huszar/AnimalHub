@@ -153,7 +153,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         List<AnimalDetailDto> animals = animalService.findAll();
         List<AnimalDetailDto> likedAnimals = getLikedAnimals(userId);
         animals.removeIf(animal -> likedAnimals.stream().anyMatch(animal1 -> animal1.getId().equals(animal.getId())));
-        List<AnimalDetailDto> dislikedAnimals = getLikedAnimals(userId);
+        List<AnimalDetailDto> dislikedAnimals = getDislikedAnimals(userId);
         animals.removeIf(animal -> dislikedAnimals.stream().anyMatch(animal1 -> animal1.getId().equals(animal.getId())));
         List<AnimalRankingDto> animalRanking = new ArrayList<>();
         for (AnimalDetailDto animal : animals) {
