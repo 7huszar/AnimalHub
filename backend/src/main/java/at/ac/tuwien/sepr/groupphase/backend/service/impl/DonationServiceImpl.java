@@ -2,15 +2,19 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DonationMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DonationService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,14 +35,18 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DonationServiceImpl implements DonationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final DonationRepository donationRepository;
     private final ShelterRepository shelterRepository;
     private final DonationMapper donationMapper;
+    private final AnimalRepository animalRepository;
 
     @Transactional
     @Override
     public List<DonationSumDto> getDonationsByReceiver(UUID shelterId) {
+        LOGGER.trace("getDonationsByReceiver({})", shelterId);
+
         return donationRepository.getAnimalDonations(shelterId)
             .map(donationSumDto -> new DonationSumDto(donationSumDto.receiver(), donationSumDto.name(),
                 donationSumDto.amount() != null ? donationSumDto.amount() : new BigDecimal(0)))
@@ -47,6 +56,8 @@ public class DonationServiceImpl implements DonationService {
 
     @Override
     public List<DonationListDto> findListedDonations(UUID shelterId, DonationSearchDto searchDto) {
+        LOGGER.trace("findListedDonations({}, {})", shelterId, searchDto);
+
         Pageable pageable = PageRequest.of(searchDto.page(), 50, Sort.by("stamp"));
 
         Specification<Donation> spec = createSpecification(
@@ -60,7 +71,37 @@ public class DonationServiceImpl implements DonationService {
 
         Page<Donation> donationPage = donationRepository.findAll(spec, pageable);
 
-        return donationPage.stream().map(donationMapper::donationToDonationListDto).collect(Collectors.toList());
+        return donationPage.stream()
+            .map(donationMapper::donationToDonationListDto)
+            .map(donationList -> {
+                UUID id = UUID.fromString(donationList.receiver());
+                Animal animal = animalRepository.findAnimalById(id);
+                if (animal != null) {
+                    return new DonationListDto(donationList.amount(),
+                        donationList.date(),
+                        donationList.type(),
+                        animal.getName());
+                }
+                Shelter shelter = shelterRepository.findShelterById(id);
+                if (shelter != null) {
+                    return new DonationListDto(donationList.amount(),
+                        donationList.date(),
+                        donationList.type(),
+                        shelter.getName());
+                }
+                shelter = shelterRepository.findShelterById(shelterId);
+                if (shelter != null) {
+                    return new DonationListDto(donationList.amount(),
+                        donationList.date(),
+                        donationList.type(),
+                        shelter.getName());
+                }
+                return new DonationListDto(donationList.amount(),
+                    donationList.date(),
+                    donationList.type(),
+                    "error");
+            })
+            .collect(Collectors.toList());
     }
 
     private Specification<Donation> createSpecification(

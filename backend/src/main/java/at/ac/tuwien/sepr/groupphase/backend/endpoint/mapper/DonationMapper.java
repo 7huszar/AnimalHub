@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

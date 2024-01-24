@@ -2,8 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
 
 import java.util.List;
 import java.util.UUID;

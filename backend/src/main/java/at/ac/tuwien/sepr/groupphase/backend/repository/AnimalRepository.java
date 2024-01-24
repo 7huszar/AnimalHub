@@ -39,5 +39,5 @@ public interface AnimalRepository extends JpaRepository<Animal, UUID> {
         @Param("smallerThan") Double smallerThan
     );
 
-
+    Animal findAnimalById(UUID id);
 }

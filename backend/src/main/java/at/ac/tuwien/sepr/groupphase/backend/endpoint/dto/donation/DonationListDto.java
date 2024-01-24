@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation;
 
 import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 
