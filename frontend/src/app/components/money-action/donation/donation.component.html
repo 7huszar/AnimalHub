@@ -1,0 +1,73 @@
+<button class="btn btn-primary"
+     (click)="click()"
+     [style.width]="width"
+     data-bs-toggle="modal"
+     data-bs-target="#donate-dialog">
+  donate
+</button>
+
+<div  id="donate-dialog"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="donate man"
+      aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Donate to {{ receiver?.name }} shelter</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container mb-3">
+          <div class="row">
+            <div class="offset-4 col-8">
+              <form>
+                <div class="form-group" [formGroup]="giveMoney">
+
+                  <div class="input-group">
+                    <input id="euro"
+                           formControlName="euro"
+                           type="text"
+                           allowOnlyNumber
+                           placeholder="0"
+                           class="form-control" style="text-align: right;">
+
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">.</span>
+                    </div>
+
+                    <input id="cent"
+                           formControlName="cent"
+                           type="text"
+                           allowOnlyNumber
+                           placeholder="00"
+                           class="form-control"
+                           maxlength="2" style="width: 45px; flex: none;">
+
+                    <div class="input-group-append">
+                      <span class="input-group-text">€</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+          <div class="modal-footer">
+              <div class="spinner-grow me-2 text-primary"
+                   role="status"
+                   *ngIf="donated"
+                   style="width: 2rem; height: 2rem;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <button class="btn" (click)="donate()" style="background-color: #FFC439; width: 250px;">
+                <img alt="paypal" src="../../../../assets/img/de-pp-logo-150px.png" height="20.8" width="80"/>
+              </button>
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>

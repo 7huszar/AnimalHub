@@ -14,13 +14,11 @@ import {tap} from "rxjs/operators";
 export class RegisterService {
 
   private http :HttpClient;
-  private authBaseUri: string = this.globals.backendUri + '/email-field';
+  private authBaseUri: string = this.globals.backendUri + '/register';
 
 
   constructor(handler :HttpBackend,
-              private globals :Globals,
-              private httpIntercepted: HttpClient,
-              private authService: AuthService) {
+              private globals :Globals) {
     this.http = new HttpClient(handler);
   }
 

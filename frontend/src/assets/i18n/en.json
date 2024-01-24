@@ -70,6 +70,7 @@
     "QUESTION_PART_1_SHELTER": "Do you really want to delete the Shelter ",
     "QUESTION_PART_1_ANIMAL": "Do you really want to delete the Animal ",
     "QUESTION_PART_1_USER": "Do you really want to delete the User ",
+    "QUESTION_PART_1_SUBSCRIPTION": "Do you really want to delete the Subscription ",
     "QUESTION_PART_2": " ?",
     "NO": "No, STOP!",
     "YES": "Yes, delete FOREVER."

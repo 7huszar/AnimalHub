@@ -1,7 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {PaypalService} from "../../services/paypal.service";
-import {AuthService} from "../../services/auth.service";
+import {PaypalService} from "../../../services/paypal.service";
+import {AuthService} from "../../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {ShelterDetailDto} from "../../../dtos/shelter";
 
 @Component({
   selector: 'app-donation',
@@ -10,10 +11,12 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 })
 export class DonationComponent {
 
-  @Input() receiver: string = '0';
+  @Input() receiver: ShelterDetailDto = null;
+  @Input() width: string = '200px';
 
   clicked: boolean = false;
   giveMoney: UntypedFormGroup;
+  donated: boolean = false;
 
   constructor(
     private service: PaypalService,
@@ -21,7 +24,8 @@ export class DonationComponent {
     formBuilder: UntypedFormBuilder
   ) {
     this.giveMoney = formBuilder.group({
-      arbitrary: ['', [Validators.pattern('\\d+(.\\d{1,2})?')]]
+      euro: ['', [Validators.pattern('\\d+')]],
+      cent: ['', Validators.pattern('\\d*')]
     });
   }
 
@@ -31,10 +35,15 @@ export class DonationComponent {
 
   donate() :void {
     if (this.giveMoney.valid) {
-      console.log(this.giveMoney.get('arbitrary').value);
-      this.service.placeOrder(this.receiver, {amount: this.giveMoney.get('arbitrary').value, donator: this.authService.getUser().id}).subscribe({
+      let cents: string = this.giveMoney.get('cent').value;
+      if (cents === '') {
+        cents = '00';
+      }
+      this.donated = true;
+      this.service.placeOrder(this.receiver.id,
+        {amount: this.giveMoney.get('euro').value + '.' + cents,
+          donator: this.authService.getUser().id}).subscribe({
         next: next => {
-          console.log(next)
           window.open(next.href);
         },
         error: error => {
@@ -44,5 +53,4 @@ export class DonationComponent {
     }
   }
 
-  protected readonly onsubmit = onsubmit;
 }

@@ -24,6 +24,7 @@ export class LoginComponent {
   failedLogin: boolean = false;
   isEmailInvalid: boolean = false;
   isPwdInvalid: boolean = false;
+  delayed: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -74,7 +75,11 @@ export class LoginComponent {
         let title: string = 'LOGIN.LOGIN_FAILED';
         // status == 401 / Unauthorized - wrong login credentials
          if (error.status == HttpStatusCode.Unauthorized) {
-            this.notification.notifyError('LOGIN.BAD_CREDENTIALS', title);
+           if (error.errors?.timeOut) {
+             this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
+           } else {
+             this.notification.notifyError('LOGIN.BAD_CREDENTIALS', title);
+           }
           this.failedLogin = true;
           this.isEmailInvalid = true;
           this.isPwdInvalid = true;

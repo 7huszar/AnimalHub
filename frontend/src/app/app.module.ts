@@ -5,6 +5,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -42,14 +43,19 @@ import {MemberEditShelterComponent} from "./pages/member.edit.shelter/member.edi
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordRepeatComponent } from './components/password/password-repeat/password-repeat.component';
 import {EmailFieldComponent} from "./components/email-field/email-field.component";
-import { DonationComponent } from './components/donation/donation.component';
-import { SuccessComponent } from './components/donation/success/success.component';
-import { FailureComponent } from './components/donation/failure/failure.component';
+import { DonationComponent } from './components/money-action/donation/donation.component';
+import { SuccessComponent } from './components/money-action/donation/success/success.component';
+import { FailureComponent } from './components/money-action/donation/failure/failure.component';
 import { StatisticComponent } from './pages/home/member-profile/statistic/statistic.component';
 import { AnimalSearchComponent } from './pages/animal-search/animal-search.component';
 import { AppointmentComponent } from './pages/appointment/appointment.component';
 import { FullCalendarModule } from "@fullcalendar/angular";
 import { AppointmentModalComponent } from './components/appointment-modal/appointment-modal.component';
+import { StandardLayoutComponent } from './components/standard-layout/standard-layout.component';
+import { OnlyNumberDirective } from './directives/only-number.directive';
+import { MoneyActionComponent } from './components/money-action/money-action.component';
+import { SubscribeComponent } from './components/money-action/subscribe/subscribe.component';
+import { DonationBarGraphComponent } from './components/donation-bar-graph/donation-bar-graph.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -94,7 +100,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnimalSearchComponent,
     EmailFieldComponent,
     AppointmentComponent,
-    AppointmentModalComponent
+    AppointmentModalComponent,
+    StandardLayoutComponent,
+    OnlyNumberDirective,
+    MoneyActionComponent,
+    SubscribeComponent,
+    DonationBarGraphComponent
   ],
   imports: [
     BrowserModule,
@@ -113,6 +124,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'de'
+    }),
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'),
     }),
     NgOptimizedImage,
     FullCalendarModule
