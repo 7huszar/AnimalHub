@@ -7,4 +7,5 @@ export interface PaypalLinkDto {
 export interface PaypalDonationDto {
   amount: string;
   donator: string;
+  receiver: string;
 }

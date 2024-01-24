@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {DonationSumDto, ShelterDetailDto} from "../../dtos/shelter";
 import {DonationService} from "../../services/donation.service";
-import {ba} from "@fullcalendar/core/internal-common";
 
 @Component({
   selector: 'app-donation-bar-graph',

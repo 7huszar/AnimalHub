@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.service.DonationService;
 import lombok.RequiredArgsConstructor;

@@ -138,7 +138,7 @@ public class PaypalServiceImpl implements PaypalService {
             .id(reply.id())
             .shelter(receiver)
             .type(DonationType.ONE_TIME)
-            .receiver(receiver.getId())
+            .receiver(donationDto.receiver())
             .build();
 
         donationRepository.save(donation);

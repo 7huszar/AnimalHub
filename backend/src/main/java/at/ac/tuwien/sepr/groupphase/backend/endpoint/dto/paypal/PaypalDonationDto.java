@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record PaypalDonationDto(
     String amount,
-    UUID donator
+    UUID donator,
+    UUID receiver
 ) {
 }

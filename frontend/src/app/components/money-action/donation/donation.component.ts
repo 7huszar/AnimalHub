@@ -3,6 +3,7 @@ import {PaypalService} from "../../../services/paypal.service";
 import {AuthService} from "../../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ShelterDetailDto} from "../../../dtos/shelter";
+import {AnimalDetailDto} from "../../../dtos/animal";
 
 @Component({
   selector: 'app-donation',
@@ -11,7 +12,9 @@ import {ShelterDetailDto} from "../../../dtos/shelter";
 })
 export class DonationComponent {
 
-  @Input() receiver: ShelterDetailDto = null;
+  @Input() shelter: ShelterDetailDto = null;
+  @Input() receiver: AnimalDetailDto = null;
+
   @Input() width: string = '200px';
 
   clicked: boolean = false;
@@ -40,9 +43,10 @@ export class DonationComponent {
         cents = '00';
       }
       this.donated = true;
-      this.service.placeOrder(this.receiver.id,
+      this.service.placeOrder(this.shelter.id,
         {amount: this.giveMoney.get('euro').value + '.' + cents,
-          donator: this.authService.getUser().id}).subscribe({
+          donator: this.authService.getUser().id, receiver: this.receiver != null ? this.receiver.id : this.shelter.id})
+        .subscribe({
         next: next => {
           window.open(next.href);
         },
