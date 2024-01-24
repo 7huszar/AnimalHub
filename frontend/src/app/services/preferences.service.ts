@@ -30,4 +30,8 @@ export class PreferencesService {
     console.log('Create preference: ' + preference.like);
     return this.httpClient.post<PreferenceDto>(this.preferenceBaseUri, preference);
   }
+
+  removeLikedAnimal(userId: string, animalId: string): Observable<any> {
+    return this.httpClient.delete<void>(this.preferenceBaseUri + '/' + userId + '/' + animalId);
+  }
 }
