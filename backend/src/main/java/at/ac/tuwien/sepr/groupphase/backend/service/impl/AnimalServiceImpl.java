@@ -213,11 +213,11 @@ public class AnimalServiceImpl implements AnimalService {
             throw new NotFoundException("Animal does not exist.");
         }
 
+        // TODO check if is image and check if is subscribed
+
         try {
             var fileDto = fileService.findById(fileId);
-            var file = ImageBlur.blur(fileDto.getFile(), fileDto.getContentMimeType());
-            fileDto.setFile(file);
-            return fileDto;
+            return ImageBlur.blur(fileDto);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }

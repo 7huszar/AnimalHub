@@ -1,66 +1,42 @@
 package at.ac.tuwien.sepr.groupphase.backend.util;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
+import ij.ImagePlus;
+import ij.plugin.filter.GaussianBlur;
 import org.springframework.core.io.InputStreamResource;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ImageBlur {
 
-    private static final float[] MATRIX = {
-        1 / 16f, 1 / 8f, 1 / 16f,
-        1 / 8f, 1 / 4f, 1 / 8f,
-        1 / 16f, 1 / 8f, 1 / 16f,
-    };
+    public static FileDetailDto blur(FileDetailDto file) throws IOException {
+        var imageType = file.getContentMimeType().toLowerCase().replace("image/", "");
 
-    public static InputStreamResource blur(InputStreamResource input, String mimeType) throws IOException {
-        var imageType = mimeType.toLowerCase().replace("image/", "");
-
-        var is = input.getInputStream();
+        var is = file.getFile().getInputStream();
         var image = ImageIO.read(is);
 
-        int height = image.getHeight();
-        int width = image.getWidth();
-        var blurredImage = new BufferedImage(width, height, image.getType());
+        var imp = new ImagePlus("Image", image);
 
-        int[][] reds = new int[10][10];
-        int[][] greens = new int[10][10];
-        int[][] blues = new int[10][10];
+        double diagonal = Math.sqrt(image.getWidth() * image.getWidth() + image.getHeight() * image.getHeight());
+        double sigma = diagonal * 0.03;  // Set sigma to be 5% of the image's diagonal size
 
-        for (int x = 0; x < width - 10; x++) {
-            for (int y = 0; y < height - 10; y++) {
-                for (int dx = 0; dx < 10; dx++) {
-                    for (int dy = 0; dy < 10; dy++) {
-                        Color color = new Color(image.getRGB(x + dx, y + dy));
-                        reds[dx][dy] = color.getRed();
-                        greens[dx][dy] = color.getGreen();
-                        blues[dx][dy] = color.getBlue();
-                    }
-                }
+        var gb = new GaussianBlur();
+        gb.blurGaussian(imp.getProcessor(), sigma);
 
-                Arrays.sort(reds);
-                Arrays.sort(greens);
-                Arrays.sort(blues);
-
-                int medianRed = reds[5][5];
-                int medianGreen = greens[5][5];
-                int medianBlue = blues[5][5];
-
-                Color medianColor = new Color(medianRed, medianGreen, medianBlue);
-                blurredImage.setRGB(x + 5, y + 5, medianColor.getRGB());
-            }
-        }
+        var blurredImage = imp.getBufferedImage();
 
         var os = new ByteArrayOutputStream();
         ImageIO.write(blurredImage, imageType, os);
+
+        file.setContentLength(os.size());
+
         is = new ByteArrayInputStream(os.toByteArray());
-        return new InputStreamResource(is);
+
+        file.setFile(new InputStreamResource(is));
+
+        return file;
     }
 }

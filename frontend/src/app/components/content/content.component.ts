@@ -75,6 +75,7 @@ export class ContentComponent implements OnChanges{
           this.content = URL.createObjectURL(blob);
         }, error: err => {
           // TODO handle error
+          console.log(err);
         }
       })
     }
