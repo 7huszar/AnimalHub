@@ -126,7 +126,9 @@ export class CreateEditComponent implements OnInit {
             this.navigateSuccess(animalDto.id);
           }
         }, error: err => {
-          console.error(err); // TODO handle
+          console.error(err);
+          const errorMessage = err.error && err.error.errors ? err.error.errors[0] : 'Unknown error';
+          this.notification.notifyError(errorMessage, "Error Creating Animal");
         }
       });
     } else {
