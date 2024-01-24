@@ -219,5 +219,27 @@
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"
+  },
+
+  "DONATION": {
+    "MORE": "show more",
+    "LESS": "show less",
+    "DONATE": "donate",
+    "DONATE_TO": "Donate to ",
+    "SUCCESS": "Transaction successful, you can close this tab now",
+    "FAILURE": "Transaction failed",
+    "WAIT": "please wait a moment"
+  },
+
+  "STATS": {
+    "RECEIVER": "receiver",
+    "AMOUNT_MAX": "max amount",
+    "AMOUNT_MIN": "min amount",
+    "DATE_MAX": "paid before",
+    "DATE_MIN": "paid after",
+    "AMOUNT": "amount",
+    "TYPE": "type",
+    "DATE": "date",
+    "PAGE_TITLE": "Donations received by "
   }
 }

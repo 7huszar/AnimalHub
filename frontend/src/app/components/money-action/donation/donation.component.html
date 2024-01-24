@@ -3,7 +3,7 @@
      [style.width]="width"
      data-bs-toggle="modal"
      data-bs-target="#donate-dialog">
-  donate
+  {{ 'DONATION.DONATE' | translate }}
 </button>
 
 <div  id="donate-dialog"
@@ -14,7 +14,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Donate to {{ receiver?.name }} shelter</h4>
+        <h4 class="modal-title">{{ 'DONATION.DONATE_TO' | translate }} {{receiver !== null ? receiver.name : shelter?.name }}</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">

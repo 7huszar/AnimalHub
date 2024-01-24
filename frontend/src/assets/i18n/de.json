@@ -220,5 +220,27 @@
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"
+  },
+
+  "DONATION": {
+    "MORE": "mehr zeigen",
+    "LESS": "weniger zeigen",
+    "DONATE": "spenden",
+    "DONATE_TO": "Spende etwas für ",
+    "SUCCESS": "Transaktion erfolgreich, du kannst diesen Tab jetzt schließen",
+    "FAILURE": "Transaktion abgebrochen",
+    "WAIT": "Bitte warte einen Moment"
+  },
+
+  "STATS": {
+    "RECEIVER": "Empfänger",
+    "AMOUNT_MAX": "Maximalbetrag",
+    "AMOUNT_MIN": "Minimalbetrag",
+    "DATE_MAX": "bezahlt bevor",
+    "DATE_MIN": "bezahlt nach",
+    "AMOUNT": "Betrag",
+    "TYPE": "Typ",
+    "DATE": "Datum",
+    "PAGE_TITLE": "Spenden erhalten bei "
   }
 }
