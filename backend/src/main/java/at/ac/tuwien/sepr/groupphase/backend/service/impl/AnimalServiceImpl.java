@@ -13,8 +13,11 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
 import at.ac.tuwien.sepr.groupphase.backend.service.FileService;
+import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.AnimalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.AnimalValidator;
 import at.ac.tuwien.sepr.groupphase.backend.util.ImageBlur;
@@ -43,6 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final FileService fileService;
+    private final UserService userService;
     private final FileMapper fileMapper;
     private final AnimalRepository animalRepository;
     private final AnimalShelterMapper mapper;
@@ -207,19 +211,25 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException {
-        LOGGER.trace("getContent({},{})", id, fileId);
-        if (!animalRepository.existsById(id)) {
+    public FileDetailDto getContent(UUID animalId, UUID userId, UUID fileId) throws NotFoundException {
+        LOGGER.trace("getContent({},{},{})", animalId, userId, fileId);
+        if (!animalRepository.existsById(animalId)) {
             throw new NotFoundException("Animal does not exist.");
         }
 
-        // TODO check if is image and check if is subscribed
 
-        try {
-            var fileDto = fileService.findById(fileId);
-            return ImageBlur.blur(fileDto);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
+        // TODO check if is image and check if is subscribed
+        var subscription = this.userService.isSubscribed(animalId, userId);
+
+        if (subscription == null) {
+            try {
+                var fileDto = fileService.findById(fileId);
+                return ImageBlur.blur(fileDto);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return fileService.findById(fileId);
         }
     }
 

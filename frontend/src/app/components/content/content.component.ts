@@ -12,7 +12,8 @@ import {ShelterService} from "../../services/shelter.service";
 })
 export class ContentComponent implements OnChanges{
 
-  @Input() id: string;
+  @Input() animalId: string;
+  @Input() userId: string;
   @Input() mode: Mode;
   @Input() file: FileDto;
   @Input() setClass: string;
@@ -25,13 +26,13 @@ export class ContentComponent implements OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.id != null && this.mode != null) {
+    if (this.animalId != null && this.mode != null) {
       if (this.mode === Mode.ANIMAL || this.mode === Mode.ANIMAL_HOME) {
-        this.loadAnimalProfileImage(changes.id.currentValue);
+        this.loadAnimalProfileImage(changes.animalId.currentValue);
       } else if (this.mode === Mode.SHELTER || this.mode === Mode.SHELTER_HOME) {
-        this.loadShelterProfileImage(changes.id.currentValue);
+        this.loadShelterProfileImage(changes.animalId.currentValue);
       } else if (this.mode === Mode.CONTENT) {
-        this.loadFile(changes.id.currentValue);
+        this.loadFile(changes.animalId.currentValue);
       }
     }
   }
@@ -62,7 +63,7 @@ export class ContentComponent implements OnChanges{
     });
   }
 
-  private loadFile(id: string): void {
+  private loadFile(animalId: string): void {
     if (this.file !== undefined) {
       if (this.file.contentMimeType.startsWith('image')) {
         this.type = Type.IMAGE;
@@ -70,7 +71,7 @@ export class ContentComponent implements OnChanges{
         this.type = Type.VIDEO;
       }
 
-      this.animalService.getContent(id, this.file.id).subscribe({
+      this.animalService.getContent(animalId, this.userId, this.file.id).subscribe({
         next: blob => {
           this.content = URL.createObjectURL(blob);
         }, error: err => {

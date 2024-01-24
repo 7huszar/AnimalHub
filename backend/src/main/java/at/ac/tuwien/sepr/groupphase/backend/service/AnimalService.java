@@ -120,12 +120,13 @@ public interface AnimalService {
     /**
      * Get a specific file from the saved content of an animal.
      *
-     * @param id     id
+     * @param animalId     animalId
+     * @param userId userId
      * @param fileId fileId, also UUID
      * @return Specific File from all the content of a specific animal (with image file)
      * @throws NotFoundException when the id points to no existing animal
      */
-    FileDetailDto getContent(UUID id, UUID fileId) throws NotFoundException;
+    FileDetailDto getContent(UUID animalId, UUID userId, UUID fileId) throws NotFoundException;
 
     /**
      * Add a file to the content of an animal.

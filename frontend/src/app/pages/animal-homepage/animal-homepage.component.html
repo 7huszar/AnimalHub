@@ -38,7 +38,7 @@
            style="max-width: 150px;"></div>
     </div>
 
-      <app-donation [receiver]="animal.shelter.id"></app-donation>
+      <app-donation [receiver]="animal?.shelter?.id"></app-donation>
 
     <!-- end of paypal -->
   </div>
@@ -110,7 +110,7 @@
       <div class="card position-relative" style="border-width: thick; border-color: hotpink; margin-bottom: 1rem">
         <div class="overflow-hidden">
           <div class="bg-image">
-            <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content"
+            <app-content [mode]="Mode.CONTENT" [animalId]="animal.id" [userId]="authService.getUser().id" [file]="content"
                          setClass="object-fit-cover"></app-content>
             <div
               class="mask"
