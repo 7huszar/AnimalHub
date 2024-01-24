@@ -189,6 +189,7 @@ export class CreateEditComponent implements OnInit {
     }
     if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
       this.setImage(event.dataTransfer.items[0].getAsFile());
+      this.animalImageSelected = true;
     } else {
       this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
     }

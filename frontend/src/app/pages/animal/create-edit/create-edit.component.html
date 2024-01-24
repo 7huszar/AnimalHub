@@ -13,7 +13,7 @@
           aria-label="Delete animal">
           <i class="bi bi-trash-fill"></i>
           </button>
-          <button type="submit" class="custom-success-btn" [disabled]="!form.valid && !animalImageSelected">
+          <button type="submit" class="custom-success-btn" [disabled]="!form.valid || !animalImageSelected">
             <i class="bi bi-floppy-fill"></i>
           </button>
         </div>
@@ -201,7 +201,7 @@
           <i class="bi bi-file-earmark-plus text-primary" style="font-size: 80px;" [ngClass]="dropZoneColor"></i> <br>
           {{'ANIMAL_CREATE_EDIT_PAGE.DRAG_AND_DROP' | translate}}
         </div>
-        <img *ngIf="animalImageURL" [src]="animalImageURL" alt="" [style.object-fit]="'contain'" class="img-fluid">
+        <img *ngIf="animalImageURL" [src]="animalImageURL" [style.max-height.em]="15" alt="" [style.object-fit]="'cropped'" class="img-fluid">
       </div>
     </div>
     <app-confirm-delete-dialog [deleteName]="nameForDeletion" [DeleteId]="idForDeletion" [deleteType]="typeForDeletion" ></app-confirm-delete-dialog>
