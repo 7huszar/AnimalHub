@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
-import {DonationSumDto} from "../dtos/shelter";
+import {DonationSearchDto, DonationSumDto} from "../dtos/shelter";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,37 @@ export class DonationService {
   }
 
   getDonationByReceiver(shelterId: string): Observable<DonationSumDto[]> {
-    return this.http.get<DonationSumDto[]>(this.shelterBaseUri + '/' + shelterId);
+    return this.http.get<DonationSumDto[]>(this.shelterBaseUri + '/sum/' + shelterId);
   }
 
+  searchDonations(shelterId: string, searchDto: DonationSearchDto): Observable<any> {
+    let params = new HttpParams();
+
+    if (searchDto.dateAfter != null) {
+      params = params.append('dateAfter', searchDto.dateAfter.toDateString());
+    }
+
+    if (searchDto.dateBefore != null) {
+      params = params.append('dateBefore', searchDto.dateBefore.toDateString());
+    }
+
+    if (searchDto.amountAfter != null) {
+      params = params.append('amountAfter', searchDto.amountAfter);
+    }
+
+    if (searchDto.amountBefore != null) {
+      params = params.append('amountBefore', searchDto.amountBefore);
+    }
+
+    if (searchDto.id != null) {
+      params = params.append('id', searchDto.id);
+    }
+
+    if (searchDto.page != null) {
+      params = params.append('page', searchDto.page);
+    }
+
+
+    return this.http.get(this.shelterBaseUri + '/search/' + shelterId, {params});
+  }
 }

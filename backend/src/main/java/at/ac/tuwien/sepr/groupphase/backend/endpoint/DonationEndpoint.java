@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.DonationListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.service.DonationService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +24,15 @@ public class DonationEndpoint {
 
     private final DonationService donationService;
 
-    @GetMapping("/{shelterId}")
+    @GetMapping("/sum/{shelterId}")
     @Secured(UserRole.Values.MEMBER_VALUE)
     public List<DonationSumDto> donationSums(@PathVariable UUID shelterId) {
         return donationService.getDonationsByReceiver(shelterId);
+    }
+
+    @GetMapping("/search/{shelterId}")
+    @Secured(UserRole.Values.MEMBER_VALUE)
+    public List<DonationListDto> searchDonations(@PathVariable UUID shelterId, DonationSearchDto searchDto) {
+        return donationService.findListedDonations(shelterId, searchDto);
     }
 }

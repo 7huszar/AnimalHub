@@ -2,12 +2,18 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -29,4 +35,16 @@ public interface DonationRepository extends JpaRepository<Donation, String> {
         + " FROM Donation"
         + " WHERE shelter.id = :shelterId")
     BigDecimal directShelterDonations(@Param(value = "shelterId") UUID shelterId);
+
+    Page<Donation> findDonationByStampAfterAndStampBeforeAndIdContainingIgnoreCaseAndAmountAfterAndAmountBeforeAndShelterEquals(
+        LocalDateTime stampAfter,
+        LocalDateTime stampBefore,
+        String id,
+        BigDecimal amountAfter,
+        BigDecimal amountBefore,
+        Shelter shelter,
+        Pageable pageable
+    );
+
+    Page<Donation> findAll(Specification<Donation> spec, Pageable pageable);
 }

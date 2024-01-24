@@ -2,10 +2,85 @@
 
 
 <div class="container">
+
   <h1 class="m-4" style="display: flex; align-items: center;">
     Donations received by {{ authService.getUser().shelter.name }}
   </h1>
+  <form class="d-flex flex-row w-auto mb-3" (ngSubmit)="reloadDonations()">
+    <div class="flex-grow-1">
+      <label for="id" class="col-form-label">
+        ID
+      </label>
+      <input type="text" id="id" name="id"
+             class="form-control"
+             [(ngModel)]="searchParams.id"
+             (ngModelChange)="searchChanged()">
+    </div>
 
+    <div class="flex-grow-1">
+      <label for="receiver" class="col-form-label">
+        receiver
+      </label>
+      <input type="text" id="receiver"
+             class="form-control">
+    </div>
+
+
+    <div class="flex-grow-1">
+      <label for="amountAfter" class="col-form-label">
+        amount after
+      </label>
+      <input type="text" id="amountAfter" name="amountAfter"
+             class="form-control"
+             placeholder="&infin;"
+             allowOnlyNumber
+             style="text-align: right"
+             [(ngModel)]="searchParams.amountAfter"
+             (ngModelChange)="searchChanged()">
+    </div>
+
+    <div class="flex-grow-1">
+      <label for="amountBefore" class="col-form-label">
+        amount before
+      </label>
+      <input type="text" id="amountBefore" name="amountBefore"
+             class="form-control"
+             placeholder="0"
+             allowOnlyNumber
+             style="text-align: right"
+             [(ngModel)]="searchParams.amountBefore"
+             (ngModelChange)="searchChanged()"
+      >
+    </div>
+
+
+    <div class="ms-1">
+      <label for="dateBefore" class="col-form-label">
+        date before
+      </label>
+      <input type="date" id="dateBefore" name="dateBefore"
+             pattern="\d{4}-\d{2}-\d{2}"
+             placeholder="yyyy-mm-dd"
+             class="form-control"
+             [(ngModel)]="searchParams.dateBefore"
+             (ngModelChange)="searchChanged()"
+      >
+    </div>
+
+    <div class="ms-1">
+      <label for="dateAfter" class="col-form-label">
+        date after
+      </label>
+      <input type="date" id="dateAfter" name="dateAfter"
+             pattern="\d{4}-\d{2}-\d{2}"
+             placeholder="yyyy-mm-dd"
+             class="form-control"
+             [(ngModel)]="searchParams.dateAfter"
+             (ngModelChange)="searchChanged()"
+      >
+    </div>
+
+  </form>
   <table class="table table-hover m-3">
     <!-- Donation Table -->
     <thead>

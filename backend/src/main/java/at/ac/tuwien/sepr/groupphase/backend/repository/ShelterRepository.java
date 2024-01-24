@@ -17,5 +17,7 @@ public interface ShelterRepository extends JpaRepository<Shelter, UUID> {
     Shelter findByUser(ApplicationUser user);
 
     boolean existsById(@NonNull UUID uuid);
+
+    Shelter findShelterById(UUID uuid);
 }
 

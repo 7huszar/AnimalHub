@@ -34,7 +34,6 @@ export class DonationBarGraphComponent implements OnInit {
     this.donationService.getDonationByReceiver(this.shelter.id).subscribe({
       next: next => {
         this.animals = next;
-        console.log(typeof this.animals[0].amount); // Check the type of the first item's amount
         console.log(next);
         this.updateChart();
       },
@@ -46,6 +45,7 @@ export class DonationBarGraphComponent implements OnInit {
   }
 
   private updateChart() {
+    console.log('init');
     const data = this.animals.slice(0, this.visibleDataCount).reverse();
     this.chartOptions = {
       grid: {
@@ -93,7 +93,7 @@ export class DonationBarGraphComponent implements OnInit {
   }
 
   isMore(): boolean {
-    return this.visibleDataCount != this.animals.length;
+    return this.visibleDataCount != this.animals?.length;
   }
 
   isLess(): boolean {
@@ -101,7 +101,7 @@ export class DonationBarGraphComponent implements OnInit {
   }
 
   total(): number {
-    return this.animals.length;
+    return this.animals?.length;
   }
 
   actual(): number {

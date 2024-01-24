@@ -83,3 +83,12 @@ export interface DonationSumDto {
   name: string;
   amount: number;
 }
+
+export interface DonationSearchDto {
+  dateAfter: Date,
+  dateBefore: Date,
+  amountAfter: string,
+  amountBefore: string,
+  id: string,
+  page: number
+}
