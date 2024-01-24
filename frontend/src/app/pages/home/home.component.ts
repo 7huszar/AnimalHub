@@ -5,6 +5,7 @@ import {NotifierService} from "../../services/notifier.service";
 import {ToastrService} from "ngx-toastr";
 import {PreferencesService} from "../../services/preferences.service";
 import {removeElement} from "../../util/util";
+import {map, Observable} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -95,8 +96,7 @@ export class HomeComponent implements OnInit {
     this.preferencesService.likeDislike(pref).subscribe({
       next: data => {
         this.likedAnimals.push(animal);
-        this.getNextAnimal();
-        this.loadCards();
+        this.getNextAnimal().subscribe(() => this.loadCards());
       },
       error: err => {
         // TODO notify
@@ -116,8 +116,7 @@ export class HomeComponent implements OnInit {
 
     this.preferencesService.likeDislike(pref).subscribe({
       next: data => {
-        this.getNextAnimal();
-        this.loadCards();
+        this.getNextAnimal().subscribe(() => this.loadCards());
       },
       error: err => {
         // TODO notify
@@ -139,24 +138,18 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private getNextAnimal() {
-    this.preferencesService.getRecommendedAnimals(this.authService.getUser().id).subscribe({
-        next: animals => {
-          console.log(animals)
-          console.log("animalList:")
-          console.log(this.animalList)
-          animals.some(animal => {
-            if (!this.animalList.find(element => element.id === animal.id)) {
-              this.animalList.push(animal);
-              this.loadCards();
-              return true;
-            }
-          });
-        },
-        error: err => {
-          // TODO notify
-        }
-    })
+  private getNextAnimal(): Observable<any> {
+    return this.preferencesService.getRecommendedAnimals(this.authService.getUser().id).pipe(
+      map(animals => {
+        animals.some(animal => {
+          if (!this.animalList.find(element => element.id === animal.id)) {
+            this.animalList.push(animal);
+            this.loadCards();
+            return true;
+          }
+        })
+      }
+    ));
   }
 
   removeLikedAnimal(animal: AnimalDetailDto){
@@ -171,18 +164,16 @@ export class HomeComponent implements OnInit {
   }
 
   rightClick(): void {
-    this.getNextAnimal();
-    this.getNextAnimal();
-    this.getNextAnimal();
-
-    for (let i = 0; i < 3; i++) {
-      if (this.counter + 2 < this.animalList.length) {
-        this.right = this.middle;
-        this.middle = this.left;
-        this.left = this.animalList[this.counter + 2];
-        this.counter++;
+    this.getNextAnimal().subscribe(() => {
+      for (let i = 0; i < 3; i++) {
+        if (this.counter + 2 < this.animalList.length) {
+          this.right = this.middle;
+          this.middle = this.left;
+          this.left = this.animalList[this.counter + 2];
+          this.counter++;
+        }
       }
-    }
+    });
   }
 
   leftClick(): void {
