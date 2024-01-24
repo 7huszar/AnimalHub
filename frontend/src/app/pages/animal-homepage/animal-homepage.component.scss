@@ -8,10 +8,12 @@ body {
   padding-right: 0;
   width: 100%;
   max-height: 30em;
+  border-width: thick;
+  border-color: hotpink;
 }
 
 
-.animal-title {
+/*.animal-title {
   color: mix(#fff, #e91e63, 85%);
   font-size: calc(3em);
   font-weight: 900;
@@ -24,6 +26,8 @@ body {
   0.03em 0.03em 0 mix(#fff, #e91e63, 70%),
   0.035em 0.035em 0 mix(#fff, #e91e63, 72%);
 }
+
+ */
 
 
 .content {

@@ -1,28 +1,104 @@
 <app-header></app-header>
 
-<div class="container" *ngIf="animal" style="min-width: 95%;">
+<div class="container-fluid" *ngIf="animal">
 
   <app-appointment-modal #createAppointmentModal [type]="Mode.ANIMAL" [mode]="Mode.CREATE" [header]="'APPOINTMENT.CREATE' | translate" [data]="animal"></app-appointment-modal>
 
-  <div class="row">
+  <div class="row headings">
     <div class="col">
-      <div class="headings">
-        <div style="display: flex; align-items: center; justify-content: flex-end">
-          <h4>{{'ANIMAL_HOMEPAGE.SHELTER' | translate}}</h4>
-          <button style="margin-left: 0.25em; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">{{animal?.shelter?.name }}
-          </button>
-        </div>
+      <h1 class="animal-title">{{ animal?.name }}</h1>
+    </div>
+    <div class="col">
+      <div style="display: flex; align-items: center; justify-content: flex-end">
+        <!--<h4>{{'ANIMAL_HOMEPAGE.SHELTER' | translate}}</h4>-->
+        <button style="margin-left: 0.25em; font-size: 2em" class="btn btn-primary" [routerLink]="['/shelter', animal?.shelter?.id]">{{animal?.shelter?.name }}
+        </button>
       </div>
     </div>
   </div>
+
   <div class="row">
-    <div class="col" style="max-width: 35em;">
-      <!--      old setup-->
-      <!--    <div class="col" style="max-width: 30em; min-height: 20em">-->
-      <h1 class="animal-title" style="text-align: center">{{ animal?.name }}</h1>
+    <div class="col" style="max-width: 30em; min-height: 20em">
       <div class="media">
         <app-content [mode]="Mode.ANIMAL_HOME" [id]="animal.id"></app-content>
       </div>
+    </div>
+    <div class="col">
+      <div class="container position-relative"
+           style="height: 100%; padding-left: 0; margin-left: 3rem; padding-top: 15%">
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.SPECIES' | translate}}</div>
+          <div class="col" *ngIf="isCat">{{'ANIMAL_HOMEPAGE.CAT' | translate}}</div>
+          <div class="col" *ngIf="isDog">{{'ANIMAL_HOMEPAGE.DOG' | translate}}</div>
+          <div class="col" *ngIf="isBird">{{'ANIMAL_HOMEPAGE.BIRD' | translate}}</div>
+          <div class="col" *ngIf="isRodent">{{'ANIMAL_HOMEPAGE.RODENT' | translate}}</div>
+        </div>
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto" style="">{{'ANIMAL_HOMEPAGE.GENDER' | translate}}</div>
+          <div class="col" *ngIf="animal.gender===Gender.male">{{'ANIMAL_HOMEPAGE.MALE' | translate}}</div>
+          <div class="col" *ngIf="animal.gender===Gender.female">{{'ANIMAL_HOMEPAGE.FEMALE' | translate}}</div>
+        </div>
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.RACE' | translate}}</div>
+          <div class="col">{{ globals.currentLanguage === "de" ? animal.germanRace : animal.englishRace }}</div>
+        </div>
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.AGE' | translate}}</div>
+          <div class="col" *ngIf="years">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEARS' | translate}}</div>
+          <div class="col" *ngIf="months">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTHS' | translate}}</div>
+          <div class="col" *ngIf="days">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAYS' | translate}}</div>
+          <div class="col" *ngIf="year">{{ animalAge }}{{'ANIMAL_HOMEPAGE.YEAR' | translate}}</div>
+          <div class="col" *ngIf="month">{{ animalAge }}{{'ANIMAL_HOMEPAGE.MONTH' | translate}}</div>
+          <div class="col" *ngIf="day">{{ animalAge }}{{'ANIMAL_HOMEPAGE.DAY' | translate}}</div>
+
+        </div>
+        <div class="row align-items-end" style="height: auto; min-height: fit-content">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.HEIGHT' | translate}}</div>
+          <div class="col">{{ animal.height }} m</div>
+        </div>
+        <div class="row align-items-end mb-2" style="height: auto; min-height: fit-content">
+          <div class="col-auto">{{'ANIMAL_HOMEPAGE.WEIGHT' | translate}}</div>
+          <div class="col">{{ animal.weight }} kg</div>
+        </div>
+        <div class="row align-items-end">
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary" (click)="createAppointmentModal.open()">{{'APPOINTMENT.CREATE' | translate}}</button>
+          </div>
+        </div>
+
+        <div class="row fixed-button align-items-end w-100">
+          <div *ngIf="canUpload()" class="col-auto">
+            <input type="file" id="newContent" name="newContent"
+                   accept="image/png, image/jpeg, image/gif, image/bmp, video/mp4, video/mpeg"
+                   (change)="onNewContentSelected($event)" class="form-control">
+          </div>
+          <div *ngIf="canUpload()" class="col-auto">
+            <button type="button" class="btn btn-primary" [disabled]="newContent === null" (click)="onUpload()">Upload
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-money-action [shelter]="animal.shelter" [animal]="animal"></app-money-action>
+  </div>
+  <div class="row">
+    <div style="margin-top: 5%;display: flex; justify-content: center; align-items: center; text-align: center">
+      <div style="max-width: 80%">
+        <h6>
+          {{ globals.currentLanguage === "de" ? animal.germanDescription : animal.englishDescription }}
+        </h6>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col" style="max-width: 35em;">
+      <div class="col" style="max-width: 30em; min-height: 20em">
+        <div class="media">
+          <app-content [mode]="Mode.ANIMAL_HOME" [id]="animal.id"></app-content>
+        </div>
       <div style="margin-top: 5%;display: flex; justify-content: center; align-items: center; text-align: center">
         <div style="max-width: 80%">
           <h6>
@@ -37,6 +113,7 @@
 
     <!-- end of paypal -->
   </div>
+
   <div class="col">
     <div class="container position-relative"
          style="height: 100%; padding-left: 0; margin-left: 3rem; padding-top: 15%">
@@ -93,6 +170,7 @@
       </div>
     </div>
   </div>
+
   </div>
 
   <div class="row">
@@ -129,4 +207,5 @@
       </div>
     </div>
   </div>
+
 </div>
