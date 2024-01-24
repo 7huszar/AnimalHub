@@ -5,6 +5,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -54,6 +55,7 @@ import { StandardLayoutComponent } from './components/standard-layout/standard-l
 import { OnlyNumberDirective } from './directives/only-number.directive';
 import { MoneyActionComponent } from './components/money-action/money-action.component';
 import { SubscribeComponent } from './components/money-action/subscribe/subscribe.component';
+import { DonationBarGraphComponent } from './components/donation-bar-graph/donation-bar-graph.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -102,7 +104,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     StandardLayoutComponent,
     OnlyNumberDirective,
     MoneyActionComponent,
-    SubscribeComponent
+    SubscribeComponent,
+    DonationBarGraphComponent
   ],
   imports: [
     BrowserModule,
@@ -121,6 +124,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'de'
+    }),
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'),
     }),
     NgOptimizedImage,
     FullCalendarModule

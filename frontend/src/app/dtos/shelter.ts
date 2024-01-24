@@ -77,3 +77,9 @@ export interface DonationListDto {
   type: string;
   receiver: string;
 }
+
+export interface DonationSumDto {
+  receiver: string;
+  name: string;
+  amount: number;
+}
