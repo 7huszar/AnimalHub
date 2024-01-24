@@ -13,25 +13,14 @@ export class DonationBarGraphComponent implements OnInit {
   @Input() shelter: ShelterDetailDto = null;
 
   chartOptions: EChartsOption;
-
-  private data = [
-    { name: 'Item A', value: 120 },
-    { name: 'Item B', value: 200 },
-    { name: 'Item C', value: 150 },
-    { name: 'Item D', value: 80 },
-    { name: 'Item E', value: 70 },
-    { name: 'Item F', value: 110 },
-    { name: 'Item G', value: 130 },
-    { name: 'Item H', value: 210 },
-    { name: 'Item I', value: 140 },
-    { name: 'Item J', value: 170 },
-    { name: 'Item K', value: 100 },
-    { name: 'Item L', value: 90 }
-  ];
-
   private animals: DonationSumDto[];
 
+  private thickness: number = 30;
+  private gap: number = 50;
+
   private visibleDataCount = 5;
+
+  height: number;
 
   constructor(
     private donationService: DonationService
@@ -50,22 +39,30 @@ export class DonationBarGraphComponent implements OnInit {
         console.error(error);
       }
     });
-    console.log();
+    this.calculateHeight();
   }
 
   private updateChart() {
+    const data = this.animals.slice(0, this.visibleDataCount).reverse();
     this.chartOptions = {
+      grid: {
+        top: 0,     // No padding on the top
+        bottom: 0,  // No padding on the bottom
+        containLabel: false // Set this to false if you handle label positioning manually
+      },
       xAxis: {
         type: 'value',
       },
       yAxis: {
         type: 'category',
-        data: this.animals.slice(0, this.visibleDataCount).map(item => item.name),
+        data: data.map(item => item.name),
       },
       series: [
         {
           type: 'bar',
-          data: this.animals.slice(0, this.visibleDataCount).map(item => item.amount),
+          barWidth: this.thickness,
+          barGap: this.gap,
+          data: data.map(item => item.amount),
         },
       ],
     };
@@ -73,6 +70,18 @@ export class DonationBarGraphComponent implements OnInit {
 
   expandChart() {
     this.visibleDataCount = Math.min(this.visibleDataCount + 5, this.animals.length);
+    this.calculateHeight();
     this.updateChart();
+  }
+
+  reduceChart(): void {
+    this.visibleDataCount = Math.max(this.visibleDataCount - 5, 0);
+    this.calculateHeight();
+    this.updateChart();
+  }
+
+  private calculateHeight(): void {
+    this.height = (this.thickness + this.gap * this.thickness / 100) * this.visibleDataCount;
+
   }
 }
