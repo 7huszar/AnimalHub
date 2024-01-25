@@ -50,10 +50,12 @@ export class DonationComponent {
           donator: this.authService.getUser().id, receiver: this.receiver != null ? this.receiver.id : this.shelter.id})
         .subscribe({
         next: next => {
+          this.donated = false;
           window.open(next.href);
         },
         error: error => {
           this.notification.notifyStdError(error, 'DONATION.DONATE_FAIL')
+          this.donated = false;
           console.error(error);
         }
       });
