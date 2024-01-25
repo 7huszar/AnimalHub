@@ -212,6 +212,7 @@
     "USER_EMAIL": "User-Email",
     "SHELTER": "Shelter",
     "ANIMAL": "Animal",
+    "ADOPT": "Adopt",
     "PLAY": "Play",
     "WALK": "Walk",
     "TYPE": "Appointment-Type",

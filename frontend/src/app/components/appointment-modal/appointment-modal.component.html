@@ -22,6 +22,7 @@
     <div *ngIf="appointment.animal" class="form-floating mb-3">
       <select class="form-select" id="appointmentType" [(ngModel)]="appointment.type" #appointmentType="ngModel"
               [disabled]="!isModeCreate()" required [class.is-invalid]="appointmentType.invalid && (appointmentType.dirty ||appointmentType.touched)">
+        <option [value]="AppointmentType.ADOPT">{{'APPOINTMENT.ADOPT' | translate}}</option>
         <option [value]="AppointmentType.PLAY">{{'APPOINTMENT.PLAY' | translate}}</option>
         <option [value]="AppointmentType.WALK">{{'APPOINTMENT.WALK' | translate}}</option>
       </select>
