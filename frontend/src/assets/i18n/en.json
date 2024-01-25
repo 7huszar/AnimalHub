@@ -230,7 +230,10 @@
     "FAILURE": "Transaction failed",
     "WAIT": "please wait a moment",
     "BAR_FAIL": "failed to load donations for graph",
-    "DONATE_FAIL": "Spenden fehlgeschlagen"
+    "DONATE_FAIL": "Spenden fehlgeschlagen",
+    "SUBSCRIPTION": "subscription payment",
+    "ONE_TIME": "one time payment"
+
   },
 
   "STATS": {

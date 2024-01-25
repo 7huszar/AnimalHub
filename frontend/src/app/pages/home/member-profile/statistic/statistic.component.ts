@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {DonationListDto, DonationSearchDto, ShelterDetailDto, ShelterDto} from "../../../../dtos/shelter";
-import {ShelterService} from "../../../../services/shelter.service";
+import {DonationListDto, DonationSearchDto, ShelterDto} from "../../../../dtos/shelter";
 import {AuthService} from "../../../../services/auth.service";
 import Decimal from "decimal.js";
 import {DonationService} from "../../../../services/donation.service";
 import {debounceTime, Subject} from "rxjs";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-statistic',
@@ -26,9 +26,8 @@ export class StatisticComponent implements OnInit {
     page: 0};
 
   constructor(
-    private shelterService: ShelterService,
     protected authService: AuthService,
-    private donationService: DonationService
+    private donationService: DonationService,
   ) {
     this.shelter = this.authService.getUser().shelter;
   }
@@ -70,14 +69,5 @@ export class StatisticComponent implements OnInit {
 
   searchChanged() :void {
     this.searchChangedObservable.next();
-  }
-
-  mapType(type: string): string {
-    if (type === 'ONE_TIME') {
-      return 'one time donation';
-    } else if (type === 'SUBSCRIPTION') {
-      return 'subscription payment';
-    }
-    return 'unknown type';
   }
 }

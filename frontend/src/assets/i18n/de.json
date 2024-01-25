@@ -231,7 +231,9 @@
     "FAILURE": "Transaktion abgebrochen",
     "WAIT": "Bitte warte einen Moment",
     "BAR_FAIL": "failed to load donations for graph",
-    "DONATE_FAIL": "donation failed"
+    "DONATE_FAIL": "donation failed",
+    "SUBSCRIPTION": "Abonnomentzahlung",
+    "ONE_TIME": "Einmalzahlung"
   },
 
   "STATS": {

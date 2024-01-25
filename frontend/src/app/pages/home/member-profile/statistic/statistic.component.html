@@ -93,7 +93,7 @@
     <tr *ngFor="let donation of donations" class="center-td">
       <td>{{ donation.id }}</td>
       <td>{{ donation.date }}</td>
-      <td>{{ mapType(donation.type) }}</td>
+      <td>{{ ('DONATION.' + donation.type) | translate }}</td>
       <td>{{ donation.receiver }}</td>
       <td>{{ formatMoney(donation) }}</td>
     </tr>
