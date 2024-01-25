@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
@@ -21,6 +22,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.BlockedIpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.BlockableService;
 import at.ac.tuwien.sepr.groupphase.backend.mail.BlockedIp;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import at.ac.tuwien.sepr.groupphase.backend.mail.TimeoutService;
@@ -87,6 +89,8 @@ public class UserServiceImpl implements UserService {
     private final MailService mail;
     private final DonationRepository donationRepository;
     private final TimeoutService timeoutService;
+    private final PaypalProperties paypalProperties;
+    private final BlockableService blockableService;
 
 
     /**
@@ -161,7 +165,7 @@ public class UserServiceImpl implements UserService {
         try {
             userDetails = loadUserByUsername(userLoginDto.getEmail());
         } catch (UsernameNotFoundException e) {
-            timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
+            timeoutService.addEntity(blockableService.blockedIp(request.getRemoteAddr()));
             throw new NotFoundException("user by e-mail " + userLoginDto.getEmail() + " not found");
         }
         if (userDetails != null
@@ -177,7 +181,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
-        timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
+        timeoutService.addEntity(blockableService.blockedIp(request.getRemoteAddr()));
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
     }
 
@@ -355,7 +359,7 @@ public class UserServiceImpl implements UserService {
         final LocalDateTime date = LocalDateTime.now();
         Donation donation = Donation.builder()
             .user(subscription.getUser())
-            .amount(new BigDecimal("10.00"))
+            .amount(paypalProperties.getHarriesHardcodedAmount())
             .stamp(date)
             .payed(true)
             .id(subscription.getSubscriptionId() + "I")
@@ -573,7 +577,7 @@ public class UserServiceImpl implements UserService {
             + "\"tenure_type\": \"REGULAR\", "
             + "\"sequence\": 1, "
             + "\"total_cycles\": 12, "
-            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"10.00\", \"currency_code\": \"USD\" } } "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"" + paypalProperties.getHarriesHardcodedAmount() + "\", \"currency_code\": \"USD\" } } "
             + "} "
             + "], "
             + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "

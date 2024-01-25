@@ -15,8 +15,10 @@ public class StampedEmail implements Blockable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final String email;
     private final Timestamp timestamp;
+    private final int timeout;
 
-    StampedEmail(String email) {
+    StampedEmail(String email, int timeout) {
+        this.timeout = timeout;
         this.email = email;
         timestamp = Timestamp.valueOf(LocalDateTime.now());
     }
@@ -24,7 +26,7 @@ public class StampedEmail implements Blockable {
     @Override
     public long getDelay(TimeUnit unit) {
         return TimeUnit.MICROSECONDS
-            .convert(60_000 + timestamp.getTime() - Timestamp.valueOf(LocalDateTime.now()).getTime(), unit);
+            .convert(timeout + timestamp.getTime() - Timestamp.valueOf(LocalDateTime.now()).getTime(), unit);
     }
 
     @Override

@@ -11,8 +11,10 @@ public class BlockedIp implements Blockable {
     private final String ip;
     private int cnt = 0;
     private int timout = 60_000;
+    private final int base;
 
-    public BlockedIp(String ip) {
+    public BlockedIp(String ip, int base) {
+        this.base = base;
         this.ip = ip;
         timestamp = Timestamp.valueOf(LocalDateTime.now());
     }

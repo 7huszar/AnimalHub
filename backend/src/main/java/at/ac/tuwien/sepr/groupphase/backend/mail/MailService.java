@@ -34,6 +34,7 @@ public class MailService {
     private final LanguageConfig lang;
     private final FrontendProperties frontend;
     private final MailProperties mailProperties;
+    private final BlockableService blockableService;
 
     /**
      * Send a verification link to specified e-mail.
@@ -50,7 +51,7 @@ public class MailService {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEntity(new StampedEmail(email + "vm"));
+        timeoutCollector.addEntity(blockableService.blockedEmail(email + "vm"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailProperties.getEmail());
         message.setTo(email);
@@ -76,7 +77,7 @@ public class MailService {
             LOGGER.warn(email + " has timout");
             return;
         }
-        timeoutCollector.addEntity(new StampedEmail(email + "pwd"));
+        timeoutCollector.addEntity(blockableService.blockedPwd(email + "pwd"));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailProperties.getEmail());
         message.setTo(email);

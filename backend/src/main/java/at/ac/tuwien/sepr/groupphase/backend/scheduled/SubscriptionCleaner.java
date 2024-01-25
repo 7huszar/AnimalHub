@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.scheduled;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.UserEndpoint;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
@@ -26,6 +27,7 @@ public class SubscriptionCleaner {
     private final SubscriptionRepository repository;
     private final DonationRepository donationRepository;
     private final UserEndpoint endpoint;
+    private final PaypalProperties paypalProperties;
 
     @Scheduled(cron = "@monthly")
     public void cleanSubscriptions() {
@@ -43,7 +45,7 @@ public class SubscriptionCleaner {
         repository.findAll().forEach((subscription -> {
             Donation donation = Donation.builder()
                 .user(subscription.getUser())
-                .amount(new BigDecimal("10.00"))
+                .amount(paypalProperties.getHarriesHardcodedAmount())
                 .stamp(date)
                 .payed(true)
                 .receiver(subscription.getAnimal().getId())

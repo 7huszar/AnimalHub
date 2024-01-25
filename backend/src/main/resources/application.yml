@@ -106,10 +106,12 @@ paypal:
   place-order: /v2/checkout/orders
   capture-order1: /v2/checkout/orders/
   capture-order2: /capture
+  harries-hardcoded-amount: 10.00
 
 timeouts:
-  login: 60
-  email: 60
+  login: 60_000
+  email: 60_000
+  pwd: 60_000
 ---
 spring:
   config:
