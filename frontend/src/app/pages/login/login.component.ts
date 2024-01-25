@@ -73,13 +73,17 @@ export class LoginComponent {
         this.emailField.fail();
         this.pwdField.fail();
         let title: string = 'LOGIN.LOGIN_FAILED';
-        let jsonObj = JSON.parse(error.error);
-        let tmp: BlockedIpExceptionDto = jsonObj as BlockedIpExceptionDto;
-        console.log(tmp);
+        let tmp: BlockedIpExceptionDto = null;
+        try {
+          let jsonObj = JSON.parse(error.error);
+          tmp = jsonObj as BlockedIpExceptionDto;
+        } catch (e) {
+          // do nothing
+        }
 
         // status == 401 / Unauthorized - wrong login credentials
          if (error.status == HttpStatusCode.Unauthorized) {
-           if (tmp.uiError === 'TE0') {
+           if (tmp?.uiError === 'TE0') {
              this.notification.notifySplitBody('LOGIN.BLOCKED1', (Math.ceil(tmp.timeout / 1000)).toString(), 'LOGIN.BLOCKED2');
            } else {
              this.notification.notifyError('LOGIN.BAD_CREDENTIALS', title);

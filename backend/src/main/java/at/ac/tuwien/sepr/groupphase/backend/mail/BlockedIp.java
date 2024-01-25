@@ -6,14 +6,15 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 public class BlockedIp implements Blockable {
-    private static final int MAX = 3;
+    private final int max;
     private final Timestamp timestamp;
     private final String ip;
-    private int cnt = 0;
+    private int cnt = 1;
     private int timout;
     private final int base;
 
-    public BlockedIp(String ip, int base) {
+    public BlockedIp(String ip, int base, int attempts) {
+        this.max = attempts;
         this.base = base;
         this.timout = this.base;
         this.ip = ip;
@@ -40,12 +41,12 @@ public class BlockedIp implements Blockable {
 
     @Override
     public void increment() {
-        cnt = Math.min(++cnt, MAX);
+        cnt = Math.min(++cnt, max);
     }
 
     @Override
     public boolean hasTimeout() {
-        return cnt == MAX;
+        return cnt == max;
     }
 
     @Override

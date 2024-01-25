@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.mail;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.TimeoutProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -12,7 +11,7 @@ public class BlockableService {
     private final TimeoutProperties timeoutProperties;
 
     public Blockable blockedIp(String ip) {
-        return new BlockedIp(ip, timeoutProperties.getLogin());
+        return new BlockedIp(ip, timeoutProperties.getLogin(), timeoutProperties.getAttempts());
     }
 
     public Blockable blockedEmail(String email) {

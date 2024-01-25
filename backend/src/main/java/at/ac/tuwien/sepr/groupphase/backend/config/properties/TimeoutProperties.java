@@ -13,4 +13,5 @@ public class TimeoutProperties {
     private int email;
     private int pwd;
     private int login;
+    private int attempts;
 }
