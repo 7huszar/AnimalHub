@@ -64,7 +64,6 @@ public class AnimalEndpoint {
         return animalService.findAll();
     }
 
-    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("search")
     @Operation(summary = "Search for specific animals", security = @SecurityRequirement(name = "apiKey"))
@@ -126,7 +125,7 @@ public class AnimalEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create new animal in database", security = @SecurityRequirement(name = "apiKey"))
-    public AnimalDetailDto create(@Valid @RequestBody CreateAnimalDto createDto) throws ValidationException, ConflictException {
+    public AnimalDetailDto create(@Valid @RequestBody CreateAnimalDto createDto) throws ValidationException, ConflictException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH + "/ " + createDto.getName());
         LOGGER.debug("Body of request:\n{}", createDto);
         return animalService.create(createDto);

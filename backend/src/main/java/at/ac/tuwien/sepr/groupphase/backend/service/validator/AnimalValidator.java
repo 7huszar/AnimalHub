@@ -2,7 +2,9 @@ package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.AnimalDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.animal.CreateAnimalDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShelterService;
 import lombok.RequiredArgsConstructor;
@@ -153,13 +155,19 @@ public class AnimalValidator {
      * @param animalDto animalDto
      * @throws ValidationException if failed to validate animal data
      */
-    public void validateForCreate(CreateAnimalDto animalDto) throws ValidationException {
+    public void validateForCreate(CreateAnimalDto animalDto) throws ValidationException, NotFoundException {
         LOGGER.trace("validateForCreate({})", animalDto);
         List<String> validationErrors = validateAnimalDetails(mapper.createAnimalDtoToAnimalDetailDto(animalDto));
 
-        if (animalDto.getShelter().getPaypalClientId() == null) {
 
-            validationErrors.add("Please set up Paypal Credentials first under the edit shelter Page");
+        if (animalDto.getShelter() != null) {
+            ShelterDetailDto shelter = shelterService.findById(animalDto.getShelter().getId());
+            LOGGER.info("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + shelter);
+
+            if (shelter.getPaypalClientId() == null || shelter.getPaypalSecret() == null) {
+                validationErrors.add("Please set up Paypal Credentials first under the edit shelter Page");
+
+            }
         }
 
 
