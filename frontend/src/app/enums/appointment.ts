@@ -1,4 +1,5 @@
 export enum AppointmentType {
+  ADOPT = 'ADOPT',
   WALK = 'WALK',
   PLAY = 'PLAY'
 }
