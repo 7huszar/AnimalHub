@@ -92,7 +92,7 @@
       <label for="msgArea">{{'APPOINTMENT.MSG' | translate}}</label>
     </div>
 
-    <div *ngIf="isModeDelete" class="form-floating mb-3">
+    <div *ngIf="isModeDelete()" class="form-floating mb-3">
       <select class="form-select" id="appointmentStatus" [(ngModel)]="appointment.status" [disabled]="true">
         <option [value]="AppointmentStatus.PENDING">{{'APPOINTMENT.PENDING' | translate}}</option>
         <option [value]="AppointmentStatus.ACCEPTED">{{'APPOINTMENT.ACCEPTED' | translate}}</option>
