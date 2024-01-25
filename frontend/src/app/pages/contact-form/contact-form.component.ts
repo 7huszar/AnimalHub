@@ -87,6 +87,7 @@ export class ContactFormComponent implements OnInit {
         }
       });
       form.reset();
+      this.notification.success("Mail sent successfully", "Success");
     }
   }
 
