@@ -268,8 +268,6 @@ public class UserServiceImpl implements UserService {
             () -> new NotFoundException("Shelter does not exist.")
         );
 
-        subscriptionRepository.deleteAllByUser(user);
-
         userRepository.delete(user);
     }
 

@@ -21,10 +21,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Subs
 
     Subscription findByKey(SubscriptionKey id);
 
-    void deleteAllByUser(ApplicationUser user);
-
-    void deleteAllByAnimal(Animal animal);
-
 
     @Modifying
     @Transactional

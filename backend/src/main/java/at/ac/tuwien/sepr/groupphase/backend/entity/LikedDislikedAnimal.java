@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Map;
 
@@ -28,9 +30,11 @@ public class LikedDislikedAnimal {
 
     @Id
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ApplicationUser user;
 
     @Id
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     private Animal animal;
 
