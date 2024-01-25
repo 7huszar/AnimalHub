@@ -138,6 +138,10 @@ export class AuthService {
     return user !== null && user.shelter !== null && user.shelter.id === shelterId;
   }
 
+  isMemberWithShelter(): boolean {
+    return this.getUserShelter() != null;
+  }
+
   getUserShelter(): ShelterDto {
     if (!this.isMember())
       return null;

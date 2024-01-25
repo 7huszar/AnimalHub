@@ -1,8 +1,8 @@
 
-<div class="card" style="width: 100%;" *ngIf="!empty">
-  <a routerLink="/animal/{{id}}" style="position: relative;">
+<div *ngIf="animal" class="card" style="width: 100%; height: 90%">
+  <a routerLink="/animal/{{animal.id}}" style="position: relative;">
     <div class="bg-image">
-      <app-content [mode]="Mode.ANIMAL" [id]="id" setClass="object-fit-cover"></app-content>
+      <app-content [mode]="Mode.ANIMAL" [id]="animal.id" setClass="object-fit-cover"></app-content>
       <div
         class="mask"
         style="
@@ -14,17 +14,17 @@
     "
       ></div>
       <div class="card-img-overlay" style="width: 100%; height: 100%">
-        <h5 class="card-title" style="position:absolute; bottom: 0; color: black; font-size: xx-large">{{ name }}</h5>
+        <h5 class="card-title" style="position:absolute; bottom: 0; color: black; font-size: xx-large">{{ animal.name }}</h5>
       </div>
     </div>
   </a>
 
-  <div class="row text-center" style="height: 3.75em">
+  <div class="row text-center mb-2" style="height: 3.75em">
     <div class="col">
       <i class="bi bi-heartbreak-fill dislike_icon" (click)="dislike.emit()"></i>
     </div>
     <div class="col">
-      <a routerLink="/animal/{{id}}">
+      <a routerLink="/animal/{{animal.id}}">
         <i class="bi bi-info-circle-fill"></i>
       </a>
     </div>
@@ -33,7 +33,7 @@
     </div>
   </div>
 </div>
-<div class="card" style="background-color: lightgray; width: 100%; height: 100%" *ngIf="empty">
+<div *ngIf="!animal" class="card" style="background-color: lightgray; width: 100%; height: 90%">
   <div class="bg-image">
     <div class="card-img-overlay" style="width: 100%; height: 100%">
       <h5 class="card-title"

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Mode} from "../../../enums/modes";
+import {AnimalDetailDto} from "../../../dtos/animal";
 
 @Component({
   selector: 'app-animal-card',
@@ -8,13 +9,9 @@ import {Mode} from "../../../enums/modes";
 })
 export class AnimalCardComponent implements OnInit{
 
-  @Input() name :string;
-  @Input() id :number | unknown;
-  @Input() empty: boolean;
+  @Input() animal: AnimalDetailDto;
   @Output() dislike = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
-
-  animalImageURL: any = null;
 
   ngOnInit(): void {
   }

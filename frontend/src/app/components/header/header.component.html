@@ -27,7 +27,7 @@
         <i class="bi bi-search text-black me-1"></i>
         {{'HEADER.SEARCH' | translate}}
       </button>
-      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
+      <button *ngIf="authService.isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/shelter/{{getShelterId()}}">
         <i class="bi bi-tools text-black me-1"></i>
         {{'HEADER.MEMBER_PAGE' | translate}}
       </button>
@@ -39,7 +39,7 @@
         <i class="bi bi-tools text-black me-1"></i>
         {{'HEADER.ADMIN_PAGE' | translate}}
       </button>
-      <button *ngIf="isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/home/member-profile/statistic">
+      <button *ngIf="authService.isMemberWithShelter()" class="btn btn-outline-dark" routerLink="/home/member-profile/statistic">
         <i class="bi bi-currency-euro"></i>
         {{'HEADER.STATISTICS' | translate}}
       </button>
