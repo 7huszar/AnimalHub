@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
@@ -11,5 +12,5 @@ public interface DonationService {
 
     List<DonationSumDto> getDonationsByReceiver(UUID shelterId);
 
-    public List<DonationListDto> findListedDonations(UUID shelterId, DonationSearchDto searchDto);
+    DonationPageDto findListedDonations(UUID shelterId, DonationSearchDto searchDto);
 }

@@ -79,6 +79,12 @@ export interface DonationListDto {
   receiver: string;
 }
 
+export interface DonationPageDto {
+  donations: DonationListDto[];
+  currentPage: number;
+  maxPage: number;
+}
+
 export interface DonationSumDto {
   receiver: string;
   name: string;
@@ -91,5 +97,6 @@ export interface DonationSearchDto {
   amountAfter: string,
   amountBefore: string,
   id: string,
-  page: number
+  page: number,
+  pageSize: number
 }

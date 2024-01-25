@@ -36,15 +36,7 @@ public interface DonationRepository extends JpaRepository<Donation, String> {
         + " WHERE shelter.id = :shelterId")
     BigDecimal directShelterDonations(@Param(value = "shelterId") UUID shelterId);
 
-    Page<Donation> findDonationByStampAfterAndStampBeforeAndIdContainingIgnoreCaseAndAmountAfterAndAmountBeforeAndShelterEquals(
-        LocalDateTime stampAfter,
-        LocalDateTime stampBefore,
-        String id,
-        BigDecimal amountAfter,
-        BigDecimal amountBefore,
-        Shelter shelter,
-        Pageable pageable
-    );
-
     Page<Donation> findAll(Specification<Donation> spec, Pageable pageable);
+
+    int count(Specification<Donation> spec);
 }

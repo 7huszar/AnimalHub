@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
@@ -55,10 +56,8 @@ public class DonationServiceImpl implements DonationService {
     }
 
     @Override
-    public List<DonationListDto> findListedDonations(UUID shelterId, DonationSearchDto searchDto) {
+    public DonationPageDto findListedDonations(UUID shelterId, DonationSearchDto searchDto) {
         LOGGER.trace("findListedDonations({}, {})", shelterId, searchDto);
-
-        Pageable pageable = PageRequest.of(searchDto.page(), 50, Sort.by("stamp"));
 
         Specification<Donation> spec = createSpecification(
             searchDto.dateAfter() != null ? LocalDateTime.of(searchDto.dateAfter(), LocalTime.of(0, 0, 0)) : null,
@@ -69,9 +68,20 @@ public class DonationServiceImpl implements DonationService {
             shelterRepository.findShelterById(shelterId)
         );
 
+        int total = donationRepository.count(spec);
+        int actual = searchDto.page();
+
+        if (total < searchDto.pageSize() * searchDto.page()) {
+            actual = searchDto.page() / searchDto.pageSize();
+            actual += total % searchDto.pageSize() == 0 ? 0 : 1;
+        }
+
+        Pageable pageable = PageRequest.of(actual, searchDto.pageSize(), Sort.by("stamp"));
+
+
         Page<Donation> donationPage = donationRepository.findAll(spec, pageable);
 
-        return donationPage.stream()
+        return new DonationPageDto(donationPage.stream()
             .map(donationMapper::donationToDonationListDto)
             .map(donationList -> {
                 UUID id = UUID.fromString(donationList.receiver());
@@ -109,7 +119,7 @@ public class DonationServiceImpl implements DonationService {
                     donationList.type(),
                     "error");
             })
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()), actual, total % searchDto.pageSize() == 0 ? 0 : 1 + total / searchDto.pageSize());
     }
 
     private Specification<Donation> createSpecification(

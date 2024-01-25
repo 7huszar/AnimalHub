@@ -15,6 +15,8 @@ export class StatisticComponent implements OnInit {
   total: Decimal = new Decimal(0);
   shelter: ShelterDto;
   searchChangedObservable = new Subject<void>();
+  page: number = 0;
+  maxPage: number = 0;
 
   searchParams: DonationSearchDto = {
     dateAfter: null,
@@ -22,7 +24,8 @@ export class StatisticComponent implements OnInit {
     amountAfter: null,
     amountBefore: null,
     id: '',
-    page: 0};
+    page: 0,
+    pageSize: 10};
 
   constructor(
     protected authService: AuthService,
@@ -45,7 +48,10 @@ export class StatisticComponent implements OnInit {
   reloadDonations(): void {
     this.donationService.searchDonations(this.shelter.id, this.searchParams).subscribe({
       next: next => {
-        this.donations = next;
+        this.donations = next.donations;
+        this.page = next.currentPage;
+        this.maxPage = next.maxPage;
+
         this.total = new Decimal(0);
         this.donations.forEach(donation => {
           this.total = this.total.add(donation.amount);
@@ -55,15 +61,18 @@ export class StatisticComponent implements OnInit {
         console.error(error);
       }
     });
-    this.donationService.searchDonations(this.shelter.id, this.searchParams).subscribe({
-      next: next => {
-        console.log(next);
-      },
-      error: error => {
-        console.error(error);
-      }
-    });
+  }
 
+  nextPage(): void {
+    this.page++;
+    this.searchParams.page = this.page;
+    this.reloadDonations();
+  }
+
+  prevPage(): void {
+    this.page--;
+    this.searchParams.page = this.page;
+    this.reloadDonations();
   }
 
   searchChanged() :void {

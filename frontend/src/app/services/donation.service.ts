@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
-import {DonationSearchDto, DonationSumDto} from "../dtos/shelter";
+import {DonationPageDto, DonationSearchDto, DonationSumDto} from "../dtos/shelter";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class DonationService {
     return this.http.get<DonationSumDto[]>(this.shelterBaseUri + '/sum/' + shelterId);
   }
 
-  searchDonations(shelterId: string, searchDto: DonationSearchDto): Observable<any> {
+  searchDonations(shelterId: string, searchDto: DonationSearchDto): Observable<DonationPageDto> {
     let params = new HttpParams();
 
     if (searchDto.dateAfter != null) {
@@ -47,7 +47,10 @@ export class DonationService {
       params = params.append('page', searchDto.page);
     }
 
+    if (searchDto.pageSize != null) {
+      params = params.append('pageSize', searchDto.pageSize);
+    }
 
-    return this.http.get(this.shelterBaseUri + '/search/' + shelterId, {params});
+    return this.http.get<DonationPageDto>(this.shelterBaseUri + '/search/' + shelterId, {params});
   }
 }

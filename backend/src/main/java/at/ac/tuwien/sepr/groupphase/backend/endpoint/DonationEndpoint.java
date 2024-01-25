@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
@@ -38,7 +39,7 @@ public class DonationEndpoint {
 
     @GetMapping("/search/{shelterId}")
     @Secured(UserRole.Values.MEMBER_VALUE)
-    public List<DonationListDto> searchDonations(@PathVariable UUID shelterId, DonationSearchDto searchDto) {
+    public DonationPageDto searchDonations(@PathVariable UUID shelterId, DonationSearchDto searchDto) {
         LOGGER.info("GET " + BASE_PATH + "/search/" + shelterId);
         LOGGER.debug("searchDonations({}, {})", shelterId, searchDto);
 
