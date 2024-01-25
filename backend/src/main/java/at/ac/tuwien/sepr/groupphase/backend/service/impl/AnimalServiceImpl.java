@@ -84,8 +84,9 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException {
+    public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException, NotFoundException {
         LOGGER.trace("Create new Animal: " + animalDto);
+        LOGGER.info("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + animalDto.getShelter());
 
         conflict.conflictForCreate(animalDto);
         validator.validateForCreate(animalDto);

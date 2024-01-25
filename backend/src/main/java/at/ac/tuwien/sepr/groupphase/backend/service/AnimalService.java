@@ -42,7 +42,7 @@ public interface AnimalService {
      * @return the created animal as AnimalDetailDto
      * @throws ValidationException if the data given for the animal is in itself incorrect (no name, name too long …)
      */
-    AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException;
+    AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException, NotFoundException;
 
     /**
      * Updates the animal with the data given in {@code animalDto} in the persistent data store.
