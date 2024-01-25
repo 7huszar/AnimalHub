@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {DonationSumDto, ShelterDetailDto} from "../../dtos/shelter";
 import {DonationService} from "../../services/donation.service";
+import {NotifierService} from "../../services/notifier.service";
 
 @Component({
   selector: 'app-donation-bar-graph',
@@ -25,7 +26,8 @@ export class DonationBarGraphComponent implements OnInit {
   height: number;
 
   constructor(
-    private donationService: DonationService
+    private donationService: DonationService,
+    private notification: NotifierService
   ) {
   }
 
@@ -33,18 +35,17 @@ export class DonationBarGraphComponent implements OnInit {
     this.donationService.getDonationByReceiver(this.shelter.id).subscribe({
       next: next => {
         this.animals = next;
-        console.log(next);
         this.updateChart();
       },
       error: error => {
         console.error(error);
+        this.notification.notifyStdError(error, 'DONATION.BAR_FAIL');
       }
     });
     this.calculateHeight();
   }
 
   private updateChart() {
-    console.log('init');
     const data = this.animals.slice(0, this.visibleDataCount).reverse();
     this.chartOptions = {
       grid: {

@@ -229,7 +229,9 @@
     "DONATE_TO": "Spende etwas für ",
     "SUCCESS": "Transaktion erfolgreich, du kannst diesen Tab jetzt schließen",
     "FAILURE": "Transaktion abgebrochen",
-    "WAIT": "Bitte warte einen Moment"
+    "WAIT": "Bitte warte einen Moment",
+    "BAR_FAIL": "failed to load donations for graph",
+    "DONATE_FAIL": "donation failed"
   },
 
   "STATS": {

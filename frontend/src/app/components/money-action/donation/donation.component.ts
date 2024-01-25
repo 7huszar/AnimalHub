@@ -4,6 +4,7 @@ import {AuthService} from "../../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ShelterDetailDto} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
+import {NotifierService} from "../../../services/notifier.service";
 
 @Component({
   selector: 'app-donation',
@@ -24,6 +25,7 @@ export class DonationComponent {
   constructor(
     private service: PaypalService,
     private authService: AuthService,
+    private notification: NotifierService,
     formBuilder: UntypedFormBuilder
   ) {
     this.giveMoney = formBuilder.group({
@@ -51,6 +53,7 @@ export class DonationComponent {
           window.open(next.href);
         },
         error: error => {
+          this.notification.notifyStdError(error, 'DONATION.DONATE_FAIL')
           console.error(error);
         }
       });

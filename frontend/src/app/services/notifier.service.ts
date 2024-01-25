@@ -53,7 +53,7 @@ export class NotifierService {
       });
       // this case should not happen, means error response not covered
     } else if (error.error) {
-      this.notification.error(error.error, title);
+      this.notification.error(title);
     }
   }
 
