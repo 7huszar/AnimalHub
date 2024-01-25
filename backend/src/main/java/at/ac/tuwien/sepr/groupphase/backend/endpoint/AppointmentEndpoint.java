@@ -3,6 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.appointment.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.AppointmentStatus;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,7 +42,7 @@ public class AppointmentEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public AppointmentDto findById(@PathVariable UUID id) {
+    public AppointmentDto findById(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("GET " + BASE_PATH + "/" + id);
         return appointmentService.findById(id);
     }
@@ -47,7 +51,7 @@ public class AppointmentEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("user/{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public List<AppointmentDto> findByUserId(@PathVariable UUID id) {
+    public List<AppointmentDto> findByUserId(@PathVariable UUID id) throws NotFoundException, NotAuthorizedException {
         LOGGER.info("GET " + BASE_PATH + "/user/" + id);
         return appointmentService.findByUserId(id);
     }
@@ -56,7 +60,7 @@ public class AppointmentEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("shelter/{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public List<AppointmentDto> findByShelterId(@PathVariable UUID id) {
+    public List<AppointmentDto> findByShelterId(@PathVariable UUID id) throws NotFoundException, NotAuthorizedException {
         LOGGER.info("GET " + BASE_PATH + "/shelter/" + id);
         return appointmentService.findByShelterId(id);
     }
@@ -65,7 +69,7 @@ public class AppointmentEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("shelter/{id}/{status}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public List<AppointmentDto> findByShelterIdWithStatus(@PathVariable UUID id, @PathVariable AppointmentStatus status) {
+    public List<AppointmentDto> findByShelterIdWithStatus(@PathVariable UUID id, @PathVariable AppointmentStatus status) throws NotFoundException, NotAuthorizedException {
         LOGGER.info("GET " + BASE_PATH + "/shelter/" + id + "/" + status);
         return appointmentService.findByShelterIdWithStatus(id, status);
     }
@@ -75,7 +79,7 @@ public class AppointmentEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public AppointmentDto create(@RequestBody AppointmentDto appointmentDto) {
+    public AppointmentDto create(@RequestBody AppointmentDto appointmentDto) throws ValidationException, ConflictException, NotFoundException {
         LOGGER.info("POST " + BASE_PATH);
         LOGGER.debug("Body of request:\n{}", appointmentDto);
         return appointmentService.create(appointmentDto);
@@ -85,7 +89,7 @@ public class AppointmentEndpoint {
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public AppointmentDto updateStatus(@PathVariable UUID id, @RequestBody AppointmentDto appointmentDto) {
+    public AppointmentDto updateStatus(@PathVariable UUID id, @RequestBody AppointmentDto appointmentDto) throws NotFoundException {
         LOGGER.info("PUT " + BASE_PATH + "/" + id);
         return appointmentService.updateStatus(appointmentDto);
     }
@@ -94,7 +98,7 @@ public class AppointmentEndpoint {
     @Secured(UserRole.Values.USER_VALUE)
     @DeleteMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) throws NotFoundException {
         LOGGER.info("DELETE " + BASE_PATH + "/" + id);
         appointmentService.delete(id);
     }
