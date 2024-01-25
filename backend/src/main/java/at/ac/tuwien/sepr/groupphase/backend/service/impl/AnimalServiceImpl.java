@@ -86,8 +86,9 @@ public class AnimalServiceImpl implements AnimalService {
     public AnimalDetailDto create(CreateAnimalDto animalDto) throws ValidationException, ConflictException {
         LOGGER.trace("Create new Animal: " + animalDto);
 
-        validator.validateForCreate(animalDto);
         conflict.conflictForCreate(animalDto);
+        validator.validateForCreate(animalDto);
+
 
         Animal entity = mapper.createAnimalDtoToAnimal(animalDto);
 

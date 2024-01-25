@@ -21,8 +21,11 @@ import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.BlockedIp;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
+import at.ac.tuwien.sepr.groupphase.backend.mail.TimeoutService;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubscriptionRepository;
@@ -38,6 +41,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -81,10 +85,10 @@ public class UserServiceImpl implements UserService {
     private final UserValidator userValidator;
     private final SecurityProperties securityProperties;
     private final UserMapper userMapper;
-    private final AnimalShelterMapper shelterMapper;
     private final UserConflict conflict;
     private final MailService mail;
     private final DonationRepository donationRepository;
+    private final TimeoutService timeoutService;
 
 
     /**
@@ -149,12 +153,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto) {
-        LOGGER.trace("login({})", userLoginDto.getEmail());
-        // TODO DaoAuthenticationProvider and User for handling everything as UserDetails
-        // tmp solution
+    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, TimoutException {
+        LOGGER.trace("login({}, {})", userLoginDto, request);
+        if (timeoutService.hasTimeout(request.getRemoteAddr())) {
+            throw new TimoutException("user by ip " + request.getRemoteAddr() + " has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
+        }
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
-        UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+        UserDetails userDetails;
+        try {
+            userDetails = loadUserByUsername(userLoginDto.getEmail());
+        } catch (UsernameNotFoundException e) {
+            timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
+            throw new NotFoundException("user by e-mail " + userLoginDto.getEmail() + " not found");
+        }
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
@@ -168,6 +179,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
+        timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
     }
 
@@ -252,10 +264,13 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("delete({})", id);
 
         conflict.conflictForDelete(id);
-        var shelter = userRepository.findById(id).orElseThrow(
+        var user = userRepository.findById(id).orElseThrow(
             () -> new NotFoundException("Shelter does not exist.")
         );
-        userRepository.delete(shelter);
+
+        subscriptionRepository.deleteAllByUser(user);
+
+        userRepository.delete(user);
     }
 
     @Override
@@ -348,7 +363,7 @@ public class UserServiceImpl implements UserService {
             .id(subscription.getSubscriptionId() + date)
             .shelter(subscription.getAnimal().getShelter())
             .type(DonationType.SUBSCRIPTION)
-            .receiver(subscription.getAnimal().getName())
+            .receiver(subscription.getAnimal().getId())
             .build();
 
         donationRepository.save(donation);

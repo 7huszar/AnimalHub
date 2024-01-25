@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "frontend")
+@ConfigurationProperties(prefix = "spring.frontend")
 public class FrontendProperties {
     private String url;
 }

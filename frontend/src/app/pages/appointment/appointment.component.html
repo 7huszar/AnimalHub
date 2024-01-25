@@ -1,0 +1,11 @@
+<app-header></app-header>
+
+<app-appointment-modal #appointmentModal *ngIf="mode" [header]="'APPOINTMENT.INFO' | translate"></app-appointment-modal>
+
+<div class="container">
+  <h2 *ngIf="isModeUser()" class="mb-4 mt-3">{{'APPOINTMENT.USER_HEADER' | translate}}</h2>
+  <h2 *ngIf="isModeShelter()" class="mb-4 mt-3">{{'APPOINTMENT.SHELTER_HEADER' | translate}}</h2>
+  <full-calendar #calendar [options]="calendarOptions" deepChangeDetection="true"></full-calendar>
+</div>
+
+<app-footer></app-footer>

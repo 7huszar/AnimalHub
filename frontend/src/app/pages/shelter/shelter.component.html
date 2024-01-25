@@ -1,13 +1,15 @@
 <app-header></app-header>
 
 <div class="container" *ngIf="shelter" style="min-width: 95%;">
+  <app-appointment-modal #createAppointmentModal [type]="Mode.SHELTER" [mode]="Mode.CREATE" [header]="'APPOINTMENT.CREATE' | translate" [data]="shelter"></app-appointment-modal>
 
   <div class="row">
     <div class="col-6">
       <h2 class="mt-4 mb-4" style="margin-left: 1rem">{{ shelter?.name }}</h2>
     </div>
     <div class="col-6 d-flex justify-content-end mb-3">
-      <button class="btn btn-primary " style="padding: 0.2rem 0.5rem; margin-top: auto;"  routerLink="/shelter/contact/{{ shelter?.id }}">{{ 'SHELTER_HOMEPAGE.CONTACT' | translate}} {{ shelter?.name }}</button>
+      <button *ngIf="!authService.isMemberOf(shelter.id)" class="btn btn-primary" style="padding: 0.2rem 0.5rem; margin-top: auto; margin-right: 0.2rem;" (click)="createAppointmentModal.open()">{{ 'APPOINTMENT.CREATE' | translate }}</button>
+      <button class="btn btn-primary " style="padding: 0.2rem 0.5rem; margin-top: auto;" routerLink="/shelter/contact/{{ shelter?.id }}">{{ 'SHELTER_HOMEPAGE.CONTACT' | translate}} {{ shelter?.name }}</button>
     </div>
     <div class="row">
       <div class="col" style="max-width: 20em; min-height: 10em">
@@ -39,11 +41,21 @@
               <h3 style="text-decoration-line: underline; padding-bottom: 0.5em">{{ 'SHELTER_HOMEPAGE.DONATE_VIA_PAYPAL' | translate }}</h3>
             </div>
             <div class="col-12" style="text-align: center;">
-              <app-donation [receiver]="shelter.id"></app-donation>
+              <app-donation [receiver]="shelter"></app-donation>
             </div>
 
           </div>
           <!-- End of Paypal -->
+
+          <div class="row" *ngIf="authService.isMemberOf(shelter.id)">
+            <div class="col-12" style="text-align: center;">
+              <div class="col-8 mx-auto">
+                <full-calendar #calendar [options]="calendarOptions" title="Termine" deepChangeDetection="true"></full-calendar>
+                <button class="btn btn-primary mt-3" routerLink="/shelter/appointments">Termine verwalten</button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

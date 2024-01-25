@@ -1,0 +1,25 @@
+<app-standard-layout></app-standard-layout>
+
+<div class="my-tmp" style="text-align: center;">
+
+  <div *ngIf="!success && !failure" class="text-primary">
+    <div class="spinner-grow m-4"
+         role="status"
+         style="width: 5rem; height: 5rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <br>
+    <h4>please wait a moment</h4>
+  </div>
+
+  <div *ngIf="success" class="text-success">
+    <i class="bi bi-check-circle" style="font-size: 5rem;"></i>
+    <h4>Transaction successful, you can close this tab now</h4>
+  </div>
+
+  <div *ngIf="failure" class="text-danger">
+    <i class="bi bi-exclamation-triangle" style="font-size: 5rem;"></i>
+    <h4>Transaction failed</h4>
+  </div>
+
+</div>

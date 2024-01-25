@@ -70,6 +70,7 @@
     "QUESTION_PART_1_SHELTER": "Willst du wirklich das Tierheim ",
     "QUESTION_PART_1_ANIMAL": "Willst du wirklich das Tier ",
     "QUESTION_PART_1_USER": "Willst du wirklich den Nutzer ",
+    "QUESTION_PART_1_SUBSCRIPTION": "Willst du wirklich das Abo ",
     "QUESTION_PART_2": " löschen?",
     "NO": "Nein, STOP!",
     "YES": "Ja, ENDGÜLTIG löschen."
@@ -84,7 +85,6 @@
     "WEIGHT": "Gewicht:",
     "CONTENT": "Medien",
     "DONATE_1": "Spende an ",
-    "ADOPT": "Adoptiere ",
     "SHELTER": "wohnt aktuell im Tierheim: ",
     "NOCONTENT": " hat noch keine Medien.",
     "YEARS": " Jahre",
@@ -193,6 +193,28 @@
     "FAILED": "Fehler beim senden der Nachricht",
     "CONTACT": "Kontaktiere"
   },
+
+  "APPOINTMENT": {
+    "APPOINTMENTS": "Termine",
+    "MANAGEMENT": "Termine verwalten",
+    "USER_HEADER": "Deine Termine verwalten",
+    "SHELTER_HEADER": "Tierheim Termine verwalten",
+    "CREATE": "Termin vereinbaren",
+    "INFO": "Termin-Infos",
+    "USER_EMAIL": "User-Email",
+    "SHELTER": "Tierheim",
+    "ANIMAL": "Tier",
+    "PLAY": "Spielen",
+    "WALK": "Spaziergang",
+    "TYPE": "Terminart",
+    "TITLE": "Titel",
+    "MSG": "Nachricht",
+    "CREATE_BTN": "Erstellen",
+    "CONFIRM_BTN": "Bestätigen",
+    "DECLINE_BTN": "Ablehnen",
+    "DELETE_BTN": "Löschen"
+  },
+
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"

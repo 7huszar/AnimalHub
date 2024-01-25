@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.DelayQueue;
 
 @EnableAsync
@@ -16,14 +16,18 @@ public class TimeoutCleaner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Async
-    public void cleanBlockedMails(DelayQueue<StampedEmail> blocked, Set<String> emails) {
+    public void cleanBlockedMails(DelayQueue<Blockable> queue, Map<String, Blockable> blocked) {
         boolean run = true;
         while (run) {
             try {
-                emails.remove(blocked.take().getEmail());
-                LOGGER.debug("removed something");
+                Blockable expired = queue.take();
+                if (expired.decrement()) {
+                    blocked.remove(expired.getKey());
+                } else  {
+                    queue.add(expired);
+                }
             } catch (InterruptedException e) {
-                LOGGER.trace("Thread of cleanBlockedMails() shutdown:\n" + e.getMessage());
+                LOGGER.trace("Thread of cleanBlockedMails() shutdown: " + e.getMessage());
                 run = false;
             }
         }

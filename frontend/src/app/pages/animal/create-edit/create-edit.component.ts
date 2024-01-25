@@ -126,7 +126,9 @@ export class CreateEditComponent implements OnInit {
             this.navigateSuccess(animalDto.id);
           }
         }, error: err => {
-          console.error(err); // TODO handle
+          console.error(err);
+          const errorMessage = err.error && err.error.errors ? err.error.errors[0] : 'Unknown error';
+          this.notification.notifyError(errorMessage, "Error Creating Animal");
         }
       });
     } else {
@@ -189,6 +191,7 @@ export class CreateEditComponent implements OnInit {
     }
     if (event?.dataTransfer?.items?.length > 0 && event.dataTransfer.items[0].kind === 'file') {
       this.setImage(event.dataTransfer.items[0].getAsFile());
+      this.animalImageSelected = true;
     } else {
       this.notification.notifyError('DUMMY.BODY', 'DUMMY.TITLE');
     }
