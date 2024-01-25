@@ -22,6 +22,6 @@ export class ContactService {
    */
   sendMail(contact: ContactShelterDto): Observable<ContactShelterDto> {
     console.log('Send mail to: ' + contact.to);
-    return this.httpClient.post<ContactShelterDto>(this.contactBaseUri + '/' + contact.to, contact);
+    return this.httpClient.post<ContactShelterDto>(this.contactBaseUri, contact);
   }
 }
