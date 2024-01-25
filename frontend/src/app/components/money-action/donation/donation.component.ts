@@ -5,6 +5,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ShelterDetailDto} from "../../../dtos/shelter";
 import {AnimalDetailDto} from "../../../dtos/animal";
 import {NotifierService} from "../../../services/notifier.service";
+import Decimal from "decimal.js";
 
 @Component({
   selector: 'app-donation',
@@ -40,6 +41,9 @@ export class DonationComponent {
 
   donate() :void {
     if (this.giveMoney.valid) {
+      if (new Decimal(this.giveMoney.get('euro').value).lessThan(1)) {
+        return;
+      }
       let cents: string = this.giveMoney.get('cent').value;
       if (cents === '') {
         cents = '00';
