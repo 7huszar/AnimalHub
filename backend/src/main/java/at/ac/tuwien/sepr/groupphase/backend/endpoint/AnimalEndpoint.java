@@ -64,7 +64,6 @@ public class AnimalEndpoint {
         return animalService.findAll();
     }
 
-    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("search")
     @Operation(summary = "Search for specific animals", security = @SecurityRequirement(name = "apiKey"))

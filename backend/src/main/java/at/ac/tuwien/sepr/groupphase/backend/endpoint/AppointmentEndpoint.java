@@ -38,7 +38,6 @@ public class AppointmentEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AppointmentService appointmentService;
 
-    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
@@ -47,7 +46,6 @@ public class AppointmentEndpoint {
         return appointmentService.findById(id);
     }
 
-    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @GetMapping("user/{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
@@ -56,7 +54,6 @@ public class AppointmentEndpoint {
         return appointmentService.findByUserId(id);
     }
 
-    // TODO doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("shelter/{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
@@ -65,7 +62,6 @@ public class AppointmentEndpoint {
         return appointmentService.findByShelterId(id);
     }
 
-    // TODO doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @GetMapping("shelter/{id}/{status}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
@@ -74,7 +70,6 @@ public class AppointmentEndpoint {
         return appointmentService.findByShelterIdWithStatus(id, status);
     }
 
-    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -85,7 +80,6 @@ public class AppointmentEndpoint {
         return appointmentService.create(appointmentDto);
     }
 
-    // TODO doku
     @Secured(UserRole.Values.MEMBER_VALUE)
     @PutMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
@@ -94,7 +88,6 @@ public class AppointmentEndpoint {
         return appointmentService.updateStatus(appointmentDto);
     }
 
-    // TODO doku
     @Secured(UserRole.Values.USER_VALUE)
     @DeleteMapping("{id}")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))

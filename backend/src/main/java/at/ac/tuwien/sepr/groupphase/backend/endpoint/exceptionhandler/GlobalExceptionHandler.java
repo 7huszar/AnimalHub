@@ -31,15 +31,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Register all your Java exceptions here to map them into meaningful HTTP exceptions.
- * If you have special cases which are only important for specific endpoints, use ResponseStatusExceptions
+ * GlobalExceptionHandler class handles and maps exceptions to HTTP responses for all controllers.
+ * It extends ResponseEntityExceptionHandler to provide default handling for Spring MVC exceptions.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // TODO doku
+    /**
+     * Handles NotFoundException and maps it to HTTP 404 Not Found response.
+     *
+     * @param e       The NotFoundException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 404 status and a SingleExceptionDto containing error details.
+     */
     @ExceptionHandler(value = {NotFoundException.class})
     protected ResponseEntity<Object> handleNotFoundException(SingleException e, WebRequest request) {
 
@@ -50,8 +56,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-
-    // TODO doku
+    /**
+     * Handles ValidationException and maps it to HTTP 422 Unprocessable Entity response.
+     *
+     * @param e       The ValidationException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 422 status and an ErrorListExceptionDto containing validation error details.
+     */
     @ExceptionHandler(value = {ValidationException.class})
     protected ResponseEntity<Object> handleValidationException(ErrorListException e, WebRequest request) {
 
@@ -63,18 +74,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
-    // TODO doku
+    /**
+     * Handles DataAccessException and maps it to HTTP 500 Internal Server Error response.
+     *
+     * @param ex      The DataAccessException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 500 status and the error message.
+     */
     @ExceptionHandler(value = {DataAccessException.class})
     protected ResponseEntity<Object> handleDataAccessException(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     /**
-     * Handles NotAuthorizedException thrown in the REST Controller.
+     * Handles NotAuthorizedException and maps it to HTTP 401 Unauthorized response.
      *
-     * @param e       RuntimeException cached from REST Controller
-     * @param request the initial {@link WebRequest}
-     * @return {@link ResponseEntity} with HttpStatus.UNAUTHORIZED
+     * @param e       The NotAuthorizedException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 401 status and a SingleExceptionDto containing error details.
      */
     @ExceptionHandler(value = {NotAuthorizedException.class})
     protected ResponseEntity<Object> handleNotAuthorizedException(SingleException e, WebRequest request) {
@@ -86,6 +103,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
+    /**
+     * Handles ConflictException and maps it to HTTP 409 Conflict response.
+     *
+     * @param e       The ConflictException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 409 status and an ErrorListExceptionDto containing conflict error details.
+     */
     @ExceptionHandler(value = {ConflictException.class})
     protected ResponseEntity<Object> handleConflictException(ErrorListException e, WebRequest request) {
 
@@ -97,6 +121,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
+    /**
+     * Handles BlockedIpException and maps it to HTTP 401 Unauthorized response.
+     *
+     * @param e       The BlockedIpException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 401 status and a BlockedIpExceptionDto containing error details.
+     */
     @ExceptionHandler(value = {BlockedIpException.class})
     protected ResponseEntity<Object> handleTimoutException(BlockedIpException e, WebRequest request) {
         BlockedIpExceptionDto dto = (BlockedIpExceptionDto) new BlockedIpExceptionDto()
@@ -106,22 +137,36 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, dto, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
+    /**
+     * Handles PaypalException and maps it to HTTP 503 Service Unavailable response.
+     *
+     * @param e       The PaypalException.
+     * @param request The WebRequest.
+     * @return ResponseEntity with HTTP 503 status and the error message.
+     */
     @ExceptionHandler(value = {PaypalException.class})
     protected ResponseEntity<Object> handlePaypalException(PaypalException e, WebRequest request) {
         return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);
     }
+
     // TODO handle IOException.
 
     /**
-     * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
-     * from e.g. Spring
+     * Overrides methods from ResponseEntityExceptionHandler to send a customized HTTP response for a known exception
+     * from e.g. Spring.
+     *
+     * @param ex      The MethodArgumentNotValidException.
+     * @param headers The HttpHeaders.
+     * @param status  The HTTP status.
+     * @param request The WebRequest.
+     * @return ResponseEntity with a map containing validation errors.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatusCode status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        //Get all errors
+        // Get all errors
         List<String> errors = ex.getBindingResult()
             .getFieldErrors()
             .stream()
