@@ -3,6 +3,9 @@ import {PaypalService} from "../../../services/paypal.service";
 import {AuthService} from "../../../services/auth.service";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ShelterDetailDto} from "../../../dtos/shelter";
+import {AnimalDetailDto} from "../../../dtos/animal";
+import {NotifierService} from "../../../services/notifier.service";
+import Decimal from "decimal.js";
 
 @Component({
   selector: 'app-donation',
@@ -11,7 +14,9 @@ import {ShelterDetailDto} from "../../../dtos/shelter";
 })
 export class DonationComponent {
 
-  @Input() receiver: ShelterDetailDto = null;
+  @Input() shelter: ShelterDetailDto = null;
+  @Input() receiver: AnimalDetailDto = null;
+
   @Input() width: string = '200px';
 
   clicked: boolean = false;
@@ -21,6 +26,7 @@ export class DonationComponent {
   constructor(
     private service: PaypalService,
     private authService: AuthService,
+    private notification: NotifierService,
     formBuilder: UntypedFormBuilder
   ) {
     this.giveMoney = formBuilder.group({
@@ -35,18 +41,25 @@ export class DonationComponent {
 
   donate() :void {
     if (this.giveMoney.valid) {
+      if (new Decimal(this.giveMoney.get('euro').value).lessThan(1)) {
+        return;
+      }
       let cents: string = this.giveMoney.get('cent').value;
       if (cents === '') {
         cents = '00';
       }
       this.donated = true;
-      this.service.placeOrder(this.receiver.id,
+      this.service.placeOrder(this.shelter.id,
         {amount: this.giveMoney.get('euro').value + '.' + cents,
-          donator: this.authService.getUser().id}).subscribe({
+          donator: this.authService.getUser().id, receiver: this.receiver != null ? this.receiver.id : this.shelter.id})
+        .subscribe({
         next: next => {
+          this.donated = false;
           window.open(next.href);
         },
         error: error => {
+          this.notification.notifyStdError(error, 'DONATION.DONATE_FAIL')
+          this.donated = false;
           console.error(error);
         }
       });

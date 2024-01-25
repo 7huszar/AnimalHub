@@ -8,20 +8,26 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.CreateFileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.File;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subscription;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Gender;
 import at.ac.tuwien.sepr.groupphase.backend.enums.Species;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AnimalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -40,6 +46,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 //// This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
@@ -53,7 +61,10 @@ public class AnimalServiceTest extends TestBase {
     AnimalService animalService;
     @Autowired
     AnimalShelterMapper mapper;
-
+    @Autowired
+    UserMapper userMapper;
+    @MockBean
+    private UserService userServiceMock;
 
     // function - FIND ALL
     // POSITIVE TEST(S)
@@ -485,6 +496,19 @@ public class AnimalServiceTest extends TestBase {
         Animal animal = allAnimalEntities.get(0);
         File givenContentFile = animal.getContent().get(0);
 
+        try {
+            when(userServiceMock.getCurrentUser()).thenReturn(
+                userMapper.applicationUserToUserDetailDto(ApplicationUser.builder().build())
+            );
+
+        } catch (NotFoundException e) {
+            //
+        }
+
+        when(userServiceMock.isSubscribed(any(), any())).thenReturn(
+            userMapper.subscriptionToSubscriptionDetailDto(Subscription.builder().build())
+        );
+
         assertDoesNotThrow(() -> {
             // might throw NotFoundException
             FileDetailDto returnContentFile = animalService.getContent(animal.getId(), animal.getContent().get(0).getId());
@@ -503,6 +527,20 @@ public class AnimalServiceTest extends TestBase {
     // NEGATIVE TEST(S)
     @Test
     public void getContentWithNonExistingContentIdThrowsNotFoundException() {
+        try {
+            when(userServiceMock.getCurrentUser()).thenReturn(
+                userMapper.applicationUserToUserDetailDto(ApplicationUser.builder().build())
+            );
+        } catch (NotFoundException e) {
+            //
+        }
+
+        when(userServiceMock.isSubscribed(any(), any())).thenReturn(
+            userMapper.subscriptionToSubscriptionDetailDto(Subscription.builder().build())
+        );
+
+
+
         assertThrows(NotFoundException.class, () -> animalService.getContent(allAnimalEntities.get(0).getId(), UUID.randomUUID()));
     }
 
@@ -510,12 +548,15 @@ public class AnimalServiceTest extends TestBase {
     // POSITIVE TEST(S)
     @Test
     public void addContentSuccessfully() {
+
         assertDoesNotThrow(() -> {
             CreateFileDto createFileDto = CreateFileDto.builder()
                 .name(TEST_FILE_NAME)
                 .summary(TEST_FILE_SUMMARY)
                 .file(new MockMultipartFile(TEST_FILE_FILE.getName(), TEST_FILE_FILE.getName(), Files.probeContentType(Path.of(TEST_FILE_FILE.getAbsolutePath())), new FileInputStream(TEST_FILE_FILE)))
                 .build();
+
+
 
             // might throw NotFoundException, ValidationException
             FileDto returnContentFile = animalService.addContent(allAnimalEntities.get(1).getId(), createFileDto);
@@ -549,6 +590,19 @@ public class AnimalServiceTest extends TestBase {
         Animal animal = allAnimalEntities.get(0);
         int initialContentListSize = animal.getContent().size();
         UUID fileIdToDelete = animal.getContent().get(0).getId();
+
+        try {
+            when(userServiceMock.getCurrentUser()).thenReturn(
+                userMapper.applicationUserToUserDetailDto(ApplicationUser.builder().build())
+            );
+
+        } catch (NotFoundException e) {
+            //
+        }
+
+        when(userServiceMock.isSubscribed(any(), any())).thenReturn(
+            userMapper.subscriptionToSubscriptionDetailDto(Subscription.builder().build())
+        );
 
         assertAll(
             () -> assertDoesNotThrow(() -> animalService.deleteContent(animal.getId(), fileIdToDelete)),

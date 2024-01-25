@@ -40,7 +40,7 @@ public class AnimalDataGenerator {
             LOGGER.debug("animals already generated");
         } else {
             LOGGER.debug("generating {} animal entries", amount);
-            Map<String, String> animalConfig = new HashMap<String, String>();
+            Map<String, String> animalConfig;
             try {
                 animalConfig = new ObjectMapper().readValue(new File("src/test/resources/demo data/AnimalConfig.json"), HashMap.class);
 

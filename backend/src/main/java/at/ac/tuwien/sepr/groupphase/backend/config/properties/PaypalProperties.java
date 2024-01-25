@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @Getter
 @Setter
@@ -17,6 +19,7 @@ public class PaypalProperties {
     private String placeOrder;
     private String captureOrder1;
     private String captureOrder2;
+    private BigDecimal harriesHardcodedAmount;
 
     public String captureOrder(String id) {
         return getCaptureOrder1() + id + getCaptureOrder2();

@@ -3,11 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend.exception;
 import lombok.Getter;
 
 @Getter
-public class TimoutException extends SingleException {
+public class BlockedIpException extends SingleException {
 
     private final long timeout;
 
-    public TimoutException(String messageSummary, long timeout) {
+    public BlockedIpException(String messageSummary, long timeout) {
         super(messageSummary);
         this.timeout = timeout;
     }

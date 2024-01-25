@@ -1,35 +1,61 @@
 import {Component, OnInit} from '@angular/core';
-import {DonationListDto, ShelterDetailDto, ShelterDto} from "../../../../dtos/shelter";
-import {ShelterService} from "../../../../services/shelter.service";
+import {DonationListDto, DonationSearchDto, ShelterDto} from "../../../../dtos/shelter";
 import {AuthService} from "../../../../services/auth.service";
 import Decimal from "decimal.js";
+import {DonationService} from "../../../../services/donation.service";
+import {debounceTime, Subject} from "rxjs";
 
 @Component({
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss']
 })
-export class StatisticComponent implements OnInit{
+export class StatisticComponent implements OnInit {
   donations: DonationListDto[];
   total: Decimal = new Decimal(0);
   shelter: ShelterDto;
+  searchChangedObservable = new Subject<void>();
+  page: number = 0;
+  maxPage: number = 0;
+
+  searchParams: DonationSearchDto = {
+    dateAfter: null,
+    dateBefore: null,
+    amountAfter: null,
+    amountBefore: null,
+    id: '',
+    page: 0,
+    pageSize: 10};
 
   constructor(
-    private shelterService: ShelterService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    private donationService: DonationService,
   ) {
     this.shelter = this.authService.getUser().shelter;
   }
 
   ngOnInit() {
-    this.shelterService.findAllDonations(this.shelter.id).subscribe({
+    this.reloadDonations();
+    this.searchChangedObservable
+      .pipe(debounceTime(300))
+      .subscribe({next: () => this.reloadDonations()});
+  }
+
+  formatMoney(donation: DonationListDto): string {
+    return new Decimal(donation.amount).toFixed(2) + ' €';
+  }
+
+  reloadDonations(): void {
+    this.donationService.searchDonations(this.shelter.id, this.searchParams).subscribe({
       next: next => {
-        this.donations = next;
+        this.donations = next.donations;
+        this.page = next.currentPage;
+        this.maxPage = next.maxPage;
+
         this.total = new Decimal(0);
         this.donations.forEach(donation => {
           this.total = this.total.add(donation.amount);
         });
-        console.log(next);
       },
       error: error => {
         console.error(error);
@@ -37,16 +63,19 @@ export class StatisticComponent implements OnInit{
     });
   }
 
-  formatMoney(donation: DonationListDto): string {
-    return new Decimal(donation.amount).toFixed(2) + ' €';
+  nextPage(): void {
+    this.page++;
+    this.searchParams.page = this.page;
+    this.reloadDonations();
   }
 
-  mapType(type: string): string {
-    if (type === 'ONE_TIME') {
-      return 'one time donation';
-    } else if (type === 'SUBSCRIPTION') {
-      return 'subscription payment';
-    }
-    return 'unknown type';
+  prevPage(): void {
+    this.page--;
+    this.searchParams.page = this.page;
+    this.reloadDonations();
+  }
+
+  searchChanged() :void {
+    this.searchChangedObservable.next();
   }
 }

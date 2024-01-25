@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {DonationSumDto, ShelterDetailDto} from "../../dtos/shelter";
 import {DonationService} from "../../services/donation.service";
+import {NotifierService} from "../../services/notifier.service";
 
 @Component({
   selector: 'app-donation-bar-graph',
@@ -25,7 +26,8 @@ export class DonationBarGraphComponent implements OnInit {
   height: number;
 
   constructor(
-    private donationService: DonationService
+    private donationService: DonationService,
+    private notification: NotifierService
   ) {
   }
 
@@ -33,12 +35,11 @@ export class DonationBarGraphComponent implements OnInit {
     this.donationService.getDonationByReceiver(this.shelter.id).subscribe({
       next: next => {
         this.animals = next;
-        console.log(typeof this.animals[0].amount); // Check the type of the first item's amount
-        console.log(next);
         this.updateChart();
       },
       error: error => {
         console.error(error);
+        this.notification.notifyStdError(error, 'DONATION.BAR_FAIL');
       }
     });
     this.calculateHeight();
@@ -49,11 +50,16 @@ export class DonationBarGraphComponent implements OnInit {
     this.chartOptions = {
       grid: {
         top: 0,
-        bottom: 0,
+        bottom: 20,
         containLabel: false
       },
       xAxis: {
         type: 'value',
+        axisLabel: {
+          formatter: function(value) {
+            return value + ' €';
+          }
+        }
       },
       yAxis: {
         type: 'category',
@@ -88,11 +94,11 @@ export class DonationBarGraphComponent implements OnInit {
   }
 
   private calculateHeight(): void {
-    this.height = (this.thickness + this.gap * this.thickness / 100) * this.visibleDataCount;
+    this.height = (this.thickness + this.gap * this.thickness / 100) * this.visibleDataCount + 20;
   }
 
   isMore(): boolean {
-    return this.visibleDataCount != this.animals.length;
+    return this.visibleDataCount != this.animals?.length;
   }
 
   isLess(): boolean {
@@ -100,7 +106,7 @@ export class DonationBarGraphComponent implements OnInit {
   }
 
   total(): number {
-    return this.animals.length;
+    return this.animals?.length;
   }
 
   actual(): number {

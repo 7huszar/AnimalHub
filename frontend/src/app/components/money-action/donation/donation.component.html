@@ -3,7 +3,7 @@
      [style.width]="width"
      data-bs-toggle="modal"
      data-bs-target="#donate-dialog">
-  {{'ANIMAL_HOMEPAGE.DONATE' | translate}}
+  {{ 'DONATION.DONATE' | translate }}
 </button>
 
 <div  id="donate-dialog"
@@ -14,7 +14,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{'ANIMAL_HOMEPAGE.DONATE_2' | translate}} {{ receiver?.name }}</h4>
+        <h4 class="modal-title">{{ 'DONATION.DONATE_TO' | translate }} {{receiver !== null ? receiver.name : shelter?.name }}</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -55,13 +55,16 @@
           </div>
         </div>
 
-          <div class="modal-footer">
+          <div class="modal-footer d-flex justify-content-between">
+            <div class="spinner-placeholder" style="width: 2rem; height: 2rem;">
               <div class="spinner-grow me-2 text-primary"
                    role="status"
                    *ngIf="donated"
                    style="width: 2rem; height: 2rem;">
                 <span class="visually-hidden">Loading...</span>
               </div>
+            </div>
+
               <button class="btn" (click)="donate()" style="background-color: #FFC439; width: 250px;">
                 <img alt="paypal" src="../../../../assets/img/de-pp-logo-150px.png" height="20.8" width="80"/>
               </button>

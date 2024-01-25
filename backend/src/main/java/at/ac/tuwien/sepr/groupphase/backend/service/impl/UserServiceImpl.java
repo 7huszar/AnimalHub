@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.shelter.ShelterDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.CreateSubscriptionDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.subscription.SubscriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.MailRequestDto;
@@ -9,7 +9,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserSearchDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
@@ -21,8 +20,9 @@ import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.TimoutException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.BlockedIpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.mail.BlockableService;
 import at.ac.tuwien.sepr.groupphase.backend.mail.BlockedIp;
 import at.ac.tuwien.sepr.groupphase.backend.mail.MailService;
 import at.ac.tuwien.sepr.groupphase.backend.mail.TimeoutService;
@@ -89,6 +89,8 @@ public class UserServiceImpl implements UserService {
     private final MailService mail;
     private final DonationRepository donationRepository;
     private final TimeoutService timeoutService;
+    private final PaypalProperties paypalProperties;
+    private final BlockableService blockableService;
 
 
     /**
@@ -153,17 +155,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, TimoutException {
+    public String login(UserLoginDto userLoginDto, HttpServletRequest request) throws  NotFoundException, BlockedIpException {
         LOGGER.trace("login({}, {})", userLoginDto, request);
         if (timeoutService.hasTimeout(request.getRemoteAddr())) {
-            throw new TimoutException("user by ip " + request.getRemoteAddr() + " has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
+            throw new BlockedIpException("user by ip " + request.getRemoteAddr() + " has timeout", timeoutService.remainingTimout(request.getRemoteAddr()));
         }
         ApplicationUser applicationUser = userRepository.findByEmail(userLoginDto.getEmail());
         UserDetails userDetails;
         try {
             userDetails = loadUserByUsername(userLoginDto.getEmail());
         } catch (UsernameNotFoundException e) {
-            timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
+            timeoutService.addEntity(blockableService.blockedIp(request.getRemoteAddr()));
             throw new NotFoundException("user by e-mail " + userLoginDto.getEmail() + " not found");
         }
         if (userDetails != null
@@ -179,7 +181,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
-        timeoutService.addEntity(new BlockedIp(request.getRemoteAddr()));
+        timeoutService.addEntity(blockableService.blockedIp(request.getRemoteAddr()));
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
     }
 
@@ -355,10 +357,10 @@ public class UserServiceImpl implements UserService {
         final LocalDateTime date = LocalDateTime.now();
         Donation donation = Donation.builder()
             .user(subscription.getUser())
-            .amount(new BigDecimal("12.99"))
+            .amount(paypalProperties.getHarriesHardcodedAmount())
             .stamp(date)
             .payed(true)
-            .id(subscription.getSubscriptionId() + date)
+            .id(subscription.getSubscriptionId() + "I")
             .shelter(subscription.getAnimal().getShelter())
             .type(DonationType.SUBSCRIPTION)
             .receiver(subscription.getAnimal().getId())
@@ -573,7 +575,7 @@ public class UserServiceImpl implements UserService {
             + "\"tenure_type\": \"REGULAR\", "
             + "\"sequence\": 1, "
             + "\"total_cycles\": 12, "
-            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"10.00\", \"currency_code\": \"USD\" } } "
+            + "\"pricing_scheme\": { \"fixed_price\": { \"value\": \"" + paypalProperties.getHarriesHardcodedAmount() + "\", \"currency_code\": \"USD\" } } "
             + "} "
             + "], "
             + "\"payment_preferences\": { \"auto_bill_outstanding\": true, "

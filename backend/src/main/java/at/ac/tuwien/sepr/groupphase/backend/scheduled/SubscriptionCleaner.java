@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.scheduled;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.PaypalProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.UserEndpoint;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -25,6 +27,7 @@ public class SubscriptionCleaner {
     private final SubscriptionRepository repository;
     private final DonationRepository donationRepository;
     private final UserEndpoint endpoint;
+    private final PaypalProperties paypalProperties;
 
     @Scheduled(cron = "@monthly")
     public void cleanSubscriptions() {
@@ -37,15 +40,16 @@ public class SubscriptionCleaner {
                 // already handled
             }
         });
+
         final LocalDateTime date = LocalDateTime.now();
         repository.findAll().forEach((subscription -> {
             Donation donation = Donation.builder()
                 .user(subscription.getUser())
-                .amount(new BigDecimal("12.99"))
+                .amount(paypalProperties.getHarriesHardcodedAmount())
                 .stamp(date)
                 .payed(true)
                 .receiver(subscription.getAnimal().getId())
-                .id(subscription.getSubscriptionId() + date)
+                .id(subscription.getSubscriptionId() + LocalDate.now().getYear() + LocalDate.now().getMonth())
                 .shelter(subscription.getAnimal().getShelter())
                 .type(DonationType.SUBSCRIPTION)
                 .build();

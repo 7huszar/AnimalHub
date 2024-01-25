@@ -1,34 +1,122 @@
-<app-header ></app-header>
+<app-header></app-header>
 
 
 <div class="container">
-  <h1 class="m-4" style="display: flex; align-items: center;">
-    Donations received by {{ authService.getUser().shelter.name }}
-  </h1>
 
+  <h1 class="m-4" style="display: flex; align-items: center;">
+    {{ 'STATS.PAGE_TITLE' | translate }} {{ authService.getUser().shelter.name }}
+  </h1>
+  <form class="row" (ngSubmit)="reloadDonations()">
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+      <label for="id" class="col-form-label">
+        ID
+      </label>
+      <input type="text" id="id" name="id"
+             class="form-control"
+             [(ngModel)]="searchParams.id"
+             (ngModelChange)="searchChanged()">
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+      <label for="receiver" class="col-form-label">
+        {{ 'STATS.RECEIVER' | translate }}
+      </label>
+      <input type="text" id="receiver"
+             class="form-control">
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+      <label for="amountBefore" class="col-form-label">
+        {{ 'STATS.AMOUNT_MAX' | translate }}
+      </label>
+      <input type="text" id="amountBefore" name="amountBefore"
+             class="form-control"
+             placeholder="&infin;"
+             allowOnlyNumber
+             style="text-align: right"
+             [(ngModel)]="searchParams.amountBefore"
+             (ngModelChange)="searchChanged()"
+      >
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+      <label for="amountAfter" class="col-form-label">
+        {{ 'STATS.AMOUNT_MIN' | translate }}
+      </label>
+      <input type="text" id="amountAfter" name="amountAfter"
+             class="form-control"
+             placeholder="0"
+             allowOnlyNumber
+             style="text-align: right"
+             [(ngModel)]="searchParams.amountAfter"
+             (ngModelChange)="searchChanged()">
+    </div>
+
+    <div class="col-auto">
+      <label for="dateBefore" class="col-form-label">
+        {{ 'STATS.DATE_MAX' | translate }}
+      </label>
+      <input type="date" id="dateBefore" name="dateBefore"
+             pattern="\d{4}-\d{2}-\d{2}"
+             placeholder="yyyy-mm-dd"
+             class="form-control"
+             [(ngModel)]="searchParams.dateBefore"
+             (ngModelChange)="searchChanged()"
+      >
+    </div>
+
+    <div class="col-auto">
+      <label for="dateAfter" class="col-form-label">
+        {{ 'STATS.DATE_MIN' | translate }}
+      </label>
+      <input type="date" id="dateAfter" name="dateAfter"
+             pattern="\d{4}-\d{2}-\d{2}"
+             placeholder="yyyy-mm-dd"
+             class="form-control"
+             [(ngModel)]="searchParams.dateAfter"
+             (ngModelChange)="searchChanged()"
+      >
+    </div>
+
+  </form>
   <table class="table table-hover m-3">
-    <!-- Donation Table -->
     <thead>
     <tr>
-      <th>Date</th>
-      <th>Type</th>
-      <th>receiver</th>
-      <th>Amount</th>
+      <th>ID</th>
+      <th>{{ 'STATS.DATE' | translate }}</th>
+      <th>{{ 'STATS.TYPE' | translate }}</th>
+      <th>{{ 'STATS.RECEIVER' | translate }}</th>
+      <th>{{ 'STATS.AMOUNT' | translate}}</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let donation of donations" class="center-td">
+      <td>{{ donation.id }}</td>
       <td>{{ donation.date }}</td>
-      <td>{{ mapType(donation.type) }}</td>
+      <td>{{ ('DONATION.' + donation.type) | translate }}</td>
       <td>{{ donation.receiver }}</td>
       <td>{{ formatMoney(donation) }}</td>
     </tr>
     <tr>
-      <td colspan="3" style="text-align: right;">Total:</td>
+      <td colspan="4" style="text-align: right;">Total:</td>
       <td>{{ total.toFixed(2) + ' €' }}</td>
     </tr>
     </tbody>
   </table>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <button class="page-link" href="#" aria-label="Previous" (click)="prevPage()" [disabled]="page <= 0">
+          <span aria-hidden="true">&laquo;</span>
+        </button>
+      </li>
+      <li class="page-item active"><a class="page-link">{{ page + 1 }}</a></li>
+      <li class="page-item">
+        <button class="page-link" href="#" aria-label="Next" (click)="nextPage()" [disabled]="page + 1 >= maxPage">
+          <span aria-hidden="true">&raquo;</span>
+        </button>
+      </li>    </ul>
+  </nav>
 </div>
 
 <app-donation-bar-graph [shelter]="shelter"></app-donation-bar-graph>

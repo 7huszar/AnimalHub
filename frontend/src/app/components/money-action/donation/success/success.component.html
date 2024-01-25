@@ -9,17 +9,17 @@
       <span class="visually-hidden">Loading...</span>
     </div>
     <br>
-    <h4>please wait a moment</h4>
+    <h4>{{ 'DONATION.WAIT' | translate }}</h4>
   </div>
 
   <div *ngIf="success" class="text-success">
     <i class="bi bi-check-circle" style="font-size: 5rem;"></i>
-    <h4>Transaction successful, you can close this tab now</h4>
+    <h4>{{ 'DONATION.SUCCESS' | translate }}</h4>
   </div>
 
   <div *ngIf="failure" class="text-danger">
     <i class="bi bi-exclamation-triangle" style="font-size: 5rem;"></i>
-    <h4>Transaction failed</h4>
+    <h4>{{ 'DONATION.FAILURE' | translate }}</h4>
   </div>
 
 </div>

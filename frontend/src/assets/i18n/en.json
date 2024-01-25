@@ -14,7 +14,9 @@
     "PWD_LONG": "the length of the password must not exceed 255",
     "BAD_CREDENTIALS": "Username or password incorrect",
     "LOGIN_FAILED": "Failed to login",
-    "HOW_DOES_IT_WORK": "How does AnimalHub work?"
+    "HOW_DOES_IT_WORK": "How does AnimalHub work?",
+    "BLOCKED1": "zu viele Anmeldeversuche, versuche es in ",
+    "BLOCKED2": "s wieder."
   },
   "LANG_SELECT": {
     "DROPDOWN": "Language"
@@ -228,5 +230,32 @@
   "DUMMY": {
     "TITLE": "OH NO, SMTH WENT WRONG",
     "BODY": "TODO DO THIS"
+  },
+
+  "DONATION": {
+    "MORE": "show more",
+    "LESS": "show less",
+    "DONATE": "donate",
+    "DONATE_TO": "Donate to ",
+    "SUCCESS": "Transaction successful, you can close this tab now",
+    "FAILURE": "Transaction failed",
+    "WAIT": "please wait a moment",
+    "BAR_FAIL": "failed to load donations for graph",
+    "DONATE_FAIL": "Spenden fehlgeschlagen",
+    "SUBSCRIPTION": "subscription payment",
+    "ONE_TIME": "one time payment"
+
+  },
+
+  "STATS": {
+    "RECEIVER": "receiver",
+    "AMOUNT_MAX": "max amount",
+    "AMOUNT_MIN": "min amount",
+    "DATE_MAX": "paid before",
+    "DATE_MIN": "paid after",
+    "AMOUNT": "amount",
+    "TYPE": "type",
+    "DATE": "date",
+    "PAGE_TITLE": "Donations received by "
   }
 }
