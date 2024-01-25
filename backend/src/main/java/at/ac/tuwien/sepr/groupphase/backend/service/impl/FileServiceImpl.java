@@ -22,6 +22,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -94,7 +95,10 @@ public class FileServiceImpl implements FileService {
 
         File fileEntity = fileRepository.findById(id).orElseThrow(() -> new NotFoundException("There is no file with id " + id + " in the database."));
 
-        java.io.File[] matchingFiles = Arrays.stream(new java.io.File("files").listFiles())
+        java.io.File[] matchingFiles = Optional.ofNullable(new java.io.File("files")
+                .listFiles())
+            .stream()
+            .flatMap(Arrays::stream)
             .filter(file -> file.isFile() && file.getName().contains(fileEntity.getContentId()))
             .toArray(java.io.File[]::new);
 
