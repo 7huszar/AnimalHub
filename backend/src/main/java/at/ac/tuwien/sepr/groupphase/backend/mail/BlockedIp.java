@@ -10,11 +10,12 @@ public class BlockedIp implements Blockable {
     private final Timestamp timestamp;
     private final String ip;
     private int cnt = 0;
-    private int timout = 60_000;
+    private int timout;
     private final int base;
 
     public BlockedIp(String ip, int base) {
         this.base = base;
+        this.timout = this.base;
         this.ip = ip;
         timestamp = Timestamp.valueOf(LocalDateTime.now());
     }
@@ -33,7 +34,7 @@ public class BlockedIp implements Blockable {
 
     @Override
     public boolean decrement() {
-        timout += 60_000;
+        timout += this.base;
         return Math.max(--cnt, 0) == 0;
     }
 
