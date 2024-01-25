@@ -223,17 +223,12 @@ public class AnimalServiceImpl implements AnimalService {
         var user = userService.getCurrentUser();
 
         if (this.userService.isSubscribed(id, user.getId()) == null) {
-            if (user.getShelter() != null && user.getShelter().getId() == findById(id).getShelter().getId() ||
-            user.getRole() == UserRole.ADMIN) {
+            if (user.getShelter() != null && user.getShelter().getId() == findById(id).getShelter().getId()
+                || user.getRole() == UserRole.ADMIN) {
                 return fileService.findById(fileId);
             } else {
                 try {
                     var fileDto = fileService.findById(fileId);
-
-                /*if (fileDto.getContentMimeType().toLowerCase().startsWith("video")) {
-                    throw new NotFoundException("Videos not shown when user not subscribed");
-                };
-                 */
 
                     return ImageBlur.blur(fileDto);
                 } catch (IOException e) {
