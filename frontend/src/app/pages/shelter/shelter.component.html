@@ -51,7 +51,13 @@
             <div class="col-12" style="text-align: center;">
               <div class="col-8 mx-auto">
                 <full-calendar #calendar [options]="calendarOptions" title="Termine" deepChangeDetection="true"></full-calendar>
-                <button class="btn btn-primary mt-3" routerLink="/shelter/appointments">Termine verwalten</button>
+                <button class="btn btn-primary mt-3 position-relative" routerLink="/shelter/appointments">
+                  {{'APPOINTMENT.MANAGEMENT' | translate}}
+                  <span *ngIf="pendingAmount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{pendingAmount}}
+                    <span class="visually-hidden">Pending Appointments</span>
+                  </span>
+                </button>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {
   NgbCalendar,
   NgbDate,
@@ -24,6 +24,7 @@ export class AppointmentModalComponent implements OnInit{
 
   @ViewChild('content') content: TemplateRef<any>;
 
+  @Output() actionPerformed = new EventEmitter<void>();
   @Input() type: Mode;  // SHELTER | ANIMAL
   @Input() mode: Mode;  // CREATE | CONFIRM | DELETE
   @Input() header: string;
@@ -34,32 +35,16 @@ export class AppointmentModalComponent implements OnInit{
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
 
-  hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate | null = this.calendar.getToday();
-  toDate: NgbDate | null = null;
-  fromTime: NgbTimeStruct = { hour: 12, minute: 0, second: 0 }
-  toTime: NgbTimeStruct = { hour: 12, minute: 0, second: 0 }
+  hoveredDate: NgbDate | null;
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+  fromTime: NgbTimeStruct;
+  toTime: NgbTimeStruct;
 
-  appointment: AppointmentDto = new class implements AppointmentDto {
-    id: string;
-    user: UserDetailDto;
-    shelter: ShelterDto;
-    animal: AnimalDto;
-    timeFrom: Date;
-    timeTo: Date;
-    title: string;
-    msg: string;
-    type: any;
-    status: any;
-  };
-
+  appointment: AppointmentDto;
 
   ngOnInit(): void {
-    if (this.type === Mode.SHELTER) {
-      this.appointment.shelter = this.data;
-    } else if (this.type === Mode.ANIMAL) {
-      this.appointment.animal = this.data;
-    }
+    this.clear();
   }
 
   // Loads appointment from server
@@ -88,8 +73,34 @@ export class AppointmentModalComponent implements OnInit{
     this.modalService.open(this.content, {ariaLabelledBy: 'appointment-title'});
   }
 
+  public clear() {
+    this.hoveredDate = null;
+    this.fromDate = this.calendar.getToday();
+    this.toDate = null;
+    this.fromTime = { hour: 12, minute: 0, second: 0 }
+    this.toTime = { hour: 12, minute: 0, second: 0 }
+
+    this.appointment = new class implements AppointmentDto {
+      animal: AnimalDto;
+      id: string;
+      msg: string;
+      shelter: ShelterDto;
+      status: AppointmentStatus;
+      timeFrom: Date;
+      timeTo: Date;
+      title: string;
+      type: AppointmentType;
+      user: UserDetailDto;
+    };
+
+    if (this.type === Mode.SHELTER) {
+      this.appointment.shelter = this.data;
+    } else if (this.type === Mode.ANIMAL) {
+      this.appointment.animal = this.data;
+    }
+  }
+
   public create() {
-    // TODO validate input
     const dateFrom: Date = new Date(this.fromDate.year, this.fromDate.month-1, this.fromDate.day,
       this.fromTime.hour, this.fromTime.minute, this.fromTime.second);
     const dateTo: Date = new Date(this.toDate.year, this.toDate.month-1, this.toDate.day,
@@ -100,7 +111,7 @@ export class AppointmentModalComponent implements OnInit{
 
     this.appointmentService.create(this.appointment).subscribe(value => {
       console.log('create appointment called!', value);
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
   }
 
@@ -109,7 +120,7 @@ export class AppointmentModalComponent implements OnInit{
 
     this.appointmentService.updateStatus(this.appointment).subscribe(value => {
       console.log('status updated!', value);
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
   }
 
@@ -118,14 +129,20 @@ export class AppointmentModalComponent implements OnInit{
 
     this.appointmentService.updateStatus(this.appointment).subscribe(value => {
       console.log('status updated!', value);
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
   }
 
   public delete() {
     this.appointmentService.delete(this.appointment.id).subscribe(() => {
-      this.modalService.dismissAll();
+      this.actionFinished();
     });
+  }
+
+  actionFinished(): void {
+    this.actionPerformed.emit();
+    this.modalService.dismissAll();
+    this.clear();
   }
 
   onDateSelection(date: NgbDate, datepicker: NgbInputDatepicker) {
@@ -164,6 +181,35 @@ export class AppointmentModalComponent implements OnInit{
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
+  isValid(): boolean {
+
+    if (this.appointment.type == null) {
+      return false;
+    }
+
+    if (this.fromDate == null) {
+      return false;
+    }
+
+    if (this.toDate == null) {
+      return false;
+    }
+
+    if (this.fromTime.hour == null || this.fromTime.minute == null) {
+      return false;
+    }
+
+    if (this.toTime.hour == null || this.toTime.minute == null) {
+      return false;
+    }
+
+    if (this.appointment.title == null) {
+      return false;
+    }
+
+    return this.appointment.msg != null;
+  }
+
   isModeCreate(): boolean {
     return this.mode === Mode.CREATE;
   }
@@ -177,4 +223,5 @@ export class AppointmentModalComponent implements OnInit{
   }
 
   protected readonly AppointmentType = AppointmentType;
+  protected readonly AppointmentStatus = AppointmentStatus;
 }

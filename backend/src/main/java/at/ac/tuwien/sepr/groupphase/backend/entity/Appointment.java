@@ -15,7 +15,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,22 +36,25 @@ public class Appointment {
     private UUID id;
 
     @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
     private ApplicationUser user;
 
     @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "shelter_id", nullable = false)
     private Shelter shelter;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "animal_id")
     private Animal animal;
 
     @Column(name = "time_from")
-    private LocalDateTime timeFrom;
+    private Instant timeFrom;
 
     @Column(name = "time_to")
-    private LocalDateTime timeTo;
+    private Instant timeTo;
 
     @Column
     private String title;

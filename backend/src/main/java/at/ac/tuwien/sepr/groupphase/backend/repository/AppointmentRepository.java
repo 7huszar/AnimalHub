@@ -14,5 +14,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     List<Appointment> findByUserId(@NonNull UUID userId);
 
+    List<Appointment> findByShelterIdAndStatus(@NonNull UUID shelterId, AppointmentStatus status);
+
     List<Appointment> findByShelterIdAndStatusNot(@NonNull UUID shelterId, AppointmentStatus status);
 }

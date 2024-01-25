@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<app-appointment-modal #appointmentModal *ngIf="mode" [header]="'APPOINTMENT.INFO' | translate"></app-appointment-modal>
+<app-appointment-modal #appointmentModal *ngIf="mode" [header]="'APPOINTMENT.INFO' | translate" (actionPerformed)="loadAppointments()"></app-appointment-modal>
 
 <div class="container">
   <h2 *ngIf="isModeUser()" class="mb-4 mt-3">{{'APPOINTMENT.USER_HEADER' | translate}}</h2>

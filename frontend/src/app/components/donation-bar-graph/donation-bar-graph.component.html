@@ -1,4 +1,6 @@
-<div echarts [style.height]="height + 'px'" [options]="chartOptions" class="echart-container p-0 m-4"></div>
-<button class="btn btn-primary m-2" (click)="expandChart()" [disabled]="!isMore()">{{ 'DONATION.MORE' | translate }}</button>
-<button class="btn btn-primary m-2" (click)="reduceChart()" [disabled]="!isLess()">{{ 'DONATION.LESS' | translate }}</button>
-<div>{{ actual() + '/' + total()}}</div>
+<div *ngIf="animals">
+  <div echarts [style.height]="height + 'px'" [options]="chartOptions" class="echart-container p-0 m-4"></div>
+  <button class="btn btn-primary m-2" (click)="expandChart()" [disabled]="!isMore()">{{ 'DONATION.MORE' | translate }}</button>
+  <button class="btn btn-primary m-2" (click)="reduceChart()" [disabled]="!isLess()">{{ 'DONATION.LESS' | translate }}</button>
+  <div>{{ actual() + '/' + total()}}</div>
+</div>

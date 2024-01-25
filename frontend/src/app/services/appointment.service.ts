@@ -3,6 +3,7 @@ import {Globals} from "../global/globals";
 import {HttpClient} from "@angular/common/http";
 import {AppointmentDto} from "../dtos/appointment";
 import {map, Observable} from "rxjs";
+import {AppointmentStatus} from "../enums/appointment";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,18 @@ export class AppointmentService {
 
   findByShelterId(id: string): Observable<AppointmentDto[]> {
     return this.httpClient.get<AppointmentDto[]>(this.appointmentBaseUri + '/shelter/' + id).pipe(
+      map((appointments: AppointmentDto[]) => {
+        return appointments.map(appointment => {
+          appointment.timeFrom = new Date(appointment.timeFrom);
+          appointment.timeTo = new Date(appointment.timeTo);
+          return appointment;
+        })
+      })
+    );
+  }
+
+  findByShelterIdWithStatus(id: string, status: AppointmentStatus): Observable<AppointmentDto[]> {
+    return this.httpClient.get<AppointmentDto[]>(this.appointmentBaseUri + '/shelter/' + id + '/' + status).pipe(
       map((appointments: AppointmentDto[]) => {
         return appointments.map(appointment => {
           appointment.timeFrom = new Date(appointment.timeFrom);

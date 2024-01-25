@@ -165,9 +165,8 @@ export class MemberEditShelterComponent {
    *
    */
   private setImage(img: File): void {
-    // 52,4288 MB?
     if (img.size > 52428800) {
-      console.error("File is too big!"); // TODO handle
+      // console.error("File is too big!"); lets hope this never happens :)
     } else {
       this.shelterImage = img;
       this.shelterImageURL = URL.createObjectURL(this.shelterImage);

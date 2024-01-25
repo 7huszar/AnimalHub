@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AnimalDto} from "../../dtos/animal";
-import  {ShelterService} from "../../services/shelter.service";
+import {ShelterService} from "../../services/shelter.service";
 import {ShelterDetailDto} from "../../dtos/shelter";
 import {ActivatedRoute} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
@@ -13,10 +13,9 @@ import bootstrap5Plugin from "@fullcalendar/bootstrap5";
 import enLocale from "@fullcalendar/core/locales/en-gb";
 import deLocale from "@fullcalendar/core/locales/de";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
-import {AppointmentDto} from "../../dtos/appointment";
 import {AppointmentStatus} from "../../enums/appointment";
 import {AppointmentService} from "../../services/appointment.service";
-
+import {parseAppointmentToCalendarEvent} from "../../util/util";
 
 
 @Component({
@@ -31,6 +30,7 @@ export class ShelterComponent implements OnInit {
 
   protected animals: AnimalDto[] = [];
   protected shelter: ShelterDetailDto;
+  protected pendingAmount: number;
 
   constructor(private shelterService: ShelterService,
               private route: ActivatedRoute,
@@ -75,38 +75,22 @@ export class ShelterComponent implements OnInit {
   }
 
   private loadUpcomingAppointments(): void {
-    // TODO replace load only upcoming
+    this.appointmentService.findByShelterIdWithStatus(this.shelter.id, AppointmentStatus.PENDING).subscribe(pendingAppointments => {
+      if (pendingAppointments.length > 0) {
+        this.pendingAmount = pendingAppointments.length;
+      } else {
+        this.pendingAmount = null;
+      }
+    });
+
     this.appointmentService.findByShelterId(this.shelter.id).subscribe(appointments => {
       this.calendarComponent.getApi().removeAllEvents();
-      appointments.map(this.parseAppointments).forEach(event => {
+      appointments.map(parseAppointmentToCalendarEvent).forEach(event => {
         if (event.status === AppointmentStatus.ACCEPTED) {
           this.calendarComponent.getApi().addEvent(event);
         }
       });
     });
-  }
-
-  // TODO move to util class
-  private parseAppointments(appointment: AppointmentDto): any {
-    let colorVal: string = null;
-
-    if (appointment.status === AppointmentStatus.ACCEPTED) {
-      colorVal = 'green';
-    } else if (appointment.status === AppointmentStatus.PENDING) {
-      colorVal = 'light-blue';
-    } else if (appointment.status === AppointmentStatus.DECLINED) {
-      colorVal = 'red';
-    }
-
-    return {
-      id: appointment.id,
-      start: appointment.timeFrom,
-      end: appointment.timeTo,
-      title: appointment.title,
-      editable: false,
-      color: colorVal,
-      status: appointment.status
-    }
   }
 
   showStats(): boolean {

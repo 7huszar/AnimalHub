@@ -12,9 +12,8 @@ import {Mode} from "../../enums/modes";
 import {AppointmentService} from "../../services/appointment.service";
 import {AuthService} from "../../services/auth.service";
 import {FullCalendarComponent} from "@fullcalendar/angular";
-import {AppointmentStatus} from "../../enums/appointment";
-import {AppointmentDto} from "../../dtos/appointment";
 import {AppointmentModalComponent} from "../../components/appointment-modal/appointment-modal.component";
+import {parseAppointmentToCalendarEvent} from "../../util/util";
 
 @Component({
   selector: 'app-appointment',
@@ -38,14 +37,14 @@ export class AppointmentComponent implements OnInit {
       height: 'auto',
       contentHeight: 'auto',
       initialView: 'dayGridMonth',
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin],
+      plugins: [dayGridPlugin, timeGridPlugin, bootstrap5Plugin],
       locales: [enLocale, deLocale],
       locale: this.translate.currentLang,
       themeSystem: 'bootstrap5',
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       eventClick: info => {
         this.openModal(info);
@@ -64,44 +63,21 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
-  private loadAppointments(): void {
+  loadAppointments(): void {
     if (this.mode === Mode.USER) {
       this.appointmentService.findByUserId(this.authService.getUser().id).subscribe(appointments => {
         this.calendarComponent.getApi().removeAllEvents();
-        appointments.map(this.parseAppointments).forEach(event => {
+        appointments.map(parseAppointmentToCalendarEvent).forEach(event => {
           this.calendarComponent.getApi().addEvent(event);
         });
       });
     } else if (this.mode === Mode.SHELTER) {
       this.appointmentService.findByShelterId(this.authService.getUserShelter().id).subscribe(appointments => {
         this.calendarComponent.getApi().removeAllEvents();
-        appointments.map(this.parseAppointments).forEach(event => {
+        appointments.map(parseAppointmentToCalendarEvent).forEach(event => {
           this.calendarComponent.getApi().addEvent(event);
         });
       });
-    }
-  }
-
-  // TODO move to util class
-  private parseAppointments(appointment: AppointmentDto): any {
-
-    let colorVal: string = null;
-
-    if (appointment.status === AppointmentStatus.ACCEPTED) {
-      colorVal = 'green';
-    } else if (appointment.status === AppointmentStatus.PENDING) {
-      colorVal = 'light-blue';
-    } else if (appointment.status === AppointmentStatus.DECLINED) {
-      colorVal = 'red';
-    }
-
-    return {
-      id: appointment.id,
-      start: appointment.timeFrom,
-      end: appointment.timeTo,
-      title: appointment.title,
-      editable: false,
-      color: colorVal
     }
   }
 

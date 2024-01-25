@@ -1,7 +1,7 @@
 <ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="appointment-title">{{header}}</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="actionFinished()"></button>
   </div>
   <div class="modal-body">
     <div *ngIf="appointment.user && isModeConfirm()" class="form-floating mb-3">
@@ -20,7 +20,8 @@
     </div>
 
     <div *ngIf="appointment.animal" class="form-floating mb-3">
-      <select class="form-select" id="appointmentType" [(ngModel)]="appointment.type" [disabled]="!isModeCreate()">
+      <select class="form-select" id="appointmentType" [(ngModel)]="appointment.type" #appointmentType="ngModel"
+              [disabled]="!isModeCreate()" required [class.is-invalid]="appointmentType.invalid && (appointmentType.dirty ||appointmentType.touched)">
         <option [value]="AppointmentType.PLAY">{{'APPOINTMENT.PLAY' | translate}}</option>
         <option [value]="AppointmentType.WALK">{{'APPOINTMENT.WALK' | translate}}</option>
       </select>
@@ -80,17 +81,28 @@
     </div>
 
     <div class="form-floating mb-3">
-      <input class="form-control" placeholder="" id="titleInput" [(ngModel)]="appointment.title" [disabled]="!isModeCreate()">
+      <input #titleInput="ngModel" class="form-control" placeholder="" id="titleInput" [(ngModel)]="appointment.title"
+             [disabled]="!isModeCreate()" required [class.is-invalid]="titleInput.invalid && (titleInput.dirty || titleInput.touched)">
       <label for="titleInput">{{'APPOINTMENT.TITLE' | translate}}</label>
     </div>
 
     <div class="form-floating mb-3">
-      <textarea class="form-control" placeholder="" id="msgArea" style="height: 80px" [(ngModel)]="appointment.msg" [disabled]="!isModeCreate()"></textarea>
+      <textarea #msgArea="ngModel" class="form-control" placeholder="" id="msgArea" style="height: 80px" [(ngModel)]="appointment.msg"
+                [disabled]="!isModeCreate()" required [class.is-invalid]="msgArea.invalid && (msgArea.dirty || msgArea.touched)"></textarea>
       <label for="msgArea">{{'APPOINTMENT.MSG' | translate}}</label>
+    </div>
+
+    <div *ngIf="isModeDelete()" class="form-floating mb-3">
+      <select class="form-select" id="appointmentStatus" [(ngModel)]="appointment.status" [disabled]="true">
+        <option [value]="AppointmentStatus.PENDING">{{'APPOINTMENT.PENDING' | translate}}</option>
+        <option [value]="AppointmentStatus.ACCEPTED">{{'APPOINTMENT.ACCEPTED' | translate}}</option>
+        <option [value]="AppointmentStatus.DECLINED">{{'APPOINTMENT.DECLINED' | translate}}</option>
+      </select>
+      <label for="appointmentStatus">{{'APPOINTMENT.STATUS' | translate}}</label>
     </div>
   </div>
   <div class="modal-footer">
-    <button *ngIf="isModeCreate()" type="button" class="btn btn-primary" (click)="create()">{{'APPOINTMENT.CREATE_BTN' | translate}}</button>
+    <button *ngIf="isModeCreate()" type="button" class="btn btn-primary" (click)="create()" [disabled]="!isValid()">{{'APPOINTMENT.CREATE_BTN' | translate}}</button>
     <button *ngIf="isModeConfirm()" type="button" class="btn btn-primary" (click)="confirm()">{{'APPOINTMENT.CONFIRM_BTN' | translate}}</button>
     <button *ngIf="isModeConfirm()" type="button" class="btn btn-danger" (click)="decline()">{{'APPOINTMENT.DECLINE_BTN' | translate}}</button>
     <button *ngIf="isModeDelete()" type="button" class="btn btn-danger" (click)="delete()">{{'APPOINTMENT.DELETE_BTN' | translate}}</button>

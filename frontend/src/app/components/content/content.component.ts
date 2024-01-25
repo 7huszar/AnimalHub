@@ -43,8 +43,6 @@ export class ContentComponent implements OnChanges{
       next: blob => {
         this.content = URL.createObjectURL(blob);
       }, error: err => {
-        // TODO handle error
-        console.error(err);
         this.content = null;
       }
     })
@@ -56,8 +54,6 @@ export class ContentComponent implements OnChanges{
       next: blob => {
         this.content = URL.createObjectURL(blob);
       }, error: err => {
-        // TODO handle error
-        console.error(err);
         this.content = null;
       }
     });
@@ -75,8 +71,7 @@ export class ContentComponent implements OnChanges{
         next: blob => {
           this.content = URL.createObjectURL(blob);
         }, error: err => {
-          // TODO handle error
-          console.log(err);
+          this.content = null;
         }
       })
     }

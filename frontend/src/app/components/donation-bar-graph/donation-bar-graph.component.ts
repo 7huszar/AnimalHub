@@ -14,7 +14,7 @@ export class DonationBarGraphComponent implements OnInit {
   @Input() shelter: ShelterDetailDto = null;
 
   chartOptions: EChartsOption;
-  private animals: DonationSumDto[];
+  animals: DonationSumDto[];
 
   private thickness: number = 30;
   private gap: number = 50;

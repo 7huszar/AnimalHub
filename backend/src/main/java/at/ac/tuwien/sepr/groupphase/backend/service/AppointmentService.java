@@ -1,23 +1,35 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.appointment.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.enums.AppointmentStatus;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface AppointmentService {
 
-    AppointmentDto findById(UUID id);
+    // TODO doku
+    AppointmentDto findById(UUID id) throws NotFoundException;
 
-    List<AppointmentDto> findByUserId(UUID userId);
+    // TODO doku
+    List<AppointmentDto> findByUserId(UUID userId) throws NotAuthorizedException, NotFoundException;
 
-    List<AppointmentDto> findByShelterId(UUID shelterId);
+    // TODO doku
+    List<AppointmentDto> findByShelterId(UUID shelterId) throws NotFoundException, NotAuthorizedException;
 
-    AppointmentDto create(AppointmentDto appointmentDto);
+    // TODO doku
+    List<AppointmentDto> findByShelterIdWithStatus(UUID shelterId, AppointmentStatus status) throws NotFoundException, NotAuthorizedException;
 
-    AppointmentDto updateStatus(AppointmentDto appointmentDto);
+    // TODO doku
+    AppointmentDto create(AppointmentDto appointmentDto) throws ValidationException, NotFoundException, ConflictException;
 
-    void delete(UUID id);
+    // TODO doku
+    AppointmentDto updateStatus(AppointmentDto appointmentDto) throws NotFoundException;
 
-    List<AppointmentDto> getUpcomingAppointments();
+    // TODO doku
+    void delete(UUID id) throws NotFoundException;
 }

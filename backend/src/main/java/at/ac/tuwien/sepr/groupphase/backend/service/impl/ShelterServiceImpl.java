@@ -135,14 +135,6 @@ public class ShelterServiceImpl implements ShelterService {
             () -> new NotFoundException("Shelter does not exist.")
         );
 
-        List<Animal> animals = shelter.getAnimals();
-
-        for (Animal animal : animals) {
-            subscriptionRepository.deleteAllByAnimal(animal);
-        }
-
-        //TODO attila delete here
-
         shelterRepository.delete(shelter);
     }
 

@@ -73,11 +73,6 @@ public class ShelterValidator {
             validationErrors.add("Email is too long");
         }
 
-        // # Created On
-
-        // TODO create validation for created on - date
-
-
         if (!validationErrors.isEmpty()) {
             throw new ValidationException("Validation of shelter details failed", validationErrors);
         }
