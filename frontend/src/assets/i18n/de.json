@@ -78,6 +78,7 @@
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
     "GENDER": "Geschlecht:",
+
     "RACE": "Rasse:",
     "BIRTHDATE": "Geburtsdatum:",
     "AGE": "Alter:",
@@ -103,7 +104,10 @@
     "DONATE": "spenden",
     "SUBSCRIBED": "bereits abonniert!",
     "SUBSCRIBE_NOW": "Abonniere jetzt!",
-    "SUBSCRIBE_TO_SEE": "Zahle jetzt 10€ um exklusiven Content zu sehen!"
+    "SUBSCRIBE_TO_SEE": "Zahle jetzt 10€ um exklusiven Content zu sehen!",
+    "ISSUBSCRIBED": " wurde schon abonniert",
+    "ISNOTSUBSCRIBED": "Abonniere ",
+    "DONATE_2": "Spende an das Tierheim "
   },
   "ANIMAL_SEARCH": {
     "NAME": "Name",

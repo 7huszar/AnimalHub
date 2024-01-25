@@ -95,29 +95,32 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="headings">
-      <div style="overflow: auto; padding-left: 0; padding-top: 1rem">
+  <div class="row headings">
+    <div class="col">
+      <div style="overflow: auto; padding-top: 2rem">
         <h1 style=" float: left">{{'ANIMAL_HOMEPAGE.CONTENT' | translate}}</h1>
       </div>
     </div>
-    <div class="content">
-      <div *ngFor="let content of contents" class="item">
-        <div class="card position-relative" style="border-width: thick; border-color: hotpink; margin-bottom: 1rem">
-          <div class="overflow-hidden">
-            <div class="bg-image">
-              <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content"
-                         setClass="object-fit-cover"></app-content>
-              <div class="mask" style="background: linear-gradient(180deg,hsla(9, 100%, 64%, 0) 75%,hsla(0, 100%, 100%, 1) 100%);"></div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="content">
+        <div *ngFor="let content of contents" class="item">
+          <div class="card position-relative" style="border-width: thick; border-color: hotpink; margin-bottom: 1rem">
+            <div class="overflow-hidden">
+              <div class="bg-image">
+                <app-content [mode]="Mode.CONTENT" [id]="animal.id" [file]="content"
+                             setClass="object-fit-cover"></app-content>
+                <div class="mask" style="background: linear-gradient(180deg,hsla(9, 100%, 64%, 0) 75%,hsla(0, 100%, 100%, 1) 100%);"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="container" *ngIf="contents?.length === 0"
-          style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
-        <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
+        <div class="container" *ngIf="contents?.length === 0"
+             style="background-color: lightgray; margin-top: 2rem; height: 10rem; display: flex; align-items: center; justify-content: center">
+          <p style="font-size: 2rem; margin: 0">{{animal.name}}{{'ANIMAL_HOMEPAGE.NOCONTENT' | translate}}</p>
+        </div>
       </div>
     </div>
   </div>
-
 </div>
