@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.file.FileDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AnimalShelterMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -222,7 +223,8 @@ public class AnimalServiceImpl implements AnimalService {
         var user = userService.getCurrentUser();
 
         if (this.userService.isSubscribed(id, user.getId()) == null) {
-            if (user.getShelter() != null && user.getShelter().getId() == findById(id).getShelter().getId()) {
+            if (user.getShelter() != null && user.getShelter().getId() == findById(id).getShelter().getId() ||
+            user.getRole() == UserRole.ADMIN) {
                 return fileService.findById(fileId);
             } else {
                 try {
