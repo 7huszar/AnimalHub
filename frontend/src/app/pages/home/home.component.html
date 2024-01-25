@@ -32,27 +32,21 @@
     <div class="col center">
       <div class ="row" style="justify-content: center">
         <div class="col-auto">
-          <app-animal-card [name]="getCard(Position.LEFT)?.name"
-                           [id]="getCard(Position.LEFT)?.id"
-                           (like)="like(getCard(Position.LEFT))"
-                           (dislike)="dislike(getCard(Position.LEFT))"
-                           [empty]="emptyLeft">
+          <app-animal-card [animal]="getAnimal(Position.LEFT)"
+                           (like)="like(getAnimal(Position.LEFT))"
+                           (dislike)="dislike(getAnimal(Position.LEFT))">
           </app-animal-card>
         </div>
-        <div class="col-auto d-none d-xxl-block">
-          <app-animal-card [name]="getCard(Position.MIDDLE)?.name"
-                           [id]="getCard(Position.MIDDLE)?.id"
-                           (like)="like(getCard(Position.MIDDLE))"
-                           (dislike)="dislike(getCard(Position.MIDDLE))"
-                           [empty]="emptyMiddle">
+        <div class="col-auto d-none d-xl-block">
+          <app-animal-card [animal]="getAnimal(Position.MIDDLE)"
+                           (like)="like(getAnimal(Position.MIDDLE))"
+                           (dislike)="dislike(getAnimal(Position.MIDDLE))">
           </app-animal-card>
         </div>
-        <div class="col-auto d-none d-xxl-block">
-          <app-animal-card [name]="getCard(Position.RIGHT)?.name"
-                           [id]="getCard(Position.RIGHT)?.id"
-                           (like)="like(getCard(Position.RIGHT))"
-                           (dislike)="dislike(getCard(Position.RIGHT))"
-                           [empty]="emptyRight">
+        <div class="col-auto d-none d-xl-block">
+          <app-animal-card [animal]="getAnimal(Position.RIGHT)"
+                           (like)="like(getAnimal(Position.RIGHT))"
+                           (dislike)="dislike(getAnimal(Position.RIGHT))">
           </app-animal-card>
         </div>
       </div>
