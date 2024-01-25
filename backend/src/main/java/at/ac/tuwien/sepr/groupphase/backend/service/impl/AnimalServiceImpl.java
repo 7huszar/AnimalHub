@@ -228,10 +228,10 @@ public class AnimalServiceImpl implements AnimalService {
                 try {
                     var fileDto = fileService.findById(fileId);
 
-                /*if (fileDto.getContentMimeType().toLowerCase().startsWith("video")) {
+                    /*if (fileDto.getContentMimeType().toLowerCase().startsWith("video")) {
                     throw new NotFoundException("Videos not shown when user not subscribed");
-                };
-                 */
+                    };
+                    */
 
                     return ImageBlur.blur(fileDto);
                 } catch (IOException e) {

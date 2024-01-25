@@ -40,4 +40,6 @@ public interface AnimalRepository extends JpaRepository<Animal, UUID> {
     );
 
     Animal findAnimalById(UUID id);
+
+    Animal findAnimalByName(String name);
 }

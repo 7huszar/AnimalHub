@@ -43,7 +43,7 @@ public class AppointmentValidator {
 
         if (appointmentDto.getTitle() == null) {
             validationErrors.add("Title must be set");
-        } else if(appointmentDto.getTitle().length() > 255) {
+        } else if (appointmentDto.getTitle().length() > 255) {
             validationErrors.add("Title is too long");
         }
 

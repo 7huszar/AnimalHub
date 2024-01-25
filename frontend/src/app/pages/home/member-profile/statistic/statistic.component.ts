@@ -4,7 +4,6 @@ import {AuthService} from "../../../../services/auth.service";
 import Decimal from "decimal.js";
 import {DonationService} from "../../../../services/donation.service";
 import {debounceTime, Subject} from "rxjs";
-import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-statistic',

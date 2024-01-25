@@ -70,6 +70,13 @@ public class UserDataGenerator {
                 .registrationStamp(LocalDateTime.now())
                 .build();
 
+            final var donator = ApplicationUser.builder()
+                .email("donator@animalhub")
+                .password(passwordEncoder.encode("password"))
+                .role(UserRole.USER)
+                .registrationStamp(LocalDateTime.now())
+                .build();
+
             LOGGER.debug("saving user {}", admin);
             userRepository.save(admin);
 
@@ -84,6 +91,9 @@ public class UserDataGenerator {
 
             LOGGER.debug("saving user {}", user);
             userRepository.save(user);
+
+            LOGGER.debug("saving donator {}", donator);
+            userRepository.save(donator);
         }
     }
 }
