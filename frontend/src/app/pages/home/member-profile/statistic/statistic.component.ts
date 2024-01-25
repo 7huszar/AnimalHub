@@ -23,6 +23,7 @@ export class StatisticComponent implements OnInit {
     dateBefore: null,
     amountAfter: null,
     amountBefore: null,
+    receiver: null,
     id: '',
     page: 0,
     pageSize: 10};

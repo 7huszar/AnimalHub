@@ -13,6 +13,7 @@ public record DonationSearchDto(
     @Nullable BigDecimal amountAfter,
     @Nullable BigDecimal amountBefore,
     @Nullable String id,
+    @Nullable String receiver,
     int page,
     int pageSize
 ) {

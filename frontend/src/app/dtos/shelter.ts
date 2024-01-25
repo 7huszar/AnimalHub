@@ -92,10 +92,11 @@ export interface DonationSumDto {
 }
 
 export interface DonationSearchDto {
-  dateAfter: Date,
-  dateBefore: Date,
+  dateAfter: string,
+  dateBefore: string,
   amountAfter: string,
   amountBefore: string,
+  receiver: string,
   id: string,
   page: number,
   pageSize: number

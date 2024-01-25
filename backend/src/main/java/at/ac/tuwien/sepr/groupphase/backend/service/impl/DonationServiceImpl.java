@@ -119,6 +119,7 @@ public class DonationServiceImpl implements DonationService {
                     donationList.type(),
                     "error");
             })
+            .filter(donationListDto -> searchDto.receiver() == null || donationListDto.receiver().toLowerCase().contains(searchDto.receiver().toLowerCase()))
             .collect(Collectors.toList()), actual, total % searchDto.pageSize() == 0 ? 0 : 1 + total / searchDto.pageSize());
     }
 

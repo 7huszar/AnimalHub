@@ -21,8 +21,10 @@
       <label for="receiver" class="col-form-label">
         {{ 'STATS.RECEIVER' | translate }}
       </label>
-      <input type="text" id="receiver"
-             class="form-control">
+      <input type="text" id="receiver" name="receiver"
+             class="form-control"
+             [(ngModel)]="searchParams.receiver"
+             (ngModelChange)="searchChanged()">
     </div>
 
     <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
