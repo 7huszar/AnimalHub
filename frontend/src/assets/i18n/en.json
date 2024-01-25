@@ -105,7 +105,10 @@
     "SUBSCRIBE": "subscribe",
     "DONATE": "donate",
     "SUBSCRIBED": "subscribed !!",
-    "SUBSCRIBE_NOW": "Subscribe now!"
+    "SUBSCRIBE_NOW": "Subscribe now!",
+    "ISSUBSCRIBED": " has already been subscribed to",
+    "ISNOTSUBSCRIBED": "Subscribe to ",
+    "DONATE_2": "Donate to the shelter "
   },
   "ANIMAL_SEARCH": {
     "NAME": "Name",

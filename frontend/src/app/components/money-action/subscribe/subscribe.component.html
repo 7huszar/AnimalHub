@@ -25,7 +25,8 @@
 
         <div class="modal-footer">
           <div class="col">
-            <h4>{{ isSubscribed ? 'You are already Subscribed to' : 'Subscribe to' }} {{ animal?.name }}</h4>
+            <h4 *ngIf="isSubscribed">{{ animal?.name }} {{'ANIMAL_HOMEPAGE.ISSUBSCRIBED' | translate}}</h4>
+            <h4 *ngIf="!isSubscribed">{{'ANIMAL_HOMEPAGE.ISNOTSUBSCRIBED' | translate}} {{ animal?.name }}</h4>
             <div *ngIf="!isSubscribed" id="paypal-button-container-P-2J073097VE083035WMWKWHZY"
                  style="max-width: 150px;"></div>
           </div>
