@@ -253,7 +253,7 @@ public class AnimalEndpoint {
     /**
      * Get a specific piece of content from a specific animal.
      *
-     * @param id     id
+     * @param id id
      * @param fileId fileId
      * @return HttpResponse which contains the actual image file
      * @throws NotFoundException when the id points to no existing animal, or to no existing file

@@ -13,6 +13,7 @@ import {ShelterService} from "../../services/shelter.service";
 export class ContentComponent implements OnChanges{
 
   @Input() id: string;
+  @Input() userId: string;
   @Input() mode: Mode;
   @Input() file: FileDto;
   @Input() setClass: string;
@@ -75,6 +76,7 @@ export class ContentComponent implements OnChanges{
           this.content = URL.createObjectURL(blob);
         }, error: err => {
           // TODO handle error
+          console.log(err);
         }
       })
     }
