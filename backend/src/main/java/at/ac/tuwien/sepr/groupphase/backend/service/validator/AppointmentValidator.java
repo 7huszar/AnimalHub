@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.Instant;
 import java.util.LinkedList;
 
 @Component
@@ -33,6 +34,10 @@ public class AppointmentValidator {
         } else {
             if (!appointmentDto.getTimeFrom().isBefore(appointmentDto.getTimeTo())) {
                 validationErrors.add("timeFrom must be before timeTo");
+            }
+
+            if (appointmentDto.getTimeFrom().isBefore(Instant.now())) {
+                validationErrors.add("timeFrom cannot be before now");
             }
         }
 

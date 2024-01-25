@@ -22,9 +22,9 @@ public class AppointmentDto {
 
     private AnimalDto animal;
 
-    private LocalDateTime timeFrom;
+    private Instant timeFrom;
 
-    private LocalDateTime timeTo;
+    private Instant timeTo;
 
     private String title;
 

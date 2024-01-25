@@ -18,6 +18,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -50,10 +51,10 @@ public class Appointment {
     private Animal animal;
 
     @Column(name = "time_from")
-    private LocalDateTime timeFrom;
+    private Instant timeFrom;
 
     @Column(name = "time_to")
-    private LocalDateTime timeTo;
+    private Instant timeTo;
 
     @Column
     private String title;

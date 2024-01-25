@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {DonationSumDto, ShelterDetailDto} from "../../dtos/shelter";
 import {DonationService} from "../../services/donation.service";
-import {ba} from "@fullcalendar/core/internal-common";
 
 @Component({
   selector: 'app-donation-bar-graph',
@@ -14,7 +13,7 @@ export class DonationBarGraphComponent implements OnInit {
   @Input() shelter: ShelterDetailDto = null;
 
   chartOptions: EChartsOption;
-  private animals: DonationSumDto[];
+  animals: DonationSumDto[];
 
   private thickness: number = 30;
   private gap: number = 50;

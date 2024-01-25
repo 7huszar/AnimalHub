@@ -56,19 +56,6 @@ export class CreateEditComponent implements OnInit {
   ) {
   }
 
-  /* TODO maybe?
-  public get heading(): string {
-    switch (this.mode) {
-      case Mode.CREATE:
-        return 'Create New Animal';
-      case Mode.EDIT:
-        return 'Edit Animal';
-      default:
-        return '?';
-    }
-  }
-   */
-
   animalForDeletion(name: string, id: string) {
     this.idForDeletion = id;
     this.nameForDeletion = name;
@@ -175,14 +162,6 @@ export class CreateEditComponent implements OnInit {
   get modeIsCreate(): boolean {
     return this.mode === Mode.CREATE;
   }
-
-  get submitButtonText(): string {
-    if (this.modeIsCreate) {
-      return 'Create';
-    }
-    return 'Update';
-  }
-
   public dropped(event: any) :void {
     event.preventDefault();
     event.stopPropagation();
@@ -216,10 +195,9 @@ export class CreateEditComponent implements OnInit {
    *
    */
   private setImage(img: File): void {
-    console.log(img);
-    // 52,4288 MB?
+    // console.log(img);
     if (img.size > 52428800) {
-      console.error("File is too big!"); // TODO handle
+      // console.error("File is too big!"); lets hope this never happens :)
     } else {
       this.animalImage = img;
       this.animalImageURL = URL.createObjectURL(this.animalImage);
