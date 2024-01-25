@@ -14,6 +14,7 @@ import {AnimalDto} from "../../dtos/animal";
 import {ShelterDto} from "../../dtos/shelter";
 import {UserDetailDto} from "../../dtos/user";
 import {AppointmentService} from "../../services/appointment.service";
+import {NotifierService} from "../../services/notifier.service";
 
 @Component({
   selector: 'app-appointment-modal',
@@ -32,6 +33,7 @@ export class AppointmentModalComponent implements OnInit{
 
   private modalService = inject(NgbModal);
   private appointmentService = inject(AppointmentService);
+  private notifierService = inject(NotifierService)
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
 
@@ -109,33 +111,53 @@ export class AppointmentModalComponent implements OnInit{
     this.appointment.timeFrom = dateFrom;
     this.appointment.timeTo = dateTo;
 
-    this.appointmentService.create(this.appointment).subscribe(value => {
-      console.log('create appointment called!', value);
-      this.actionFinished();
+    this.appointmentService.create(this.appointment).subscribe({next: value => {
+        this.notifierService.notifySuccess('APPOINTMENT.CREATE_SUCCESS');
+        this.actionFinished();
+      }, error: err => {
+        console.log(err)
+        this.notifierService.notifyError('APPOINTMENT.CREATE_ERROR', 'APPOINTMENT.APPOINTMENTS');
+      }
     });
   }
 
   public confirm() {
     this.appointment.status = AppointmentStatus.ACCEPTED;
 
-    this.appointmentService.updateStatus(this.appointment).subscribe(value => {
-      console.log('status updated!', value);
-      this.actionFinished();
+    this.appointmentService.updateStatus(this.appointment).subscribe({next: value => {
+        console.log('status updated!', value);
+        this.notifierService.notifySuccess('APPOINTMENT.UPDATE_SUCCESS');
+        this.actionFinished();
+      }, error: err => {
+        console.log(err);
+        this.notifierService.notifyError('APPOINTMENT.UPDATE_ERROR', 'APPOINTMENT.APPOINTMENTS');
+      }
     });
   }
 
   public decline() {
     this.appointment.status = AppointmentStatus.DECLINED;
 
-    this.appointmentService.updateStatus(this.appointment).subscribe(value => {
-      console.log('status updated!', value);
-      this.actionFinished();
+    this.appointmentService.updateStatus(this.appointment).subscribe({next: value => {
+        console.log('status updated!', value);
+        this.notifierService.notifySuccess('APPOINTMENT.UPDATE_SUCCESS');
+        this.actionFinished();
+      }, error: err => {
+        console.log(err);
+        this.notifierService.notifyError('APPOINTMENT.UPDATE_ERROR', 'APPOINTMENT.APPOINTMENTS');
+      }
     });
   }
 
   public delete() {
-    this.appointmentService.delete(this.appointment.id).subscribe(() => {
-      this.actionFinished();
+    this.appointmentService.delete(this.appointment.id).subscribe({
+      next: () => {
+        this.notifierService.notifySuccess('APPOINTMENT.DELETE_SUCCESS');
+        this.actionFinished();
+      }, error: err => {
+        console.log(err);
+        this.notifierService.notifyError('APPOINTMENT.DELETE_ERROR', 'APPOINTMENT.APPOINTMENTS');
+      }
     });
   }
 
