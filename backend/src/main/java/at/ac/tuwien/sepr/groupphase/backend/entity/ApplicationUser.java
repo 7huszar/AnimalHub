@@ -49,7 +49,7 @@ public class ApplicationUser {
     @JoinColumn(name = "shelter_id", nullable = true)
     private Shelter shelter;
 
-    @Override
+    /*@Override
     public String toString() {
         return "ApplicationUser{"
             + "id=" + id
@@ -58,5 +58,5 @@ public class ApplicationUser {
             + ", role=" + role + '\''
             + ", shelter=" + shelter.getName() + '\''
             + '}';
-    }
+    }*/
 }

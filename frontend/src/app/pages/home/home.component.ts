@@ -1,15 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {AnimalDetailDto} from "../../dtos/animal";
-import {AnimalService} from "../../services/animal.service";
 import {NotifierService} from "../../services/notifier.service";
-import {TranslateService} from "@ngx-translate/core";
-import {indexOf} from "lodash";
-import {SubscriptionDetailDto, UserDetailDto} from "../../dtos/user";
-import {Observable} from "rxjs";
-import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
-import {ShelterDetailDto} from "../../dtos/shelter";
+import {PreferencesService} from "../../services/preferences.service";
+import {removeElement} from "../../util/util";
+import {map, Observable} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -18,192 +14,132 @@ import {ShelterDetailDto} from "../../dtos/shelter";
 })
 export class HomeComponent implements OnInit {
 
-  private left: AnimalDetailDto;
-  private middle: AnimalDetailDto;
-  private right: AnimalDetailDto;
-
   protected animalList: AnimalDetailDto[] = [];
-  protected subscriptionList: SubscriptionDetailDto[];
   protected likedAnimals: AnimalDetailDto[] = [];
-  protected dislikedAnimals: AnimalDetailDto[] = [];
-  protected shelterId: string;
 
-
-  counter = 1;
-  emptyLeft: boolean = false;
-  emptyMiddle: boolean = false;
-  emptyRight: boolean = false;
+  private pos = 0;
 
   constructor(
     public authService: AuthService,
-    private animalService: AnimalService,
-    private userService: UserService,
     private notification: ToastrService,
     private notifier: NotifierService,
-    private translator: TranslateService) {
+    private preferencesService: PreferencesService) {
   }
-
-  animal: AnimalDetailDto = {
-    birthDate: null,
-    createdOn: null,
-    height: 0,
-    id: "",
-    name: "",
-    gender: undefined,
-    englishRace: null,
-    germanRace: null,
-    shelter: undefined,
-    species: undefined,
-    weight: 0,
-  };
-
-  user: UserDetailDto = {
-    email: "",
-    id: "",
-    role: "",
-    shelter: undefined,
-  };
-
-  subscription: SubscriptionDetailDto = {
-    id: "",
-    subscriptionId: "",
-    tier: "",
-    user: undefined,
-    animal: undefined,
-  };
 
   ngOnInit() {
-    this.animalService.findAll().subscribe({
+    this.getNextAnimals(3).subscribe();
+
+    const user = this.authService.getUser();
+
+    this.preferencesService.getLikedDislikedAnimals(user.id, true).subscribe( {
       next: data => {
-        this.animalList = data;
-        this.loadCards();
+        this.likedAnimals = data;
       },
       error: error => {
-        console.error("Failed to load animals", error);
+        console.error("Failed to load liked animals", error);
       }
-    });
-
-    //loading the currently active user
-    let userObservable: Observable<UserDetailDto> = this.userService.getCurrentUser()
-    userObservable.subscribe({
-      next: data => {
-        this.user = data;
-        this.subscription.user = this.user;
-        this.shelterId = this.user.shelter?.id;
-        //loading the subscriptions of the user
-        let subscriptionObservable: Observable<SubscriptionDetailDto[]> = this.userService.findAllSubscriptionsByUser(this.user)
-        subscriptionObservable.subscribe({
-          next: data => {
-            this.subscriptionList = data;
-          },
-          error: error => {
-            //this schould never happen
-            console.error('Error finding subscriptions', error);
-            this.notification.error("Could not find subscriptions");
-          }
-        });
-
-
-      },
-      error: error => {
-        //this schould never happen
-        console.error('Error finding user', error);
-        this.notification.error("Could not find logged in user");
-      }
-    });
-
-
+    })
   }
 
-  loadCards() {
-    if (this.animalList && this.animalList.length >= 0) {
-      if (this.animalList[this.counter + 1] == undefined && this.animalList[this.counter - 2] != undefined) {
-        this.counter--;
-      }
-      this.right = this.animalList[this.counter - 1];
-      this.middle = this.animalList[this.counter];
-      this.left = this.animalList[this.counter + 1];
+  getAnimal(position: Position): AnimalDetailDto {
+    if (this.animalList.length > this.pos + position) {
+      return this.animalList[this.pos + position];
+    } else {
+      return null;
     }
-  }
-
-  getCard(position: Position): AnimalDetailDto {
-    if (this.animalList && this.animalList.length >= 0) {
-      this.emptyLeft = false;
-      this.emptyMiddle = false;
-      this.emptyRight = false;
-
-      switch (position) {
-        case Position.LEFT:
-          if (this.left == undefined) this.emptyLeft = true;
-          return this.left;
-        case Position.MIDDLE:
-          if (this.middle == undefined) this.emptyMiddle = true;
-          return this.middle
-        case Position.RIGHT:
-          if (this.right == undefined) this.emptyRight = true;
-          return this.right;
-        default:
-          console.error("unknown card position", position);
-          return null;
-      }
-    }
-    return null;
   }
 
   like(animal: AnimalDetailDto) {
-    if (this.dislikedAnimals.includes(animal)) {
-      this.dislikedAnimals.splice(this.dislikedAnimals.indexOf(animal), 1);
+    // Remove animal
+    this.animalList = removeElement(this.animalList, animal);
+
+    const pref = {
+      userId: this.authService.getUser().id,
+      animalId: animal.id,
+      like: true
     }
-    if (!this.likedAnimals.includes(animal)) {
-      this.likedAnimals.push(animal);
-    }
-    this.animalList.splice(this.animalList.indexOf(animal), 1);
-    this.loadCards();
+
+    this.preferencesService.likeDislike(pref).subscribe({
+      next: () => {
+        this.likedAnimals.push(animal);
+        this.getNextAnimals(1).subscribe();
+      },
+      error: err => {
+        // TODO notify
+      }
+    });
   }
 
   dislike(animal: AnimalDetailDto) {
-    if (this.likedAnimals.includes(animal)) {
-      this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
+    // Remove animal
+    this.animalList = removeElement(this.animalList, animal);
+
+    const pref = {
+      userId: this.authService.getUser().id,
+      animalId: animal.id,
+      like: false
     }
-    if (!this.likedAnimals.includes(animal)) {
-      this.dislikedAnimals.push(animal);
-    }
-    this.animalList.splice(this.animalList.indexOf(animal), 1);
-    this.loadCards();
+
+    this.preferencesService.likeDislike(pref).subscribe({
+      next: () => {
+        this.getNextAnimals(1).subscribe();
+      },
+      error: err => {
+        // TODO notify
+      }
+    });
   }
-  remove(animal: AnimalDetailDto){
-    if (this.likedAnimals.includes(animal)) {
-      this.likedAnimals.splice(this.likedAnimals.indexOf(animal), 1);
-      this.animalList.push(animal);
-      this.loadCards();
+
+  // TODO handle error
+  private getNextAnimals(numAnimals: number): Observable<any> {
+    return this.preferencesService.getRecommendedAnimals(this.authService.getUser().id).pipe(
+      map(animals => {
+        let addedAnimals = 0;
+        for (let animal of animals) {
+          if (addedAnimals >= numAnimals) {
+            break;
+          }
+          if (!this.animalList.find(element => element.id === animal.id)) {
+            this.animalList.push(animal);
+            addedAnimals++;
+          }
+        }
+      })
+    );
+  }
+
+  removeLikedAnimal(animal: AnimalDetailDto){
+    // Remove liked animal
+    this.likedAnimals = removeElement(this.likedAnimals, animal);
+
+    this.preferencesService.removeLikedAnimal(this.authService.getUser().id, animal.id).subscribe({
+      error: err => {
+        // TODO notify
+      }
+    });
+  }
+
+  rightClick(): void {
+    if (this.pos + Position.RIGHT + 3 <= this.animalList.length - 1) {
+      this.pos += 3;
+    } else if (this.pos + Position.RIGHT + 3 > this.animalList.length - 1) {
+      const amount = this.pos + Position.RIGHT + 3 - (this.animalList.length - 1);
+
+      this.getNextAnimals(amount).subscribe(() => {
+        this.pos = this.animalList.length - (Position.RIGHT + 1);
+      });
     }
   }
 
   leftClick(): void {
-    for (let i = 0; i < 3; i++) {
-      if (this.counter + 2 < this.animalList.length) {
-        this.right = this.middle;
-        this.middle = this.left;
-        this.left = this.animalList[this.counter + 2];
-        this.counter++;
-      }
+    if (this.pos > 3) {
+      this.pos -= 3;
+    } else {
+      this.pos = 0;
     }
   }
 
-  rightClick(): void {
-    for (let i = 0; i < 3; i++) {
-      if (this.counter - 2 >= 0) {
-        this.left = this.middle;
-        this.middle = this.right;
-        this.right = this.animalList[this.counter - 2];
-        this.counter--;
-      }
-    }
-  }
-
-  protected readonly AuthService = AuthService;
   protected readonly Position = Position;
-  protected readonly name = name;
 }
 
 enum Position {
