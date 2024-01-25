@@ -4,14 +4,19 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationPageDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.user.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DonationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Animal;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AnimalRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DonationService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
@@ -42,11 +48,17 @@ public class DonationServiceImpl implements DonationService {
     private final ShelterRepository shelterRepository;
     private final DonationMapper donationMapper;
     private final AnimalRepository animalRepository;
+    private final UserService userService;
 
     @Transactional
     @Override
-    public List<DonationSumDto> getDonationsByReceiver(UUID shelterId) {
+    public List<DonationSumDto> getDonationsByReceiver(UUID shelterId) throws NotFoundException, NotAuthorizedException {
         LOGGER.trace("getDonationsByReceiver({})", shelterId);
+
+        UserDetailDto user = userService.getCurrentUser();
+        if (!user.getShelter().getId().equals(shelterId)) {
+            throw new NotAuthorizedException("No permission for user1 " + user.getId() + " to perform action on shelter " + shelterId);
+        }
 
         return donationRepository.getAnimalDonations(shelterId)
             .map(donationSumDto -> new DonationSumDto(donationSumDto.receiver(), donationSumDto.name(),
@@ -56,8 +68,13 @@ public class DonationServiceImpl implements DonationService {
     }
 
     @Override
-    public DonationPageDto findListedDonations(UUID shelterId, DonationSearchDto searchDto) {
+    public DonationPageDto findListedDonations(UUID shelterId, DonationSearchDto searchDto) throws NotFoundException, NotAuthorizedException {
         LOGGER.trace("findListedDonations({}, {})", shelterId, searchDto);
+
+        UserDetailDto user = userService.getCurrentUser();
+        if (!user.getShelter().getId().equals(shelterId)) {
+            throw new NotAuthorizedException("No permission for user1 " + user.getId() + " to perform action on shelter " + shelterId);
+        }
 
         Specification<Donation> spec = createSpecification(
             searchDto.dateAfter() != null ? LocalDateTime.of(searchDto.dateAfter(), LocalTime.of(0, 0, 0)) : null,

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -23,7 +24,7 @@ public interface PaypalService {
      * @throws ValidationException If failed to validate data
      * @throws ConflictException If donator and receiver are the same
      */
-    PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException;
+    PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException, NotAuthorizedException;
 
     /**
      * Capture PayPal order and thus finalizes payment process.

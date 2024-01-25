@@ -144,15 +144,6 @@ public class ShelterEndpoint {
         return shelterService.search(searchParameters);
     }
 
-    @Secured(UserRole.Values.MEMBER_VALUE)
-    @GetMapping("/donation/{id}")
-    public List<DonationListDto> findAllDonations(@PathVariable UUID id) {
-        LOGGER.info("GET " + BASE_PATH + "/donation/" + id);
-        LOGGER.debug("findAllDonations({})", id);
-        return shelterService.findAllDonationsByShelterId(id);
-    }
-
-
     @Secured(UserRole.Values.ADMIN_VALUE)
     @PutMapping("/current/{id}")
     @Operation(summary = "Update specific shelter in database", security = @SecurityRequirement(name = "apiKey"))

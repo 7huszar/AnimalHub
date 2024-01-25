@@ -112,9 +112,6 @@ public interface ShelterService {
      */
     FileDto updateProfileImage(UUID id, CreateFileDto createFileDto) throws ValidationException, IOException, NotFoundException;
 
-    List<DonationListDto> findAllDonationsByShelterId(UUID id);
-
-
     /**
      * Assigns the shelter to a user.
      *

@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Donation;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Shelter;
 import at.ac.tuwien.sepr.groupphase.backend.enums.DonationType;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -18,6 +19,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.DonationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShelterRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.PaypalService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.conflict.PaypalConflict;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.Amount;
 import at.ac.tuwien.sepr.groupphase.backend.service.dto.AuthResponseDto;
@@ -61,6 +63,7 @@ public class PaypalServiceImpl implements PaypalService {
     private final FrontendProperties frontend;
     private final PaypalConflict paypalConflict;
     private final PaypalValidator paypalValidator;
+    private final UserService userService;
 
     private String retrieveAccessToken(String clientId, String clientSecret) throws PaypalException {
         LOGGER.trace("retrieveAccessToken({}, *)", clientId);
@@ -87,7 +90,7 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException {
+    public PaypalLink placeOrder(UUID id, PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException, NotAuthorizedException {
         LOGGER.trace("placeOrder({}, {})", id, donationDto);
 
         paypalValidator.validateDonationOrder(id, donationDto);
@@ -95,6 +98,10 @@ public class PaypalServiceImpl implements PaypalService {
 
         Shelter receiver = shelterRepository.findById(id).orElseThrow(NotFoundException::new);
         ApplicationUser donator = userRepository.findById(donationDto.donator()).orElseThrow(NotFoundException::new);
+
+        if (!this.userService.getCurrentUser().getId().equals(donator.getId())) {
+            throw new NotAuthorizedException("No permission for user1 " + this.userService.getCurrentUser().getId() + " to perform action on user2 " + donator.getId());
+        }
 
         WebClient client = WebClient.create(paypal.getSandbox());
 

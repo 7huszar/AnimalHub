@@ -5,6 +5,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSearch
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationSumDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.donation.DonationListDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.DonationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -30,19 +32,29 @@ public class DonationEndpoint {
 
     @GetMapping("/sum/{shelterId}")
     @Secured(UserRole.Values.MEMBER_VALUE)
-    public List<DonationSumDto> donationSums(@PathVariable UUID shelterId) {
+    public List<DonationSumDto> donationSums(@PathVariable UUID shelterId) throws NotFoundException, NotAuthorizedException {
         LOGGER.info("GET " + BASE_PATH + "/sum/" + shelterId);
         LOGGER.debug("donationSums({})", shelterId);
 
-        return donationService.getDonationsByReceiver(shelterId);
+        try {
+            return donationService.getDonationsByReceiver(shelterId);
+        } catch (NotFoundException | NotAuthorizedException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
+        }
     }
 
     @GetMapping("/search/{shelterId}")
     @Secured(UserRole.Values.MEMBER_VALUE)
-    public DonationPageDto searchDonations(@PathVariable UUID shelterId, DonationSearchDto searchDto) {
+    public DonationPageDto searchDonations(@PathVariable UUID shelterId, DonationSearchDto searchDto) throws NotFoundException, NotAuthorizedException {
         LOGGER.info("GET " + BASE_PATH + "/search/" + shelterId);
         LOGGER.debug("searchDonations({}, {})", shelterId, searchDto);
 
-        return donationService.findListedDonations(shelterId, searchDto);
+        try {
+            return donationService.findListedDonations(shelterId, searchDto);
+        } catch (NotFoundException | NotAuthorizedException e) {
+            LOGGER.warn(e.getMessage());
+            throw e;
+        }
     }
 }

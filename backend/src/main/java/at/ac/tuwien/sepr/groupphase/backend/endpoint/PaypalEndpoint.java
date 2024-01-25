@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.paypal.PaypalDonationDto;
 import at.ac.tuwien.sepr.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotAuthorizedException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PaypalException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -43,13 +44,13 @@ public class PaypalEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @Secured(UserRole.Values.USER_VALUE)
     @PostMapping("/donate/{id}")
-    public PaypalLink placeOrder(@PathVariable UUID id, @RequestBody PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException {
+    public PaypalLink placeOrder(@PathVariable UUID id, @RequestBody PaypalDonationDto donationDto) throws NotFoundException, ValidationException, ConflictException, PaypalException, NotAuthorizedException {
         LOGGER.info("POST " + BASE_PATH + "/donate/{}", id);
         LOGGER.debug("placeOrder({}, {})", id, donationDto);
 
         try {
             return this.paypalService.placeOrder(id, donationDto);
-        } catch (ValidationException | ConflictException e) {
+        } catch (ValidationException | ConflictException | NotAuthorizedException e) {
             LOGGER.warn(e.getMessage());
             throw e;
         } catch (PaypalException e) {

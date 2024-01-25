@@ -245,15 +245,5 @@ public class ShelterServiceImpl implements ShelterService {
 
         shelterRepository.save(foundShelter);
         userRepository.save(applicationUser);
-
-    }
-
-    @Override
-    public List<DonationListDto> findAllDonationsByShelterId(UUID id) {
-        LOGGER.trace("findAllDonationsByShelterId({})", id);
-        return donationRepository.findAllByShelterId(id)
-            .filter(Donation::isPayed)
-            .map(donationMapper::donationToDonationListDto)
-            .collect(Collectors.toList());
     }
 }
