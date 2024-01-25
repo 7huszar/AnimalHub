@@ -79,7 +79,7 @@
   },
   "ANIMAL_HOMEPAGE": {
     "SPECIES": "Tierart:",
-    "GENDER": "Geschlecht",
+    "GENDER": "Geschlecht:",
     "RACE": "Rasse:",
     "BIRTHDATE": "Geburtsdatum:",
     "AGE": "Alter:",
@@ -100,7 +100,12 @@
     "BIRD": "Vogel",
     "RODENT": "Nagetier",
     "FEMALE": "Weiblich",
-    "MALE": "Männlich"
+    "MALE": "Männlich",
+    "SUBSCRIBE": "abonnieren",
+    "DONATE": "spenden",
+    "SUBSCRIBED": "bereits abonniert!",
+    "SUBSCRIBE_NOW": "Abonniere jetzt!",
+    "SUBSCRIBE_TO_SEE": "Zahle jetzt 10€ um exklusiven Content zu sehen!"
   },
   "ANIMAL_SEARCH": {
     "NAME": "Name",

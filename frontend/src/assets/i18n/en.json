@@ -101,7 +101,11 @@
     "BIRD": "Bird",
     "RODENT": "Rodent",
     "MALE": "Male",
-    "FEMALE": "Female"
+    "FEMALE": "Female",
+    "SUBSCRIBE": "subscribe",
+    "DONATE": "donate",
+    "SUBSCRIBED": "subscribed !!",
+    "SUBSCRIBE_NOW": "Subscribe now!"
   },
   "ANIMAL_SEARCH": {
     "NAME": "Name",

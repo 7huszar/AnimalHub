@@ -4,8 +4,8 @@
         data-bs-toggle="modal"
         data-bs-target="#subscribe-dialog"
         [disabled]="isSubscribed">
-  <div *ngIf="!isSubscribed">subscribe</div>
-  <div *ngIf="isSubscribed">subscribed !!!</div>
+  <div *ngIf="!isSubscribed">{{'ANIMAL_HOMEPAGE.SUBSCRIBE' | translate}}</div>
+  <div *ngIf="isSubscribed">{{'ANIMAL_HOMEPAGE.SUBSCRIBED' | translate}}</div>
 </button>
 
 <div *ngIf="!isSubscribed" id="subscribe-dialog"
@@ -16,12 +16,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Subscribe now</h4>
+        <h4 class="modal-title">{{'ANIMAL_HOMEPAGE.SUBSCRIBE_NOW' | translate}}</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
-        pay 10.00€ or something like this to see stuff of the animal
+        {{'ANIMAL_HOMEPAGE.SUBSCRIBE_TO_SEE' | translate}}
 
         <div class="modal-footer">
           <div class="col">
